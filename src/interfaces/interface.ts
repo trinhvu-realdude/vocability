@@ -14,6 +14,8 @@ export interface MyDB extends DBSchema {
 export interface Collection {
     id?: number;
     name: string;
+    color: string;
+    numOfWords?: number;
     createdAt: Date;
 }
 
@@ -22,5 +24,6 @@ export interface Word {
     word: string;
     definition: string;
     notes: string;
+    partOfSpeech: string;
     collectionId?: number;
 }

@@ -2,26 +2,11 @@ import { useState } from "react";
 import { partsOfSpeech } from "../utils/constants";
 import ReactSelectCreatable from "react-select/creatable";
 import { SingleValue } from "react-select";
-import { IDBPDatabase } from "idb";
-import { MyDB } from "../interfaces";
 import { addWord } from "../services/WordService";
 import { getRandomColor } from "../utils/helper";
+import { Choice, CommonProps } from "../interfaces/type";
 
-type AddWordFormProps = {
-    db: IDBPDatabase<MyDB> | undefined;
-    collections: Object[];
-};
-
-type Choice = {
-    label: string;
-    value: string;
-    __isNew__: boolean;
-};
-
-export const AddWordForm: React.FC<AddWordFormProps> = ({
-    db,
-    collections,
-}) => {
+export const AddWordForm: React.FC<CommonProps> = ({ db, collections }) => {
     const [word, setWord] = useState<string>("");
     const [definition, setDefinition] = useState<string>("");
     const [notes, setNotes] = useState<string>("");
@@ -30,7 +15,6 @@ export const AddWordForm: React.FC<AddWordFormProps> = ({
 
     const handleAddWord = async () => {
         const collection = choice as Choice;
-
         if (db) {
             const objCollection = {
                 name: collection.value,
@@ -41,10 +25,15 @@ export const AddWordForm: React.FC<AddWordFormProps> = ({
                 word: word,
                 definition: definition,
                 notes: notes,
+                partOfSpeech: partOfSpeech,
             };
             await addWord(db, objWord, objCollection);
+
             alert(`Word ${word} has been added successfully`);
         }
+        setWord("");
+        setPartOfSpeech("");
+        window.location.reload();
     };
 
     return (
@@ -79,9 +68,20 @@ export const AddWordForm: React.FC<AddWordFormProps> = ({
                         <ReactSelectCreatable
                             className="react-select-creatable"
                             placeholder="Collection"
-                            options={collections}
+                            options={collections.map((collection) => {
+                                return {
+                                    label: collection.name,
+                                    value: collection.name,
+                                };
+                            })}
                             noOptionsMessage={() => "No collections"}
                             onChange={(choice) => setChoice(choice)}
+                            styles={{
+                                menu: (provided: any) => ({
+                                    ...provided,
+                                    zIndex: 1050, // High z-index to ensure it's on top
+                                }),
+                            }}
                         />
                     </div>
                     <div className="input-group col-12 mb-2">
@@ -102,7 +102,7 @@ export const AddWordForm: React.FC<AddWordFormProps> = ({
                             onChange={(event) => setNotes(event.target.value)}
                         ></textarea>
                     </div>
-                    <div className="input-group col-12 mb-2">
+                    <div className="input-group col-12">
                         <button
                             className="btn btn-success"
                             onClick={handleAddWord}
