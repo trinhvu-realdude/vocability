@@ -1,6 +1,6 @@
 import { IDBPDatabase } from "idb";
-import { Collection, MyDB, Word } from "../interfaces/interface";
-import { addCollection, findCollectionByName } from "./CollectionService";
+import { Collection, MyDB, Word } from "../interfaces/model";
+import { addCollection, getCollectionByName } from "./CollectionService";
 
 const storeName = "words";
 
@@ -8,9 +8,9 @@ export const addWord = async (
     db: IDBPDatabase<MyDB>,
     objWord: Word,
     objCollection: Collection
-): Promise<void> => {
+): Promise<Word> => {
     let collectionId;
-    const collection = await findCollectionByName(db, objCollection.name);
+    const collection = await getCollectionByName(db, objCollection.name);
 
     if (!collection) collectionId = await addCollection(db, objCollection);
     else collectionId = collection.id;
@@ -25,6 +25,8 @@ export const addWord = async (
 
     await store.add(word);
     await tx.done;
+
+    return word;
 };
 
 export const getWords = async (db: IDBPDatabase<MyDB>): Promise<Word[]> => {
@@ -64,5 +66,15 @@ export const deleteWordsByCollectionId = async (
         }
     }
 
+    await tx.done;
+};
+
+export const deleteWord = async (
+    db: IDBPDatabase<MyDB>,
+    word: Word
+): Promise<void> => {
+    const tx = db.transaction(storeName, "readwrite");
+    const store = tx.objectStore(storeName);
+    if (word.id) await store.delete(word.id);
     await tx.done;
 };

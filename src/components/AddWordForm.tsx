@@ -2,11 +2,17 @@ import { useState } from "react";
 import { partsOfSpeech } from "../utils/constants";
 import ReactSelectCreatable from "react-select/creatable";
 import { SingleValue } from "react-select";
-import { addWord } from "../services/WordService";
+import { addWord, getWordsByCollectionId } from "../services/WordService";
 import { getRandomColor } from "../utils/helper";
-import { Choice, CommonProps } from "../interfaces/type";
+import { Choice, CommonProps } from "../interfaces/props";
+import { getCollections } from "../services/CollectionService";
 
-export const AddWordForm: React.FC<CommonProps> = ({ db, collections }) => {
+export const AddWordForm: React.FC<CommonProps> = ({
+    db,
+    collections,
+    setCollections,
+    setWords,
+}) => {
     const [word, setWord] = useState<string>("");
     const [definition, setDefinition] = useState<string>("");
     const [notes, setNotes] = useState<string>("");
@@ -14,26 +20,41 @@ export const AddWordForm: React.FC<CommonProps> = ({ db, collections }) => {
     const [choice, setChoice] = useState<SingleValue<Object>>();
 
     const handleAddWord = async () => {
-        const collection = choice as Choice;
-        if (db) {
-            const objCollection = {
-                name: collection.value,
-                color: getRandomColor(),
-                createdAt: new Date(),
-            };
-            const objWord = {
-                word: word,
-                definition: definition,
-                notes: notes,
-                partOfSpeech: partOfSpeech,
-            };
-            await addWord(db, objWord, objCollection);
+        try {
+            const collection = choice as Choice;
+            if (db) {
+                const objCollection = {
+                    name: collection.value,
+                    color: getRandomColor(),
+                    createdAt: new Date(),
+                };
+                const objWord = {
+                    word: word,
+                    definition: definition,
+                    notes: notes,
+                    partOfSpeech: partOfSpeech,
+                };
+                const addedWord = await addWord(db, objWord, objCollection);
 
-            alert(`Word ${word} has been added successfully`);
+                const storedCollections = await getCollections(db);
+                setCollections(storedCollections);
+
+                setWord("");
+                setPartOfSpeech("");
+
+                if (addedWord.collectionId) {
+                    const words = await getWordsByCollectionId(
+                        db,
+                        addedWord.collectionId
+                    );
+                    setWords(words);
+                }
+                alert(`Word ${addedWord.word} has been added successfully`);
+            }
+        } catch (error) {
+            console.log(error);
+            alert(`Failed to add ${word}`);
         }
-        setWord("");
-        setPartOfSpeech("");
-        window.location.reload();
     };
 
     return (

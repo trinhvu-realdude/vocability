@@ -1,5 +1,5 @@
 import { openDB, IDBPDatabase } from "idb";
-import { MyDB } from "../interfaces/interface";
+import { MyDB } from "../interfaces/model";
 
 const dbName = "vocability";
 const storeNames = ["collections", "words"] as const;

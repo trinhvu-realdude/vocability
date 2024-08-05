@@ -1,5 +1,5 @@
 import { IDBPDatabase } from "idb";
-import { Collection, MyDB } from "../interfaces/interface";
+import { Collection, MyDB } from "../interfaces/model";
 import { deleteWordsByCollectionId, getWords } from "./WordService";
 
 const storeName = "collections";
@@ -35,7 +35,7 @@ export const addCollection = async (
     return collectionId;
 };
 
-export const findCollectionByName = async (
+export const getCollectionByName = async (
     db: IDBPDatabase<MyDB>,
     name: string
 ): Promise<Collection | undefined> => {
@@ -43,7 +43,7 @@ export const findCollectionByName = async (
     return collections.find((collection) => collection.name === name);
 };
 
-export const findCollectionById = async (
+export const getCollectionById = async (
     db: IDBPDatabase<MyDB>,
     id: number
 ): Promise<Collection | undefined> => {

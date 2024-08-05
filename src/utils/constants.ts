@@ -12,6 +12,10 @@ export const partsOfSpeech = [
         value: "verb",
     },
     {
+        label: "Phrasal Verb",
+        value: "phrasal verb"
+    },
+    {
         label: "Adverb",
         value: "adverb",
     },
