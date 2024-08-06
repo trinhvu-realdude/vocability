@@ -30,10 +30,11 @@ export const AddWordForm: React.FC<CommonProps> = ({
                     createdAt: new Date(),
                 };
                 const objWord = {
-                    word: word,
-                    definition: definition,
-                    notes: notes,
+                    word: word.toLowerCase().trim(),
+                    definition: definition.trim(),
+                    notes: notes.trim(),
                     partOfSpeech: partOfSpeech,
+                    isFavorite: false,
                     createdAt: new Date(),
                 };
                 const addedWord = await addWord(db, objWord, objCollection);
@@ -84,9 +85,7 @@ export const AddWordForm: React.FC<CommonProps> = ({
                     type="text"
                     className="form-control"
                     placeholder="Note your word"
-                    onChange={(event) =>
-                        setWord(event.target.value.toLowerCase().trim())
-                    }
+                    onChange={(event) => setWord(event.target.value)}
                 />
             </div>
             {word.length > 1 && partOfSpeech ? (

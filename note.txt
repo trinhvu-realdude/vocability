@@ -1,3 +1,5 @@
 - Add sort words with filters - Done
 - Add search word in collection - Done
 - Add how to pronounce button
+- Add heart for favorite word
+- Add toast notification

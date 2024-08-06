@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import { WordCardProps } from "../../interfaces/props";
 import { DeleteWordModal } from "../Modal/DeleteWordModal";
 import { EditWordModal } from "../Modal/EditWordModal";
+import { Word } from "../../interfaces/model";
+import { addWordToFavorite, getWords } from "../../services/WordService";
 
 export const WordCard: React.FC<WordCardProps> = ({
     db,
@@ -9,15 +11,26 @@ export const WordCard: React.FC<WordCardProps> = ({
     collection,
     setWords,
 }) => {
+    const [isFavorite, setIsFavorite] = useState<boolean>(false);
+
+    const handleAddFavorite = async (word: Word) => {
+        setIsFavorite(!isFavorite);
+        if (db) {
+            await addWordToFavorite(db, word, isFavorite);
+            const words = await getWords(db);
+            setWords(words);
+        }
+    };
+
     const handleTextToSpeech = async (text: string) => {
         const speech = new SpeechSynthesisUtterance();
         speech.text = text;
         window.speechSynthesis.speak(speech);
 
         // check voice speech for each language
-        window.speechSynthesis.onvoiceschanged = () => {
-            console.log(window.speechSynthesis.getVoices());
-        };
+        // window.speechSynthesis.onvoiceschanged = () => {
+        //     console.log(window.speechSynthesis.getVoices());
+        // };
     };
 
     return (
@@ -38,12 +51,7 @@ export const WordCard: React.FC<WordCardProps> = ({
                             }}
                             onClick={() => handleTextToSpeech(word.word)}
                         >
-                            <i
-                                className="fas fa-volume-up"
-                                style={{
-                                    fontSize: "12px",
-                                }}
-                            ></i>
+                            <i className="fas fa-volume-up"></i>
                         </button>
                     </h5>
                     <small>
@@ -51,25 +59,31 @@ export const WordCard: React.FC<WordCardProps> = ({
                     </small>
                 </div>
                 <div>
-                    <button
+                    <div
+                        className="btn btn-sm"
+                        onClick={() => handleAddFavorite(word)}
+                    >
+                        <i
+                            className={`${
+                                word.isFavorite ? "fas" : "far"
+                            } fa-heart`}
+                            style={{ color: `${word.isFavorite ? "red" : ""}` }}
+                        ></i>
+                    </div>
+                    <div
                         className="btn btn-sm"
                         data-bs-toggle="modal"
                         data-bs-target={`#edit-word-${word.id}`}
                     >
-                        <i
-                            className="fas fa-pen"
-                            style={{
-                                fontSize: "12px",
-                            }}
-                        ></i>
-                    </button>
-                    <button
+                        <i className="fas fa-pen"></i>
+                    </div>
+                    <div
                         className="btn btn-sm"
                         data-bs-toggle="modal"
                         data-bs-target={`#delete-word-${word.id}`}
                     >
                         <i className="fas fa-times"></i>
-                    </button>
+                    </div>
                 </div>
             </div>
             <p className="mb-1">{word.definition}</p>

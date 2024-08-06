@@ -21,7 +21,7 @@ export const partsOfSpeech = [
     },
     {
         label: "Phrasal Verb",
-        value: "phrasalVerb",
+        value: "phrasal verb",
     },
     {
         label: "Preposition",

@@ -78,3 +78,20 @@ export const deleteWord = async (
     if (word.id) await store.delete(word.id);
     await tx.done;
 };
+
+export const addWordToFavorite = async (
+    db: IDBPDatabase<MyDB>,
+    word: Word,
+    isFavorite: boolean
+): Promise<void> => {
+    const tx = db.transaction(storeName, "readwrite");
+    const store = tx.objectStore(storeName);
+    if (word.id) {
+        let objWord = await store.get(word.id);
+        if (objWord) {
+            objWord.isFavorite = isFavorite;
+            await store.put(objWord);
+            await tx.done;
+        }
+    }
+};

@@ -20,19 +20,18 @@ export const CollectionCard: React.FC<CollectionCardProps> = ({
                 >
                     {collection.name}
                     <div>
-                        <button
+                        <div
                             className="btn btn-sm"
                             style={{
                                 border: "none",
                                 color: "#fff",
-                                fontSize: "12px",
                             }}
                             data-bs-toggle="modal"
                             data-bs-target={`#edit-collection-${collection.id}`}
                         >
                             <i className="fas fa-pen"></i>
-                        </button>
-                        <button
+                        </div>
+                        <div
                             className="btn btn-sm"
                             style={{
                                 border: "none",
@@ -42,7 +41,7 @@ export const CollectionCard: React.FC<CollectionCardProps> = ({
                             data-bs-target={`#collection-${collection.id}`}
                         >
                             <i className="fas fa-times"></i>
-                        </button>
+                        </div>
                     </div>
                 </div>
                 <a
@@ -55,11 +54,8 @@ export const CollectionCard: React.FC<CollectionCardProps> = ({
                     href={`/collection/${collection.id}`}
                 >
                     <p>
-                        <i
-                            className="fas fa-book"
-                            style={{ fontSize: "12px" }}
-                        />{" "}
-                        Number of words: {collection.numOfWords}
+                        <i className="fas fa-book" /> Number of words:{" "}
+                        {collection.numOfWords}
                     </p>
                 </a>
             </div>

@@ -11,21 +11,20 @@ export const EditCollectionModal: React.FC<CollectionModalProps> = ({
     setCollections,
 }) => {
     const [renameValue, setRenameValue] = useState<string>("");
+    const [color, setColor] = useState<string>("");
 
     const handleEditCollection = async () => {
         try {
             if (db) {
-                if (renameValue !== "") {
-                    const updatedCollection = await updateCollection(
-                        db,
-                        collection,
-                        renameValue
-                    );
-                    if (updatedCollection) {
-                        const storedCollections = await getCollections(db);
-                        setCollections(storedCollections);
-                        alert("Renamed successfully");
-                    }
+                const updatedCollection = await updateCollection(
+                    db,
+                    collection,
+                    renameValue !== "" ? renameValue.trim() : collection.name,
+                    color !== "" ? color : collection.color
+                );
+                if (updatedCollection) {
+                    const storedCollections = await getCollections(db);
+                    setCollections(storedCollections);
                 }
             }
         } catch (error) {
@@ -54,7 +53,7 @@ export const EditCollectionModal: React.FC<CollectionModalProps> = ({
                             className="modal-title"
                             id={`edit-collection-${collection.id}`}
                         >
-                            Rename collection
+                            Edit collection
                         </h5>
                         <button
                             type="button"
@@ -68,6 +67,16 @@ export const EditCollectionModal: React.FC<CollectionModalProps> = ({
                     </div>
                     <div className="modal-body text-center">
                         <div className="input-group mb-2">
+                            <input
+                                type="color"
+                                className="form-control form-control-color"
+                                id="color-input"
+                                defaultValue={collection.color}
+                                title="Choose your color"
+                                onChange={(event) =>
+                                    setColor(event.target.value)
+                                }
+                            />
                             <input
                                 type="text"
                                 className="form-control"
@@ -92,7 +101,7 @@ export const EditCollectionModal: React.FC<CollectionModalProps> = ({
                             onClick={handleEditCollection}
                             data-bs-dismiss="modal"
                         >
-                            Rename
+                            Edit
                         </button>
                     </div>
                 </div>

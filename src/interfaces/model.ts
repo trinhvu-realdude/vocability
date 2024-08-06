@@ -25,6 +25,7 @@ export interface Word {
     definition: string;
     notes: string;
     partOfSpeech: string;
+    isFavorite: boolean;
     collectionId?: number;
     createdAt: Date;
 }

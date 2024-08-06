@@ -69,7 +69,8 @@ export const deleteCollection = async (
 export const updateCollection = async (
     db: IDBPDatabase<MyDB>,
     collection: Collection,
-    renameValue: string
+    renameValue: string,
+    color: string
 ): Promise<Collection> => {
     const tx = db.transaction(storeName, "readwrite");
     const store = tx.objectStore(storeName);
@@ -77,6 +78,7 @@ export const updateCollection = async (
         let objCollection = await store.get(collection.id);
         if (objCollection) {
             objCollection.name = renameValue;
+            objCollection.color = color;
             await store.put(objCollection);
             await tx.done;
             return objCollection;

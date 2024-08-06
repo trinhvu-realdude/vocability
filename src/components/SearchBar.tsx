@@ -36,7 +36,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
             />
 
             <button
-                className="btn dropdown-toggle"
+                className="btn"
                 type="button"
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
@@ -44,7 +44,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
                     border: "1px solid #ced4da",
                 }}
             >
-                {filterSorting ? filterSorting.label : "Sort by"}
+                {filterSorting ? filterSorting.label : "Sort by"} &#8645;
             </button>
             <ul className="dropdown-menu">
                 {filterSortingOptions.map((filter, index) => (
