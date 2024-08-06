@@ -26,4 +26,5 @@ export interface Word {
     notes: string;
     partOfSpeech: string;
     collectionId?: number;
+    createdAt: Date;
 }

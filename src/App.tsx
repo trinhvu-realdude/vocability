@@ -1,19 +1,21 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
-import { AddWordForm } from "./components/AddWordForm";
+import { AddWordForm } from "./components/WordForm";
 import initDB from "./utils/database";
 import { IDBPDatabase } from "idb";
 import { Collection, MyDB, Word } from "./interfaces/model";
 import { getCollections } from "./services/CollectionService";
-import { CollectionDisplay } from "./components/CollectionDisplay";
+import { CollectionPage } from "./pages/CollectionPage";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { WordDisplay } from "./components/WordDisplay";
+import { WordPage } from "./pages/WordPage";
 import { NavBar } from "./components/NavBar";
+import { GlossaryPage } from "./pages/GlossaryPage";
 
 function App() {
     const [db, setDb] = useState<IDBPDatabase<MyDB>>();
     const [collections, setCollections] = useState<Collection[]>([]);
     const [words, setWords] = useState<Word[]>([]);
+    const [currentCollectionId, setCurrentCollectionId] = useState<string>("");
 
     useEffect(() => {
         const initializeDB = async () => {
@@ -46,20 +48,21 @@ function App() {
     return (
         <BrowserRouter>
             <React.Fragment>
-                <NavBar />
+                <NavBar collections={collections} />
                 <div className="container my-4">
                     <AddWordForm
                         db={db}
                         collections={collections}
                         setCollections={setCollections}
                         setWords={setWords}
+                        collectionId={currentCollectionId}
                     />
 
                     <Routes>
                         <Route
                             path="/"
                             element={
-                                <CollectionDisplay
+                                <CollectionPage
                                     db={db}
                                     collections={collections}
                                     setCollections={setCollections}
@@ -67,16 +70,19 @@ function App() {
                                 />
                             }
                         />
-
                         <Route
                             path="/collection/:collectionId"
                             element={
-                                <WordDisplay
+                                <WordPage
                                     words={words}
                                     setWords={setWords}
+                                    setCurrentCollectionId={
+                                        setCurrentCollectionId
+                                    }
                                 />
                             }
                         />
+                        <Route path="/glossary" element={<GlossaryPage />} />
                     </Routes>
                 </div>
             </React.Fragment>

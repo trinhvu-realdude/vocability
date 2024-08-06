@@ -10,6 +10,7 @@ import { getCollections } from "../services/CollectionService";
 export const AddWordForm: React.FC<CommonProps> = ({
     db,
     collections,
+    collectionId,
     setCollections,
     setWords,
 }) => {
@@ -33,6 +34,7 @@ export const AddWordForm: React.FC<CommonProps> = ({
                     definition: definition,
                     notes: notes,
                     partOfSpeech: partOfSpeech,
+                    createdAt: new Date(),
                 };
                 const addedWord = await addWord(db, objWord, objCollection);
 
@@ -42,7 +44,11 @@ export const AddWordForm: React.FC<CommonProps> = ({
                 setWord("");
                 setPartOfSpeech("");
 
-                if (addedWord.collectionId) {
+                if (
+                    addedWord.collectionId &&
+                    collectionId &&
+                    addedWord.collectionId === Number.parseInt(collectionId)
+                ) {
                     const words = await getWordsByCollectionId(
                         db,
                         addedWord.collectionId
@@ -77,7 +83,7 @@ export const AddWordForm: React.FC<CommonProps> = ({
                 <input
                     type="text"
                     className="form-control"
-                    placeholder="Add a word"
+                    placeholder="Note your word"
                     onChange={(event) =>
                         setWord(event.target.value.toLowerCase().trim())
                     }

@@ -47,8 +47,10 @@ export const getCollectionById = async (
     db: IDBPDatabase<MyDB>,
     id: number
 ): Promise<Collection | undefined> => {
-    const collections: Collection[] = await getCollections(db);
-    return collections.find((collection) => collection.id === id);
+    const tx = db.transaction(storeName, "readonly");
+    const store = tx.objectStore(storeName);
+    const collection = await store.get(id);
+    return collection;
 };
 
 export const deleteCollection = async (
@@ -62,4 +64,23 @@ export const deleteCollection = async (
         await deleteWordsByCollectionId(db, collection.id);
     }
     await tx.done;
+};
+
+export const updateCollection = async (
+    db: IDBPDatabase<MyDB>,
+    collection: Collection,
+    renameValue: string
+): Promise<Collection> => {
+    const tx = db.transaction(storeName, "readwrite");
+    const store = tx.objectStore(storeName);
+    if (collection.id) {
+        let objCollection = await store.get(collection.id);
+        if (objCollection) {
+            objCollection.name = renameValue;
+            await store.put(objCollection);
+            await tx.done;
+            return objCollection;
+        }
+    }
+    return collection;
 };

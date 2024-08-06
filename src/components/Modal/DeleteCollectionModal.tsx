@@ -1,11 +1,11 @@
 import { Collection } from "../../interfaces/model";
-import { DeleteCollectionModalProps } from "../../interfaces/props";
+import { CollectionCardProps } from "../../interfaces/props";
 import {
     deleteCollection,
     getCollections,
 } from "../../services/CollectionService";
 
-export const DeleteCollectionModal: React.FC<DeleteCollectionModalProps> = ({
+export const DeleteCollectionModal: React.FC<CollectionCardProps> = ({
     db,
     collection,
     setCollections,
@@ -15,7 +15,7 @@ export const DeleteCollectionModal: React.FC<DeleteCollectionModalProps> = ({
             await deleteCollection(db, collection);
             const storedCollections = await getCollections(db);
             setCollections(storedCollections);
-            alert(`Deleted the collection ${collection.name} successfully`);
+            alert(`Deleted ${collection.name} collection successfully`);
         }
     };
 
