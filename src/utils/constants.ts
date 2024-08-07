@@ -156,3 +156,21 @@ export const glossaryItems = [
         example: "Example: 'as a matter of fact', 'to make a long story short'",
     },
 ];
+
+export const documentFileFormats = [
+    {
+        type: "pdf",
+    },
+    {
+        type: "docx",
+    },
+    {
+        type: "xlsx",
+    },
+    {
+        type: "csv",
+    },
+    {
+        type: "png",
+    },
+];

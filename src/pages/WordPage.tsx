@@ -8,10 +8,12 @@ import { WordPageProps } from "../interfaces/props";
 import { IDBPDatabase } from "idb";
 import { SearchBar } from "../components/SearchBar";
 import { WordCard } from "../components/Card/WordCard";
+import { EditCollectionModal } from "../components/Modal/EditCollectionModal";
 
 export const WordPage: React.FC<WordPageProps> = ({
     words,
     setWords,
+    setCollections,
     setCurrentCollectionId,
 }) => {
     const [db, setDb] = useState<IDBPDatabase<MyDB>>();
@@ -42,12 +44,22 @@ export const WordPage: React.FC<WordPageProps> = ({
     }, []);
 
     return (
-        <div className="word-list" id="word-list">
+        <div className="collection-list" id="word-list">
             <h4 className="text-center mt-4">
                 <span style={{ color: collection?.color }}>
                     <strong>{collection?.name}</strong>
                 </span>{" "}
                 collection
+                <div
+                    className="btn btn-sm mx-2"
+                    style={{
+                        border: "none",
+                    }}
+                    data-bs-toggle="modal"
+                    data-bs-target={`#edit-collection-${collection?.id}`}
+                >
+                    <i className="fas fa-pen"></i>
+                </div>
             </h4>
 
             <SearchBar words={words} setFilteredWords={setFilteredWords} />
@@ -64,9 +76,24 @@ export const WordPage: React.FC<WordPageProps> = ({
                         />
                     ))
                 ) : (
-                    <div className="text-center">&#128517; No found word</div>
+                    <div className="text-center">
+                        &#128517; No found word in{" "}
+                        <span style={{ color: collection?.color }}>
+                            {collection?.name}
+                        </span>{" "}
+                        collection
+                    </div>
                 )}
             </div>
+
+            {collection && (
+                <EditCollectionModal
+                    db={db}
+                    collection={collection}
+                    setCollection={setCollection}
+                    setCollections={setCollections}
+                />
+            )}
         </div>
     );
 };

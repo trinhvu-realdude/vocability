@@ -29,3 +29,14 @@ export interface Word {
     collectionId?: number;
     createdAt: Date;
 }
+
+export interface WordDto {
+    id?: number;
+    word: string;
+    definition: string;
+    notes: string;
+    partOfSpeech: string;
+    isFavorite: boolean;
+    collection: Collection;
+    createdAt: Date;
+}

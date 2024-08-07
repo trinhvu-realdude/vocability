@@ -9,15 +9,24 @@ export interface CommonProps {
     setWords: React.Dispatch<React.SetStateAction<Word[]>>;
 }
 
+export interface MainLayoutProps extends CommonProps {
+    words: Word[];
+    setCurrentCollectionId: React.Dispatch<React.SetStateAction<string>>;
+}
+
 export interface WordPageProps {
     words: Word[];
     setWords: React.Dispatch<React.SetStateAction<Word[]>>;
+    setCollections: React.Dispatch<React.SetStateAction<Collection[]>>;
     setCurrentCollectionId: React.Dispatch<React.SetStateAction<string>>;
 }
 
 export type CollectionModalProps = {
     db: IDBPDatabase<MyDB> | undefined;
     collection: Collection;
+    setCollection?: React.Dispatch<
+        React.SetStateAction<Collection | undefined>
+    >;
     setCollections: React.Dispatch<React.SetStateAction<Collection[]>>;
 };
 

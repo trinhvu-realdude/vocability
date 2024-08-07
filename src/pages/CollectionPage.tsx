@@ -8,7 +8,7 @@ export const CollectionPage: React.FC<CommonProps> = ({
     setCollections,
 }) => {
     return (
-        <div className="collection-list" id="collection-list">
+        <div className="container-list" id="collection-list">
             <h4 className="text-center mt-4">Collections</h4>
             <div className="row">
                 {collections && collections.length > 0 ? (

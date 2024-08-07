@@ -1,15 +1,13 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
-import { AddWordForm } from "./components/WordForm";
 import initDB from "./utils/database";
 import { IDBPDatabase } from "idb";
 import { Collection, MyDB, Word } from "./interfaces/model";
 import { getCollections } from "./services/CollectionService";
-import { CollectionPage } from "./pages/CollectionPage";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { WordPage } from "./pages/WordPage";
 import { NavBar } from "./components/NavBar";
-import { GlossaryPage } from "./pages/GlossaryPage";
+import MainLayout from "./layouts/MainLayout";
+import PracticeLayout from "./layouts/PracticeLayout";
 
 function App() {
     const [db, setDb] = useState<IDBPDatabase<MyDB>>();
@@ -23,24 +21,6 @@ function App() {
             setDb(dbInstance);
             const storedCollections = await getCollections(dbInstance);
             setCollections(storedCollections);
-
-            // To monitor the storage of IndexedDB
-            if (navigator.storage && navigator.storage.estimate) {
-                const estimate = await navigator.storage.estimate();
-
-                const used = estimate.usage;
-                const quota = estimate.quota;
-                console.log(
-                    `Used Storage: ${
-                        used ? (used / 1024 / 1024).toFixed(2) : "N/A"
-                    } MB`
-                );
-                console.log(
-                    `Available Storage: ${
-                        quota ? (quota / 1024 / 1024).toFixed(2) : "N/A"
-                    } MB`
-                );
-            }
         };
         initializeDB();
     }, []);
@@ -49,42 +29,24 @@ function App() {
         <BrowserRouter>
             <React.Fragment>
                 <NavBar collections={collections} />
-                <div className="container my-4">
-                    <AddWordForm
-                        db={db}
-                        collections={collections}
-                        setCollections={setCollections}
-                        setWords={setWords}
-                        collectionId={currentCollectionId}
+                <Routes>
+                    <Route
+                        path="/*"
+                        element={
+                            <MainLayout
+                                db={db}
+                                collectionId={currentCollectionId}
+                                words={words}
+                                collections={collections}
+                                setWords={setWords}
+                                setCollections={setCollections}
+                                setCurrentCollectionId={setCurrentCollectionId}
+                            />
+                        }
                     />
 
-                    <Routes>
-                        <Route
-                            path="/"
-                            element={
-                                <CollectionPage
-                                    db={db}
-                                    collections={collections}
-                                    setCollections={setCollections}
-                                    setWords={setWords}
-                                />
-                            }
-                        />
-                        <Route
-                            path="/collection/:collectionId"
-                            element={
-                                <WordPage
-                                    words={words}
-                                    setWords={setWords}
-                                    setCurrentCollectionId={
-                                        setCurrentCollectionId
-                                    }
-                                />
-                            }
-                        />
-                        <Route path="/glossary" element={<GlossaryPage />} />
-                    </Routes>
-                </div>
+                    <Route path="/practices/*" element={<PracticeLayout />} />
+                </Routes>
             </React.Fragment>
         </BrowserRouter>
     );

@@ -1,5 +1,12 @@
 - Add sort words with filters - Done
 - Add search word in collection - Done
-- Add how to pronounce button
-- Add heart for favorite word
-- Add toast notification
+- Add how to pronounce button - Done
+- Add heart for favorite word - Done
+- Add progress bar to display used storage - Done
+- Create 2 layouts for Main and Practice - Done
+- Add edit button for collection in WordPage - Done
+- Add createdAt to WordCard - Done
+- Complete edit word
+- Add search bar for Favorite collection
+- Export and download the documents: docx, xlsx, csv, pdf, jpg, png
+- Research games for Practice

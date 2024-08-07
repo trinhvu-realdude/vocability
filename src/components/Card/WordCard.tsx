@@ -3,7 +3,11 @@ import { WordCardProps } from "../../interfaces/props";
 import { DeleteWordModal } from "../Modal/DeleteWordModal";
 import { EditWordModal } from "../Modal/EditWordModal";
 import { Word } from "../../interfaces/model";
-import { addWordToFavorite, getWords } from "../../services/WordService";
+import {
+    addWordToFavorite,
+    getWordsByCollectionId,
+} from "../../services/WordService";
+import { formatDate } from "../../utils/helper";
 
 export const WordCard: React.FC<WordCardProps> = ({
     db,
@@ -17,8 +21,13 @@ export const WordCard: React.FC<WordCardProps> = ({
         setIsFavorite(!isFavorite);
         if (db) {
             await addWordToFavorite(db, word, isFavorite);
-            const words = await getWords(db);
-            setWords(words);
+            if (word.collectionId) {
+                const words = await getWordsByCollectionId(
+                    db,
+                    word.collectionId
+                );
+                setWords(words);
+            }
         }
     };
 
@@ -28,9 +37,9 @@ export const WordCard: React.FC<WordCardProps> = ({
         window.speechSynthesis.speak(speech);
 
         // check voice speech for each language
-        // window.speechSynthesis.onvoiceschanged = () => {
-        //     console.log(window.speechSynthesis.getVoices());
-        // };
+        window.speechSynthesis.onvoiceschanged = () => {
+            console.log(window.speechSynthesis.getVoices());
+        };
     };
 
     return (
@@ -59,14 +68,12 @@ export const WordCard: React.FC<WordCardProps> = ({
                     </small>
                 </div>
                 <div>
-                    <div
-                        className="btn btn-sm"
-                        onClick={() => handleAddFavorite(word)}
-                    >
+                    <div className="btn btn-sm">
                         <i
                             className={`${
                                 word.isFavorite ? "fas" : "far"
                             } fa-heart`}
+                            onClick={() => handleAddFavorite(word)}
                             style={{ color: `${word.isFavorite ? "red" : ""}` }}
                         ></i>
                     </div>
@@ -92,6 +99,10 @@ export const WordCard: React.FC<WordCardProps> = ({
                     <strong>Notes:</strong> {word.notes}
                 </p>
             )}
+            <small className="text-muted mb-1" style={{ fontSize: "12px" }}>
+                Created at {formatDate(word.createdAt)}{" "}
+                {new Date(word.createdAt).toLocaleTimeString()}
+            </small>
             <DeleteWordModal
                 db={db}
                 word={word}

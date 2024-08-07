@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { CollectionModalProps } from "../../interfaces/props";
 import {
+    getCollectionById,
     getCollections,
     updateCollection,
 } from "../../services/CollectionService";
@@ -8,6 +9,7 @@ import {
 export const EditCollectionModal: React.FC<CollectionModalProps> = ({
     db,
     collection,
+    setCollection,
     setCollections,
 }) => {
     const [renameValue, setRenameValue] = useState<string>("");
@@ -25,6 +27,14 @@ export const EditCollectionModal: React.FC<CollectionModalProps> = ({
                 if (updatedCollection) {
                     const storedCollections = await getCollections(db);
                     setCollections(storedCollections);
+
+                    if (collection.id && setCollection) {
+                        const objCollection = await getCollectionById(
+                            db,
+                            collection.id
+                        );
+                        setCollection(objCollection);
+                    }
                 }
             }
         } catch (error) {

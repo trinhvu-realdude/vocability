@@ -1,6 +1,10 @@
 import { IDBPDatabase } from "idb";
-import { Collection, MyDB, Word } from "../interfaces/model";
-import { addCollection, getCollectionByName } from "./CollectionService";
+import { Collection, MyDB, Word, WordDto } from "../interfaces/model";
+import {
+    addCollection,
+    getCollectionById,
+    getCollectionByName,
+} from "./CollectionService";
 
 const storeName = "words";
 
@@ -94,4 +98,36 @@ export const addWordToFavorite = async (
             await tx.done;
         }
     }
+};
+
+export const getFavoriteWords = async (
+    db: IDBPDatabase<MyDB>
+): Promise<WordDto[]> => {
+    const tx = db.transaction(storeName, "readonly");
+    const store = tx.objectStore(storeName);
+    const words = (await store.getAll()).filter((word) => word.isFavorite);
+
+    const favoriteWords: WordDto[] = [];
+
+    words.forEach(async (word) => {
+        const collectionId = word.collectionId;
+        if (collectionId) {
+            const collection = await getCollectionById(db, collectionId);
+            if (collection) {
+                favoriteWords.push({
+                    id: word.id,
+                    collection: collection,
+                    word: word.word,
+                    definition: word.definition,
+                    notes: word.notes,
+                    partOfSpeech: word.partOfSpeech,
+                    isFavorite: word.isFavorite,
+                    createdAt: word.createdAt,
+                });
+            }
+        }
+    });
+
+    await tx.done;
+    return favoriteWords;
 };

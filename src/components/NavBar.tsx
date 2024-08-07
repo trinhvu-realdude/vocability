@@ -28,14 +28,23 @@ export const NavBar: React.FC<NavBarProps> = ({ collections }) => {
                     id="navbar-toggle"
                 >
                     <ul className="navbar-nav mb-2 mb-lg-0 text-center">
-                        <li className="nav-item dropdown mx-2">
-                            <div
-                                className="btn"
+                        <li className="nav-item mx-2">
+                            <a className="nav-link active" href="/practices">
+                                Practices
+                            </a>
+                        </li>
+
+                        <li
+                            className="nav-item dropdown mx-2"
+                            style={{ cursor: "pointer" }}
+                        >
+                            <a
+                                className="nav-link active"
                                 data-bs-toggle="dropdown"
                                 aria-expanded="false"
                             >
                                 Collections
-                            </div>
+                            </a>
                             <ul className="dropdown-menu">
                                 {collections.map((collection, index) => (
                                     <li key={index}>
@@ -71,6 +80,15 @@ export const NavBar: React.FC<NavBarProps> = ({ collections }) => {
                                     </a>
                                 </li>
                             </ul>
+                        </li>
+
+                        <li className="nav-item mx-2">
+                            <a
+                                className="nav-link active"
+                                href="/import-export"
+                            >
+                                Import/Export
+                            </a>
                         </li>
 
                         <li className="nav-item mx-2">
