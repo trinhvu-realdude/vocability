@@ -2,6 +2,7 @@ import React from "react";
 import { DeleteCollectionModal } from "../Modal/DeleteCollectionModal";
 import { CollectionCardProps } from "../../interfaces/props";
 import { EditCollectionModal } from "../Modal/EditCollectionModal";
+import { formatDate } from "../../utils/helper";
 
 export const CollectionCard: React.FC<CollectionCardProps> = ({
     db,
@@ -48,9 +49,7 @@ export const CollectionCard: React.FC<CollectionCardProps> = ({
                     className="card-body text-center"
                     data-bs-toggle="tooltip"
                     data-bs-placement="top"
-                    title={`Created at ${new Date(
-                        collection.createdAt
-                    ).toUTCString()}`}
+                    title={`Created at ${formatDate(collection.createdAt)}`}
                     href={`/app/collection/${collection.id}`}
                 >
                     <p>

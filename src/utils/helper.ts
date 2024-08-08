@@ -64,7 +64,9 @@ export const formatDate = (createdAt: Date) => {
     const [weekday, month, day, year] = formattedDate
         .replace(",", "")
         .split(" ");
-    return `${weekday}, ${day.replace(",", "")} ${month} ${year}`;
+    return `${weekday}, ${day.replace(",", "")} ${month} ${year} ${new Date(
+        createdAt
+    ).toLocaleTimeString()}`;
 };
 
 export const handleTextToSpeech = async (text: string) => {

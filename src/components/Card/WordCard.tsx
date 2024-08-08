@@ -85,8 +85,7 @@ export const WordCard: React.FC<WordCardProps> = ({
                 </p>
             )}
             <small className="text-muted mb-1" style={{ fontSize: "12px" }}>
-                Created at {formatDate(word.createdAt)}{" "}
-                {new Date(word.createdAt).toLocaleTimeString()}
+                Created at {formatDate(word.createdAt)}
             </small>
             <DeleteWordModal
                 db={db}
