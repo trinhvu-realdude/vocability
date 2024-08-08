@@ -7,12 +7,17 @@ import {
     addWordToFavorite,
     getWordsByCollectionId,
 } from "../../services/WordService";
-import { formatDate, handleTextToSpeech } from "../../utils/helper";
+import {
+    formatDate,
+    handleTextToSpeech,
+    sortWordsByFilter,
+} from "../../utils/helper";
 
 export const WordCard: React.FC<WordCardProps> = ({
     db,
     word,
     collection,
+    filterSorting,
     setWords,
 }) => {
     const [isFavorite, setIsFavorite] = useState<boolean>(false);
@@ -26,7 +31,9 @@ export const WordCard: React.FC<WordCardProps> = ({
                     db,
                     word.collectionId
                 );
-                setWords(words);
+                if (filterSorting) {
+                    setWords(sortWordsByFilter(words, filterSorting.value));
+                } else setWords(words);
             }
         }
     };

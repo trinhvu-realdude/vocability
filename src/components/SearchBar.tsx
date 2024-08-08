@@ -5,14 +5,17 @@ import { sortWordsByFilter } from "../utils/helper";
 
 export const SearchBar: React.FC<SearchBarProps> = ({
     words,
+    displayWords,
+    filterSorting,
+    setDisplayWords,
     setFilteredWords,
+    setFilterSorting,
 }) => {
     const [searchValue, setSearchValue] = useState<string>("");
-    const [filterSorting, setFilterSorting] = useState<FilterSortingOption>();
 
     const handleFilter = async (filter: FilterSortingOption) => {
         setFilterSorting(filter);
-        const sortedWords = sortWordsByFilter(words, filter.value);
+        const sortedWords = sortWordsByFilter(displayWords, filter.value);
         setFilteredWords(sortedWords);
     };
 
@@ -21,6 +24,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
         const filtered = words.filter((word) =>
             word.word.toLowerCase().includes(lowerCaseSearchValue)
         );
+        setDisplayWords(filtered);
         setFilteredWords(filtered);
     }, [searchValue, words]);
 

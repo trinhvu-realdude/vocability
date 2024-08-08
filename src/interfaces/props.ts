@@ -39,7 +39,13 @@ export type WordModalProps = {
 
 export type SearchBarProps = {
     words: Word[];
+    displayWords: Word[];
+    filterSorting?: FilterSortingOption;
+    setDisplayWords: React.Dispatch<React.SetStateAction<Word[]>>;
     setFilteredWords: React.Dispatch<React.SetStateAction<Word[]>>;
+    setFilterSorting: React.Dispatch<
+        React.SetStateAction<FilterSortingOption | undefined>
+    >;
 };
 
 export type NavBarProps = {
@@ -56,6 +62,7 @@ export type WordCardProps = {
     db: IDBPDatabase<MyDB> | undefined;
     word: Word;
     collection: Collection | undefined;
+    filterSorting?: FilterSortingOption;
     setWords: React.Dispatch<React.SetStateAction<Word[]>>;
 };
 

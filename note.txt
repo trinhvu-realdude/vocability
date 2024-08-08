@@ -7,7 +7,7 @@
 - Add edit button for collection in WordPage - Done
 - Add createdAt to WordCard - Done
 - Complete edit word - Done
-- Fix when click to add Favorite, no need to update the state
+- Fix when click to add Favorite, no need to update the state - Done
 - Change edit modal to edit form directly in the word and collection
 - Change Collections link in NavBar to hoverable dropdown
 - Add search bar for Favorite collection

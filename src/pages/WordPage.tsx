@@ -4,7 +4,7 @@ import { Collection, MyDB, Word } from "../interfaces/model";
 import { getWordsByCollectionId } from "../services/WordService";
 import initDB from "../utils/database";
 import { getCollectionById } from "../services/CollectionService";
-import { WordPageProps } from "../interfaces/props";
+import { FilterSortingOption, WordPageProps } from "../interfaces/props";
 import { IDBPDatabase } from "idb";
 import { SearchBar } from "../components/SearchBar";
 import { WordCard } from "../components/Card/WordCard";
@@ -21,6 +21,8 @@ export const WordPage: React.FC<WordPageProps> = ({
     const { collectionId } = useParams();
     const [collection, setCollection] = useState<Collection>();
     const [filteredWords, setFilteredWords] = useState<Word[]>(words);
+    const [displayWords, setDisplayWords] = useState<Word[]>([]);
+    const [filterSorting, setFilterSorting] = useState<FilterSortingOption>();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -62,7 +64,14 @@ export const WordPage: React.FC<WordPageProps> = ({
                 </div>
             </h4>
 
-            <SearchBar words={words} setFilteredWords={setFilteredWords} />
+            <SearchBar
+                words={words}
+                displayWords={displayWords}
+                filterSorting={filterSorting}
+                setDisplayWords={setDisplayWords}
+                setFilteredWords={setFilteredWords}
+                setFilterSorting={setFilterSorting}
+            />
 
             <div className="list-group mt-4">
                 {filteredWords && filteredWords.length > 0 ? (
@@ -72,6 +81,7 @@ export const WordPage: React.FC<WordPageProps> = ({
                             db={db}
                             word={word}
                             collection={collection}
+                            filterSorting={filterSorting}
                             setWords={setWords}
                         />
                     ))
