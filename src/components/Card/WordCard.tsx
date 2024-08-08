@@ -7,7 +7,7 @@ import {
     addWordToFavorite,
     getWordsByCollectionId,
 } from "../../services/WordService";
-import { formatDate } from "../../utils/helper";
+import { formatDate, handleTextToSpeech } from "../../utils/helper";
 
 export const WordCard: React.FC<WordCardProps> = ({
     db,
@@ -31,37 +31,22 @@ export const WordCard: React.FC<WordCardProps> = ({
         }
     };
 
-    const handleTextToSpeech = async (text: string) => {
-        const speech = new SpeechSynthesisUtterance();
-        speech.text = text;
-        window.speechSynthesis.speak(speech);
-
-        // check voice speech for each language
-        window.speechSynthesis.onvoiceschanged = () => {
-            console.log(window.speechSynthesis.getVoices());
-        };
-    };
-
     return (
         <div className="list-group-item">
             <div className="d-flex w-100 justify-content-between mb-2">
                 <div className="row">
                     <h5 className="mb-1">
                         <strong>{word.word}</strong>{" "}
-                        <button
+                        <div
+                            className="btn btn-sm"
                             style={{
-                                background: "none",
-                                border: "none",
                                 padding: 0,
                                 margin: 0,
-                                font: "inherit",
-                                color: "inherit",
-                                cursor: "pointer",
                             }}
                             onClick={() => handleTextToSpeech(word.word)}
                         >
                             <i className="fas fa-volume-up"></i>
-                        </button>
+                        </div>
                     </h5>
                     <small>
                         <i>{word.partOfSpeech}</i>

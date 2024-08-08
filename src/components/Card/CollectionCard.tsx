@@ -51,7 +51,7 @@ export const CollectionCard: React.FC<CollectionCardProps> = ({
                     title={`Created at ${new Date(
                         collection.createdAt
                     ).toUTCString()}`}
-                    href={`/collection/${collection.id}`}
+                    href={`/app/collection/${collection.id}`}
                 >
                     <p>
                         <i className="fas fa-book" /> Number of words:{" "}

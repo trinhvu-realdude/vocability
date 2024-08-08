@@ -31,7 +31,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({
 
             <Routes>
                 <Route
-                    path="/"
+                    path="/collections"
                     element={
                         <CollectionPage
                             db={db}

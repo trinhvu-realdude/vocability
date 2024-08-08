@@ -8,6 +8,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { NavBar } from "./components/NavBar";
 import MainLayout from "./layouts/MainLayout";
 import PracticeLayout from "./layouts/PracticeLayout";
+import RootLayout from "./layouts/RootLayout";
 
 function App() {
     const [db, setDb] = useState<IDBPDatabase<MyDB>>();
@@ -30,8 +31,9 @@ function App() {
             <React.Fragment>
                 <NavBar collections={collections} />
                 <Routes>
+                    <Route path="/" element={<RootLayout />} />
                     <Route
-                        path="/*"
+                        path="/app/*"
                         element={
                             <MainLayout
                                 db={db}
@@ -45,7 +47,10 @@ function App() {
                         }
                     />
 
-                    <Route path="/practices/*" element={<PracticeLayout />} />
+                    <Route
+                        path="/app/practices/*"
+                        element={<PracticeLayout />}
+                    />
                 </Routes>
             </React.Fragment>
         </BrowserRouter>

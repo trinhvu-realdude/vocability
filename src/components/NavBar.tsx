@@ -28,11 +28,11 @@ export const NavBar: React.FC<NavBarProps> = ({ collections }) => {
                     id="navbar-toggle"
                 >
                     <ul className="navbar-nav mb-2 mb-lg-0 text-center">
-                        <li className="nav-item mx-2">
-                            <a className="nav-link active" href="/practices">
+                        {/* <li className="nav-item mx-2">
+                            <a className="nav-link active" href="/app/practices">
                                 Practices
                             </a>
-                        </li>
+                        </li> */}
 
                         <li
                             className="nav-item dropdown mx-2"
@@ -46,11 +46,21 @@ export const NavBar: React.FC<NavBarProps> = ({ collections }) => {
                                 Collections
                             </a>
                             <ul className="dropdown-menu">
+                                <li>
+                                    <a
+                                        className="dropdown-item"
+                                        href="/app/collections"
+                                    >
+                                        <h6 className="dropdown-header">
+                                            All collections
+                                        </h6>
+                                    </a>
+                                </li>
                                 {collections.map((collection, index) => (
                                     <li key={index}>
                                         <a
                                             className="dropdown-item d-flex"
-                                            href={`/collection/${collection.id}`}
+                                            href={`/app/collection/${collection.id}`}
                                         >
                                             <div
                                                 className="square"
@@ -66,9 +76,12 @@ export const NavBar: React.FC<NavBarProps> = ({ collections }) => {
                                     </li>
                                 ))}
                                 <li>
+                                    <hr className="dropdown-divider" />
+                                </li>
+                                <li>
                                     <a
                                         className="dropdown-item d-flex"
-                                        href="/favorite-collection"
+                                        href="/app/favorite-collection"
                                     >
                                         <div
                                             className="square"
@@ -85,7 +98,7 @@ export const NavBar: React.FC<NavBarProps> = ({ collections }) => {
                         <li className="nav-item mx-2">
                             <a
                                 className="nav-link active"
-                                href="/import-export"
+                                href="/app/import-export"
                             >
                                 Import/Export
                             </a>
@@ -94,12 +107,23 @@ export const NavBar: React.FC<NavBarProps> = ({ collections }) => {
                         <li className="nav-item mx-2">
                             <a
                                 className="nav-link active"
-                                href="/glossary"
+                                href="/app/glossary"
                                 style={{
                                     color: "#DD5746",
                                 }}
                             >
                                 Glossary
+                            </a>
+                        </li>
+
+                        <li className="nav-item mx-2">
+                            <a className="nav-link active" href="/">
+                                <span
+                                    className="fi fi-us"
+                                    style={{
+                                        borderRadius: "2px",
+                                    }}
+                                ></span>
                             </a>
                         </li>
                     </ul>

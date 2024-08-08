@@ -30,13 +30,6 @@ export interface Word {
     createdAt: Date;
 }
 
-export interface WordDto {
-    id?: number;
-    word: string;
-    definition: string;
-    notes: string;
-    partOfSpeech: string;
-    isFavorite: boolean;
+export interface WordDto extends Word {
     collection: Collection;
-    createdAt: Date;
 }

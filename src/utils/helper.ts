@@ -66,3 +66,14 @@ export const formatDate = (createdAt: Date) => {
         .split(" ");
     return `${weekday}, ${day.replace(",", "")} ${month} ${year}`;
 };
+
+export const handleTextToSpeech = async (text: string) => {
+    const speech = new SpeechSynthesisUtterance();
+    speech.text = text;
+    window.speechSynthesis.speak(speech);
+
+    // check voice speech for each language
+    window.speechSynthesis.onvoiceschanged = () => {
+        console.log(window.speechSynthesis.getVoices());
+    };
+};

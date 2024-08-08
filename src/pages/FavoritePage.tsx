@@ -3,6 +3,7 @@ import { WordDto } from "../interfaces/model";
 import { addWordToFavorite, getFavoriteWords } from "../services/WordService";
 import initDB from "../utils/database";
 import { CommonProps } from "../interfaces/props";
+import { handleTextToSpeech } from "../utils/helper";
 
 export const FavoritePage: React.FC<CommonProps> = ({ db }) => {
     const [favoriteWords, setFavoriteWords] = useState<WordDto[]>([]);
@@ -43,19 +44,18 @@ export const FavoritePage: React.FC<CommonProps> = ({ db }) => {
                                 <div className="row">
                                     <h5 className="mb-1">
                                         <strong>{word.word}</strong>{" "}
-                                        <button
+                                        <div
+                                            className="btn btn-sm"
                                             style={{
-                                                background: "none",
-                                                border: "none",
                                                 padding: 0,
                                                 margin: 0,
-                                                font: "inherit",
-                                                color: "inherit",
-                                                cursor: "pointer",
                                             }}
+                                            onClick={() =>
+                                                handleTextToSpeech(word.word)
+                                            }
                                         >
                                             <i className="fas fa-volume-up"></i>
-                                        </button>
+                                        </div>
                                     </h5>
                                     <small>
                                         <i>{word.partOfSpeech}</i>
@@ -73,7 +73,7 @@ export const FavoritePage: React.FC<CommonProps> = ({ db }) => {
                                 </div>
                             </div>
                             <p className="mb-1">{word.definition}</p>
-                            <a href={`/collection/${word.collection.id}`}>
+                            <a href={`/app/collection/${word.collection.id}`}>
                                 <small className="text-muted">
                                     &#8618; Go to{" "}
                                     <span
