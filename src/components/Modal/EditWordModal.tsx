@@ -1,5 +1,7 @@
-import { WordModalProps } from "../../interfaces/props";
+import { useState } from "react";
+import { EditWordObj, WordModalProps } from "../../interfaces/props";
 import { partsOfSpeech } from "../../utils/constants";
+import { getWordsByCollectionId, updateWord } from "../../services/WordService";
 
 export const EditWordModal: React.FC<WordModalProps> = ({
     db,
@@ -7,8 +9,40 @@ export const EditWordModal: React.FC<WordModalProps> = ({
     collection,
     setWords,
 }) => {
+    const [partOfSpeechValue, setPartOfSpeechValue] = useState<string>("");
+    const [wordValue, setWordValue] = useState<string>("");
+    const [definitionValue, setDefinitionValue] = useState<string>("");
+    const [notesValue, setNotesValue] = useState<string>("");
+
     const handleEditWord = async () => {
-        console.log(word);
+        try {
+            if (db) {
+                const editValue: EditWordObj = {
+                    word: wordValue !== "" ? wordValue.trim() : word.word,
+                    partOfSpeech:
+                        partOfSpeechValue !== ""
+                            ? partOfSpeechValue.trim()
+                            : word.partOfSpeech,
+                    definition:
+                        definitionValue !== ""
+                            ? definitionValue.trim()
+                            : word.definition,
+                    notes: notesValue !== "" ? notesValue.trim() : word.notes,
+                };
+                const updatedWord = await updateWord(db, word, editValue);
+
+                if (updatedWord && collection?.id) {
+                    const words = await getWordsByCollectionId(
+                        db,
+                        collection.id
+                    );
+                    setWords(words);
+                }
+            }
+        } catch (error) {
+            console.log(error);
+            alert(`Failed to edit ${word.word}`);
+        }
     };
 
     return (
@@ -47,6 +81,9 @@ export const EditWordModal: React.FC<WordModalProps> = ({
                                 className="form-select"
                                 id="part-of-speech"
                                 defaultValue={word.partOfSpeech}
+                                onChange={(event) =>
+                                    setPartOfSpeechValue(event.target.value)
+                                }
                             >
                                 <option value="">Part of speech</option>
                                 {partsOfSpeech &&
@@ -66,7 +103,7 @@ export const EditWordModal: React.FC<WordModalProps> = ({
                                 placeholder="Add a word"
                                 defaultValue={word.word}
                                 onChange={(event) =>
-                                    (word.word = event.target.value)
+                                    setWordValue(event.target.value)
                                 }
                             />
                         </div>
@@ -80,7 +117,7 @@ export const EditWordModal: React.FC<WordModalProps> = ({
                                     className="form-control"
                                     defaultValue={word.definition}
                                     onChange={(event) =>
-                                        (word.definition = event.target.value)
+                                        setDefinitionValue(event.target.value)
                                     }
                                 />
                             </div>
@@ -90,7 +127,7 @@ export const EditWordModal: React.FC<WordModalProps> = ({
                                     className="form-control"
                                     defaultValue={word.notes}
                                     onChange={(event) =>
-                                        (word.notes = event.target.value)
+                                        setNotesValue(event.target.value)
                                     }
                                 ></textarea>
                             </div>

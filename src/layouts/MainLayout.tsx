@@ -1,7 +1,7 @@
 import React from "react";
 import { MainLayoutProps } from "../interfaces/props";
 import { StorageBar } from "../components/StorageBar";
-import { AddWordForm } from "../components/WordForm";
+import { AddWordForm } from "../components/Form/AddWordForm";
 import { Route, Routes } from "react-router-dom";
 import { WordPage } from "../pages/WordPage";
 import { FavoritePage } from "../pages/FavoritePage";

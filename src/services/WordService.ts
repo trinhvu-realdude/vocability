@@ -5,6 +5,7 @@ import {
     getCollectionById,
     getCollectionByName,
 } from "./CollectionService";
+import { EditWordObj } from "../interfaces/props";
 
 const storeName = "words";
 
@@ -130,4 +131,26 @@ export const getFavoriteWords = async (
 
     await tx.done;
     return favoriteWords;
+};
+
+export const updateWord = async (
+    db: IDBPDatabase<MyDB>,
+    word: Word,
+    editValue: EditWordObj
+): Promise<Word> => {
+    const tx = db.transaction(storeName, "readwrite");
+    const store = tx.objectStore(storeName);
+    if (word.id) {
+        let objWord = await store.get(word.id);
+        if (objWord) {
+            objWord.word = editValue.word;
+            objWord.partOfSpeech = editValue.partOfSpeech;
+            objWord.definition = editValue.definition;
+            objWord.notes = editValue.notes;
+            await store.put(objWord);
+            await tx.done;
+            return objWord;
+        }
+    }
+    return word;
 };

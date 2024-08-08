@@ -69,3 +69,10 @@ export type Choice = {
     value: string;
     __isNew__: boolean;
 };
+
+export type EditWordObj = {
+    word: string;
+    partOfSpeech: string;
+    definition: string;
+    notes: string;
+};
