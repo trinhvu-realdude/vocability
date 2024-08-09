@@ -2,8 +2,10 @@ import { glossaryItems } from "../utils/constants";
 
 export const GlossaryPage = () => {
     return (
-        <div id="glossary" className="container">
-            <h4 className="text-center mt-4 mb-4">Glossary</h4>
+        <div id="glossary" className="container-list">
+            <h4 className="text-center mt-4 mb-4" style={{ color: "#DD5746" }}>
+                Glossary
+            </h4>
             <div className="list-group">
                 {glossaryItems.map((item, index) => (
                     <div key={index} className="col-md-6 mb-4 w-100">
