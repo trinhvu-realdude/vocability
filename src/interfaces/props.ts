@@ -30,13 +30,6 @@ export type CollectionModalProps = {
     setCollections: React.Dispatch<React.SetStateAction<Collection[]>>;
 };
 
-export type WordModalProps = {
-    db: IDBPDatabase<MyDB> | undefined;
-    word: Word;
-    collection: Collection | undefined;
-    setWords: React.Dispatch<React.SetStateAction<Word[]>>;
-};
-
 export type SearchBarProps = {
     words: Word[];
     displayWords: Word[];
@@ -63,6 +56,24 @@ export type WordCardProps = {
     word: Word;
     collection: Collection | undefined;
     filterSorting?: FilterSortingOption;
+    setWords: React.Dispatch<React.SetStateAction<Word[]>>;
+};
+
+export type CollectionFormProps = {
+    db: IDBPDatabase<MyDB> | undefined;
+    collection: Collection;
+    setIsEditOrDelete: React.Dispatch<React.SetStateAction<boolean>>;
+    setCollection?: React.Dispatch<
+        React.SetStateAction<Collection | undefined>
+    >;
+    setCollections: React.Dispatch<React.SetStateAction<Collection[]>>;
+};
+
+export type WordFormProps = {
+    db: IDBPDatabase<MyDB> | undefined;
+    word: Word;
+    collection: Collection | undefined;
+    setIsEditOrDelete: React.Dispatch<React.SetStateAction<boolean>>;
     setWords: React.Dispatch<React.SetStateAction<Word[]>>;
 };
 

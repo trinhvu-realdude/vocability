@@ -1,7 +1,5 @@
 import React, { useState } from "react";
 import { WordCardProps } from "../../interfaces/props";
-import { DeleteWordModal } from "../Modal/DeleteWordModal";
-import { EditWordModal } from "../Modal/EditWordModal";
 import { Word } from "../../interfaces/model";
 import {
     addWordToFavorite,
@@ -12,6 +10,8 @@ import {
     handleTextToSpeech,
     sortWordsByFilter,
 } from "../../utils/helper";
+import { EditWordForm } from "../Form/EditWordForm";
+import { DeleteWordForm } from "../Form/DeleteWordForm";
 
 export const WordCard: React.FC<WordCardProps> = ({
     db,
@@ -21,6 +21,8 @@ export const WordCard: React.FC<WordCardProps> = ({
     setWords,
 }) => {
     const [isFavorite, setIsFavorite] = useState<boolean>(false);
+    const [isEdit, setIsEdit] = useState<boolean>(false);
+    const [isDelete, setIsDelete] = useState<boolean>(false);
 
     const handleAddFavorite = async (word: Word) => {
         setIsFavorite(!isFavorite);
@@ -39,73 +41,92 @@ export const WordCard: React.FC<WordCardProps> = ({
     };
 
     return (
-        <div className="list-group-item">
-            <div className="d-flex w-100 justify-content-between mb-2">
-                <div className="row">
-                    <h5 className="mb-1">
-                        <strong>{word.word}</strong>{" "}
-                        <div
-                            className="btn btn-sm"
-                            style={{
-                                padding: 0,
-                                margin: 0,
-                            }}
-                            onClick={() => handleTextToSpeech(word.word)}
-                        >
-                            <i className="fas fa-volume-up"></i>
+        <>
+            {!isEdit && !isDelete && (
+                <div className="list-group-item">
+                    <div className="d-flex w-100 justify-content-between mb-2">
+                        <div className="row">
+                            <h5 className="mb-1">
+                                <strong>{word.word}</strong>{" "}
+                                <div
+                                    className="btn btn-sm"
+                                    style={{
+                                        padding: 0,
+                                        margin: 0,
+                                    }}
+                                    onClick={() =>
+                                        handleTextToSpeech(word.word)
+                                    }
+                                >
+                                    <i className="fas fa-volume-up"></i>
+                                </div>
+                            </h5>
+                            <small>
+                                <i>{word.partOfSpeech}</i>
+                            </small>
                         </div>
-                    </h5>
-                    <small>
-                        <i>{word.partOfSpeech}</i>
+                        <div>
+                            <div className="btn btn-sm">
+                                <i
+                                    className={`${
+                                        word.isFavorite ? "fas" : "far"
+                                    } fa-heart`}
+                                    onClick={() => handleAddFavorite(word)}
+                                    style={{
+                                        color: `${
+                                            word.isFavorite ? "red" : ""
+                                        }`,
+                                    }}
+                                ></i>
+                            </div>
+                            <div
+                                className="btn btn-sm"
+                                onClick={() => setIsEdit(true)}
+                            >
+                                <i className="fas fa-pen"></i>
+                            </div>
+                            <div
+                                className="btn btn-sm"
+                                onClick={() => setIsDelete(true)}
+                            >
+                                <i className="fas fa-times"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <p className="mb-1">{word.definition}</p>
+                    {word.notes && (
+                        <p className="mb-1">
+                            <strong>Notes:</strong> {word.notes}
+                        </p>
+                    )}
+                    <small
+                        className="text-muted mb-1"
+                        style={{ fontSize: "12px" }}
+                    >
+                        Created at {formatDate(word.createdAt)}
                     </small>
                 </div>
-                <div>
-                    <div className="btn btn-sm">
-                        <i
-                            className={`${
-                                word.isFavorite ? "fas" : "far"
-                            } fa-heart`}
-                            onClick={() => handleAddFavorite(word)}
-                            style={{ color: `${word.isFavorite ? "red" : ""}` }}
-                        ></i>
-                    </div>
-                    <div
-                        className="btn btn-sm"
-                        data-bs-toggle="modal"
-                        data-bs-target={`#edit-word-${word.id}`}
-                    >
-                        <i className="fas fa-pen"></i>
-                    </div>
-                    <div
-                        className="btn btn-sm"
-                        data-bs-toggle="modal"
-                        data-bs-target={`#delete-word-${word.id}`}
-                    >
-                        <i className="fas fa-times"></i>
-                    </div>
-                </div>
-            </div>
-            <p className="mb-1">{word.definition}</p>
-            {word.notes && (
-                <p className="mb-1">
-                    <strong>Notes:</strong> {word.notes}
-                </p>
             )}
-            <small className="text-muted mb-1" style={{ fontSize: "12px" }}>
-                Created at {formatDate(word.createdAt)}
-            </small>
-            <DeleteWordModal
-                db={db}
-                word={word}
-                collection={collection}
-                setWords={setWords}
-            />
-            <EditWordModal
-                db={db}
-                word={word}
-                collection={collection}
-                setWords={setWords}
-            />
-        </div>
+
+            {isEdit && (
+                <EditWordForm
+                    db={db}
+                    word={word}
+                    collection={collection}
+                    setIsEditOrDelete={setIsEdit}
+                    setWords={setWords}
+                />
+            )}
+
+            {isDelete && (
+                <DeleteWordForm
+                    db={db}
+                    word={word}
+                    collection={collection}
+                    setIsEditOrDelete={setIsDelete}
+                    setWords={setWords}
+                />
+            )}
+        </>
     );
 };
