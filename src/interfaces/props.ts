@@ -77,6 +77,12 @@ export type WordFormProps = {
     setWords: React.Dispatch<React.SetStateAction<Word[]>>;
 };
 
+export type DownloadDocumentModalProps = {
+    collectionColor: string;
+    filename: string;
+    blobUrl?: string;
+};
+
 export type FilterSortingOption = {
     label: string;
     value: string;

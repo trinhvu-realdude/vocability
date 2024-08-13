@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { CollectionCardProps } from "../../interfaces/props";
-import { formatDate } from "../../utils/helper";
 import { EditCollectionForm } from "../Form/EditCollectionForm";
 import { DeleteCollectionForm } from "../Form/DeleteCollectionForm";
+import { formatDate } from "../../utils/formatDateString";
 
 export const CollectionCard: React.FC<CollectionCardProps> = ({
     db,

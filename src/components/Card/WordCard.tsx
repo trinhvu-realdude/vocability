@@ -5,13 +5,10 @@ import {
     addWordToFavorite,
     getWordsByCollectionId,
 } from "../../services/WordService";
-import {
-    formatDate,
-    handleTextToSpeech,
-    sortWordsByFilter,
-} from "../../utils/helper";
+import { handleTextToSpeech, sortWordsByFilter } from "../../utils/helper";
 import { EditWordForm } from "../Form/EditWordForm";
 import { DeleteWordForm } from "../Form/DeleteWordForm";
+import { formatDate } from "../../utils/formatDateString";
 
 export const WordCard: React.FC<WordCardProps> = ({
     db,

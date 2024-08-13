@@ -174,3 +174,11 @@ export const documentFileFormats = [
         type: "png",
     },
 ];
+
+export const FILETYPE = {
+    PDF: "pdf",
+    DOCX: "docx",
+    XLSX: "xlsx",
+    CSV: "csv",
+    PNG: "png",
+};

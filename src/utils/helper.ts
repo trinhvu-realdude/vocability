@@ -52,23 +52,6 @@ export const sortWordsByFilter = (words: Word[], filterValue: string) => {
     return sortedWords;
 };
 
-export const formatDate = (createdAt: Date) => {
-    const date = new Date(createdAt);
-    const formattedDate = date.toLocaleDateString("en-US", {
-        weekday: "short",
-        month: "short",
-        day: "2-digit",
-        year: "numeric",
-    });
-
-    const [weekday, month, day, year] = formattedDate
-        .replace(",", "")
-        .split(" ");
-    return `${weekday}, ${day.replace(",", "")} ${month} ${year} ${new Date(
-        createdAt
-    ).toLocaleTimeString()}`;
-};
-
 export const handleTextToSpeech = async (text: string) => {
     const speech = new SpeechSynthesisUtterance();
     speech.text = text;

@@ -10,9 +10,9 @@
 - Fix when click to add Favorite, no need to update the state - Done
 - Change edit modal to edit form directly in the word and collection - Done
 - Change Collections link in NavBar to hoverable dropdown - Done
+- Export and download the documents: docx, xlsx, csv, pdf, jpg, png
 - Add search bar for Favorite collection
 - Design for Root layout
-- Export and download the documents: docx, xlsx, csv, pdf, jpg, png
 - Research games for Practice
 - Add Languagues: 
     + English - us

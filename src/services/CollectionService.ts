@@ -86,3 +86,13 @@ export const updateCollection = async (
     }
     return collection;
 };
+
+export const getColorByCollectionId = async (
+    db: IDBPDatabase<MyDB>,
+    collectionId: number
+): Promise<string> => {
+    const tx = db.transaction(storeName, "readonly");
+    const store = tx.objectStore(storeName);
+    const collection = await store.get(collectionId);
+    return collection ? collection?.color : "";
+};
