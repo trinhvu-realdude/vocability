@@ -1,6 +1,7 @@
 import { CommonProps } from "../interfaces/props";
 import "../App.css";
 import { CollectionCard } from "../components/Card/CollectionCard";
+import { NoDataMessage } from "../components/NoDataMessage";
 
 export const CollectionPage: React.FC<CommonProps> = ({
     db,
@@ -21,10 +22,10 @@ export const CollectionPage: React.FC<CommonProps> = ({
                         />
                     ))
                 ) : (
-                    <div className="text-center">
-                        &#128511; Oops...! You have no collection. Let's start
-                        to take note and learn vocabulary.
-                    </div>
+                    <NoDataMessage
+                        message="&#128511; Oops...! You have no collection.
+                        Let's start to take note and learn vocabulary."
+                    />
                 )}
             </div>
         </div>

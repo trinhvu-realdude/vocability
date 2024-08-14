@@ -2,13 +2,14 @@ import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Collection, MyDB, Word } from "../interfaces/model";
 import { getWordsByCollectionId } from "../services/WordService";
-import initDB from "../utils/database";
+import initDB from "../configs/database";
 import { getCollectionById } from "../services/CollectionService";
 import { FilterSortingOption, WordPageProps } from "../interfaces/props";
 import { IDBPDatabase } from "idb";
 import { SearchBar } from "../components/SearchBar";
 import { WordCard } from "../components/Card/WordCard";
 import { EditCollectionModal } from "../components/Modal/EditCollectionModal";
+import { NoDataMessage } from "../components/NoDataMessage";
 
 export const WordPage: React.FC<WordPageProps> = ({
     words,
@@ -74,7 +75,8 @@ export const WordPage: React.FC<WordPageProps> = ({
             />
 
             <div className="list-group mt-4">
-                {filteredWords && filteredWords.length > 0 ? (
+                {filteredWords &&
+                    filteredWords.length > 0 &&
                     filteredWords.map((word) => (
                         <WordCard
                             key={word.id}
@@ -84,17 +86,16 @@ export const WordPage: React.FC<WordPageProps> = ({
                             filterSorting={filterSorting}
                             setWords={setWords}
                         />
-                    ))
-                ) : (
-                    <div className="text-center">
-                        &#128517; No found word in{" "}
-                        <span style={{ color: collection?.color }}>
-                            {collection?.name}
-                        </span>{" "}
-                        collection
-                    </div>
-                )}
+                    ))}
             </div>
+
+            {!filteredWords ||
+                (filteredWords.length <= 0 && (
+                    <NoDataMessage
+                        collectionColor={collection?.color}
+                        collectionName={collection?.name}
+                    />
+                ))}
 
             {collection && (
                 <EditCollectionModal

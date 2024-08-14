@@ -94,6 +94,12 @@ export type Choice = {
     __isNew__: boolean;
 };
 
+export type NoDataMessageProps = {
+    collectionName?: string;
+    collectionColor?: string;
+    message?: string;
+};
+
 export type EditWordObj = {
     word: string;
     partOfSpeech: string;

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
-import initDB from "./utils/database";
+import initDB from "./configs/database";
 import { IDBPDatabase } from "idb";
 import { Collection, MyDB, Word } from "./interfaces/model";
 import { getCollections } from "./services/CollectionService";

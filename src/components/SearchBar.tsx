@@ -46,6 +46,8 @@ export const SearchBar: React.FC<SearchBarProps> = ({
                 aria-expanded="false"
                 style={{
                     border: "1px solid #ced4da",
+                    borderTopRightRadius: "0.25rem",
+                    borderBottomRightRadius: "0.25rem",
                 }}
             >
                 {filterSorting ? filterSorting.label : "Sort by"} &#8645;
