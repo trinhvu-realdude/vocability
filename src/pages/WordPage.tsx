@@ -9,7 +9,6 @@ import { IDBPDatabase } from "idb";
 import { WordCard } from "../components/Card/WordCard";
 import { EditCollectionModal } from "../components/Modal/EditCollectionModal";
 import { NoDataMessage } from "../components/NoDataMessage";
-import { SortFilter } from "../components/Filter/SortFilter";
 import { SearchBar } from "../components/SearchBar";
 
 export const WordPage: React.FC<WordPageProps> = ({
@@ -76,18 +75,15 @@ export const WordPage: React.FC<WordPageProps> = ({
                 </div>
             </h4>
 
-            <div className="input-group d-flex justify-content-center mt-4">
-                <SearchBar
-                    searchValue={searchValue}
-                    setSearchValue={setSearchValue}
-                />
-                <SortFilter
-                    displayWords={displayWords}
-                    filterSorting={filterSorting}
-                    setFilterSorting={setFilterSorting}
-                    setFilteredWords={setFilteredWords}
-                />
-            </div>
+            <SearchBar
+                isFavorite={false}
+                searchValue={searchValue}
+                setSearchValue={setSearchValue}
+                displayWords={displayWords}
+                filterSorting={filterSorting}
+                setFilterSorting={setFilterSorting}
+                setFilteredWords={setFilteredWords}
+            />
 
             <div className="list-group mt-4">
                 {filteredWords &&

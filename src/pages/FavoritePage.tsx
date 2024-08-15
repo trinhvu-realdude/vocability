@@ -5,7 +5,6 @@ import { addWordToFavorite, getFavoriteWords } from "../services/WordService";
 import { CommonProps } from "../interfaces/props";
 import { handleTextToSpeech } from "../utils/helper";
 import { NoDataMessage } from "../components/NoDataMessage";
-import { CollectionFilter } from "../components/Filter/CollectionFilter";
 import { SearchBar } from "../components/SearchBar";
 
 export const FavoritePage: React.FC<CommonProps> = ({ db }) => {
@@ -33,6 +32,17 @@ export const FavoritePage: React.FC<CommonProps> = ({ db }) => {
             }
             alert(`Removed ${word.word} from Favorite collection`);
         }
+    };
+
+    const handleFilter = (collection: Collection | null) => {
+        setSelectedCollection(collection || undefined);
+        const filtered = collection
+            ? favoriteWords.filter(
+                  (word) => word.collection.name === collection.name
+              )
+            : favoriteWords;
+        setFilteredWords(filtered);
+        setDisplayWords(filtered);
     };
 
     useEffect(() => {
@@ -64,17 +74,6 @@ export const FavoritePage: React.FC<CommonProps> = ({ db }) => {
         setDisplayWords(filtered);
     }, [searchValue, filteredWords]);
 
-    const handleFilter = (collection: Collection | null) => {
-        setSelectedCollection(collection || undefined);
-        const filtered = collection
-            ? favoriteWords.filter(
-                  (word) => word.collection.name === collection.name
-              )
-            : favoriteWords;
-        setFilteredWords(filtered);
-        setDisplayWords(filtered);
-    };
-
     return (
         <div className="container-list" id="favorite-collection">
             <h4 className="text-center mt-4">
@@ -84,17 +83,14 @@ export const FavoritePage: React.FC<CommonProps> = ({ db }) => {
                 collection
             </h4>
 
-            <div className="input-group d-flex justify-content-center mt-4">
-                <SearchBar
-                    searchValue={searchValue}
-                    setSearchValue={setSearchValue}
-                />
-                <CollectionFilter
-                    collections={collections}
-                    selectedCollection={selectedCollection}
-                    handleFilter={handleFilter}
-                />
-            </div>
+            <SearchBar
+                isFavorite={true}
+                searchValue={searchValue}
+                setSearchValue={setSearchValue}
+                collections={collections}
+                selectedCollection={selectedCollection}
+                handleFilter={handleFilter}
+            />
 
             <div className="list-group mt-4">
                 {displayWords &&

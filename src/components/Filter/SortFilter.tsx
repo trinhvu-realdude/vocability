@@ -9,9 +9,11 @@ export const SortFilter: React.FC<SortFilterProps> = ({
     setFilteredWords,
 }) => {
     const handleFilter = async (filter: FilterSortingOption) => {
-        setFilterSorting(filter);
-        const sortedWords = sortWordsByFilter(displayWords, filter.value);
-        setFilteredWords(sortedWords);
+        if (displayWords && setFilterSorting && setFilteredWords) {
+            setFilterSorting(filter);
+            const sortedWords = sortWordsByFilter(displayWords, filter.value);
+            setFilteredWords(sortedWords);
+        }
     };
 
     return (

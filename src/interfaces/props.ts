@@ -78,18 +78,18 @@ export type DownloadDocumentModalProps = {
 };
 
 export type SortFilterProps = {
-    displayWords: Word[];
+    displayWords?: Word[];
     filterSorting?: FilterSortingOption;
-    setFilterSorting: React.Dispatch<
+    setFilterSorting?: React.Dispatch<
         React.SetStateAction<FilterSortingOption | undefined>
     >;
-    setFilteredWords: React.Dispatch<React.SetStateAction<Word[]>>;
+    setFilteredWords?: React.Dispatch<React.SetStateAction<Word[]>>;
 };
 
 export type CollectionFilterProps = {
-    collections: Collection[];
+    collections?: Collection[];
     selectedCollection?: Collection;
-    handleFilter: (collection: Collection | null) => void;
+    handleFilter?: (collection: Collection | null) => void;
 };
 
 export type FilterSortingOption = {

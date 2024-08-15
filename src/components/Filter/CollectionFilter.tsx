@@ -1,4 +1,3 @@
-import { Collection } from "../../interfaces/model";
 import { CollectionFilterProps } from "../../interfaces/props";
 
 export const CollectionFilter: React.FC<CollectionFilterProps> = ({
@@ -6,13 +5,6 @@ export const CollectionFilter: React.FC<CollectionFilterProps> = ({
     collections,
     handleFilter,
 }) => {
-    // const handleFilter = async (collection: Collection) => {
-    //     setSelectedCollection(collection);
-    //     const words = favoriteWords.filter(
-    //         (word) => word.collection.id === collection.id
-    //     );
-    //     setFilteredWords(words);
-    // };
     return (
         <>
             <button
@@ -37,27 +29,25 @@ export const CollectionFilter: React.FC<CollectionFilterProps> = ({
             <ul className="dropdown-menu">
                 <li
                     style={{ cursor: "default" }}
-                    // onClick={() => {
-                    //     setSelectedCollection(undefined);
-                    //     setFilteredWords(favoriteWords);
-                    // }}
-                    onClick={() => handleFilter(null)}
+                    onClick={() => handleFilter && handleFilter(null)}
                 >
                     <a className="dropdown-item">All collections</a>
                 </li>
-                {collections.map((collection, index) => (
-                    <li
-                        key={index}
-                        style={{ cursor: "default" }}
-                        onClick={() => handleFilter(collection)}
-                    >
-                        <a className="dropdown-item d-flex">
-                            <span style={{ color: collection.color }}>
-                                <strong>{collection.name}</strong>
-                            </span>
-                        </a>
-                    </li>
-                ))}
+                {collections &&
+                    handleFilter &&
+                    collections.map((collection, index) => (
+                        <li
+                            key={index}
+                            style={{ cursor: "default" }}
+                            onClick={() => handleFilter(collection)}
+                        >
+                            <a className="dropdown-item d-flex">
+                                <span style={{ color: collection.color }}>
+                                    <strong>{collection.name}</strong>
+                                </span>
+                            </a>
+                        </li>
+                    ))}
             </ul>
         </>
     );
