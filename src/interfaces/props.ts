@@ -31,14 +31,8 @@ export type CollectionModalProps = {
 };
 
 export type SearchBarProps = {
-    words: Word[];
-    displayWords: Word[];
-    filterSorting?: FilterSortingOption;
-    setDisplayWords: React.Dispatch<React.SetStateAction<Word[]>>;
-    setFilteredWords: React.Dispatch<React.SetStateAction<Word[]>>;
-    setFilterSorting: React.Dispatch<
-        React.SetStateAction<FilterSortingOption | undefined>
-    >;
+    searchValue: string;
+    setSearchValue: React.Dispatch<React.SetStateAction<string>>;
 };
 
 export type NavBarProps = {
@@ -81,6 +75,21 @@ export type DownloadDocumentModalProps = {
     collectionColor: string;
     filename: string;
     blobUrl?: string;
+};
+
+export type SortFilterProps = {
+    displayWords: Word[];
+    filterSorting?: FilterSortingOption;
+    setFilterSorting: React.Dispatch<
+        React.SetStateAction<FilterSortingOption | undefined>
+    >;
+    setFilteredWords: React.Dispatch<React.SetStateAction<Word[]>>;
+};
+
+export type CollectionFilterProps = {
+    collections: Collection[];
+    selectedCollection?: Collection;
+    handleFilter: (collection: Collection | null) => void;
 };
 
 export type FilterSortingOption = {

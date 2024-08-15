@@ -110,7 +110,7 @@ export const getFavoriteWords = async (
 
     const favoriteWords: WordDto[] = [];
 
-    words.forEach(async (word) => {
+    for (const word of words) {
         const collectionId = word.collectionId;
         if (collectionId) {
             const collection = await getCollectionById(db, collectionId);
@@ -127,7 +127,7 @@ export const getFavoriteWords = async (
                 });
             }
         }
-    });
+    }
 
     await tx.done;
     return favoriteWords;

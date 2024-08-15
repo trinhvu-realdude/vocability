@@ -5,7 +5,7 @@ import { AddWordForm } from "../components/Form/AddWordForm";
 import { Route, Routes } from "react-router-dom";
 import { WordPage } from "../pages/WordPage";
 import { FavoritePage } from "../pages/FavoritePage";
-import { ImportExportPage } from "../pages/ImportExportPage";
+import { ExportPage } from "../pages/ExportPage";
 import { CollectionPage } from "../pages/CollectionPage";
 import { GlossaryPage } from "../pages/GlossaryPage";
 
@@ -53,7 +53,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({
                     }
                 />
                 <Route
-                    path="/favorite-collection"
+                    path="/favorite"
                     element={
                         <FavoritePage
                             db={db}
@@ -64,9 +64,9 @@ const MainLayout: React.FC<MainLayoutProps> = ({
                     }
                 />
                 <Route
-                    path="/import-export"
+                    path="/export"
                     element={
-                        <ImportExportPage
+                        <ExportPage
                             db={db}
                             collections={collections}
                             setCollections={setCollections}

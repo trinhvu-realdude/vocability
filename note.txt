@@ -10,7 +10,12 @@
 - Fix when click to add Favorite, no need to update the state - Done
 - Change edit modal to edit form directly in the word and collection - Done
 - Change Collections link in NavBar to hoverable dropdown - Done
-- Add search bar for Favorite collection - In progress
+- Add search bar for Favorite collection - Done
+- Validate the input for all
+    + AddWordForm
+    + EditCollectionForm
+    + EditWordForm
+    + EditCollectionModal
 - Export and download the documents: 
     + docx - Done
     + pdf - Done
@@ -23,10 +28,6 @@
     + English - us
     + Spanish - es
     + French - fr
-    + Japanese - jp
     + German - de 
-    + Korean - kr 
     + Italian - it 
-    + Chinese - cn 
-    + Russian - ru
     + Portuguese - pt

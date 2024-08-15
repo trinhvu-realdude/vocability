@@ -5,18 +5,32 @@ import { addWordToFavorite, getFavoriteWords } from "../services/WordService";
 import { CommonProps } from "../interfaces/props";
 import { handleTextToSpeech } from "../utils/helper";
 import { NoDataMessage } from "../components/NoDataMessage";
+import { CollectionFilter } from "../components/Filter/CollectionFilter";
+import { SearchBar } from "../components/SearchBar";
 
 export const FavoritePage: React.FC<CommonProps> = ({ db }) => {
     const [favoriteWords, setFavoriteWords] = useState<WordDto[]>([]);
-    const [searchValue, setSearchValue] = useState<string>("");
     const [collections, setCollections] = useState<Collection[]>([]);
+    const [selectedCollection, setSelectedCollection] = useState<Collection>();
+    const [filteredWords, setFilteredWords] = useState<WordDto[]>([]);
+    const [displayWords, setDisplayWords] = useState<WordDto[]>([]);
+    const [searchValue, setSearchValue] = useState<string>("");
 
     const handleRemoveFavorite = async (word: WordDto) => {
         const isFavorite = false;
         if (db) {
             await addWordToFavorite(db, word, isFavorite);
             const words = await getFavoriteWords(db);
-            setFavoriteWords(words);
+            if (selectedCollection) {
+                const filtered = words.filter(
+                    (w) => w.collection.name === selectedCollection.name
+                );
+                setFavoriteWords(filtered);
+                setFilteredWords(filtered);
+            } else {
+                setFavoriteWords(words);
+                setFilteredWords(words);
+            }
             alert(`Removed ${word.word} from Favorite collection`);
         }
     };
@@ -26,27 +40,40 @@ export const FavoritePage: React.FC<CommonProps> = ({ db }) => {
             const dbInstance = await initDB();
             const words = await getFavoriteWords(dbInstance);
             setFavoriteWords(words);
-
-            // const collectionsInFavorite = words.map((word) => {
-            //     return word.collection;
-            // });
-            // const uniqueCollections = Array.from(
-            //     new Set(
-            //         collectionsInFavorite.map((collection) => collection.name)
-            //     )
-            // ).map((name) =>
-            //     collectionsInFavorite.find(
-            //         (collection) => collection.name === name
-            //     )
-            // );
-            // setCollections(uniqueCollections.filter(Boolean) as Collection[]);
+            setFilteredWords(words);
+            const collectionsInFavorite = words.map((word) => word.collection);
+            const uniqueCollections = Array.from(
+                new Set(
+                    collectionsInFavorite.map((collection) => collection.name)
+                )
+            ).map((name) =>
+                collectionsInFavorite.find(
+                    (collection) => collection.name === name
+                )
+            );
+            setCollections(uniqueCollections.filter(Boolean) as Collection[]);
         };
         fetchFavorite();
     }, []);
 
-    const filteredWords = favoriteWords.filter((word) =>
-        word.word.toLowerCase().includes(searchValue.toLowerCase())
-    );
+    useEffect(() => {
+        const lowerCaseSearchValue = searchValue.toLowerCase().trim();
+        const filtered = filteredWords.filter((word) =>
+            word.word.toLowerCase().includes(lowerCaseSearchValue)
+        );
+        setDisplayWords(filtered);
+    }, [searchValue, filteredWords]);
+
+    const handleFilter = (collection: Collection | null) => {
+        setSelectedCollection(collection || undefined);
+        const filtered = collection
+            ? favoriteWords.filter(
+                  (word) => word.collection.name === collection.name
+              )
+            : favoriteWords;
+        setFilteredWords(filtered);
+        setDisplayWords(filtered);
+    };
 
     return (
         <div className="container-list" id="favorite-collection">
@@ -58,52 +85,21 @@ export const FavoritePage: React.FC<CommonProps> = ({ db }) => {
             </h4>
 
             <div className="input-group d-flex justify-content-center mt-4">
-                <input
-                    className="form-control"
-                    type="search"
-                    placeholder="Search word in collection"
-                    aria-label="Search word in collection"
-                    value={searchValue}
-                    onChange={(event) => setSearchValue(event.target.value)}
+                <SearchBar
+                    searchValue={searchValue}
+                    setSearchValue={setSearchValue}
                 />
-                <button
-                    className="btn"
-                    type="button"
-                    data-bs-toggle="dropdown"
-                    aria-expanded="false"
-                    style={{
-                        border: "1px solid #ced4da",
-                        borderTopRightRadius: "0.25rem",
-                        borderBottomRightRadius: "0.25rem",
-                    }}
-                >
-                    All collections
-                </button>
-                <ul className="dropdown-menu">
-                    {collections.map((collection, index) => (
-                        <li
-                            key={index}
-                            style={{ cursor: "default" }}
-                            // onClick={handleFilter}
-                        >
-                            <a className="dropdown-item d-flex">
-                                <div
-                                    className="square"
-                                    style={{
-                                        backgroundColor: collection.color,
-                                    }}
-                                ></div>
-                                <span className="ms-2">{collection.name}</span>
-                            </a>
-                        </li>
-                    ))}
-                </ul>
+                <CollectionFilter
+                    collections={collections}
+                    selectedCollection={selectedCollection}
+                    handleFilter={handleFilter}
+                />
             </div>
 
             <div className="list-group mt-4">
-                {filteredWords &&
-                    filteredWords.length > 0 &&
-                    filteredWords.map((word) => (
+                {displayWords &&
+                    displayWords.length > 0 &&
+                    displayWords.map((word) => (
                         <div className="list-group-item" key={word.id}>
                             <div className="d-flex w-100 justify-content-between mb-2">
                                 <div className="row">

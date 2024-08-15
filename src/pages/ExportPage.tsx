@@ -10,10 +10,7 @@ import {
 } from "../services/CollectionService";
 import { formatFileName } from "../utils/formatDateString";
 
-export const ImportExportPage: React.FC<CommonProps> = ({
-    db,
-    collections,
-}) => {
+export const ExportPage: React.FC<CommonProps> = ({ db, collections }) => {
     const [exportCollectionId, setExportCollectionId] = useState<number>();
     const [fileType, setFileType] = useState<string>("");
     const [filename, setFileName] = useState<string>("");
@@ -108,8 +105,6 @@ export const ImportExportPage: React.FC<CommonProps> = ({
                     )}
                 </div>
             </div>
-
-            <h4 className="text-center mt-4">Import</h4>
         </div>
     );
 };

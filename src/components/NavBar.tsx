@@ -81,7 +81,7 @@ export const NavBar: React.FC<NavBarProps> = ({ collections }) => {
                                 <li>
                                     <a
                                         className="dropdown-item d-flex"
-                                        href="/app/favorite-collection"
+                                        href="/app/favorite"
                                     >
                                         <div
                                             className="square"
@@ -96,11 +96,8 @@ export const NavBar: React.FC<NavBarProps> = ({ collections }) => {
                         </li>
 
                         <li className="nav-item mx-2">
-                            <a
-                                className="nav-link active"
-                                href="/app/import-export"
-                            >
-                                Import/Export
+                            <a className="nav-link active" href="/app/export">
+                                Export
                             </a>
                         </li>
 

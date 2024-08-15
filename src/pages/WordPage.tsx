@@ -6,10 +6,11 @@ import initDB from "../configs/database";
 import { getCollectionById } from "../services/CollectionService";
 import { FilterSortingOption, WordPageProps } from "../interfaces/props";
 import { IDBPDatabase } from "idb";
-import { SearchBar } from "../components/SearchBar";
 import { WordCard } from "../components/Card/WordCard";
 import { EditCollectionModal } from "../components/Modal/EditCollectionModal";
 import { NoDataMessage } from "../components/NoDataMessage";
+import { SortFilter } from "../components/Filter/SortFilter";
+import { SearchBar } from "../components/SearchBar";
 
 export const WordPage: React.FC<WordPageProps> = ({
     words,
@@ -24,9 +25,10 @@ export const WordPage: React.FC<WordPageProps> = ({
     const [filteredWords, setFilteredWords] = useState<Word[]>(words);
     const [displayWords, setDisplayWords] = useState<Word[]>([]);
     const [filterSorting, setFilterSorting] = useState<FilterSortingOption>();
+    const [searchValue, setSearchValue] = useState<string>("");
 
     useEffect(() => {
-        const fetchData = async () => {
+        const fetchCollection = async () => {
             const dbInstance = await initDB();
             setDb(dbInstance);
             if (collectionId) {
@@ -43,8 +45,17 @@ export const WordPage: React.FC<WordPageProps> = ({
                 setWords(objWord);
             }
         };
-        fetchData();
+        fetchCollection();
     }, []);
+
+    useEffect(() => {
+        const lowerCaseSearchValue = searchValue.toLowerCase().trim();
+        const filtered = words.filter((word) =>
+            word.word.toLowerCase().includes(lowerCaseSearchValue)
+        );
+        setDisplayWords(filtered);
+        setFilteredWords(filtered);
+    }, [searchValue, words]);
 
     return (
         <div className="container-list" id="word-list">
@@ -65,14 +76,18 @@ export const WordPage: React.FC<WordPageProps> = ({
                 </div>
             </h4>
 
-            <SearchBar
-                words={words}
-                displayWords={displayWords}
-                filterSorting={filterSorting}
-                setDisplayWords={setDisplayWords}
-                setFilteredWords={setFilteredWords}
-                setFilterSorting={setFilterSorting}
-            />
+            <div className="input-group d-flex justify-content-center mt-4">
+                <SearchBar
+                    searchValue={searchValue}
+                    setSearchValue={setSearchValue}
+                />
+                <SortFilter
+                    displayWords={displayWords}
+                    filterSorting={filterSorting}
+                    setFilterSorting={setFilterSorting}
+                    setFilteredWords={setFilteredWords}
+                />
+            </div>
 
             <div className="list-group mt-4">
                 {filteredWords &&
