@@ -182,3 +182,30 @@ export const FILETYPE = {
     CSV: "csv",
     PNG: "png",
 };
+
+export const practices = [
+    {
+        name: "Flashcard Quiz",
+        href: "/practices/flashcard-quiz",
+    },
+    {
+        name: "Crossword Puzzles",
+        href: "/practices/crossword-puzzles",
+    },
+    {
+        name: "Word Scramble",
+        href: "/practices/word-scramble",
+    },
+    {
+        name: "Vocabulary Quiz",
+        href: "/practices/vocabulary-quiz",
+    },
+    {
+        name: "Word Matching",
+        href: "/practices/word-matching",
+    },
+    {
+        name: "Memory Card",
+        href: "/practices/memory-card",
+    },
+];

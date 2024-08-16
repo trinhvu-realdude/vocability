@@ -24,7 +24,6 @@ export const WordPage: React.FC<WordPageProps> = ({
     const [filteredWords, setFilteredWords] = useState<Word[]>(words);
     const [displayWords, setDisplayWords] = useState<Word[]>([]);
     const [filterSorting, setFilterSorting] = useState<FilterSortingOption>();
-    const [searchValue, setSearchValue] = useState<string>("");
 
     useEffect(() => {
         const fetchCollection = async () => {
@@ -47,15 +46,6 @@ export const WordPage: React.FC<WordPageProps> = ({
         fetchCollection();
     }, []);
 
-    useEffect(() => {
-        const lowerCaseSearchValue = searchValue.toLowerCase().trim();
-        const filtered = words.filter((word) =>
-            word.word.toLowerCase().includes(lowerCaseSearchValue)
-        );
-        setDisplayWords(filtered);
-        setFilteredWords(filtered);
-    }, [searchValue, words]);
-
     return (
         <div className="container-list" id="word-list">
             <h4 className="text-center mt-4">
@@ -77,10 +67,10 @@ export const WordPage: React.FC<WordPageProps> = ({
 
             <SearchBar
                 isFavorite={false}
-                searchValue={searchValue}
-                setSearchValue={setSearchValue}
+                words={words}
                 displayWords={displayWords}
                 filterSorting={filterSorting}
+                setDisplayWords={setDisplayWords}
                 setFilterSorting={setFilterSorting}
                 setFilteredWords={setFilteredWords}
             />

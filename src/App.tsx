@@ -33,7 +33,7 @@ function App() {
                 <Routes>
                     <Route path="/" element={<RootLayout />} />
                     <Route
-                        path="/app/*"
+                        path="/*"
                         element={
                             <MainLayout
                                 db={db}
@@ -48,7 +48,7 @@ function App() {
                     />
 
                     <Route
-                        path="/app/practices/*"
+                        path="/practices/*"
                         element={<PracticeLayout />}
                     />
                 </Routes>

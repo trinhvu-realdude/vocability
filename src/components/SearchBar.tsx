@@ -1,34 +1,67 @@
-import React from "react";
-import { Collection, Word } from "../interfaces/model";
+import React, { useEffect, useState } from "react";
+import { Collection, Word, WordDto } from "../interfaces/model";
 import { FilterSortingOption } from "../interfaces/props";
 import { SortFilter } from "./Filter/SortFilter";
 import { CollectionFilter } from "./Filter/CollectionFilter";
 
 export const SearchBar: React.FC<{
     isFavorite: boolean;
-    searchValue: string;
-    setSearchValue: React.Dispatch<React.SetStateAction<string>>;
     collections?: Collection[];
     selectedCollection?: Collection | undefined;
-    handleFilter?: (collection: Collection | null) => void;
     displayWords?: Word[];
     filterSorting?: FilterSortingOption | undefined;
+    filteredWords?: WordDto[];
+    words?: Word[];
+    handleFilter?: (collection: Collection | null) => void;
+    setDisplayWordDtos?: React.Dispatch<React.SetStateAction<WordDto[]>>;
+    setDisplayWords?: React.Dispatch<React.SetStateAction<Word[]>>;
+    setFilteredWords?: React.Dispatch<React.SetStateAction<Word[]>>;
     setFilterSorting?: React.Dispatch<
         React.SetStateAction<FilterSortingOption | undefined>
     >;
-    setFilteredWords?: React.Dispatch<React.SetStateAction<Word[]>>;
 }> = ({
     isFavorite,
-    searchValue,
-    setSearchValue,
     collections,
     selectedCollection,
-    handleFilter,
     displayWords,
     filterSorting,
+    filteredWords,
+    words,
+    handleFilter,
     setFilterSorting,
     setFilteredWords,
+    setDisplayWordDtos,
+    setDisplayWords,
 }) => {
+    const [searchValue, setSearchValue] = useState<string>("");
+
+    {
+        isFavorite
+            ? useEffect(() => {
+                  // Search for Favorite collection
+                  const lowerCaseSearchValue = searchValue.toLowerCase().trim();
+                  const filtered =
+                      filteredWords &&
+                      filteredWords.filter((word) =>
+                          word.word.toLowerCase().includes(lowerCaseSearchValue)
+                      );
+                  setDisplayWordDtos &&
+                      filtered &&
+                      setDisplayWordDtos(filtered);
+              }, [searchValue, filteredWords])
+            : useEffect(() => {
+                  // Search for main collections
+                  const lowerCaseSearchValue = searchValue.toLowerCase().trim();
+                  const filtered =
+                      words &&
+                      words.filter((word) =>
+                          word.word.toLowerCase().includes(lowerCaseSearchValue)
+                      );
+                  setDisplayWords && filtered && setDisplayWords(filtered);
+                  setFilteredWords && filtered && setFilteredWords(filtered);
+              }, [searchValue, words]);
+    }
+
     return (
         <div className="input-group d-flex justify-content-center mt-4">
             <input

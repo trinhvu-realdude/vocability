@@ -13,7 +13,6 @@ export const FavoritePage: React.FC<CommonProps> = ({ db }) => {
     const [selectedCollection, setSelectedCollection] = useState<Collection>();
     const [filteredWords, setFilteredWords] = useState<WordDto[]>([]);
     const [displayWords, setDisplayWords] = useState<WordDto[]>([]);
-    const [searchValue, setSearchValue] = useState<string>("");
 
     const handleRemoveFavorite = async (word: WordDto) => {
         const isFavorite = false;
@@ -66,14 +65,6 @@ export const FavoritePage: React.FC<CommonProps> = ({ db }) => {
         fetchFavorite();
     }, []);
 
-    useEffect(() => {
-        const lowerCaseSearchValue = searchValue.toLowerCase().trim();
-        const filtered = filteredWords.filter((word) =>
-            word.word.toLowerCase().includes(lowerCaseSearchValue)
-        );
-        setDisplayWords(filtered);
-    }, [searchValue, filteredWords]);
-
     return (
         <div className="container-list" id="favorite-collection">
             <h4 className="text-center mt-4">
@@ -85,10 +76,10 @@ export const FavoritePage: React.FC<CommonProps> = ({ db }) => {
 
             <SearchBar
                 isFavorite={true}
-                searchValue={searchValue}
-                setSearchValue={setSearchValue}
+                filteredWords={filteredWords}
                 collections={collections}
                 selectedCollection={selectedCollection}
+                setDisplayWordDtos={setDisplayWords}
                 handleFilter={handleFilter}
             />
 
@@ -130,7 +121,7 @@ export const FavoritePage: React.FC<CommonProps> = ({ db }) => {
                                 </div>
                             </div>
                             <p className="mb-1">{word.definition}</p>
-                            <a href={`/app/collection/${word.collection.id}`}>
+                            <a href={`/collection/${word.collection.id}`}>
                                 <small className="text-muted">
                                     &#8618; Go to{" "}
                                     <span

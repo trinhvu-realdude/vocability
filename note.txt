@@ -11,6 +11,13 @@
 - Change edit modal to edit form directly in the word and collection - Done
 - Change Collections link in NavBar to hoverable dropdown - Done
 - Add search bar for Favorite collection - Done
+- Research games for Practice
+    + Flashcard Quiz
+    + Crossword Puzzles
+    + Word Scramble
+    + Vocabulary Quiz
+    + Word Matching
+    + Memory Card
 - Validate the input for all
     + AddWordForm
     + EditCollectionForm
@@ -23,7 +30,6 @@
     + csv
     + png
 - Design for Root layout
-- Research games for Practice
 - Add Languagues: 
     + English - us
     + Spanish - es

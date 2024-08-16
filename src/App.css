@@ -17,8 +17,10 @@
     transition: transform 0.2s ease-in-out;
 }
 
-#card-collection:hover {
+#card-collection:hover,
+#card-practice:hover {
     transform: translateY(-5px);
+    /* box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 8px; */
 }
 
 .card-header {
@@ -53,9 +55,4 @@
     visibility: hidden;
     opacity: 0;
     transition: visibility 0.2s, opacity 0.2s;
-}
-
-#word-list > .list-group,
-#favorite-collection > .list-group {
-    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
 }

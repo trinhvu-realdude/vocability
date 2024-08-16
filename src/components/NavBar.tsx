@@ -28,12 +28,6 @@ export const NavBar: React.FC<NavBarProps> = ({ collections }) => {
                     id="navbar-toggle"
                 >
                     <ul className="navbar-nav mb-2 mb-lg-0 text-center">
-                        {/* <li className="nav-item mx-2">
-                            <a className="nav-link active" href="/app/practices">
-                                Practices
-                            </a>
-                        </li> */}
-
                         <li
                             className="nav-item dropdown mx-2"
                             style={{ cursor: "pointer" }}
@@ -49,7 +43,7 @@ export const NavBar: React.FC<NavBarProps> = ({ collections }) => {
                                 <li>
                                     <a
                                         className="dropdown-item"
-                                        href="/app/collections"
+                                        href="/collections"
                                     >
                                         <h6 className="dropdown-header">
                                             All collections
@@ -60,7 +54,7 @@ export const NavBar: React.FC<NavBarProps> = ({ collections }) => {
                                     <li key={index}>
                                         <a
                                             className="dropdown-item d-flex"
-                                            href={`/app/collection/${collection.id}`}
+                                            href={`/collection/${collection.id}`}
                                         >
                                             <div
                                                 className="square"
@@ -81,7 +75,7 @@ export const NavBar: React.FC<NavBarProps> = ({ collections }) => {
                                 <li>
                                     <a
                                         className="dropdown-item d-flex"
-                                        href="/app/favorite"
+                                        href="/favorite"
                                     >
                                         <div
                                             className="square"
@@ -96,7 +90,13 @@ export const NavBar: React.FC<NavBarProps> = ({ collections }) => {
                         </li>
 
                         <li className="nav-item mx-2">
-                            <a className="nav-link active" href="/app/export">
+                            <a className="nav-link active" href="/practices">
+                                Practices
+                            </a>
+                        </li>
+
+                        <li className="nav-item mx-2">
+                            <a className="nav-link active" href="/export">
                                 Export
                             </a>
                         </li>
@@ -104,7 +104,7 @@ export const NavBar: React.FC<NavBarProps> = ({ collections }) => {
                         <li className="nav-item mx-2">
                             <a
                                 className="nav-link active"
-                                href="/app/glossary"
+                                href="/glossary"
                                 style={{
                                     color: "#DD5746",
                                 }}
