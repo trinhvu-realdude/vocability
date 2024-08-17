@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { WordCardProps } from "../../interfaces/props";
+import { WordCardProps } from "../../interfaces/mainProps";
 import { Word } from "../../interfaces/model";
 import {
     addWordToFavorite,

@@ -1,4 +1,4 @@
-import { NavBarProps } from "../interfaces/props";
+import { NavBarProps } from "../interfaces/mainProps";
 
 export const NavBar: React.FC<NavBarProps> = ({ collections }) => {
     return (

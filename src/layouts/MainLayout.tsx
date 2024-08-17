@@ -1,5 +1,5 @@
 import React from "react";
-import { MainLayoutProps } from "../interfaces/props";
+import { MainLayoutProps } from "../interfaces/mainProps";
 import { StorageBar } from "../components/StorageBar";
 import { AddWordForm } from "../components/Form/AddWordForm";
 import { Route, Routes } from "react-router-dom";

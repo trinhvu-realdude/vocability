@@ -1,5 +1,5 @@
 import { Word } from "../../interfaces/model";
-import { WordFormProps } from "../../interfaces/props";
+import { WordFormProps } from "../../interfaces/mainProps";
 import { deleteWord, getWordsByCollectionId } from "../../services/WordService";
 
 export const DeleteWordForm: React.FC<WordFormProps> = ({
@@ -23,7 +23,7 @@ export const DeleteWordForm: React.FC<WordFormProps> = ({
         }
     };
     return (
-        <div className="card">
+        <div className="card" style={{ borderColor: collection?.color }}>
             <div
                 className="card-header d-flex justify-content-between align-items-center"
                 style={{

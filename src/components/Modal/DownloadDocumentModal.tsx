@@ -1,4 +1,4 @@
-import { DownloadDocumentModalProps } from "../../interfaces/props";
+import { DownloadDocumentModalProps } from "../../interfaces/mainProps";
 
 export const DownloadDocumentModal: React.FC<DownloadDocumentModalProps> = ({
     collectionColor,

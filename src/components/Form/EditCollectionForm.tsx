@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { CollectionFormProps } from "../../interfaces/props";
+import { CollectionFormProps } from "../../interfaces/mainProps";
 import {
     getCollectionById,
     getCollections,

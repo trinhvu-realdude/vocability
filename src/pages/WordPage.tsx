@@ -4,7 +4,7 @@ import { Collection, MyDB, Word } from "../interfaces/model";
 import { getWordsByCollectionId } from "../services/WordService";
 import initDB from "../configs/database";
 import { getCollectionById } from "../services/CollectionService";
-import { FilterSortingOption, WordPageProps } from "../interfaces/props";
+import { FilterSortingOption, WordPageProps } from "../interfaces/mainProps";
 import { IDBPDatabase } from "idb";
 import { WordCard } from "../components/Card/WordCard";
 import { EditCollectionModal } from "../components/Modal/EditCollectionModal";

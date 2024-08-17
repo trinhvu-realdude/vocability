@@ -1,4 +1,4 @@
-import { FilterSortingOption, SortFilterProps } from "../../interfaces/props";
+import { FilterSortingOption, SortFilterProps } from "../../interfaces/mainProps";
 import { filterSortingOptions } from "../../utils/constants";
 import { sortWordsByFilter } from "../../utils/helper";
 

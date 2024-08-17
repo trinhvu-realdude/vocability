@@ -5,7 +5,7 @@ import {
     getCollectionById,
     getCollectionByName,
 } from "./CollectionService";
-import { EditWordObj } from "../interfaces/props";
+import { EditWordObj } from "../interfaces/mainProps";
 
 const storeName = "words";
 

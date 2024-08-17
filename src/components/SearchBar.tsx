@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Collection, Word, WordDto } from "../interfaces/model";
-import { FilterSortingOption } from "../interfaces/props";
+import { FilterSortingOption } from "../interfaces/mainProps";
 import { SortFilter } from "./Filter/SortFilter";
 import { CollectionFilter } from "./Filter/CollectionFilter";
 

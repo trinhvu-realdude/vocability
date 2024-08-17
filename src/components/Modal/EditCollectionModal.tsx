@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { CollectionModalProps } from "../../interfaces/props";
+import { CollectionModalProps } from "../../interfaces/mainProps";
 import {
     getCollectionById,
     getCollections,

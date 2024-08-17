@@ -49,7 +49,9 @@ function App() {
 
                     <Route
                         path="/practices/*"
-                        element={<PracticeLayout />}
+                        element={
+                            <PracticeLayout db={db} collections={collections} />
+                        }
                     />
                 </Routes>
             </React.Fragment>

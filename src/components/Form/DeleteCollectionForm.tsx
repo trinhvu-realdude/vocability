@@ -1,5 +1,5 @@
 import { Collection } from "../../interfaces/model";
-import { CollectionFormProps } from "../../interfaces/props";
+import { CollectionFormProps } from "../../interfaces/mainProps";
 import {
     deleteCollection,
     getCollections,

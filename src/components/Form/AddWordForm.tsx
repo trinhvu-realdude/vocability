@@ -4,7 +4,7 @@ import ReactSelectCreatable from "react-select/creatable";
 import { SingleValue } from "react-select";
 import { addWord, getWordsByCollectionId } from "../../services/WordService";
 import { getRandomColor } from "../../utils/helper";
-import { Choice, CommonProps } from "../../interfaces/props";
+import { Choice, CommonProps } from "../../interfaces/mainProps";
 import { getCollections } from "../../services/CollectionService";
 
 export const AddWordForm: React.FC<CommonProps> = ({

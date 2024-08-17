@@ -1,4 +1,4 @@
-import { NoDataMessageProps } from "../interfaces/props";
+import { NoDataMessageProps } from "../interfaces/mainProps";
 
 export const NoDataMessage: React.FC<NoDataMessageProps> = ({
     collectionName,

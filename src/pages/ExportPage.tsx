@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { CommonProps } from "../interfaces/props";
+import { CommonProps } from "../interfaces/mainProps";
 import { documentFileFormats, FILETYPE } from "../utils/constants";
 import { getWordsByCollectionId } from "../services/WordService";
 import { exportToDocx, exportToPdf } from "../utils/generateDocument";

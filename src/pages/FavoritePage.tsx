@@ -2,7 +2,7 @@ import initDB from "../configs/database";
 import { useEffect, useState } from "react";
 import { Collection, WordDto } from "../interfaces/model";
 import { addWordToFavorite, getFavoriteWords } from "../services/WordService";
-import { CommonProps } from "../interfaces/props";
+import { CommonProps } from "../interfaces/mainProps";
 import { handleTextToSpeech } from "../utils/helper";
 import { NoDataMessage } from "../components/NoDataMessage";
 import { SearchBar } from "../components/SearchBar";

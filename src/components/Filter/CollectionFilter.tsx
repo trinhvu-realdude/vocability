@@ -1,4 +1,4 @@
-import { CollectionFilterProps } from "../../interfaces/props";
+import { CollectionFilterProps } from "../../interfaces/mainProps";
 
 export const CollectionFilter: React.FC<CollectionFilterProps> = ({
     selectedCollection,

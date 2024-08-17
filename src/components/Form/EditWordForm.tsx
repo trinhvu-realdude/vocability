@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { EditWordObj, WordFormProps } from "../../interfaces/props";
+import { EditWordObj, WordFormProps } from "../../interfaces/mainProps";
 import { partsOfSpeech } from "../../utils/constants";
 import { getWordsByCollectionId, updateWord } from "../../services/WordService";
 
@@ -48,7 +48,7 @@ export const EditWordForm: React.FC<WordFormProps> = ({
     };
 
     return (
-        <div className="card">
+        <div className="card" style={{ borderColor: collection?.color }}>
             <div
                 className="card-header d-flex justify-content-between align-items-center"
                 style={{
