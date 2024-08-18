@@ -12,7 +12,7 @@
 - Change Collections link in NavBar to hoverable dropdown - Done
 - Add search bar for Favorite collection - Done
 - Research games for Practice
-    + Flashcard Quiz
+    + Flashcard Quiz - In progress
     + Crossword Puzzles
     + Word Scramble
     + Vocabulary Quiz
