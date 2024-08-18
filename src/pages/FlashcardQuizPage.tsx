@@ -15,10 +15,14 @@ export const FlashcardQuizPage: React.FC<FlashcardQuizPageProps> = ({
     const [numberOfCards, setNumberOfCards] = useState<number>();
     const [generatedWords, setGeneratedWords] = useState<Word[]>([]);
     const [isFlipped, setIsFlipped] = useState(false);
+    const [isGetHint, setIsGetHint] = useState<boolean>(false);
     const [cardColor, setCardColor] = useState<string>("");
+    const [currentIndex, setCurrentIndex] = useState(1);
 
     const handleGenerateFlashcard = async () => {
         setIsFlipped(false);
+        setIsGetHint(false);
+        setCurrentIndex(1);
         if (db && selectedCollectionId && numberOfCards) {
             const collection = await getCollectionById(
                 db,
@@ -32,6 +36,8 @@ export const FlashcardQuizPage: React.FC<FlashcardQuizPageProps> = ({
             // Determine the number of words to return
             const maxWords = Math.min(numberOfCards, words.length, 10);
 
+            console.log(maxWords);
+
             // Slice the array to get the desired number of words
             const selectedWords = words.slice(0, maxWords);
 
@@ -39,6 +45,19 @@ export const FlashcardQuizPage: React.FC<FlashcardQuizPageProps> = ({
         } else {
             alert("Please choose the collection and enter number of cards");
         }
+    };
+
+    const handleSlide = (direction: string) => {
+        setIsGetHint(false);
+        setIsFlipped(false);
+
+        setCurrentIndex((prevIndex) => {
+            if (direction === "next") {
+                return prevIndex === generatedWords.length ? 1 : prevIndex + 1;
+            } else {
+                return prevIndex === 1 ? generatedWords.length : prevIndex - 1;
+            }
+        });
     };
 
     return (
@@ -68,7 +87,7 @@ export const FlashcardQuizPage: React.FC<FlashcardQuizPageProps> = ({
                         type="number"
                         className="form-control"
                         placeholder="Number of cards"
-                        min={1}
+                        min={2}
                         onChange={(event) =>
                             setNumberOfCards(
                                 Number.parseInt(event.target.value)
@@ -88,7 +107,7 @@ export const FlashcardQuizPage: React.FC<FlashcardQuizPageProps> = ({
 
             {generatedWords && generatedWords.length > 0 && (
                 <div
-                    id="carouselExampleDark"
+                    id="flashcard-carousel"
                     className="carousel carousel-dark slide"
                     data-bs-interval="false"
                 >
@@ -100,16 +119,32 @@ export const FlashcardQuizPage: React.FC<FlashcardQuizPageProps> = ({
                                 word={word}
                                 cardColor={cardColor}
                                 isFlipped={isFlipped}
+                                isGetHint={isGetHint}
                                 setIsFlipped={setIsFlipped}
+                                setIsGetHint={setIsGetHint}
                             />
                         ))}
                     </div>
+                    <div className="text-center mt-4">
+                        <span
+                            className="p-1"
+                            style={{
+                                border: "1px solid gray",
+                                borderRadius: "0.25rem",
+                            }}
+                        >
+                            <small>
+                                {currentIndex}/{generatedWords.length}
+                            </small>
+                        </span>
+                    </div>
+
                     <button
                         className="carousel-control-prev"
                         type="button"
-                        data-bs-target="#carouselExampleDark"
+                        data-bs-target="#flashcard-carousel"
                         data-bs-slide="prev"
-                        onClick={() => setIsFlipped(false)}
+                        onClick={() => handleSlide("prev")}
                     >
                         <span
                             className="carousel-control-prev-icon"
@@ -120,9 +155,9 @@ export const FlashcardQuizPage: React.FC<FlashcardQuizPageProps> = ({
                     <button
                         className="carousel-control-next"
                         type="button"
-                        data-bs-target="#carouselExampleDark"
+                        data-bs-target="#flashcard-carousel"
                         data-bs-slide="next"
-                        onClick={() => setIsFlipped(false)}
+                        onClick={() => handleSlide("next")}
                     >
                         <span
                             className="carousel-control-next-icon"

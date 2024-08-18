@@ -62,3 +62,47 @@ export const handleTextToSpeech = async (text: string) => {
         console.log(window.speechSynthesis.getVoices());
     };
 };
+
+export const getHintWord = async (text: string) => {
+    // Helper function to replace characters with underscores in a word
+    function maskWord(word: string) {
+        const length = word.length;
+        const maskCount = Math.ceil(length / 3); // Ensure at least one character is masked
+        const indicesToMask = new Set<number>();
+
+        while (indicesToMask.size < maskCount) {
+            const randomIndex = Math.floor(Math.random() * length);
+            indicesToMask.add(randomIndex);
+        }
+
+        return word
+            .split("")
+            .map((char, index) => (indicesToMask.has(index) ? "_" : char))
+            .join("");
+    }
+
+    // Split text into words
+    const words = text.split(" ");
+    const wordCount = words.length;
+
+    // Handle single word case
+    if (wordCount === 1) {
+        return maskWord(text);
+    }
+
+    // Handle phrase case
+    const maskWordsCount = Math.ceil(wordCount / 3); // Ensure at least one word is masked
+    const indicesToMask = new Set<number>();
+
+    while (indicesToMask.size < maskWordsCount) {
+        const randomIndex = Math.floor(Math.random() * wordCount);
+        indicesToMask.add(randomIndex);
+    }
+
+    const result = words
+        .map((word, index) =>
+            indicesToMask.has(index) ? maskWord(word) : word
+        )
+        .join(" ");
+    return result;
+};

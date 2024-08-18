@@ -62,3 +62,11 @@
     font-size: 14px;
     color: #6c757d;
 }
+
+.get-hint {
+    cursor: pointer;
+}
+
+.get-hint:hover {
+    text-decoration: underline;
+}

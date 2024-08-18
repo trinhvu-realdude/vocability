@@ -1,12 +1,32 @@
+import { useState } from "react";
 import { Word } from "../../interfaces/model";
+import { getHintWord, handleTextToSpeech } from "../../utils/helper";
 
 export const FlashCard: React.FC<{
     index: number;
     word: Word;
     isFlipped: boolean;
+    isGetHint: boolean;
     cardColor: string;
     setIsFlipped: React.Dispatch<React.SetStateAction<boolean>>;
-}> = ({ index, word, isFlipped, cardColor, setIsFlipped }) => {
+    setIsGetHint: React.Dispatch<React.SetStateAction<boolean>>;
+}> = ({
+    index,
+    word,
+    isFlipped,
+    isGetHint,
+    cardColor,
+    setIsFlipped,
+    setIsGetHint,
+}) => {
+    const [hint, setHint] = useState<string>("");
+
+    const handleGetHint = async () => {
+        setIsGetHint(true);
+        const hintWord = await getHintWord(word.word);
+        setHint(hintWord);
+    };
+
     return (
         <div
             key={word.id}
@@ -64,6 +84,37 @@ export const FlashCard: React.FC<{
                     </div>
                 </div>
             </div>
+            {!isFlipped && !isGetHint && (
+                <div
+                    className="get-hint text-center mt-4"
+                    onClick={handleGetHint}
+                >
+                    <i className="fa" style={{ color: "yellowgreen" }}>
+                        &#xf0eb;
+                    </i>{" "}
+                    Get a hint
+                </div>
+            )}
+            {isGetHint && !isFlipped && (
+                <div className="text-center mt-4">
+                    <strong>{hint}</strong>{" "}
+                    <small>
+                        <i>({word.partOfSpeech})</i>
+                    </small>
+                </div>
+            )}
+            {isFlipped && (
+                <div
+                    className="text-center mt-4"
+                    style={{ cursor: "pointer" }}
+                    onClick={() => handleTextToSpeech(word.word)}
+                >
+                    <strong>{word.word}</strong>{" "}
+                    <small>
+                        <i>({word.partOfSpeech})</i>
+                    </small>
+                </div>
+            )}
         </div>
     );
 };
