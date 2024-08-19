@@ -36,10 +36,11 @@ export const FlashcardQuizPage: React.FC<FlashcardQuizPageProps> = ({
             // Determine the number of words to return
             const maxWords = Math.min(numberOfCards, words.length, 10);
 
-            console.log(maxWords);
-
             // Slice the array to get the desired number of words
-            const selectedWords = words.slice(0, maxWords);
+            const selectedWords = words.slice(
+                0,
+                numberOfCards === words.length ? numberOfCards : maxWords
+            );
 
             setGeneratedWords(selectedWords);
         } else {
