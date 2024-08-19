@@ -6,7 +6,7 @@ export const NoDataMessage: React.FC<NoDataMessageProps> = ({
     message,
 }) => {
     return (
-        <div className="text-center">
+        <div className="text-center px-4">
             {collectionColor && collectionName ? (
                 <p>
                     &#128531; No found word in{" "}

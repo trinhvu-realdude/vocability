@@ -49,7 +49,7 @@ export const ExportPage: React.FC<CommonProps> = ({ db, collections }) => {
 
     return (
         <div className="container-list" id="import-export">
-            <h4 className="text-center mt-4">Export</h4>
+            <h4 className="text-center my-4">Export</h4>
             <div className="export-form">
                 <div className="input-group mb-4">
                     <select

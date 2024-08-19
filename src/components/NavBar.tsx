@@ -113,7 +113,7 @@ export const NavBar: React.FC<NavBarProps> = ({ collections }) => {
                             </a>
                         </li>
 
-                        <li className="nav-item mx-2">
+                        {/* <li className="nav-item mx-2">
                             <a className="nav-link active" href="/">
                                 <span
                                     className="fi fi-us"
@@ -122,7 +122,7 @@ export const NavBar: React.FC<NavBarProps> = ({ collections }) => {
                                     }}
                                 ></span>
                             </a>
-                        </li>
+                        </li> */}
                     </ul>
                 </div>
             </div>

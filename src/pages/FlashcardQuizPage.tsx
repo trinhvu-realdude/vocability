@@ -62,10 +62,10 @@ export const FlashcardQuizPage: React.FC<FlashcardQuizPageProps> = ({
 
     return (
         <div className="container-list" id="flashcard-quiz">
-            <h4 className="text-center mt-4">Flashcard Quiz</h4>
+            <h4 className="text-center my-4">Flashcard Quiz</h4>
 
             {collections && collections.length > 0 ? (
-                <div className="input-group mb-4">
+                <div className="input-group my-4">
                     <select
                         className="form-select"
                         id="part-of-speech"

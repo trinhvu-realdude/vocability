@@ -3,7 +3,7 @@ import { glossaryItems } from "../utils/constants";
 export const GlossaryPage = () => {
     return (
         <div id="glossary" className="container-list">
-            <h4 className="text-center mt-4 mb-4" style={{ color: "#DD5746" }}>
+            <h4 className="text-center my-4" style={{ color: "#DD5746" }}>
                 Glossary
             </h4>
             <div className="list-group">

@@ -2,6 +2,7 @@ import { Route, Routes } from "react-router-dom";
 import { PracticePage } from "../pages/PracticePage";
 import { FlashcardQuizPage } from "../pages/FlashcardQuizPage";
 import { PracticeLayoutProps } from "../interfaces/practiceProps";
+import { CrosswordPuzzlePage } from "../pages/CrosswordPuzzlePage";
 
 const PracticeLayout: React.FC<PracticeLayoutProps> = ({ db, collections }) => {
     return (
@@ -13,6 +14,10 @@ const PracticeLayout: React.FC<PracticeLayoutProps> = ({ db, collections }) => {
                     element={
                         <FlashcardQuizPage db={db} collections={collections} />
                     }
+                />
+                <Route
+                    path="/crossword-puzzles"
+                    element={<CrosswordPuzzlePage />}
                 />
             </Routes>
         </div>

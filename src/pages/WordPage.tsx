@@ -48,7 +48,7 @@ export const WordPage: React.FC<WordPageProps> = ({
 
     return (
         <div className="container-list" id="word-list">
-            <h4 className="text-center mt-4">
+            <h4 className="text-center my-4">
                 <span style={{ color: collection?.color }}>
                     <strong>{collection?.name}</strong>
                 </span>{" "}
