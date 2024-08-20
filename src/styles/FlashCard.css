@@ -7,14 +7,6 @@
     cursor: pointer;
 }
 
-/* Media query for mobile devices */
-@media (max-width: 768px) {
-    .flashcard {
-        width: 70%;
-        height: 400px;
-    }
-}
-
 .flashcard-inner {
     position: relative;
     width: 100%;

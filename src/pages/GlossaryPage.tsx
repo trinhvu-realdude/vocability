@@ -1,11 +1,13 @@
+import { PageHeader } from "../components/PageHeader";
 import { glossaryItems } from "../utils/constants";
 
 export const GlossaryPage = () => {
     return (
         <div id="glossary" className="container-list">
-            <h4 className="text-center my-4" style={{ color: "#DD5746" }}>
-                Glossary
-            </h4>
+            <PageHeader
+                href="/"
+                content={<span style={{ color: "#DD5746" }}>Glossary</span>}
+            />
             <div className="list-group">
                 {glossaryItems.map((item, index) => (
                     <div key={index} className="col-md-6 mb-4 w-100">

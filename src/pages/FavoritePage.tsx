@@ -6,6 +6,7 @@ import { CommonProps } from "../interfaces/mainProps";
 import { handleTextToSpeech } from "../utils/helper";
 import { NoDataMessage } from "../components/NoDataMessage";
 import { SearchBar } from "../components/SearchBar";
+import { PageHeader } from "../components/PageHeader";
 
 export const FavoritePage: React.FC<CommonProps> = ({ db }) => {
     const [favoriteWords, setFavoriteWords] = useState<WordDto[]>([]);
@@ -67,12 +68,17 @@ export const FavoritePage: React.FC<CommonProps> = ({ db }) => {
 
     return (
         <div className="container-list" id="favorite-collection">
-            <h4 className="text-center my-4">
-                <span style={{ color: "red" }}>
-                    <strong>Favorite</strong>
-                </span>{" "}
-                collection
-            </h4>
+            <PageHeader
+                href="/collections"
+                content={
+                    <>
+                        <span style={{ color: "red" }}>
+                            <strong>Favorite</strong>
+                        </span>{" "}
+                        collection
+                    </>
+                }
+            />
 
             <SearchBar
                 isFavorite={true}

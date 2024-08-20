@@ -9,6 +9,7 @@ import {
     getColorByCollectionId,
 } from "../services/CollectionService";
 import { formatFileName } from "../utils/formatDateString";
+import { PageHeader } from "../components/PageHeader";
 
 export const ExportPage: React.FC<CommonProps> = ({ db, collections }) => {
     const [exportCollectionId, setExportCollectionId] = useState<number>();
@@ -49,7 +50,7 @@ export const ExportPage: React.FC<CommonProps> = ({ db, collections }) => {
 
     return (
         <div className="container-list" id="import-export">
-            <h4 className="text-center my-4">Export</h4>
+            <PageHeader href="/" content="Export" />
             <div className="export-form">
                 <div className="input-group mb-4">
                     <select

@@ -13,6 +13,7 @@ export const PracticePage = () => {
                                 className="card-body text-center"
                             >
                                 <strong>{practice.name}</strong>
+                                <p className="mt-4">{practice.description}</p>
                             </a>
                         </div>
                     </div>

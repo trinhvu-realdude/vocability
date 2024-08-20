@@ -185,27 +185,33 @@ export const FILETYPE = {
 
 export const practices = [
     {
-        name: "Flashcard Quiz",
+        name: "📚 Flashcard Quiz",
         href: "/practices/flashcard-quiz",
+        description: "Test your vocabulary knowledge with flashcards",
     },
     {
-        name: "Crossword Puzzles",
+        name: "🧩 Crossword Puzzles",
         href: "/practices/crossword-puzzles",
+        description: "Solve crossword puzzles with your vocabulary",
     },
     {
-        name: "Word Scramble",
+        name: "🔡 Word Scramble",
         href: "/practices/word-scramble",
+        description: "Unscramble letters to form words",
     },
     {
-        name: "Vocabulary Quiz",
+        name: "📝 Vocabulary Quiz",
         href: "/practices/vocabulary-quiz",
+        description: "Take a quiz to test your vocabulary skills",
     },
     {
-        name: "Word Matching",
+        name: "🔗 Word Matching",
         href: "/practices/word-matching",
+        description: "Match words with their correct meanings",
     },
     {
-        name: "Memory Card",
+        name: "🃏 Memory Card",
         href: "/practices/memory-card",
+        description: "Test your memory with a vocabulary card game",
     },
 ];

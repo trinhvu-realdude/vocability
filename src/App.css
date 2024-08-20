@@ -20,7 +20,19 @@
 #card-collection:hover,
 #card-practice:hover {
     transform: translateY(-5px);
-    /* box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 8px; */
+    box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 8px;
+}
+
+#card-practice {
+    height: 180px; /* Set a fixed height for the card */
+}
+
+.description {
+    font-size: 0.9rem;
+    margin-top: 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; /* Truncate long descriptions */
 }
 
 .card-header {

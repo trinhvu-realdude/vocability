@@ -10,6 +10,7 @@ import { WordCard } from "../components/Card/WordCard";
 import { EditCollectionModal } from "../components/Modal/EditCollectionModal";
 import { NoDataMessage } from "../components/NoDataMessage";
 import { SearchBar } from "../components/SearchBar";
+import { PageHeader } from "../components/PageHeader";
 
 export const WordPage: React.FC<WordPageProps> = ({
     words,
@@ -48,22 +49,27 @@ export const WordPage: React.FC<WordPageProps> = ({
 
     return (
         <div className="container-list" id="word-list">
-            <h4 className="text-center my-4">
-                <span style={{ color: collection?.color }}>
-                    <strong>{collection?.name}</strong>
-                </span>{" "}
-                collection
-                <div
-                    className="btn btn-sm mx-2"
-                    style={{
-                        border: "none",
-                    }}
-                    data-bs-toggle="modal"
-                    data-bs-target={`#edit-collection-${collection?.id}`}
-                >
-                    <i className="fas fa-pen"></i>
-                </div>
-            </h4>
+            <PageHeader
+                href="/collections"
+                content={
+                    <>
+                        <span style={{ color: collection?.color }}>
+                            <strong>{collection?.name}</strong>
+                        </span>{" "}
+                        collection
+                        <div
+                            className="btn btn-sm mx-2"
+                            style={{
+                                border: "none",
+                            }}
+                            data-bs-toggle="modal"
+                            data-bs-target={`#edit-collection-${collection?.id}`}
+                        >
+                            <i className="fas fa-pen"></i>
+                        </div>
+                    </>
+                }
+            />
 
             <SearchBar
                 isFavorite={false}

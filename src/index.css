@@ -24,3 +24,23 @@ input::-webkit-inner-spin-button {
 input[type="number"] {
     -moz-appearance: textfield;
 }
+
+/* Media query for mobile devices */
+@media (max-width: 768px) {
+    .flashcard {
+        width: 70%;
+        height: 400px;
+    }
+
+    .flashcard .definition {
+        display: -webkit-box;
+        -webkit-line-clamp: 5; /* Show up to 5 lines */
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    #card-practice {
+        height: 160px; /* Set a fixed height for the card */
+    }
+}
