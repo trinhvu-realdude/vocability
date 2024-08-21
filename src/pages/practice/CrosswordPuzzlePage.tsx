@@ -3,7 +3,7 @@ import { PageHeader } from "../../components/PageHeader";
 export const CrosswordPuzzlePage = () => {
     return (
         <div className="container-list" id="crossword-puzzles">
-            <PageHeader href="/practices" content="Crossword Puzzles" />
+            <PageHeader href={document.referrer} content="Crossword Puzzles" />
         </div>
     );
 };

@@ -69,7 +69,7 @@ export const FavoritePage: React.FC<CommonProps> = ({ db }) => {
     return (
         <div className="container-list" id="favorite-collection">
             <PageHeader
-                href="/collections"
+                href={document.referrer}
                 content={
                     <>
                         <span style={{ color: "red" }}>

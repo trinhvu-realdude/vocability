@@ -50,7 +50,7 @@ export const WordPage: React.FC<WordPageProps> = ({
     return (
         <div className="container-list" id="word-list">
             <PageHeader
-                href="/collections"
+                href={document.referrer}
                 content={
                     <>
                         <span style={{ color: collection?.color }}>

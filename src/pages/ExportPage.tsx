@@ -50,7 +50,7 @@ export const ExportPage: React.FC<CommonProps> = ({ db, collections }) => {
 
     return (
         <div className="container-list" id="import-export">
-            <PageHeader href="/" content="Export" />
+            <PageHeader href={document.referrer} content="Export" />
             <div className="export-form">
                 <div className="input-group mb-4">
                     <select
