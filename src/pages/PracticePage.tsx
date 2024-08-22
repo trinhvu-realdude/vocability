@@ -1,6 +1,8 @@
-import { practices } from "../utils/constants";
+import { APP_NAME, practices } from "../utils/constants";
 
 export const PracticePage = () => {
+    document.title = `${APP_NAME} | Practices`;
+
     return (
         <div className="container-list" id="practices-list">
             <h4 className="text-center my-4">Practices</h4>

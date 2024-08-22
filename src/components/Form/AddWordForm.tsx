@@ -23,7 +23,8 @@ export const AddWordForm: React.FC<CommonProps> = ({
     const handleAddWord = async () => {
         try {
             const collection = choice as Choice;
-            if (db) {
+
+            if (db && collection) {
                 const objCollection = {
                     name: collection.value,
                     color: getRandomColor(),
@@ -57,6 +58,8 @@ export const AddWordForm: React.FC<CommonProps> = ({
                     setWords(words);
                 }
                 alert(`Word ${addedWord.word} has been added successfully`);
+            } else {
+                alert("Please choose or create the collection first");
             }
         } catch (error) {
             console.log(error);

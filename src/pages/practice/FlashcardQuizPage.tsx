@@ -7,11 +7,14 @@ import { getCollectionById } from "../../services/CollectionService";
 import { FlashCard } from "../../components/Card/FlashCard";
 import "../../styles/FlashCard.css";
 import { PageHeader } from "../../components/PageHeader";
+import { APP_NAME } from "../../utils/constants";
 
 export const FlashcardQuizPage: React.FC<FlashcardQuizPageProps> = ({
     db,
     collections,
 }) => {
+    document.title = `${APP_NAME} | Flashcard Quiz`;
+
     const [selectedCollectionId, setSelectedCollectionId] = useState<number>();
     const [numberOfCards, setNumberOfCards] = useState<number>();
     const [generatedWords, setGeneratedWords] = useState<Word[]>([]);
@@ -40,7 +43,7 @@ export const FlashcardQuizPage: React.FC<FlashcardQuizPageProps> = ({
             // Slice the array to get the desired number of words
             const selectedWords = words.slice(
                 0,
-                numberOfCards === words.length ? numberOfCards : maxWords
+                numberOfCards <= words.length ? numberOfCards : maxWords
             );
 
             setGeneratedWords(selectedWords);

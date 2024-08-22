@@ -1,3 +1,5 @@
+export const APP_NAME = "Vocability";
+
 export const partsOfSpeech = [
     {
         label: "Noun",

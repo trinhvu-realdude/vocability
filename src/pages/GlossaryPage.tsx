@@ -1,7 +1,9 @@
 import { PageHeader } from "../components/PageHeader";
-import { glossaryItems } from "../utils/constants";
+import { APP_NAME, glossaryItems } from "../utils/constants";
 
 export const GlossaryPage = () => {
+    document.title = `${APP_NAME} | Glossary`;
+
     return (
         <div id="glossary" className="container-list">
             <PageHeader

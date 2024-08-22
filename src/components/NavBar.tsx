@@ -57,12 +57,13 @@ export const NavBar: React.FC<NavBarProps> = ({ collections }) => {
                                             href={`/collection/${collection.id}`}
                                         >
                                             <div
-                                                className="square"
+                                                // className="square"
                                                 style={{
-                                                    backgroundColor:
-                                                        collection.color,
+                                                    color: collection.color,
                                                 }}
-                                            ></div>
+                                            >
+                                                <i className="fas fa-clone"></i>
+                                            </div>
                                             <span className="ms-2">
                                                 {collection.name}
                                             </span>
@@ -78,11 +79,13 @@ export const NavBar: React.FC<NavBarProps> = ({ collections }) => {
                                         href="/favorite"
                                     >
                                         <div
-                                            className="square"
+                                            // className="square"
                                             style={{
-                                                backgroundColor: "red",
+                                                color: "red",
                                             }}
-                                        ></div>
+                                        >
+                                            <i className="fas fa-clone"></i>
+                                        </div>
                                         <span className="ms-2">Favorite</span>
                                     </a>
                                 </li>

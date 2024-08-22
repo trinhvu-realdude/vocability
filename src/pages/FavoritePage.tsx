@@ -7,8 +7,11 @@ import { handleTextToSpeech } from "../utils/helper";
 import { NoDataMessage } from "../components/NoDataMessage";
 import { SearchBar } from "../components/SearchBar";
 import { PageHeader } from "../components/PageHeader";
+import { APP_NAME } from "../utils/constants";
 
 export const FavoritePage: React.FC<CommonProps> = ({ db }) => {
+    document.title = `${APP_NAME} | Favorite collection`;
+
     const [favoriteWords, setFavoriteWords] = useState<WordDto[]>([]);
     const [collections, setCollections] = useState<Collection[]>([]);
     const [selectedCollection, setSelectedCollection] = useState<Collection>();

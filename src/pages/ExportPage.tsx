@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { CommonProps } from "../interfaces/mainProps";
-import { documentFileFormats, FILETYPE } from "../utils/constants";
+import { APP_NAME, documentFileFormats, FILETYPE } from "../utils/constants";
 import { getWordsByCollectionId } from "../services/WordService";
 import { exportToDocx, exportToPdf } from "../utils/generateDocument";
 import { DownloadDocumentModal } from "../components/Modal/DownloadDocumentModal";
@@ -12,6 +12,8 @@ import { formatFileName } from "../utils/formatDateString";
 import { PageHeader } from "../components/PageHeader";
 
 export const ExportPage: React.FC<CommonProps> = ({ db, collections }) => {
+    document.title = `${APP_NAME} | Export`;
+
     const [exportCollectionId, setExportCollectionId] = useState<number>();
     const [fileType, setFileType] = useState<string>("");
     const [filename, setFileName] = useState<string>("");

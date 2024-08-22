@@ -11,6 +11,7 @@ import { EditCollectionModal } from "../components/Modal/EditCollectionModal";
 import { NoDataMessage } from "../components/NoDataMessage";
 import { SearchBar } from "../components/SearchBar";
 import { PageHeader } from "../components/PageHeader";
+import { APP_NAME } from "../utils/constants";
 
 export const WordPage: React.FC<WordPageProps> = ({
     words,
@@ -25,6 +26,10 @@ export const WordPage: React.FC<WordPageProps> = ({
     const [filteredWords, setFilteredWords] = useState<Word[]>(words);
     const [displayWords, setDisplayWords] = useState<Word[]>([]);
     const [filterSorting, setFilterSorting] = useState<FilterSortingOption>();
+
+    document.title = collection
+        ? `${APP_NAME} | ${collection.name} collection`
+        : APP_NAME;
 
     useEffect(() => {
         const fetchCollection = async () => {
