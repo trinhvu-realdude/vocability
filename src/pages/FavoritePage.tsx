@@ -59,11 +59,17 @@ export const FavoritePage: React.FC<CommonProps> = ({ db }) => {
                 new Set(
                     collectionsInFavorite.map((collection) => collection.name)
                 )
-            ).map((name) =>
-                collectionsInFavorite.find(
-                    (collection) => collection.name === name
+            )
+                .map((name) =>
+                    collectionsInFavorite.find(
+                        (collection) => collection.name === name
+                    )
                 )
-            );
+                .sort((a, b) => {
+                    const idA = a?.id !== undefined ? a.id : Infinity;
+                    const idB = b?.id !== undefined ? b.id : Infinity;
+                    return idA - idB;
+                });
             setCollections(uniqueCollections.filter(Boolean) as Collection[]);
         };
         fetchFavorite();
