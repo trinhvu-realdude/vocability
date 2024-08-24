@@ -1,13 +1,12 @@
 import { useState } from "react";
 import { NoDataMessage } from "../../components/NoDataMessage";
 import { FlashcardQuizPageProps } from "../../interfaces/practiceProps";
-import { getWordsByCollectionId } from "../../services/WordService";
 import { Word } from "../../interfaces/model";
-import { getCollectionById } from "../../services/CollectionService";
 import { FlashCard } from "../../components/Card/FlashCard";
 import "../../styles/FlashCard.css";
 import { PageHeader } from "../../components/PageHeader";
 import { APP_NAME } from "../../utils/constants";
+import { generateWordsForFlashCards } from "../../services/PracticeService";
 
 export const FlashcardQuizPage: React.FC<FlashcardQuizPageProps> = ({
     db,
@@ -28,25 +27,13 @@ export const FlashcardQuizPage: React.FC<FlashcardQuizPageProps> = ({
         setIsGetHint(false);
         setCurrentIndex(1);
         if (db && selectedCollectionId && numberOfCards) {
-            const collection = await getCollectionById(
+            const wordsForFlashCards = await generateWordsForFlashCards(
                 db,
-                selectedCollectionId
+                selectedCollectionId,
+                numberOfCards,
+                setCardColor
             );
-            setCardColor(collection ? collection.color : "");
-            let words = await getWordsByCollectionId(db, selectedCollectionId);
-            // Shuffle the words array
-            words = words.sort(() => Math.random() - 0.5);
-
-            // Determine the number of words to return
-            const maxWords = Math.min(numberOfCards, words.length, 10);
-
-            // Slice the array to get the desired number of words
-            const selectedWords = words.slice(
-                0,
-                numberOfCards <= words.length ? numberOfCards : maxWords
-            );
-
-            setGeneratedWords(selectedWords);
+            setGeneratedWords(wordsForFlashCards);
         } else {
             alert("Please choose the collection and enter number of cards");
         }
@@ -68,7 +55,7 @@ export const FlashcardQuizPage: React.FC<FlashcardQuizPageProps> = ({
     return (
         <div className="container-list" id="flashcard-quiz">
             <PageHeader
-                href={document.referrer}
+                href="/practices"
                 content={
                     <>
                         <span style={{ color: cardColor && cardColor }}>
@@ -80,42 +67,49 @@ export const FlashcardQuizPage: React.FC<FlashcardQuizPageProps> = ({
             />
 
             {collections && collections.length > 0 ? (
-                <div className="input-group my-4">
-                    <select
-                        className="form-select"
-                        id="part-of-speech"
-                        onChange={(event) =>
-                            setSelectedCollectionId(
-                                Number.parseInt(event.target.value)
-                            )
-                        }
-                    >
-                        <option value="">Collection</option>
-                        {collections.map((collection, index) => (
-                            <option key={index} value={collection.id}>
-                                {collection.name}
-                            </option>
-                        ))}
-                    </select>
+                <>
+                    <div className="input-group my-4">
+                        <select
+                            className="form-select"
+                            id="part-of-speech"
+                            onChange={(event) =>
+                                setSelectedCollectionId(
+                                    Number.parseInt(event.target.value)
+                                )
+                            }
+                        >
+                            <option value="">Collection</option>
+                            {collections.map((collection, index) => (
+                                <option key={index} value={collection.id}>
+                                    {collection.name}
+                                </option>
+                            ))}
+                        </select>
 
-                    <input
-                        type="number"
-                        className="form-control"
-                        placeholder="Number of cards"
-                        min={2}
-                        onChange={(event) =>
-                            setNumberOfCards(
-                                Number.parseInt(event.target.value)
-                            )
-                        }
-                    />
-                    <button
-                        className="btn btn-outline-success"
-                        onClick={handleGenerateFlashcard}
-                    >
-                        Generate
-                    </button>
-                </div>
+                        <input
+                            type="number"
+                            className="form-control"
+                            placeholder="Number of cards"
+                            min={2}
+                            onChange={(event) =>
+                                setNumberOfCards(
+                                    Number.parseInt(event.target.value)
+                                )
+                            }
+                        />
+                        <button
+                            className="btn btn-outline-success"
+                            onClick={handleGenerateFlashcard}
+                        >
+                            Generate
+                        </button>
+                    </div>
+
+                    {!generatedWords ||
+                        (generatedWords.length <= 0 && (
+                            <NoDataMessage message="📚 Choose the collection, enter number of cards and enjoy flashcards" />
+                        ))}
+                </>
             ) : (
                 <NoDataMessage message="&#128511; You have no collection. Let's start to take note and practice vocabulary." />
             )}

@@ -12,8 +12,8 @@
 - Change Collections link in NavBar to hoverable dropdown - Done
 - Add search bar for Favorite collection - Done
 - Research games for Practice
-    + Flashcard Quiz - In progress
-    + Crossword Puzzles
+    + Flashcard Quiz - Done
+    + Crossword Puzzles - In progress
     + Word Scramble
     + Vocabulary Quiz
     + Word Matching

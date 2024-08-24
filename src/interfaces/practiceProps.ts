@@ -3,7 +3,9 @@ import { Collection, MyDB } from "./model";
 
 export interface PracticeLayoutProps {
     db: IDBPDatabase<MyDB> | undefined;
-    collections: Collection[];
+    collections?: Collection[];
 }
 
 export interface FlashcardQuizPageProps extends PracticeLayoutProps {}
+
+export interface CrosswordPuzzlePageProps extends PracticeLayoutProps {}
