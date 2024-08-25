@@ -19,9 +19,10 @@ function App() {
     useEffect(() => {
         const initializeDB = async () => {
             const dbInstance = await initDB();
-            setDb(dbInstance);
             const storedCollections = await getCollections(dbInstance);
+            setDb(dbInstance);
             setCollections(storedCollections);
+            console.log("initDB");
         };
         initializeDB();
     }, []);
@@ -30,30 +31,38 @@ function App() {
         <BrowserRouter>
             <React.Fragment>
                 <NavBar collections={collections} />
-                <Routes>
-                    <Route path="/" element={<RootLayout />} />
-                    <Route
-                        path="/*"
-                        element={
-                            <MainLayout
-                                db={db}
-                                collectionId={currentCollectionId}
-                                words={words}
-                                collections={collections}
-                                setWords={setWords}
-                                setCollections={setCollections}
-                                setCurrentCollectionId={setCurrentCollectionId}
-                            />
-                        }
-                    />
 
-                    <Route
-                        path="/practices/*"
-                        element={
-                            <PracticeLayout db={db} collections={collections} />
-                        }
-                    />
-                </Routes>
+                {db && (
+                    <Routes>
+                        <Route path="/" element={<RootLayout />} />
+                        <Route
+                            path="/*"
+                            element={
+                                <MainLayout
+                                    db={db}
+                                    collectionId={currentCollectionId}
+                                    words={words}
+                                    collections={collections}
+                                    setWords={setWords}
+                                    setCollections={setCollections}
+                                    setCurrentCollectionId={
+                                        setCurrentCollectionId
+                                    }
+                                />
+                            }
+                        />
+
+                        <Route
+                            path="/practices/*"
+                            element={
+                                <PracticeLayout
+                                    db={db}
+                                    collections={collections}
+                                />
+                            }
+                        />
+                    </Routes>
+                )}
             </React.Fragment>
         </BrowserRouter>
     );

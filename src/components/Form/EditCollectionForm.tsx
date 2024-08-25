@@ -50,7 +50,7 @@ export const EditCollectionForm: React.FC<CollectionFormProps> = ({
             <div
                 className="card-header d-flex justify-content-between align-items-center"
                 style={{
-                    backgroundColor: collection.color,
+                    backgroundColor: color !== "" ? color : collection.color,
                     color: "#fff",
                 }}
             >
@@ -75,7 +75,7 @@ export const EditCollectionForm: React.FC<CollectionFormProps> = ({
                         type="color"
                         className="form-control form-control-color"
                         id="color-input"
-                        defaultValue={collection.color}
+                        value={color !== "" ? color : collection.color}
                         title="Choose your color"
                         onChange={(event) => setColor(event.target.value)}
                     />

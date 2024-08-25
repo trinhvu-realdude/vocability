@@ -45,6 +45,7 @@ export const AddWordForm: React.FC<CommonProps> = ({
 
                 setWord("");
                 setPartOfSpeech("");
+                setChoice(undefined);
 
                 if (
                     addedWord.collectionId &&
@@ -73,6 +74,7 @@ export const AddWordForm: React.FC<CommonProps> = ({
                 <select
                     className="form-select"
                     id="part-of-speech"
+                    value={partOfSpeech}
                     onChange={(event) => setPartOfSpeech(event.target.value)}
                 >
                     <option value="">Part of speech</option>
@@ -88,6 +90,7 @@ export const AddWordForm: React.FC<CommonProps> = ({
                     type="text"
                     className="form-control"
                     placeholder="Note your word"
+                    value={word}
                     onChange={(event) => setWord(event.target.value)}
                 />
             </div>
@@ -97,6 +100,7 @@ export const AddWordForm: React.FC<CommonProps> = ({
                         <ReactSelectCreatable
                             className="react-select-creatable"
                             placeholder="Collection"
+                            value={choice}
                             options={collections.map((collection) => {
                                 return {
                                     label: collection.name,
@@ -118,7 +122,6 @@ export const AddWordForm: React.FC<CommonProps> = ({
                         <input
                             type="text"
                             className="form-control"
-                            placeholder=""
                             onChange={(event) =>
                                 setDefinition(event.target.value)
                             }
@@ -131,13 +134,13 @@ export const AddWordForm: React.FC<CommonProps> = ({
                             onChange={(event) => setNotes(event.target.value)}
                         ></textarea>
                     </div>
-                    <div className="input-group col-12">
+                    <div className="d-flex input-group col-12">
                         <button
-                            className="btn btn-success"
+                            className="btn btn-outline-success"
                             onClick={handleAddWord}
                             style={{ width: "100%" }}
                         >
-                            Add Word
+                            Add word
                         </button>
                     </div>
                 </div>

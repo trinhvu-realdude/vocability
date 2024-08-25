@@ -9,7 +9,7 @@ export const CrosswordPuzzlePage: React.FC<CrosswordPuzzlePageProps> = ({
 }) => {
     document.title = `${APP_NAME} | Crossword Puzzles`;
 
-    const handleCreatePuzzle = async () => {
+    const handleGeneratePuzzle = async () => {
         if (db) {
             let words = (await getWords(db))
                 .filter((word) => word.word.trim().split(" ").length <= 2)
@@ -31,12 +31,12 @@ export const CrosswordPuzzlePage: React.FC<CrosswordPuzzlePageProps> = ({
             <div className="text-center my-4">
                 <button
                     className="btn btn-outline-success mb-4"
-                    onClick={handleCreatePuzzle}
+                    onClick={handleGeneratePuzzle}
                 >
-                    Create puzzle
+                    Generate puzzle
                 </button>
 
-                <NoDataMessage message="🧩 Click Create puzzle and start to solve puzzle with your noted vocabulary" />
+                <NoDataMessage message="🧩 Click Generate puzzle and start to solve puzzle with your noted vocabulary" />
             </div>
         </div>
     );
