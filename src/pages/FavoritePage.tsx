@@ -9,7 +9,11 @@ import { SearchBar } from "../components/SearchBar";
 import { PageHeader } from "../components/PageHeader";
 import { APP_NAME } from "../utils/constants";
 
+let count = 1;
+
 export const FavoritePage: React.FC<CommonProps> = ({ db }) => {
+    console.log("FavoritePage " + count++);
+
     document.title = `${APP_NAME} | Favorite collection`;
 
     const [favoriteWords, setFavoriteWords] = useState<WordDto[]>([]);

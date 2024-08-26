@@ -8,13 +8,11 @@ export const SearchBar: React.FC<{
     isFavorite: boolean;
     collections?: Collection[];
     selectedCollection?: Collection | undefined;
-    displayWords?: Word[];
     filterSorting?: FilterSortingOption | undefined;
     filteredWords?: WordDto[];
     words?: Word[];
     handleFilter?: (collection: Collection | null) => void;
     setDisplayWordDtos?: React.Dispatch<React.SetStateAction<WordDto[]>>;
-    setDisplayWords?: React.Dispatch<React.SetStateAction<Word[]>>;
     setFilteredWords?: React.Dispatch<React.SetStateAction<Word[]>>;
     setFilterSorting?: React.Dispatch<
         React.SetStateAction<FilterSortingOption | undefined>
@@ -23,7 +21,6 @@ export const SearchBar: React.FC<{
     isFavorite,
     collections,
     selectedCollection,
-    displayWords,
     filterSorting,
     filteredWords,
     words,
@@ -31,9 +28,9 @@ export const SearchBar: React.FC<{
     setFilterSorting,
     setFilteredWords,
     setDisplayWordDtos,
-    setDisplayWords,
 }) => {
     const [searchValue, setSearchValue] = useState<string>("");
+    const [displayWords, setDisplayWords] = useState<Word[]>([]); // for SortFilter component
 
     {
         isFavorite

@@ -19,7 +19,7 @@ export const CreateCollectionModal: React.FC<{
         try {
             if (db) {
                 const objCollection = {
-                    name: name,
+                    name: name || "Default",
                     color: color || randomColor,
                     createdAt: new Date(),
                 } as Collection;
@@ -67,7 +67,7 @@ export const CreateCollectionModal: React.FC<{
                             data-bs-dismiss="modal"
                             aria-label="Close"
                             style={{ border: "none", color: "#fff" }}
-                            onClick={reset}
+                            // onClick={reset}
                         >
                             <i className="fas fa-times"></i>
                         </button>
@@ -100,7 +100,7 @@ export const CreateCollectionModal: React.FC<{
                             type="button"
                             className="btn btn-outline-secondary"
                             data-bs-dismiss="modal"
-                            onClick={reset}
+                            // onClick={reset}
                         >
                             Cancel
                         </button>

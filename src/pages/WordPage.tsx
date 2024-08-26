@@ -13,18 +13,21 @@ import { SearchBar } from "../components/SearchBar";
 import { PageHeader } from "../components/PageHeader";
 import { APP_NAME } from "../utils/constants";
 
+let count = 1;
+
 export const WordPage: React.FC<WordPageProps> = ({
     words,
     setWords,
     setCollections,
     setCurrentCollectionId,
 }) => {
+    console.log("WordPage " + count++);
+
     const [db, setDb] = useState<IDBPDatabase<MyDB>>();
 
     const { collectionId } = useParams();
     const [collection, setCollection] = useState<Collection>();
     const [filteredWords, setFilteredWords] = useState<Word[]>(words);
-    const [displayWords, setDisplayWords] = useState<Word[]>([]);
     const [filterSorting, setFilterSorting] = useState<FilterSortingOption>();
 
     document.title = collection
@@ -79,9 +82,7 @@ export const WordPage: React.FC<WordPageProps> = ({
             <SearchBar
                 isFavorite={false}
                 words={words}
-                displayWords={displayWords}
                 filterSorting={filterSorting}
-                setDisplayWords={setDisplayWords}
                 setFilterSorting={setFilterSorting}
                 setFilteredWords={setFilteredWords}
             />

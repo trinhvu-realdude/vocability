@@ -17,9 +17,9 @@ export const StorageBar = () => {
                     const usage = (used / quota) * 100;
                     setUsedPercent(usage);
 
-                    console.log(`Used Storage: ${usedMB} MB`);
-                    console.log(`Available Storage: ${quotaMB} MB`);
-                    console.log(`Used Storage Percentage: ${usage}%`);
+                    // console.log(`Used Storage: ${usedMB} MB`);
+                    // console.log(`Available Storage: ${quotaMB} MB`);
+                    // console.log(`Used Storage Percentage: ${usage}%`);
                 }
             }
         };

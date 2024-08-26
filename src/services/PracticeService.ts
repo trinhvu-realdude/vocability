@@ -19,9 +19,8 @@ export const generateWordsForFlashCards = async (
     const maxWords = Math.min(numberOfCards, words.length, 10);
 
     // Slice the array to get the desired number of words
-    const selectedWords = words.slice(
-        0,
-        numberOfCards <= words.length ? numberOfCards : maxWords
-    );
+    const selectedWords = words
+        .slice(0, numberOfCards <= words.length ? numberOfCards : maxWords)
+        .filter((word) => word.definition && word.definition !== "");
     return selectedWords;
 };
