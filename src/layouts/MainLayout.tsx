@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { MainLayoutProps } from "../interfaces/mainProps";
 import { StorageBar } from "../components/StorageBar";
 import { AddWordForm } from "../components/Form/AddWordForm";
@@ -8,16 +8,16 @@ import { FavoritePage } from "../pages/FavoritePage";
 import { ExportPage } from "../pages/ExportPage";
 import { CollectionPage } from "../pages/CollectionPage";
 import { GlossaryPage } from "../pages/GlossaryPage";
+import { Word } from "../interfaces/model";
 
 const MainLayout: React.FC<MainLayoutProps> = ({
     db,
     collections,
-    collectionId,
-    words,
-    setWords,
     setCollections,
-    setCurrentCollectionId,
 }) => {
+    const [words, setWords] = useState<Word[]>([]);
+    const [currentCollectionId, setCurrentCollectionId] = useState<string>("");
+
     return (
         <div className="container my-4">
             <StorageBar />
@@ -26,7 +26,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({
                 collections={collections}
                 setCollections={setCollections}
                 setWords={setWords}
-                collectionId={collectionId}
+                collectionId={currentCollectionId}
             />
 
             <Routes>
@@ -45,6 +45,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({
                     path="/collection/:collectionId"
                     element={
                         <WordPage
+                            db={db}
                             words={words}
                             setWords={setWords}
                             setCollections={setCollections}

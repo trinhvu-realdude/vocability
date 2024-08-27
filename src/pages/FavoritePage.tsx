@@ -9,11 +9,7 @@ import { SearchBar } from "../components/SearchBar";
 import { PageHeader } from "../components/PageHeader";
 import { APP_NAME } from "../utils/constants";
 
-let count = 1;
-
 export const FavoritePage: React.FC<CommonProps> = ({ db }) => {
-    console.log("FavoritePage " + count++);
-
     document.title = `${APP_NAME} | Favorite collection`;
 
     const [favoriteWords, setFavoriteWords] = useState<WordDto[]>([]);
@@ -93,14 +89,16 @@ export const FavoritePage: React.FC<CommonProps> = ({ db }) => {
                 }
             />
 
-            <SearchBar
-                isFavorite={true}
-                filteredWords={filteredWords}
-                collections={collections}
-                selectedCollection={selectedCollection}
-                setDisplayWordDtos={setDisplayWords}
-                handleFilter={handleFilter}
-            />
+            {collections.length > 0 && (
+                <SearchBar
+                    isFavorite={true}
+                    filteredWords={filteredWords}
+                    collections={collections}
+                    selectedCollection={selectedCollection}
+                    setDisplayWordDtos={setDisplayWords}
+                    handleFilter={handleFilter}
+                />
+            )}
 
             <div className="list-group mt-4">
                 {displayWords &&

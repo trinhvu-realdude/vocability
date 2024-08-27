@@ -30,9 +30,9 @@ export const WordCard: React.FC<WordCardProps> = ({
                     db,
                     word.collectionId
                 );
-                if (filterSorting) {
+                if (filterSorting)
                     setWords(sortWordsByFilter(words, filterSorting.value));
-                } else setWords(words);
+                else setWords(words);
             }
         }
     };

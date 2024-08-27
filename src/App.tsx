@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./App.css";
 import initDB from "./configs/database";
 import { IDBPDatabase } from "idb";
-import { Collection, MyDB, Word } from "./interfaces/model";
+import { Collection, MyDB } from "./interfaces/model";
 import { getCollections } from "./services/CollectionService";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { NavBar } from "./components/NavBar";
@@ -13,8 +13,6 @@ import RootLayout from "./layouts/RootLayout";
 function App() {
     const [db, setDb] = useState<IDBPDatabase<MyDB>>();
     const [collections, setCollections] = useState<Collection[]>([]);
-    const [words, setWords] = useState<Word[]>([]);
-    const [currentCollectionId, setCurrentCollectionId] = useState<string>("");
 
     useEffect(() => {
         const initializeDB = async () => {
@@ -40,14 +38,9 @@ function App() {
                             element={
                                 <MainLayout
                                     db={db}
-                                    collectionId={currentCollectionId}
-                                    words={words}
                                     collections={collections}
-                                    setWords={setWords}
+                                    setWords={(): void => {}}
                                     setCollections={setCollections}
-                                    setCurrentCollectionId={
-                                        setCurrentCollectionId
-                                    }
                                 />
                             }
                         />

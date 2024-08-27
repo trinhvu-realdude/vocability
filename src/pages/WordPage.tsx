@@ -1,11 +1,9 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { Collection, MyDB, Word } from "../interfaces/model";
+import { Collection, Word } from "../interfaces/model";
 import { getWordsByCollectionId } from "../services/WordService";
-import initDB from "../configs/database";
 import { getCollectionById } from "../services/CollectionService";
 import { FilterSortingOption, WordPageProps } from "../interfaces/mainProps";
-import { IDBPDatabase } from "idb";
 import { WordCard } from "../components/Card/WordCard";
 import { EditCollectionModal } from "../components/Modal/EditCollectionModal";
 import { NoDataMessage } from "../components/NoDataMessage";
@@ -13,18 +11,13 @@ import { SearchBar } from "../components/SearchBar";
 import { PageHeader } from "../components/PageHeader";
 import { APP_NAME } from "../utils/constants";
 
-let count = 1;
-
 export const WordPage: React.FC<WordPageProps> = ({
+    db,
     words,
     setWords,
     setCollections,
     setCurrentCollectionId,
 }) => {
-    console.log("WordPage " + count++);
-
-    const [db, setDb] = useState<IDBPDatabase<MyDB>>();
-
     const { collectionId } = useParams();
     const [collection, setCollection] = useState<Collection>();
     const [filteredWords, setFilteredWords] = useState<Word[]>(words);
@@ -36,17 +29,15 @@ export const WordPage: React.FC<WordPageProps> = ({
 
     useEffect(() => {
         const fetchCollection = async () => {
-            const dbInstance = await initDB();
-            setDb(dbInstance);
-            if (collectionId) {
+            if (db && collectionId) {
                 setCurrentCollectionId(collectionId);
                 const objCollection = await getCollectionById(
-                    dbInstance,
+                    db,
                     Number.parseInt(collectionId)
                 );
                 setCollection(objCollection);
                 const objWord = await getWordsByCollectionId(
-                    dbInstance,
+                    db,
                     Number.parseInt(collectionId)
                 );
                 setWords(objWord);
@@ -79,13 +70,15 @@ export const WordPage: React.FC<WordPageProps> = ({
                 }
             />
 
-            <SearchBar
-                isFavorite={false}
-                words={words}
-                filterSorting={filterSorting}
-                setFilterSorting={setFilterSorting}
-                setFilteredWords={setFilteredWords}
-            />
+            {words.length > 0 && (
+                <SearchBar
+                    isFavorite={false}
+                    words={words}
+                    filterSorting={filterSorting}
+                    setFilterSorting={setFilterSorting}
+                    setFilteredWords={setFilteredWords}
+                />
+            )}
 
             <div className="list-group mt-4">
                 {filteredWords &&

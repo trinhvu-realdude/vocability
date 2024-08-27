@@ -17,72 +17,84 @@ export const SearchBar: React.FC<{
     setFilterSorting?: React.Dispatch<
         React.SetStateAction<FilterSortingOption | undefined>
     >;
-}> = ({
-    isFavorite,
-    collections,
-    selectedCollection,
-    filterSorting,
-    filteredWords,
-    words,
-    handleFilter,
-    setFilterSorting,
-    setFilteredWords,
-    setDisplayWordDtos,
-}) => {
-    const [searchValue, setSearchValue] = useState<string>("");
-    const [displayWords, setDisplayWords] = useState<Word[]>([]); // for SortFilter component
+}> = React.memo(
+    ({
+        isFavorite,
+        collections,
+        selectedCollection,
+        filterSorting,
+        filteredWords,
+        words,
+        handleFilter,
+        setFilterSorting,
+        setFilteredWords,
+        setDisplayWordDtos,
+    }) => {
+        const [searchValue, setSearchValue] = useState<string>("");
+        const [displayWords, setDisplayWords] = useState<Word[]>([]); // for SortFilter component
 
-    {
-        isFavorite
-            ? useEffect(() => {
-                  // Search for Favorite collection
-                  const lowerCaseSearchValue = searchValue.toLowerCase().trim();
-                  const filtered =
-                      filteredWords &&
-                      filteredWords.filter((word) =>
-                          word.word.toLowerCase().includes(lowerCaseSearchValue)
-                      );
-                  setDisplayWordDtos &&
-                      filtered &&
-                      setDisplayWordDtos(filtered);
-              }, [searchValue, filteredWords])
-            : useEffect(() => {
-                  // Search for main collections
-                  const lowerCaseSearchValue = searchValue.toLowerCase().trim();
-                  const filtered =
-                      words &&
-                      words.filter((word) =>
-                          word.word.toLowerCase().includes(lowerCaseSearchValue)
-                      );
-                  setDisplayWords && filtered && setDisplayWords(filtered);
-                  setFilteredWords && filtered && setFilteredWords(filtered);
-              }, [searchValue, words]);
+        {
+            isFavorite
+                ? useEffect(() => {
+                      // Search for Favorite collection
+                      const lowerCaseSearchValue = searchValue
+                          .toLowerCase()
+                          .trim();
+                      const filtered =
+                          filteredWords &&
+                          filteredWords.filter((word) =>
+                              word.word
+                                  .toLowerCase()
+                                  .includes(lowerCaseSearchValue)
+                          );
+                      setDisplayWordDtos &&
+                          filtered &&
+                          setDisplayWordDtos(filtered);
+                  }, [searchValue, filteredWords])
+                : useEffect(() => {
+                      // Search for main collections
+                      const lowerCaseSearchValue = searchValue
+                          .toLowerCase()
+                          .trim();
+                      const filtered =
+                          words &&
+                          words.filter((word) =>
+                              word.word
+                                  .toLowerCase()
+                                  .includes(lowerCaseSearchValue)
+                          );
+                      setDisplayWords && filtered && setDisplayWords(filtered);
+                      setFilteredWords &&
+                          filtered &&
+                          setFilteredWords(filtered);
+                  }, [searchValue, words]);
+        }
+
+        return (
+            <div className="input-group d-flex justify-content-center mt-4">
+                <input
+                    className="form-control"
+                    type="search"
+                    placeholder="Search word in collection"
+                    aria-label="Search word in collection"
+                    value={searchValue}
+                    onChange={(event) => setSearchValue(event.target.value)}
+                />
+                {isFavorite ? (
+                    <CollectionFilter
+                        collections={collections}
+                        selectedCollection={selectedCollection}
+                        handleFilter={handleFilter}
+                    />
+                ) : (
+                    <SortFilter
+                        displayWords={displayWords}
+                        filterSorting={filterSorting}
+                        setFilterSorting={setFilterSorting}
+                        setFilteredWords={setFilteredWords}
+                    />
+                )}
+            </div>
+        );
     }
-
-    return (
-        <div className="input-group d-flex justify-content-center mt-4">
-            <input
-                className="form-control"
-                type="search"
-                placeholder="Search word in collection"
-                aria-label="Search word in collection"
-                value={searchValue}
-                onChange={(event) => setSearchValue(event.target.value)}
-            />
-            {isFavorite ? (
-                <CollectionFilter
-                    collections={collections}
-                    selectedCollection={selectedCollection}
-                    handleFilter={handleFilter}
-                />
-            ) : (
-                <SortFilter
-                    displayWords={displayWords}
-                    filterSorting={filterSorting}
-                    setFilterSorting={setFilterSorting}
-                    setFilteredWords={setFilteredWords}
-                />
-            )}
-        </div>
-    );
-};
+);
