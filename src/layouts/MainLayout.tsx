@@ -9,6 +9,7 @@ import { ExportPage } from "../pages/ExportPage";
 import { CollectionPage } from "../pages/CollectionPage";
 import { GlossaryPage } from "../pages/GlossaryPage";
 import { Word } from "../interfaces/model";
+import { WordDetailPage } from "../pages/WordDetailPage";
 
 const MainLayout: React.FC<MainLayoutProps> = ({
     db,
@@ -52,6 +53,10 @@ const MainLayout: React.FC<MainLayoutProps> = ({
                             setCurrentCollectionId={setCurrentCollectionId}
                         />
                     }
+                />
+                <Route
+                    path="/word/:wordId"
+                    element={<WordDetailPage db={db} />}
                 />
                 <Route
                     path="/favorite"

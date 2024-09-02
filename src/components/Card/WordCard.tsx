@@ -44,7 +44,18 @@ export const WordCard: React.FC<WordCardProps> = ({
                     <div className="d-flex w-100 justify-content-between mb-2">
                         <div className="row">
                             <h5 className="mb-1">
-                                <strong>{word.word}</strong>{" "}
+                                <a
+                                    href={`/word/${word.id}`}
+                                    className="word-link"
+                                >
+                                    <strong>{word.word}</strong>{" "}
+                                </a>
+                                <small
+                                    className="text-muted mb-1"
+                                    style={{ fontSize: "14px" }}
+                                >
+                                    {word.phonetic}
+                                </small>{" "}
                                 <div
                                     className="btn btn-sm"
                                     style={{

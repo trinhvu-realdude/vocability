@@ -9,3 +9,5 @@ export interface PracticeLayoutProps {
 export interface FlashcardQuizPageProps extends PracticeLayoutProps {}
 
 export interface CrosswordPuzzlePageProps extends PracticeLayoutProps {}
+
+export interface VocabularyQuizPageProps extends PracticeLayoutProps {}

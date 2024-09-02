@@ -12,6 +12,15 @@
     color: #000000;
 }
 
+a.word-link {
+    color: initial;
+    transition: color 0.2s ease-in-out;
+}
+
+a.word-link:hover {
+    color: #dd5746;
+}
+
 .card {
     cursor: pointer;
     transition: transform 0.2s ease-in-out;

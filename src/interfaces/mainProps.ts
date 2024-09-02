@@ -19,6 +19,10 @@ export interface WordPageProps {
     setCurrentCollectionId: React.Dispatch<React.SetStateAction<string>>;
 }
 
+export interface WordDetailPageProps {
+    db: IDBPDatabase<MyDB> | undefined;
+}
+
 export type CollectionModalProps = {
     db: IDBPDatabase<MyDB> | undefined;
     collection: Collection;

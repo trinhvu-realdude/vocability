@@ -1,7 +1,7 @@
 import { IDBPDatabase } from "idb";
-import { MyDB, Word } from "../interfaces/model";
+import { MyDB, QuestionVocabularyQuiz, Word } from "../interfaces/model";
 import { getCollectionById } from "./CollectionService";
-import { getWordsByCollectionId } from "./WordService";
+import { getWords, getWordsByCollectionId } from "./WordService";
 
 export const generateWordsForFlashCards = async (
     db: IDBPDatabase<MyDB>,
@@ -23,4 +23,13 @@ export const generateWordsForFlashCards = async (
         .slice(0, numberOfCards <= words.length ? numberOfCards : maxWords)
         .filter((word) => word.definition && word.definition !== "");
     return selectedWords;
+};
+
+export const generateQuestionsForVocabularyQuiz = async (
+    db: IDBPDatabase<MyDB>
+): Promise<QuestionVocabularyQuiz | undefined> => {
+    const words = await getWords(db);
+    console.log(words);
+
+    return undefined;
 };

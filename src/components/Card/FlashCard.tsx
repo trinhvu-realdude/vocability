@@ -74,6 +74,8 @@ export const FlashCard: React.FC<{
                         </div>
                         <div className="card-body w-100 mb-4 d-flex justify-content-center align-items-center">
                             <div className="word">
+                                <small>{word.phonetic}</small>
+                                <br />
                                 {word.word}
                                 <br />
                                 <small>

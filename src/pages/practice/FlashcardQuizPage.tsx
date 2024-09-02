@@ -7,6 +7,7 @@ import "../../styles/FlashCard.css";
 import { PageHeader } from "../../components/PageHeader";
 import { APP_NAME } from "../../utils/constants";
 import { generateWordsForFlashCards } from "../../services/PracticeService";
+import { PracticeMessage } from "../../components/PracticeMessage";
 
 export const FlashcardQuizPage: React.FC<FlashcardQuizPageProps> = ({
     db,
@@ -107,7 +108,7 @@ export const FlashcardQuizPage: React.FC<FlashcardQuizPageProps> = ({
 
                     {!generatedWords ||
                         (generatedWords.length <= 0 && (
-                            <NoDataMessage message="📚 Choose the collection, enter number of cards and enjoy flashcards" />
+                            <PracticeMessage message="📚 Choose the collection, enter number of cards and enjoy flashcards" />
                         ))}
                 </>
             ) : (

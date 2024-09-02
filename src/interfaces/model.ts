@@ -22,6 +22,7 @@ export interface Collection {
 export interface Word {
     id?: number;
     word: string;
+    phonetic?: string;
     definition: string;
     notes: string;
     partOfSpeech: string;
@@ -33,3 +34,15 @@ export interface Word {
 export interface WordDto extends Word {
     collection: Collection;
 }
+
+export type QuestionVocabularyQuiz = {
+    id: string;
+    question: string;
+    answers: [
+        {
+            id: string;
+            option: string;
+            isCorrect: boolean;
+        }
+    ];
+};

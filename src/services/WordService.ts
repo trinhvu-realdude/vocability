@@ -42,6 +42,16 @@ export const getWords = async (db: IDBPDatabase<MyDB>): Promise<Word[]> => {
     return words;
 };
 
+export const getWordById = async (
+    db: IDBPDatabase<MyDB>,
+    wordId: number
+): Promise<Word | undefined> => {
+    const tx = db.transaction(storeName, "readonly");
+    const store = tx.objectStore(storeName);
+    const word = await store.get(wordId);
+    return word;
+};
+
 export const getWordsByCollectionId = async (
     db: IDBPDatabase<MyDB>,
     collectionId: number
@@ -153,4 +163,48 @@ export const updateWord = async (
         }
     }
     return word;
+};
+
+export const getPhonetic = async (
+    word: string
+): Promise<string | undefined> => {
+    if (word.split(" ").length > 1) {
+        return undefined;
+    }
+    const response = await fetch(
+        `https://api.dictionaryapi.dev/api/v2/entries/en/${word}`
+    );
+    const data = await response.json();
+    const phonetics = data[0].phonetics;
+
+    for (const element of phonetics) {
+        if (element.text && element.audio) {
+            return element.text;
+        }
+    }
+    return undefined;
+};
+
+export const getSynonymsAntonyms = async (
+    word: Word
+): Promise<{ synonyms: string[]; antonyms: string[] } | undefined> => {
+    if (word.word.split(" ").length > 1) {
+        return undefined;
+    }
+    const response = await fetch(
+        `https://api.dictionaryapi.dev/api/v2/entries/en/${word.word}`
+    );
+    const data = await response.json();
+    const meanings = data[0].meanings as Array<any>;
+
+    for (const meaning of meanings) {
+        if (meaning.partOfSpeech === word.partOfSpeech) {
+            const result = {
+                synonyms: meaning.synonyms,
+                antonyms: meaning.antonyms,
+            };
+            return result;
+        }
+    }
+    return undefined;
 };

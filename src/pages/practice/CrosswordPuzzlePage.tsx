@@ -1,5 +1,5 @@
-import { NoDataMessage } from "../../components/NoDataMessage";
 import { PageHeader } from "../../components/PageHeader";
+import { PracticeMessage } from "../../components/PracticeMessage";
 import { CrosswordPuzzlePageProps } from "../../interfaces/practiceProps";
 import { getWords } from "../../services/WordService";
 import { APP_NAME } from "../../utils/constants";
@@ -36,7 +36,7 @@ export const CrosswordPuzzlePage: React.FC<CrosswordPuzzlePageProps> = ({
                     Generate puzzle
                 </button>
 
-                <NoDataMessage message="🧩 Click Generate puzzle and start to solve puzzle with your noted vocabulary" />
+                <PracticeMessage message="🧩 Click Generate puzzle and start to solve puzzle with your noted vocabulary" />
             </div>
         </div>
     );

@@ -2,7 +2,11 @@ import { useState } from "react";
 import { partsOfSpeech } from "../../utils/constants";
 import ReactSelectCreatable from "react-select/creatable";
 import { SingleValue } from "react-select";
-import { addWord, getWordsByCollectionId } from "../../services/WordService";
+import {
+    addWord,
+    getPhonetic,
+    getWordsByCollectionId,
+} from "../../services/WordService";
 import { getRandomColor } from "../../utils/helper";
 import { Choice, CommonProps } from "../../interfaces/mainProps";
 import { getCollections } from "../../services/CollectionService";
@@ -30,8 +34,12 @@ export const AddWordForm: React.FC<CommonProps> = ({
                     color: getRandomColor(),
                     createdAt: new Date(),
                 };
+
+                const phonetic = await getPhonetic(word.toLowerCase().trim());
+
                 const objWord = {
                     word: word.toLowerCase().trim(),
+                    phonetic: phonetic && phonetic,
                     definition: definition.trim(),
                     notes: notes.trim(),
                     partOfSpeech: partOfSpeech,
