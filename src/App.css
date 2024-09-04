@@ -2,6 +2,10 @@
     width: 100%;
 }
 
+.container-list {
+    height: 100%;
+}
+
 .container-list h4 {
     margin-bottom: 20px;
     color: #343a40;
@@ -76,4 +80,8 @@ a.word-link:hover {
     visibility: hidden;
     opacity: 0;
     transition: visibility 0.2s, opacity 0.2s;
+}
+
+.synonyms-antonyms:hover {
+    text-decoration: underline;
 }

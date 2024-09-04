@@ -1,33 +1,73 @@
 import { useEffect, useState } from "react";
 import { PageHeader } from "../components/PageHeader";
-import { Word } from "../interfaces/model";
+import { Collection, Word } from "../interfaces/model";
 import { useParams } from "react-router-dom";
-import { getSynonymsAntonyms, getWordById } from "../services/WordService";
+import {
+    addWordToFavorite,
+    getSynonymsAntonyms,
+    getWordById,
+    getWordsByCollectionId,
+} from "../services/WordService";
 import { WordDetailPageProps } from "../interfaces/mainProps";
 import { formatDate } from "../utils/formatDateString";
 import { handleTextToSpeech } from "../utils/helper";
+import { getCollectionById } from "../services/CollectionService";
+import { OffCanvas } from "../components/OffCanvas";
 
 export const WordDetailPage: React.FC<WordDetailPageProps> = ({ db }) => {
     const { wordId } = useParams();
 
     const [word, setWord] = useState<Word>();
+    const [collection, setCollection] = useState<Collection>();
     const [synonyms, setSynonyms] = useState<string[]>();
     const [antonyms, setAntonyms] = useState<string[]>();
+
+    const [visibleOffCanvas, setVisibleOffCanvas] = useState<string | null>(
+        null
+    );
+    const [isLoading, setIsLoading] = useState<boolean>(true);
+    const [isFavorite, setIsFavorite] = useState<boolean>(false);
+
+    const handleAddFavorite = async (word: Word) => {
+        setIsFavorite(!isFavorite);
+        if (db) {
+            await addWordToFavorite(db, word, isFavorite);
+            if (word.id) {
+                const updatedWord = await getWordById(db, word.id);
+                setWord(updatedWord);
+            }
+        }
+    };
 
     useEffect(() => {
         const fetchWord = async () => {
             if (db && wordId) {
-                const data = await getWordById(db, Number.parseInt(wordId));
-                if (data) {
-                    const objSynonymsAntonyms = await getSynonymsAntonyms(data);
+                const objWord = await getWordById(db, Number.parseInt(wordId));
+                if (objWord?.collectionId) {
+                    const objCollection = await getCollectionById(
+                        db,
+                        objWord?.collectionId
+                    );
+                    setCollection(objCollection);
+                }
+                if (objWord) {
+                    setWord(objWord);
+                    const objSynonymsAntonyms = await getSynonymsAntonyms(
+                        objWord
+                    );
                     setSynonyms(objSynonymsAntonyms?.synonyms);
                     setAntonyms(objSynonymsAntonyms?.antonyms);
-                    setWord(data);
                 }
             }
+            setIsLoading(false);
         };
         fetchWord();
     }, []);
+
+    const handleShowOffCanvas = async (id: string) => {
+        setVisibleOffCanvas(id);
+    };
+
     return (
         <div className="container-list" id="word-detail">
             <PageHeader
@@ -67,6 +107,21 @@ export const WordDetailPage: React.FC<WordDetailPageProps> = ({ db }) => {
                         <i>{word?.partOfSpeech}</i>
                     </small>
                 </div>
+                <div>
+                    <div className="btn btn-sm">
+                        <i
+                            className={`${
+                                word?.isFavorite ? "fas" : "far"
+                            } fa-heart`}
+                            onClick={() => {
+                                if (word) handleAddFavorite(word);
+                            }}
+                            style={{
+                                color: `${word?.isFavorite ? "red" : ""}`,
+                            }}
+                        ></i>
+                    </div>
+                </div>
             </div>
             <p className="mb-1">{word?.definition}</p>
             {word?.notes && (
@@ -74,8 +129,31 @@ export const WordDetailPage: React.FC<WordDetailPageProps> = ({ db }) => {
                     <strong>Notes:</strong> {word?.notes}
                 </p>
             )}
-            {synonyms && antonyms && (
-                <table className="table">
+            <a href={`/collection/${word?.collectionId}`}>
+                <small className="text-muted">
+                    &#8618; Go to{" "}
+                    <span style={{ color: collection?.color }}>
+                        <strong>{collection?.name}</strong>
+                    </span>{" "}
+                    collection
+                </small>
+            </a>
+            <br />
+            {word?.createdAt && (
+                <small className="text-muted" style={{ fontSize: "12px" }}>
+                    Created at {formatDate(word?.createdAt)}
+                </small>
+            )}
+
+            {isLoading ? (
+                <div className="container text-center">Loading...</div>
+            ) : synonyms &&
+              antonyms &&
+              (synonyms.length > 0 || antonyms.length > 0) ? (
+                <table
+                    className="table table-bordered table-sm mt-2"
+                    style={{ borderRadius: "0.25rem" }}
+                >
                     <thead>
                         <tr className="text-center">
                             <th scope="col">Synonyms</th>
@@ -87,24 +165,86 @@ export const WordDetailPage: React.FC<WordDetailPageProps> = ({ db }) => {
                             <td>
                                 {synonyms.length > 0 &&
                                     synonyms.map((synonym, index) => (
-                                        <div key={index}>{synonym}</div>
+                                        <div key={index}>
+                                            <span
+                                                className="synonyms-antonyms"
+                                                style={{
+                                                    cursor: "pointer",
+                                                }}
+                                                // data-bs-toggle="offcanvas"
+                                                // data-bs-target={`#offcanvas-bottom-synonym-${index}`}
+                                                // aria-controls={`offcanvas-bottom-synonym-${index}`}
+                                                onClick={() =>
+                                                    handleShowOffCanvas(
+                                                        `offcanvas-bottom-synonym-${index}`
+                                                    )
+                                                }
+                                            >
+                                                {synonym}
+                                            </span>
+
+                                            {visibleOffCanvas ===
+                                                `offcanvas-bottom-synonym-${index}` && (
+                                                <OffCanvas
+                                                    id={`offcanvas-bottom-synonym-${index}`}
+                                                    word={synonym}
+                                                    show={true}
+                                                    onClose={() =>
+                                                        setVisibleOffCanvas(
+                                                            null
+                                                        )
+                                                    }
+                                                />
+                                            )}
+                                        </div>
                                     ))}
                             </td>
                             <td>
                                 {antonyms.length > 0 &&
                                     antonyms.map((antonym, index) => (
-                                        <div key={index}>{antonym}</div>
+                                        <div
+                                            key={index}
+                                            style={{
+                                                cursor: "pointer",
+                                            }}
+                                        >
+                                            <span
+                                                className="synonyms-antonyms"
+                                                style={{
+                                                    cursor: "pointer",
+                                                }}
+                                                // data-bs-toggle="offcanvas"
+                                                // data-bs-target={`#offcanvas-bottom-antonym-${index}`}
+                                                // aria-controls={`offcanvas-bottom-antonym-${index}`}
+                                                onClick={() =>
+                                                    handleShowOffCanvas(
+                                                        `offcanvas-bottom-antonym-${index}`
+                                                    )
+                                                }
+                                            >
+                                                {antonym}
+                                            </span>
+
+                                            {visibleOffCanvas ===
+                                                `offcanvas-bottom-antonym-${index}` && (
+                                                <OffCanvas
+                                                    id={`offcanvas-bottom-antonym-${index}`}
+                                                    word={antonym}
+                                                    show={true}
+                                                    onClose={() =>
+                                                        setVisibleOffCanvas(
+                                                            null
+                                                        )
+                                                    }
+                                                />
+                                            )}
+                                        </div>
                                     ))}
                             </td>
                         </tr>
                     </tbody>
                 </table>
-            )}
-            {word?.createdAt && (
-                <small className="text-muted mb-1" style={{ fontSize: "12px" }}>
-                    Created at {formatDate(word?.createdAt)}
-                </small>
-            )}
+            ) : null}
         </div>
     );
 };

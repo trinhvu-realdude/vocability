@@ -5,7 +5,7 @@ import {
     getCollectionById,
     getCollectionByName,
 } from "./CollectionService";
-import { EditWordObj } from "../interfaces/mainProps";
+import { EditWordObj, ExternalWord } from "../interfaces/mainProps";
 
 const storeName = "words";
 
@@ -207,4 +207,14 @@ export const getSynonymsAntonyms = async (
         }
     }
     return undefined;
+};
+
+export const getExternalWord = async (
+    word: string
+): Promise<ExternalWord[] | { message: string }> => {
+    const response = await fetch(
+        `https://api.dictionaryapi.dev/api/v2/entries/en/${word}`
+    );
+    const data = await response.json();
+    return data as ExternalWord[];
 };

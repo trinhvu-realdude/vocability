@@ -71,6 +71,7 @@ export type WordFormProps = {
     collection: Collection | undefined;
     setIsEditOrDelete: React.Dispatch<React.SetStateAction<boolean>>;
     setWords: React.Dispatch<React.SetStateAction<Word[]>>;
+    setWord?: React.Dispatch<React.SetStateAction<Word>>;
 };
 
 export type DownloadDocumentModalProps = {
@@ -116,4 +117,23 @@ export type EditWordObj = {
     partOfSpeech: string;
     definition: string;
     notes: string;
+};
+
+export type ExternalWord = {
+    word: string;
+    phonetic: string;
+    phonetics: [{ text: string; audio: string }];
+    meanings: [
+        {
+            partOfSpeech: string;
+            definitions: [
+                {
+                    definition: string;
+                    example: string;
+                }
+            ];
+            synonyms: [string];
+            antonyms: [string];
+        }
+    ];
 };
