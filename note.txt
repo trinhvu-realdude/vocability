@@ -11,6 +11,7 @@
 - Change edit modal to edit form directly in the word and collection - Done
 - Change Collections link in NavBar to hoverable dropdown - Done
 - Add search bar for Favorite collection - Done
+- Fix edit word in WordDetailPage, it is calling API 2 times
 - Fix components render 2 times - Pending
 - Research games for Practice
     + Flashcard Quiz - Done

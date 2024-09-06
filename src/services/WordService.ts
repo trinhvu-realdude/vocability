@@ -129,6 +129,7 @@ export const getFavoriteWords = async (
                     id: word.id,
                     collection: collection,
                     word: word.word,
+                    phonetic: word.phonetic,
                     definition: word.definition,
                     notes: word.notes,
                     partOfSpeech: word.partOfSpeech,
@@ -154,6 +155,7 @@ export const updateWord = async (
         let objWord = await store.get(word.id);
         if (objWord) {
             objWord.word = editValue.word;
+            objWord.phonetic = editValue.phonetic;
             objWord.partOfSpeech = editValue.partOfSpeech;
             objWord.definition = editValue.definition;
             objWord.notes = editValue.notes;
@@ -175,11 +177,14 @@ export const getPhonetic = async (
         `https://api.dictionaryapi.dev/api/v2/entries/en/${word}`
     );
     const data = await response.json();
-    const phonetics = data[0].phonetics;
 
-    for (const element of phonetics) {
-        if (element.text && element.audio) {
-            return element.text;
+    if (data instanceof Array) {
+        const phonetics = data[0].phonetics;
+
+        for (const element of phonetics) {
+            if (element.text && element.audio) {
+                return element.text;
+            }
         }
     }
     return undefined;

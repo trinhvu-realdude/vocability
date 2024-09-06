@@ -44,6 +44,8 @@ export const FavoritePage: React.FC<CommonProps> = ({ db }) => {
                   (word) => word.collection.name === collection.name
               )
             : favoriteWords;
+        console.log(filtered);
+
         setFilteredWords(filtered);
         setDisplayWords(filtered);
     };
@@ -109,6 +111,12 @@ export const FavoritePage: React.FC<CommonProps> = ({ db }) => {
                                 <div className="row">
                                     <h5 className="mb-1">
                                         <strong>{word.word}</strong>{" "}
+                                        <small
+                                            className="text-muted mb-1"
+                                            style={{ fontSize: "14px" }}
+                                        >
+                                            {word.phonetic}
+                                        </small>{" "}
                                         <div
                                             className="btn btn-sm"
                                             style={{

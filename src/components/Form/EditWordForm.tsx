@@ -1,7 +1,11 @@
 import { useState } from "react";
 import { EditWordObj, WordFormProps } from "../../interfaces/mainProps";
 import { partsOfSpeech } from "../../utils/constants";
-import { getWordsByCollectionId, updateWord } from "../../services/WordService";
+import {
+    getPhonetic,
+    getWordsByCollectionId,
+    updateWord,
+} from "../../services/WordService";
 
 export const EditWordForm: React.FC<WordFormProps> = ({
     db,
@@ -9,6 +13,7 @@ export const EditWordForm: React.FC<WordFormProps> = ({
     collection,
     setIsEditOrDelete,
     setWords,
+    setWord,
 }) => {
     const [partOfSpeechValue, setPartOfSpeechValue] = useState<string>("");
     const [wordValue, setWordValue] = useState<string>("");
@@ -16,10 +21,14 @@ export const EditWordForm: React.FC<WordFormProps> = ({
     const [notesValue, setNotesValue] = useState<string>("");
 
     const handleEditWord = async () => {
+        const phonetic = await getPhonetic(
+            wordValue !== "" ? wordValue.trim() : word.word
+        );
         try {
             if (db) {
                 const editValue: EditWordObj = {
                     word: wordValue !== "" ? wordValue.trim() : word.word,
+                    phonetic: phonetic,
                     partOfSpeech:
                         partOfSpeechValue !== ""
                             ? partOfSpeechValue.trim()
@@ -39,6 +48,7 @@ export const EditWordForm: React.FC<WordFormProps> = ({
                     );
                     setWords(words);
                 }
+                if (setWord) setWord(updatedWord);
                 setIsEditOrDelete(false);
             }
         } catch (error) {

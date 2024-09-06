@@ -6,13 +6,14 @@ import {
     addWordToFavorite,
     getSynonymsAntonyms,
     getWordById,
-    getWordsByCollectionId,
 } from "../services/WordService";
 import { WordDetailPageProps } from "../interfaces/mainProps";
 import { formatDate } from "../utils/formatDateString";
 import { handleTextToSpeech } from "../utils/helper";
 import { getCollectionById } from "../services/CollectionService";
 import { OffCanvas } from "../components/OffCanvas";
+import { APP_NAME } from "../utils/constants";
+import { EditWordForm } from "../components/Form/EditWordForm";
 
 export const WordDetailPage: React.FC<WordDetailPageProps> = ({ db }) => {
     const { wordId } = useParams();
@@ -27,6 +28,9 @@ export const WordDetailPage: React.FC<WordDetailPageProps> = ({ db }) => {
     );
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [isFavorite, setIsFavorite] = useState<boolean>(false);
+    const [isEdit, setIsEdit] = useState<boolean>(false);
+
+    document.title = `${APP_NAME} | ${word?.word}`;
 
     const handleAddFavorite = async (word: Word) => {
         setIsFavorite(!isFavorite);
@@ -41,28 +45,39 @@ export const WordDetailPage: React.FC<WordDetailPageProps> = ({ db }) => {
 
     useEffect(() => {
         const fetchWord = async () => {
-            if (db && wordId) {
-                const objWord = await getWordById(db, Number.parseInt(wordId));
-                if (objWord?.collectionId) {
-                    const objCollection = await getCollectionById(
+            try {
+                if (db && wordId) {
+                    const objWord = await getWordById(
                         db,
-                        objWord?.collectionId
+                        Number.parseInt(wordId)
                     );
-                    setCollection(objCollection);
+                    if (objWord?.collectionId) {
+                        const objCollection = await getCollectionById(
+                            db,
+                            objWord?.collectionId
+                        );
+                        setCollection(objCollection);
+                    }
+                    if (objWord) {
+                        setWord(objWord);
+                        const objSynonymsAntonyms = await getSynonymsAntonyms(
+                            objWord
+                        );
+
+                        setSynonyms(objSynonymsAntonyms?.synonyms);
+                        setAntonyms(objSynonymsAntonyms?.antonyms);
+                    }
                 }
-                if (objWord) {
-                    setWord(objWord);
-                    const objSynonymsAntonyms = await getSynonymsAntonyms(
-                        objWord
-                    );
-                    setSynonyms(objSynonymsAntonyms?.synonyms);
-                    setAntonyms(objSynonymsAntonyms?.antonyms);
-                }
+            } catch (error) {
+                console.log(error);
+                setSynonyms([]);
+                setAntonyms([]);
+            } finally {
+                setIsLoading(false);
             }
-            setIsLoading(false);
         };
         fetchWord();
-    }, []);
+    }, [isEdit ? word?.word : null]);
 
     const handleShowOffCanvas = async (id: string) => {
         setVisibleOffCanvas(id);
@@ -78,71 +93,103 @@ export const WordDetailPage: React.FC<WordDetailPageProps> = ({ db }) => {
                     </>
                 }
             />
-            <div className="d-flex w-100 justify-content-between mb-2">
-                <div className="row">
-                    <h5 className="mb-1">
-                        <a href={`/word/${word?.id}`} className="word-link">
-                            <strong>{word?.word}</strong>{" "}
-                        </a>
-                        <small
-                            className="text-muted mb-1"
-                            style={{ fontSize: "14px" }}
-                        >
-                            {word?.phonetic}
-                        </small>{" "}
-                        <div
-                            className="btn btn-sm"
-                            style={{
-                                padding: 0,
-                                margin: 0,
-                            }}
-                            onClick={() =>
-                                word?.word && handleTextToSpeech(word?.word)
-                            }
-                        >
-                            <i className="fas fa-volume-up"></i>
+            {!isEdit && (
+                <>
+                    <div className="d-flex w-100 justify-content-between mb-2">
+                        <div className="row">
+                            <h5 className="mb-1">
+                                <a
+                                    href={`/word/${word?.id}`}
+                                    className="word-link"
+                                >
+                                    <strong>{word?.word}</strong>{" "}
+                                </a>
+                                <small
+                                    className="text-muted mb-1"
+                                    style={{ fontSize: "14px" }}
+                                >
+                                    {word?.phonetic}
+                                </small>{" "}
+                                <div
+                                    className="btn btn-sm"
+                                    style={{
+                                        padding: 0,
+                                        margin: 0,
+                                    }}
+                                    onClick={() =>
+                                        word?.word &&
+                                        handleTextToSpeech(word?.word)
+                                    }
+                                >
+                                    <i className="fas fa-volume-up"></i>
+                                </div>
+                            </h5>
+                            <small>
+                                <i>{word?.partOfSpeech}</i>
+                            </small>
                         </div>
-                    </h5>
-                    <small>
-                        <i>{word?.partOfSpeech}</i>
-                    </small>
-                </div>
-                <div>
-                    <div className="btn btn-sm">
-                        <i
-                            className={`${
-                                word?.isFavorite ? "fas" : "far"
-                            } fa-heart`}
-                            onClick={() => {
-                                if (word) handleAddFavorite(word);
-                            }}
-                            style={{
-                                color: `${word?.isFavorite ? "red" : ""}`,
-                            }}
-                        ></i>
+                        <div>
+                            <div className="btn btn-sm">
+                                <i
+                                    className={`${
+                                        word?.isFavorite ? "fas" : "far"
+                                    } fa-heart`}
+                                    onClick={() => {
+                                        if (word) handleAddFavorite(word);
+                                    }}
+                                    style={{
+                                        color: `${
+                                            word?.isFavorite ? "red" : ""
+                                        }`,
+                                    }}
+                                ></i>
+                            </div>
+                            {/* <div
+                                className="btn btn-sm"
+                                onClick={() => setIsEdit(true)}
+                            >
+                                <i className="fas fa-pen"></i>
+                            </div> */}
+                        </div>
                     </div>
-                </div>
-            </div>
-            <p className="mb-1">{word?.definition}</p>
-            {word?.notes && (
-                <p className="mb-1">
-                    <strong>Notes:</strong> {word?.notes}
-                </p>
+                    <p className="mb-1">{word?.definition}</p>
+                    {word?.notes && (
+                        <p className="mb-1">
+                            <strong>Notes:</strong> {word?.notes}
+                        </p>
+                    )}
+                    <a href={`/collection/${word?.collectionId}`}>
+                        <small className="text-muted">
+                            &#8618; Go to{" "}
+                            <span style={{ color: collection?.color }}>
+                                <strong>{collection?.name}</strong>
+                            </span>{" "}
+                            collection
+                        </small>
+                    </a>
+                    <br />
+                    {word?.createdAt && (
+                        <small
+                            className="text-muted"
+                            style={{ fontSize: "12px" }}
+                        >
+                            Created at {formatDate(word?.createdAt)}
+                        </small>
+                    )}
+                </>
             )}
-            <a href={`/collection/${word?.collectionId}`}>
-                <small className="text-muted">
-                    &#8618; Go to{" "}
-                    <span style={{ color: collection?.color }}>
-                        <strong>{collection?.name}</strong>
-                    </span>{" "}
-                    collection
-                </small>
-            </a>
-            <br />
-            {word?.createdAt && (
-                <small className="text-muted" style={{ fontSize: "12px" }}>
-                    Created at {formatDate(word?.createdAt)}
-                </small>
+
+            {isEdit && word && (
+                <EditWordForm
+                    db={db}
+                    word={word}
+                    collection={collection}
+                    setIsEditOrDelete={setIsEdit}
+                    setWords={() => {}}
+                    setWord={setWord}
+                    setSynonyms={setSynonyms}
+                    setAntonyms={setAntonyms}
+                />
             )}
 
             {isLoading ? (
@@ -171,9 +218,6 @@ export const WordDetailPage: React.FC<WordDetailPageProps> = ({ db }) => {
                                                 style={{
                                                     cursor: "pointer",
                                                 }}
-                                                // data-bs-toggle="offcanvas"
-                                                // data-bs-target={`#offcanvas-bottom-synonym-${index}`}
-                                                // aria-controls={`offcanvas-bottom-synonym-${index}`}
                                                 onClick={() =>
                                                     handleShowOffCanvas(
                                                         `offcanvas-bottom-synonym-${index}`
@@ -213,9 +257,6 @@ export const WordDetailPage: React.FC<WordDetailPageProps> = ({ db }) => {
                                                 style={{
                                                     cursor: "pointer",
                                                 }}
-                                                // data-bs-toggle="offcanvas"
-                                                // data-bs-target={`#offcanvas-bottom-antonym-${index}`}
-                                                // aria-controls={`offcanvas-bottom-antonym-${index}`}
                                                 onClick={() =>
                                                     handleShowOffCanvas(
                                                         `offcanvas-bottom-antonym-${index}`

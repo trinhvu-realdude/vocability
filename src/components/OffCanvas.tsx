@@ -30,7 +30,7 @@ export const OffCanvas: React.FC<{
             style={{
                 height: `${data instanceof Array ? "100%" : "20%"}`,
                 visibility: show ? "visible" : "hidden",
-                transition: "visibility 0.2s ease, height 0.2s ease",
+                transition: "visibility 0.3s ease, height 0.3s ease",
             }}
         >
             <div className="offcanvas-header">
@@ -40,13 +40,14 @@ export const OffCanvas: React.FC<{
                 >
                     <strong>{word}</strong>
                 </h5>
-                <button
-                    type="button"
-                    className="btn-close text-reset"
+                <div
+                    className="btn btn-sm"
                     data-bs-dismiss="offcanvas"
                     aria-label="Close"
                     onClick={onClose}
-                ></button>
+                >
+                    <i className="fas fa-times"></i>
+                </div>
             </div>
             <div className="offcanvas-body text-start container">
                 {isLoading ? (
