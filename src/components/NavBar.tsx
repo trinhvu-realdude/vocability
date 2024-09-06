@@ -57,12 +57,11 @@ export const NavBar: React.FC<NavBarProps> = ({ collections }) => {
                                             href={`/collection/${collection.id}`}
                                         >
                                             <div
-                                                // className="square"
                                                 style={{
                                                     color: collection.color,
                                                 }}
                                             >
-                                                <i className="fas fa-clone"></i>
+                                                <i className="fas fa-layer-group"></i>
                                             </div>
                                             <span className="ms-2">
                                                 {collection.name}
@@ -84,7 +83,7 @@ export const NavBar: React.FC<NavBarProps> = ({ collections }) => {
                                                 color: "red",
                                             }}
                                         >
-                                            <i className="fas fa-clone"></i>
+                                            <i className="fas fa-layer-group"></i>
                                         </div>
                                         <span className="ms-2">Favorite</span>
                                     </a>

@@ -166,15 +166,15 @@ export const documentFileFormats = [
     {
         type: "docx",
     },
-    {
-        type: "xlsx",
-    },
-    {
-        type: "csv",
-    },
-    {
-        type: "png",
-    },
+    // {
+    //     type: "xlsx",
+    // },
+    // {
+    //     type: "csv",
+    // },
+    // {
+    //     type: "png",
+    // },
 ];
 
 export const FILETYPE = {
