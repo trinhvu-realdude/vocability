@@ -98,12 +98,7 @@ export const WordDetailPage: React.FC<WordDetailPageProps> = ({ db }) => {
                     <div className="d-flex w-100 justify-content-between mb-2">
                         <div className="row">
                             <h5 className="mb-1">
-                                <a
-                                    href={`/word/${word?.id}`}
-                                    className="word-link"
-                                >
-                                    <strong>{word?.word}</strong>{" "}
-                                </a>
+                                <strong>{word?.word}</strong>{" "}
                                 <small
                                     className="text-muted mb-1"
                                     style={{ fontSize: "14px" }}

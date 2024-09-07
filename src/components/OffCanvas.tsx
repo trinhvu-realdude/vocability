@@ -154,12 +154,7 @@ export const OffCanvas: React.FC<{
                                                                                             index
                                                                                         }
                                                                                     >
-                                                                                        <span
-                                                                                            className="synonyms-antonyms"
-                                                                                            style={{
-                                                                                                cursor: "pointer",
-                                                                                            }}
-                                                                                        >
+                                                                                        <span>
                                                                                             {
                                                                                                 synonym
                                                                                             }
@@ -182,16 +177,8 @@ export const OffCanvas: React.FC<{
                                                                                         key={
                                                                                             index
                                                                                         }
-                                                                                        style={{
-                                                                                            cursor: "pointer",
-                                                                                        }}
                                                                                     >
-                                                                                        <span
-                                                                                            className="synonyms-antonyms"
-                                                                                            style={{
-                                                                                                cursor: "pointer",
-                                                                                            }}
-                                                                                        >
+                                                                                        <span>
                                                                                             {
                                                                                                 antonym
                                                                                             }
