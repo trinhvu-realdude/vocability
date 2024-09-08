@@ -7,7 +7,6 @@ export const GlossaryPage = () => {
     return (
         <div id="glossary" className="container-list">
             <PageHeader
-                href={document.referrer}
                 content={<span style={{ color: "#DD5746" }}>Glossary</span>}
             />
             <div className="list-group">

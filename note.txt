@@ -39,3 +39,4 @@
     + German - de 
     + Italian - it 
     + Portuguese - pt
+- Add translation

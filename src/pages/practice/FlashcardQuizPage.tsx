@@ -34,7 +34,11 @@ export const FlashcardQuizPage: React.FC<FlashcardQuizPageProps> = ({
                 numberOfCards,
                 setCardColor
             );
-            setGeneratedWords(wordsForFlashCards);
+            if (wordsForFlashCards.length > 0) {
+                setGeneratedWords(wordsForFlashCards);
+            } else {
+                alert("Collection has no word");
+            }
         } else {
             alert("Please choose the collection and enter number of cards");
         }

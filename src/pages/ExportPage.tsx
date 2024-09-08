@@ -19,10 +19,19 @@ export const ExportPage: React.FC<CommonProps> = ({ db, collections }) => {
     const [filename, setFileName] = useState<string>("");
     const [collectionColor, setCollectionColor] = useState<string>("");
     const [documentUrl, setDocumentUrl] = useState<string>("");
+    const [fromDate, setFromDate] = useState<Date>();
+    const [toDate, setToDate] = useState<Date>();
 
     const handleGenerateDocument = async () => {
         if (db && exportCollectionId && fileType) {
-            const words = await getWordsByCollectionId(db, exportCollectionId);
+            let words = await getWordsByCollectionId(db, exportCollectionId);
+            if (fromDate && toDate) {
+                words = words.filter(
+                    (word) =>
+                        word.createdAt >= fromDate && word.createdAt <= toDate
+                );
+            }
+
             const color = await getColorByCollectionId(db, exportCollectionId);
             setCollectionColor(color);
             const collection = await getCollectionById(db, exportCollectionId);
@@ -52,9 +61,9 @@ export const ExportPage: React.FC<CommonProps> = ({ db, collections }) => {
 
     return (
         <div className="container-list" id="import-export">
-            <PageHeader href={document.referrer} content="Export" />
+            <PageHeader content="Export" />
             <div className="export-form">
-                <div className="input-group mb-4">
+                <div className="input-group mb-2">
                     <select
                         className="form-select"
                         id="part-of-speech"
@@ -87,6 +96,44 @@ export const ExportPage: React.FC<CommonProps> = ({ db, collections }) => {
                             </option>
                         ))}
                     </select>
+                </div>
+                <div className="d-flex justify-content-between mb-2">
+                    <button
+                        className="btn"
+                        style={{
+                            border: "1px solid #ced4da",
+                        }}
+                    >
+                        <strong>From:</strong>{" "}
+                        <input
+                            type="date"
+                            style={{ border: "none" }}
+                            onChange={(event) =>
+                                setFromDate(
+                                    new Date(`${event.target.value}T00:00:00`)
+                                )
+                            }
+                        />
+                    </button>
+                    <button
+                        className="btn"
+                        style={{
+                            border: "1px solid #ced4da",
+                        }}
+                    >
+                        <strong>To:</strong>{" "}
+                        <input
+                            type="date"
+                            style={{ border: "none" }}
+                            onChange={(event) =>
+                                setToDate(
+                                    new Date(
+                                        `${event.target.value}T23:59:59.999`
+                                    )
+                                )
+                            }
+                        />
+                    </button>
                 </div>
 
                 <div className="input-group">

@@ -32,7 +32,8 @@ function App() {
 
                 {db && (
                     <Routes>
-                        <Route path="/" element={<RootLayout />} />
+                        {/* For production */}
+                        {/* <Route path="/" element={<RootLayout />} /> */}
                         <Route
                             path="/*"
                             element={

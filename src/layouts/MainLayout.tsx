@@ -31,6 +31,20 @@ const MainLayout: React.FC<MainLayoutProps> = ({
             />
 
             <Routes>
+                {/* For production */}
+                <Route
+                    path="/"
+                    element={
+                        <CollectionPage
+                            db={db}
+                            collections={collections}
+                            setCollections={setCollections}
+                            setWords={setWords}
+                        />
+                    }
+                />
+
+
                 <Route
                     path="/collections"
                     element={
