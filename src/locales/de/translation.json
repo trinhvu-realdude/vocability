@@ -1,0 +1,19 @@
+{
+    "language": "de",
+    "navbar.collections": "Sammlungen",
+    "navbar.collections.allCollections": "Alle Sammlungen",
+    "navbar.collections.favorite": "Favoriten",
+    "navbar.practices": "Übungen",
+    "navbar.export": "Exportieren",
+    "navbar.glossary": "Glossar",
+    "addWordForm.partOfSpeech": "Wortart",
+    "addWordForm.noteYourWord": "Notiere dein Wort",
+    "addWordForm.collection": "Sammlung",
+    "addWordForm.noOptionsMessage": "Keine Sammlung",
+    "addWordForm.definition": "Definition",
+    "addWordForm.notes": "Notizen",
+    "addWordForm.addWordBtn": "Wort hinzufügen",
+    "collectionPage.title": "Sammlungen",
+    "collectionPage.noDataMessage": "🗿 Oops...! Du hast keine Sammlung. Lass uns anfangen, Vokabeln zu notieren und zu üben.",
+    "collectionPage.createCollectionBtn": "Sammlung erstellen"
+}

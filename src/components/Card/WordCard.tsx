@@ -9,6 +9,7 @@ import { handleTextToSpeech, sortWordsByFilter } from "../../utils/helper";
 import { EditWordForm } from "../Form/EditWordForm";
 import { DeleteWordForm } from "../Form/DeleteWordForm";
 import { formatDate } from "../../utils/formatDateString";
+import { useLanguage } from "../../LanguageContext";
 
 export const WordCard: React.FC<WordCardProps> = ({
     db,
@@ -20,6 +21,8 @@ export const WordCard: React.FC<WordCardProps> = ({
     const [isFavorite, setIsFavorite] = useState<boolean>(false);
     const [isEdit, setIsEdit] = useState<boolean>(false);
     const [isDelete, setIsDelete] = useState<boolean>(false);
+
+    const { translations } = useLanguage();
 
     const handleAddFavorite = async (word: Word) => {
         setIsFavorite(!isFavorite);
@@ -63,7 +66,10 @@ export const WordCard: React.FC<WordCardProps> = ({
                                         margin: 0,
                                     }}
                                     onClick={() =>
-                                        handleTextToSpeech(word.word)
+                                        handleTextToSpeech(
+                                            word.word,
+                                            translations["language"]
+                                        )
                                     }
                                 >
                                     <i className="fas fa-volume-up"></i>

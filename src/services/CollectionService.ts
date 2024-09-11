@@ -4,6 +4,30 @@ import { deleteWordsByCollectionId, getWords } from "./WordService";
 
 const storeName = "collections";
 
+export const getCollectionsByLanguageId = async (
+    db: IDBPDatabase<MyDB>,
+    currentLanguageId: number
+): Promise<Collection[]> => {
+    const tx = db.transaction(storeName, "readonly");
+    const store = tx.objectStore(storeName);
+
+    const collections = (await store.getAll()).filter(
+        (collection) => collection.languageId === currentLanguageId
+    );
+
+    const words = await getWords(db);
+
+    await tx.done;
+
+    collections.forEach((collection) => {
+        collection.numOfWords = words.filter(
+            (word) => word.collectionId === collection.id
+        ).length;
+    });
+
+    return collections;
+};
+
 export const getCollections = async (
     db: IDBPDatabase<MyDB>
 ): Promise<Collection[]> => {

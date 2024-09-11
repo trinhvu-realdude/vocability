@@ -1,6 +1,12 @@
 import { NavBarProps } from "../interfaces/mainProps";
+import { useLanguage } from "../LanguageContext";
 
-export const NavBar: React.FC<NavBarProps> = ({ collections }) => {
+export const NavBar: React.FC<NavBarProps> = ({
+    collections,
+    languageCode,
+}) => {
+    const { translations } = useLanguage();
+
     return (
         <nav className="navbar navbar-expand-lg navbar-light bg-light">
             <div className="container">
@@ -37,7 +43,7 @@ export const NavBar: React.FC<NavBarProps> = ({ collections }) => {
                                 data-bs-toggle="dropdown"
                                 aria-expanded="false"
                             >
-                                Collections
+                                {translations["navbar.collections"]}
                             </a>
                             <ul className="dropdown-menu">
                                 <li>
@@ -46,7 +52,11 @@ export const NavBar: React.FC<NavBarProps> = ({ collections }) => {
                                         href="/collections"
                                     >
                                         <h6 className="dropdown-header">
-                                            All collections
+                                            {
+                                                translations[
+                                                    "navbar.collections.allCollections"
+                                                ]
+                                            }
                                         </h6>
                                     </a>
                                 </li>
@@ -85,21 +95,27 @@ export const NavBar: React.FC<NavBarProps> = ({ collections }) => {
                                         >
                                             <i className="fas fa-layer-group"></i>
                                         </div>
-                                        <span className="ms-2">Favorite</span>
+                                        <span className="ms-2">
+                                            {
+                                                translations[
+                                                    "navbar.collections.favorite"
+                                                ]
+                                            }
+                                        </span>
                                     </a>
                                 </li>
                             </ul>
                         </li>
 
-                        <li className="nav-item mx-2">
+                        {/* <li className="nav-item mx-2">
                             <a className="nav-link active" href="/practices">
-                                Practices
+                                {translations["navbar.practices"]}
                             </a>
-                        </li>
+                        </li> */}
 
                         <li className="nav-item mx-2">
                             <a className="nav-link active" href="/export">
-                                Export
+                                {translations["navbar.export"]}
                             </a>
                         </li>
 
@@ -111,20 +127,22 @@ export const NavBar: React.FC<NavBarProps> = ({ collections }) => {
                                     color: "#DD5746",
                                 }}
                             >
-                                Glossary
+                                {translations["navbar.glossary"]}
                             </a>
                         </li>
 
-                        {/* <li className="nav-item mx-2">
-                            <a className="nav-link active" href="/">
-                                <span
-                                    className="fi fi-us"
-                                    style={{
-                                        borderRadius: "2px",
-                                    }}
-                                ></span>
-                            </a>
-                        </li> */}
+                        {languageCode && (
+                            <li className="nav-item mx-2">
+                                <a className="nav-link active">
+                                    <span
+                                        className={`fi fi-${languageCode}`}
+                                        style={{
+                                            borderRadius: "2px",
+                                        }}
+                                    ></span>
+                                </a>
+                            </li>
+                        )}
                     </ul>
                 </div>
             </div>

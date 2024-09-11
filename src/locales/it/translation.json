@@ -1,0 +1,19 @@
+{
+    "language": "it",
+    "navbar.collections": "Collezioni",
+    "navbar.collections.allCollections": "Tutte le collezioni",
+    "navbar.collections.favorite": "Preferiti",
+    "navbar.practices": "Esercizi",
+    "navbar.export": "Esporta",
+    "navbar.glossary": "Glossario",
+    "addWordForm.partOfSpeech": "Parte del discorso",
+    "addWordForm.noteYourWord": "Annota la tua parola",
+    "addWordForm.collection": "Collezione",
+    "addWordForm.noOptionsMessage": "Nessuna collezione",
+    "addWordForm.definition": "Definizione",
+    "addWordForm.notes": "Note",
+    "addWordForm.addWordBtn": "Aggiungi parola",
+    "collectionPage.title": "Collezioni",
+    "collectionPage.noDataMessage": "🗿 Ops...! Non hai alcuna collezione. Inizia a prendere appunti e a fare pratica con il vocabolario.",
+    "collectionPage.createCollectionBtn": "Crea collezione"
+}

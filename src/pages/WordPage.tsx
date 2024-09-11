@@ -10,6 +10,7 @@ import { NoDataMessage } from "../components/NoDataMessage";
 import { SearchBar } from "../components/SearchBar";
 import { PageHeader } from "../components/PageHeader";
 import { APP_NAME } from "../utils/constants";
+import { useLanguage } from "../LanguageContext";
 
 export const WordPage: React.FC<WordPageProps> = ({
     db,
@@ -22,6 +23,8 @@ export const WordPage: React.FC<WordPageProps> = ({
     const [collection, setCollection] = useState<Collection>();
     const [filteredWords, setFilteredWords] = useState<Word[]>(words);
     const [filterSorting, setFilterSorting] = useState<FilterSortingOption>();
+
+    const { translations } = useLanguage();
 
     document.title = collection
         ? `${APP_NAME} | ${collection.name} collection`
@@ -49,7 +52,7 @@ export const WordPage: React.FC<WordPageProps> = ({
     return (
         <div className="container-list" id="word-list">
             <PageHeader
-                href="/collections"
+                href={`/${translations["language"]}/collections`}
                 content={
                     <>
                         <span style={{ color: collection?.color }}>

@@ -85,3 +85,7 @@ a.word-link:hover {
 .synonyms-antonyms:hover {
     text-decoration: underline;
 }
+
+.flag:hover {
+    text-decoration: underline;
+}

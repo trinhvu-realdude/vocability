@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { MainLayoutProps } from "../interfaces/mainProps";
 import { StorageBar } from "../components/StorageBar";
 import { AddWordForm } from "../components/Form/AddWordForm";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useParams } from "react-router-dom";
 import { WordPage } from "../pages/WordPage";
 import { FavoritePage } from "../pages/FavoritePage";
 import { ExportPage } from "../pages/ExportPage";
@@ -10,14 +10,39 @@ import { CollectionPage } from "../pages/CollectionPage";
 import { GlossaryPage } from "../pages/GlossaryPage";
 import { Word } from "../interfaces/model";
 import { WordDetailPage } from "../pages/WordDetailPage";
+import { getCurrentLanguageId } from "../utils/helper";
+import { languages } from "../utils/constants";
+import { getCollectionsByLanguageId } from "../services/CollectionService";
 
 const MainLayout: React.FC<MainLayoutProps> = ({
     db,
     collections,
     setCollections,
+    setLanguageCode,
 }) => {
     const [words, setWords] = useState<Word[]>([]);
     const [currentCollectionId, setCurrentCollectionId] = useState<string>("");
+    // const [collections, setCollections] = useState<Collection[]>([]);
+
+    const { language } = useParams();
+
+    useEffect(() => {
+        const fetchData = async () => {
+            if (db && language) {
+                setLanguageCode(language);
+                const currentLanguageId = await getCurrentLanguageId(
+                    languages,
+                    language
+                );
+                const storedCollections = await getCollectionsByLanguageId(
+                    db,
+                    currentLanguageId
+                );
+                setCollections(storedCollections);
+            }
+        };
+        fetchData();
+    }, [language]);
 
     return (
         <div className="container my-4">
@@ -32,7 +57,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({
 
             <Routes>
                 {/* For production */}
-                <Route
+                {/* <Route
                     path="/"
                     element={
                         <CollectionPage
@@ -42,8 +67,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({
                             setWords={setWords}
                         />
                     }
-                />
-
+                /> */}
 
                 <Route
                     path="/collections"

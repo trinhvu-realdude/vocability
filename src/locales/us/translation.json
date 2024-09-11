@@ -1,0 +1,21 @@
+{
+    "language": "us",
+    "navbar.collections": "Collections",
+    "navbar.collections.allCollections": "All collection",
+    "navbar.collections.favorite": "Favorite",
+    "navbar.practices": "Practices",
+    "navbar.export": "Export",
+    "navbar.glossary": "Glossary",
+    "addWordForm.partOfSpeech": "Part of speech",
+    "addWordForm.noteYourWord": "Note your word",
+    "addWordForm.collection": "Collection",
+    "addWordForm.noOptionsMessage": "No collection",
+    "addWordForm.definition": "Definition",
+    "addWordForm.notes": "Notes",
+    "addWordForm.addWordBtn": "Add word",
+    "collectionPage.title": "Collections",
+    "collectionPage.noDataMessage": "🗿 Oops...! You have no collection. Let's start to take note and practice vocabulary.",
+    "collectionPage.createCollectionBtn": "Create collection",
+    "collectionPage.collectionCard.numberOfWords": "Number of words",
+    "searchBar.placeholder": "Search word in collection"
+}

@@ -3,6 +3,7 @@ import { Collection, Word, WordDto } from "../interfaces/model";
 import { FilterSortingOption } from "../interfaces/mainProps";
 import { SortFilter } from "./Filter/SortFilter";
 import { CollectionFilter } from "./Filter/CollectionFilter";
+import { useLanguage } from "../LanguageContext";
 
 export const SearchBar: React.FC<{
     isFavorite: boolean;
@@ -32,6 +33,8 @@ export const SearchBar: React.FC<{
     }) => {
         const [searchValue, setSearchValue] = useState<string>("");
         const [displayWords, setDisplayWords] = useState<Word[]>([]); // for SortFilter component
+
+        const { translations } = useLanguage();
 
         {
             isFavorite
@@ -75,8 +78,8 @@ export const SearchBar: React.FC<{
                 <input
                     className="form-control"
                     type="search"
-                    placeholder="Search word in collection"
-                    aria-label="Search word in collection"
+                    placeholder={translations["searchBar.placeholder"]}
+                    aria-label={translations["searchBar.placeholder"]}
                     value={searchValue}
                     onChange={(event) => setSearchValue(event.target.value)}
                 />

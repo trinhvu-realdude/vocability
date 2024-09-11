@@ -32,7 +32,7 @@
     + csv
     + png
 - Design for Root layout
-- Add Languagues: 
+- Add Languagues - In Progress 
     + English - us
     + Spanish - es
     + French - fr
