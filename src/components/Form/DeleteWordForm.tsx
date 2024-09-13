@@ -1,6 +1,7 @@
 import { Word } from "../../interfaces/model";
 import { WordFormProps } from "../../interfaces/mainProps";
 import { deleteWord, getWordsByCollectionId } from "../../services/WordService";
+import { useLanguage } from "../../LanguageContext";
 
 export const DeleteWordForm: React.FC<WordFormProps> = ({
     db,
@@ -9,6 +10,8 @@ export const DeleteWordForm: React.FC<WordFormProps> = ({
     setIsEditOrDelete,
     setWords,
 }) => {
+    const { translations } = useLanguage();
+
     const handleDeleteWord = async (word: Word) => {
         if (db) {
             await deleteWord(db, word);
@@ -66,14 +69,14 @@ export const DeleteWordForm: React.FC<WordFormProps> = ({
                     className="btn btn-outline-secondary"
                     onClick={() => setIsEditOrDelete(false)}
                 >
-                    Cancel
+                    {translations["cancelBtn"]}
                 </button>
                 <button
                     type="button"
                     className="btn btn-outline-danger"
                     onClick={() => handleDeleteWord(word)}
                 >
-                    Delete now
+                    {translations["deleteBtn"]}
                 </button>
             </div>
         </div>

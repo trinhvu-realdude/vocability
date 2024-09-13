@@ -49,7 +49,7 @@ export const NavBar: React.FC<NavBarProps> = ({
                                 <li>
                                     <a
                                         className="dropdown-item"
-                                        href="/collections"
+                                        href={`/${translations["language"]}/collections`}
                                     >
                                         <h6 className="dropdown-header">
                                             {
@@ -132,8 +132,15 @@ export const NavBar: React.FC<NavBarProps> = ({
                         </li>
 
                         {languageCode && (
-                            <li className="nav-item mx-2">
-                                <a className="nav-link active">
+                            <li
+                                className="nav-item dropdown mx-2"
+                                style={{ cursor: "pointer" }}
+                            >
+                                <a
+                                    className="nav-link active"
+                                    data-bs-toggle="dropdown"
+                                    aria-expanded="false"
+                                >
                                     <span
                                         className={`fi fi-${languageCode}`}
                                         style={{
@@ -141,6 +148,14 @@ export const NavBar: React.FC<NavBarProps> = ({
                                         }}
                                     ></span>
                                 </a>
+                                <ul className="dropdown-menu dropdown-menu-end dropdown-menu-lg-start">
+                                    <li>
+                                        <a
+                                            className="dropdown-item d-flex"
+                                            href=""
+                                        ></a>
+                                    </li>
+                                </ul>
                             </li>
                         )}
                     </ul>

@@ -15,5 +15,8 @@
     "addWordForm.addWordBtn": "Wort hinzufügen",
     "collectionPage.title": "Sammlungen",
     "collectionPage.noDataMessage": "🗿 Oops...! Du hast keine Sammlung. Lass uns anfangen, Vokabeln zu notieren und zu üben.",
-    "collectionPage.createCollectionBtn": "Sammlung erstellen"
+    "collectionPage.createCollectionBtn": "Sammlung erstellen",
+    "editForm.editCollection": "Sammlung bearbeiten",
+    "cancelBtn": "Stornieren",
+    "editBtn": "Bearbeiten"
 }

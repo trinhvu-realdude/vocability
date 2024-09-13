@@ -15,5 +15,8 @@
     "addWordForm.addWordBtn": "Aggiungi parola",
     "collectionPage.title": "Collezioni",
     "collectionPage.noDataMessage": "🗿 Ops...! Non hai alcuna collezione. Inizia a prendere appunti e a fare pratica con il vocabolario.",
-    "collectionPage.createCollectionBtn": "Crea collezione"
+    "collectionPage.createCollectionBtn": "Crea collezione",
+    "editForm.editCollection": "Modifica collezione",
+    "cancelBtn": "Cancellare",
+    "editBtn": "Modificare"
 }

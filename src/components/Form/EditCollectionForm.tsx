@@ -2,9 +2,12 @@ import { useState } from "react";
 import { CollectionFormProps } from "../../interfaces/mainProps";
 import {
     getCollectionById,
-    getCollections,
+    getCollectionsByLanguageId,
     updateCollection,
 } from "../../services/CollectionService";
+import { languages } from "../../utils/constants";
+import { useLanguage } from "../../LanguageContext";
+import { getCurrentLanguageId } from "../../utils/helper";
 
 export const EditCollectionForm: React.FC<CollectionFormProps> = ({
     db,
@@ -16,6 +19,8 @@ export const EditCollectionForm: React.FC<CollectionFormProps> = ({
     const [renameValue, setRenameValue] = useState<string>("");
     const [color, setColor] = useState<string>("");
 
+    const { translations } = useLanguage();
+
     const handleEditCollection = async () => {
         try {
             if (db) {
@@ -26,7 +31,14 @@ export const EditCollectionForm: React.FC<CollectionFormProps> = ({
                     color !== "" ? color : collection.color
                 );
                 if (updatedCollection) {
-                    const storedCollections = await getCollections(db);
+                    const currentLanguageId = await getCurrentLanguageId(
+                        languages,
+                        translations["language"]
+                    );
+                    const storedCollections = await getCollectionsByLanguageId(
+                        db,
+                        currentLanguageId
+                    );
                     setCollections(storedCollections);
 
                     if (collection.id && setCollection) {
@@ -54,7 +66,7 @@ export const EditCollectionForm: React.FC<CollectionFormProps> = ({
                     color: "#fff",
                 }}
             >
-                Edit collection
+                {translations["editForm.editCollection"]}
                 <div>
                     <div
                         className="btn btn-sm"
@@ -94,14 +106,14 @@ export const EditCollectionForm: React.FC<CollectionFormProps> = ({
                     className="btn btn-outline-secondary"
                     onClick={() => setIsEditOrDelete(false)}
                 >
-                    Cancel
+                    {translations["cancelBtn"]}
                 </button>
                 <button
                     type="button"
                     className="btn btn-outline-success"
                     onClick={handleEditCollection}
                 >
-                    Edit
+                    {translations["editBtn"]}
                 </button>
             </div>
         </div>

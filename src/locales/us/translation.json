@@ -17,5 +17,8 @@
     "collectionPage.noDataMessage": "🗿 Oops...! You have no collection. Let's start to take note and practice vocabulary.",
     "collectionPage.createCollectionBtn": "Create collection",
     "collectionPage.collectionCard.numberOfWords": "Number of words",
-    "searchBar.placeholder": "Search word in collection"
+    "searchBar.placeholder": "Search word in collection",
+    "editForm.editCollection": "Edit collection",
+    "cancelBtn": "Cancel",
+    "editBtn": "Edit"
 }

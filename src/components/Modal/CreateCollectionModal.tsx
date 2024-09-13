@@ -1,11 +1,13 @@
 import { IDBPDatabase } from "idb";
 import { Collection, MyDB } from "../../interfaces/model";
-import { getRandomColor } from "../../utils/helper";
+import { getCurrentLanguageId, getRandomColor } from "../../utils/helper";
 import { useState } from "react";
 import {
     addCollection,
-    getCollections,
+    getCollectionsByLanguageId,
 } from "../../services/CollectionService";
+import { languages } from "../../utils/constants";
+import { useLanguage } from "../../LanguageContext";
 
 export const CreateCollectionModal: React.FC<{
     db: IDBPDatabase<MyDB> | undefined;
@@ -15,17 +17,27 @@ export const CreateCollectionModal: React.FC<{
     const [color, setColor] = useState<string>("");
     const [name, setName] = useState<string>("");
 
+    const { translations } = useLanguage();
+
     const handleAddCollection = async () => {
         try {
             if (db) {
+                const currentLanguageId = await getCurrentLanguageId(
+                    languages,
+                    translations["language"]
+                );
                 const objCollection = {
                     name: name || "Default",
                     color: color || randomColor,
                     createdAt: new Date(),
+                    languageId: currentLanguageId,
                 } as Collection;
                 await addCollection(db, objCollection);
 
-                const storedCollections = await getCollections(db);
+                const storedCollections = await getCollectionsByLanguageId(
+                    db,
+                    currentLanguageId
+                );
                 setCollections(storedCollections);
                 reset();
             }
@@ -67,7 +79,6 @@ export const CreateCollectionModal: React.FC<{
                             data-bs-dismiss="modal"
                             aria-label="Close"
                             style={{ border: "none", color: "#fff" }}
-                            // onClick={reset}
                         >
                             <i className="fas fa-times"></i>
                         </button>

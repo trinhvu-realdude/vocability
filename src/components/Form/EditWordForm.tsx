@@ -6,6 +6,7 @@ import {
     getWordsByCollectionId,
     updateWord,
 } from "../../services/WordService";
+import { useLanguage } from "../../LanguageContext";
 
 export const EditWordForm: React.FC<WordFormProps> = ({
     db,
@@ -20,10 +21,19 @@ export const EditWordForm: React.FC<WordFormProps> = ({
     const [definitionValue, setDefinitionValue] = useState<string>("");
     const [notesValue, setNotesValue] = useState<string>("");
 
+    const { translations } = useLanguage();
+
+    const selectedPartsOfSpeech = partsOfSpeech.find(
+        (language) => language.code === translations["language"]
+    );
+
     const handleEditWord = async () => {
-        const phonetic = await getPhonetic(
-            wordValue !== "" ? wordValue.trim() : word.word
-        );
+        let phonetic;
+        if (translations["language"] === "us") {
+            phonetic = await getPhonetic(
+                wordValue !== "" ? wordValue.trim() : word.word
+            );
+        }
         try {
             if (db) {
                 const editValue: EditWordObj = {
@@ -92,12 +102,17 @@ export const EditWordForm: React.FC<WordFormProps> = ({
                         }
                     >
                         <option value="">Part of speech</option>
-                        {partsOfSpeech &&
-                            partsOfSpeech.map((partOfSpeech, index) => (
-                                <option key={index} value={partOfSpeech.value}>
-                                    {partOfSpeech.label}
-                                </option>
-                            ))}
+                        {selectedPartsOfSpeech &&
+                            selectedPartsOfSpeech["list"].map(
+                                (partOfSpeech, index) => (
+                                    <option
+                                        key={index}
+                                        value={partOfSpeech.value}
+                                    >
+                                        {partOfSpeech.label}
+                                    </option>
+                                )
+                            )}
                     </select>
 
                     <input

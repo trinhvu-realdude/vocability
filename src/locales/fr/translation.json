@@ -17,5 +17,8 @@
     "collectionPage.noDataMessage": "🗿 Oups...! Vous n'avez aucune collection. Commençons à noter et à pratiquer le vocabulaire.",
     "collectionPage.createCollectionBtn": "Créer une collection",
     "collectionPage.collectionCard.numberOfWords": "Nombre de mots",
-    "searchBar.placeholder": "Rechercher un mot dans la collection"
+    "searchBar.placeholder": "Rechercher un mot dans la collection",
+    "editForm.editCollection": "Modifier la collection",
+    "cancelBtn": "Annuler",
+    "editBtn": "Modifier"
 }
