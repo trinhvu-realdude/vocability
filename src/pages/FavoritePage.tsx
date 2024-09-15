@@ -3,14 +3,17 @@ import { useEffect, useState } from "react";
 import { Collection, WordDto } from "../interfaces/model";
 import { addWordToFavorite, getFavoriteWords } from "../services/WordService";
 import { CommonProps } from "../interfaces/mainProps";
-import { handleTextToSpeech } from "../utils/helper";
+import { getCurrentLanguageId, handleTextToSpeech } from "../utils/helper";
 import { NoDataMessage } from "../components/NoDataMessage";
 import { SearchBar } from "../components/SearchBar";
 import { PageHeader } from "../components/PageHeader";
-import { APP_NAME } from "../utils/constants";
+import { APP_NAME, languages } from "../utils/constants";
+import { useParams } from "react-router-dom";
+import { useLanguage } from "../LanguageContext";
 
 export const FavoritePage: React.FC<CommonProps> = ({ db }) => {
-    document.title = `${APP_NAME} | Favorite collection`;
+    const { translations } = useLanguage();
+    document.title = `${translations["flag"]} ${APP_NAME} | Favorite collection`;
 
     const [favoriteWords, setFavoriteWords] = useState<WordDto[]>([]);
     const [collections, setCollections] = useState<Collection[]>([]);
@@ -18,11 +21,17 @@ export const FavoritePage: React.FC<CommonProps> = ({ db }) => {
     const [filteredWords, setFilteredWords] = useState<WordDto[]>([]);
     const [displayWords, setDisplayWords] = useState<WordDto[]>([]);
 
+    const { language } = useParams();
+
     const handleRemoveFavorite = async (word: WordDto) => {
         const isFavorite = false;
         if (db) {
             await addWordToFavorite(db, word, isFavorite);
-            const words = await getFavoriteWords(db);
+            const currentLanguageId = await getCurrentLanguageId(
+                languages,
+                language ? language : ""
+            );
+            const words = await getFavoriteWords(db, currentLanguageId);
             if (selectedCollection) {
                 const filtered = words.filter(
                     (w) => w.collection.name === selectedCollection.name
@@ -44,8 +53,6 @@ export const FavoritePage: React.FC<CommonProps> = ({ db }) => {
                   (word) => word.collection.name === collection.name
               )
             : favoriteWords;
-        console.log(filtered);
-
         setFilteredWords(filtered);
         setDisplayWords(filtered);
     };
@@ -53,7 +60,11 @@ export const FavoritePage: React.FC<CommonProps> = ({ db }) => {
     useEffect(() => {
         const fetchFavorite = async () => {
             const dbInstance = await initDB();
-            const words = await getFavoriteWords(dbInstance);
+            const currentLanguageId = await getCurrentLanguageId(
+                languages,
+                language ? language : ""
+            );
+            const words = await getFavoriteWords(dbInstance, currentLanguageId);
             setFavoriteWords(words);
             setFilteredWords(words);
             const collectionsInFavorite = words.map((word) => word.collection);
@@ -84,9 +95,13 @@ export const FavoritePage: React.FC<CommonProps> = ({ db }) => {
                 content={
                     <>
                         <span style={{ color: "red" }}>
-                            <strong>Favorite</strong>
+                            <strong>
+                                {translations["navbar.collections.favorite"]}
+                            </strong>
                         </span>{" "}
-                        collection
+                        {new String(
+                            translations["addWordForm.collection"]
+                        ).toLowerCase()}
                     </>
                 }
             />
@@ -124,7 +139,10 @@ export const FavoritePage: React.FC<CommonProps> = ({ db }) => {
                                                 margin: 0,
                                             }}
                                             onClick={() =>
-                                                handleTextToSpeech(word.word)
+                                                handleTextToSpeech(
+                                                    word.word,
+                                                    language ? language : ""
+                                                )
                                             }
                                         >
                                             <i className="fas fa-volume-up"></i>
@@ -146,7 +164,9 @@ export const FavoritePage: React.FC<CommonProps> = ({ db }) => {
                                 </div>
                             </div>
                             <p className="mb-1">{word.definition}</p>
-                            <a href={`/collection/${word.collection.id}`}>
+                            <a
+                                href={`/${translations["language"]}/collection/${word.collection.id}`}
+                            >
                                 <small className="text-muted">
                                     &#8618; Go to{" "}
                                     <span

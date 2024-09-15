@@ -17,6 +17,7 @@ export interface Collection {
     color: string;
     numOfWords?: number;
     createdAt: Date;
+    languageId: number;
 }
 
 export interface Word {

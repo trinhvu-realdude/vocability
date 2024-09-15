@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { partsOfSpeech } from "../../utils/constants";
+import { languages, partsOfSpeech } from "../../utils/constants";
 import ReactSelectCreatable from "react-select/creatable";
 import { SingleValue } from "react-select";
 import {
@@ -7,9 +7,10 @@ import {
     getPhonetic,
     getWordsByCollectionId,
 } from "../../services/WordService";
-import { getRandomColor } from "../../utils/helper";
+import { getCurrentLanguageId, getRandomColor } from "../../utils/helper";
 import { Choice, CommonProps } from "../../interfaces/mainProps";
-import { getCollections } from "../../services/CollectionService";
+import { getCollectionsByLanguageId } from "../../services/CollectionService";
+import { useLanguage } from "../../LanguageContext";
 
 export const AddWordForm: React.FC<CommonProps> = ({
     db,
@@ -24,18 +25,33 @@ export const AddWordForm: React.FC<CommonProps> = ({
     const [partOfSpeech, setPartOfSpeech] = useState<string>("");
     const [choice, setChoice] = useState<SingleValue<Object>>();
 
+    const { translations } = useLanguage();
+
+    const selectedPartsOfSpeech = partsOfSpeech.find(
+        (language) => language.code === translations["language"]
+    );
+
     const handleAddWord = async () => {
         try {
             const collection = choice as Choice;
 
             if (db && collection) {
+                const currentLanguageId = await getCurrentLanguageId(
+                    languages,
+                    translations["language"]
+                );
+
                 const objCollection = {
                     name: collection.value,
                     color: getRandomColor(),
                     createdAt: new Date(),
+                    languageId: currentLanguageId ? currentLanguageId : -1,
                 };
 
-                const phonetic = await getPhonetic(word.toLowerCase().trim());
+                let phonetic;
+                if (currentLanguageId === 1) {
+                    phonetic = await getPhonetic(word.toLowerCase().trim());
+                }
 
                 const objWord = {
                     word: word.toLowerCase().trim(),
@@ -46,9 +62,17 @@ export const AddWordForm: React.FC<CommonProps> = ({
                     isFavorite: false,
                     createdAt: new Date(),
                 };
-                const addedWord = await addWord(db, objWord, objCollection);
+                const addedWord = await addWord(
+                    db,
+                    objWord,
+                    objCollection,
+                    currentLanguageId
+                );
 
-                const storedCollections = await getCollections(db);
+                const storedCollections = await getCollectionsByLanguageId(
+                    db,
+                    currentLanguageId
+                );
                 setCollections(storedCollections);
 
                 setWord("");
@@ -85,19 +109,23 @@ export const AddWordForm: React.FC<CommonProps> = ({
                     value={partOfSpeech}
                     onChange={(event) => setPartOfSpeech(event.target.value)}
                 >
-                    <option value="">Part of speech</option>
-                    {partsOfSpeech &&
-                        partsOfSpeech.map((partOfSpeech, index) => (
-                            <option key={index} value={partOfSpeech.value}>
-                                {partOfSpeech.label}
-                            </option>
-                        ))}
+                    <option value="">
+                        {translations["addWordForm.partOfSpeech"]}
+                    </option>
+                    {selectedPartsOfSpeech &&
+                        selectedPartsOfSpeech["list"].map(
+                            (partOfSpeech, index) => (
+                                <option key={index} value={partOfSpeech.value}>
+                                    {partOfSpeech.label}
+                                </option>
+                            )
+                        )}
                 </select>
 
                 <input
                     type="text"
                     className="form-control"
-                    placeholder="Note your word"
+                    placeholder={translations["addWordForm.noteYourWord"]}
                     value={word}
                     onChange={(event) => setWord(event.target.value)}
                 />
@@ -107,7 +135,7 @@ export const AddWordForm: React.FC<CommonProps> = ({
                     <div className="input-group col-12 mb-2">
                         <ReactSelectCreatable
                             className="react-select-creatable"
-                            placeholder="Collection"
+                            placeholder={translations["addWordForm.collection"]}
                             value={choice}
                             options={collections.map((collection) => {
                                 return {
@@ -115,7 +143,9 @@ export const AddWordForm: React.FC<CommonProps> = ({
                                     value: collection.name,
                                 };
                             })}
-                            noOptionsMessage={() => "No collections"}
+                            noOptionsMessage={() =>
+                                translations["addWordForm.noOptionsMessage"]
+                            }
                             onChange={(choice) => setChoice(choice)}
                             styles={{
                                 menu: (provided: any) => ({
@@ -126,7 +156,9 @@ export const AddWordForm: React.FC<CommonProps> = ({
                         />
                     </div>
                     <div className="input-group col-12 mb-2">
-                        <span className="input-group-text">Definition</span>
+                        <span className="input-group-text">
+                            {translations["addWordForm.definition"]}
+                        </span>
                         <input
                             type="text"
                             className="form-control"
@@ -136,7 +168,9 @@ export const AddWordForm: React.FC<CommonProps> = ({
                         />
                     </div>
                     <div className="input-group col-12 mb-2">
-                        <span className="input-group-text">Notes</span>
+                        <span className="input-group-text">
+                            {translations["addWordForm.notes"]}
+                        </span>
                         <textarea
                             className="form-control"
                             onChange={(event) => setNotes(event.target.value)}
@@ -148,7 +182,7 @@ export const AddWordForm: React.FC<CommonProps> = ({
                             onClick={handleAddWord}
                             style={{ width: "100%" }}
                         >
-                            Add word
+                            {translations["addWordForm.addWordBtn"]}
                         </button>
                     </div>
                 </div>

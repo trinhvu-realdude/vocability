@@ -52,15 +52,41 @@ export const sortWordsByFilter = (words: Word[], filterValue: string) => {
     return sortedWords;
 };
 
-export const handleTextToSpeech = async (text: string) => {
+export const handleTextToSpeech = async (text: string, language: string) => {
     const speech = new SpeechSynthesisUtterance();
     speech.text = text;
-    window.speechSynthesis.speak(speech);
 
-    // check voice speech for each language
-    window.speechSynthesis.onvoiceschanged = () => {
-        console.log(window.speechSynthesis.getVoices());
-    };
+    // Wait for voices to be loaded
+    await new Promise((resolve) => {
+        const checkVoices = () => {
+            const voices = window.speechSynthesis.getVoices();
+            if (voices.length > 0) {
+                resolve(voices);
+            } else {
+                window.speechSynthesis.onvoiceschanged = () => {
+                    const updatedVoices = window.speechSynthesis.getVoices();
+                    if (updatedVoices.length > 0) {
+                        resolve(updatedVoices);
+                    }
+                };
+            }
+        };
+        checkVoices();
+    });
+
+    const voices = window.speechSynthesis.getVoices();
+    // Find a voice that matches the specified language
+    const selectedVoice = voices.find((voice) =>
+        voice.lang.startsWith(language)
+    );
+
+    if (selectedVoice) {
+        speech.voice = selectedVoice;
+    } else {
+        console.warn(`No voice found for language: ${language}`);
+    }
+
+    window.speechSynthesis.speak(speech);
 };
 
 export const getHintWord = async (text: string) => {
@@ -105,4 +131,14 @@ export const getHintWord = async (text: string) => {
         )
         .join(" ");
     return result;
+};
+
+export const getCurrentLanguageId = async (
+    languages: Array<any>,
+    languageCode: string
+): Promise<any> => {
+    const currentLanguageId = await languages.find(
+        (lang: any) => lang.code === languageCode
+    )?.id;
+    return currentLanguageId;
 };

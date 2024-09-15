@@ -3,7 +3,7 @@ import { Collection, MyDB, Word, WordDto } from "../interfaces/model";
 import {
     addCollection,
     getCollectionById,
-    getCollectionByName,
+    getCollectionByNameAndLanguageId,
 } from "./CollectionService";
 import { EditWordObj, ExternalWord } from "../interfaces/mainProps";
 
@@ -12,10 +12,15 @@ const storeName = "words";
 export const addWord = async (
     db: IDBPDatabase<MyDB>,
     objWord: Word,
-    objCollection: Collection
+    objCollection: Collection,
+    currentLanguageId: number
 ): Promise<Word> => {
     let collectionId;
-    const collection = await getCollectionByName(db, objCollection.name);
+    const collection = await getCollectionByNameAndLanguageId(
+        db,
+        objCollection.name,
+        currentLanguageId
+    );
 
     if (!collection) collectionId = await addCollection(db, objCollection);
     else collectionId = collection.id;
@@ -112,7 +117,8 @@ export const addWordToFavorite = async (
 };
 
 export const getFavoriteWords = async (
-    db: IDBPDatabase<MyDB>
+    db: IDBPDatabase<MyDB>,
+    currentLanguageId: number
 ): Promise<WordDto[]> => {
     const tx = db.transaction(storeName, "readonly");
     const store = tx.objectStore(storeName);
@@ -124,7 +130,7 @@ export const getFavoriteWords = async (
         const collectionId = word.collectionId;
         if (collectionId) {
             const collection = await getCollectionById(db, collectionId);
-            if (collection) {
+            if (collection && collection.languageId === currentLanguageId) {
                 favoriteWords.push({
                     id: word.id,
                     collection: collection,

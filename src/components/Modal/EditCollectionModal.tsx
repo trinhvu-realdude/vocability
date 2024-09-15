@@ -2,9 +2,10 @@ import { useState } from "react";
 import { CollectionModalProps } from "../../interfaces/mainProps";
 import {
     getCollectionById,
-    getCollections,
+    getCollectionsByLanguageId,
     updateCollection,
 } from "../../services/CollectionService";
+import { useLanguage } from "../../LanguageContext";
 
 export const EditCollectionModal: React.FC<CollectionModalProps> = ({
     db,
@@ -14,6 +15,8 @@ export const EditCollectionModal: React.FC<CollectionModalProps> = ({
 }) => {
     const [renameValue, setRenameValue] = useState<string>("");
     const [color, setColor] = useState<string>("");
+
+    const { translations } = useLanguage();
 
     const handleEditCollection = async () => {
         try {
@@ -25,7 +28,10 @@ export const EditCollectionModal: React.FC<CollectionModalProps> = ({
                     color !== "" ? color : collection.color
                 );
                 if (updatedCollection) {
-                    const storedCollections = await getCollections(db);
+                    const storedCollections = await getCollectionsByLanguageId(
+                        db,
+                        updatedCollection.languageId
+                    );
                     setCollections(storedCollections);
 
                     if (collection.id && setCollection) {
@@ -64,7 +70,7 @@ export const EditCollectionModal: React.FC<CollectionModalProps> = ({
                             className="modal-title"
                             id={`edit-collection-${collection.id}`}
                         >
-                            Edit collection
+                            {translations["editForm.editCollection"]}
                         </h5>
                         <button
                             type="button"
@@ -104,7 +110,7 @@ export const EditCollectionModal: React.FC<CollectionModalProps> = ({
                             className="btn btn-outline-secondary"
                             data-bs-dismiss="modal"
                         >
-                            Cancel
+                            {translations["cancelBtn"]}
                         </button>
                         <button
                             type="button"
@@ -112,7 +118,7 @@ export const EditCollectionModal: React.FC<CollectionModalProps> = ({
                             onClick={handleEditCollection}
                             data-bs-dismiss="modal"
                         >
-                            Edit
+                            {translations["editBtn"]}
                         </button>
                     </div>
                 </div>

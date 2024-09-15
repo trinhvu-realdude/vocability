@@ -9,7 +9,9 @@ export interface CommonProps {
     setWords: React.Dispatch<React.SetStateAction<Word[]>>;
 }
 
-export interface MainLayoutProps extends CommonProps {}
+export interface MainLayoutProps extends CommonProps {
+    setLanguageCode: React.Dispatch<React.SetStateAction<string>>;
+}
 
 export interface WordPageProps {
     db: IDBPDatabase<MyDB> | undefined;
@@ -38,13 +40,16 @@ export type SearchBarProps = {
 };
 
 export type NavBarProps = {
+    db: IDBPDatabase<MyDB> | undefined;
     collections: Collection[];
+    languageCode?: string;
 };
 
 export type CollectionCardProps = {
     db: IDBPDatabase<MyDB> | undefined;
     collection: Collection;
     setCollections: React.Dispatch<React.SetStateAction<Collection[]>>;
+    languageCode: string;
 };
 
 export type WordCardProps = {

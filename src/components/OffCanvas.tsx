@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { ExternalWord } from "../interfaces/mainProps";
 import { handleTextToSpeech } from "../utils/helper";
 import { getExternalWord } from "../services/WordService";
+import { useLanguage } from "../LanguageContext";
 
 export const OffCanvas: React.FC<{
     id: string;
@@ -11,6 +12,8 @@ export const OffCanvas: React.FC<{
 }> = ({ id, word, show, onClose }) => {
     const [data, setData] = useState<ExternalWord[] | { message: string }>();
     const [isLoading, setIsLoading] = useState<boolean>(true);
+
+    const { translations } = useLanguage();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -74,7 +77,10 @@ export const OffCanvas: React.FC<{
                                             margin: 0,
                                         }}
                                         onClick={() =>
-                                            handleTextToSpeech(element.word)
+                                            handleTextToSpeech(
+                                                element.word,
+                                                translations["language"]
+                                            )
                                         }
                                     >
                                         <i className="fas fa-volume-up"></i>

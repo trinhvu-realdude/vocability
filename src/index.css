@@ -43,4 +43,12 @@ input[type="number"] {
     #card-practice {
         height: 160px; /* Set a fixed height for the card */
     }
+
+    .language-btn {
+        width: 100%;
+    }
+
+    .custom-select {
+        width: 100%;
+    }
 }

@@ -1,11 +1,13 @@
 import { IDBPDatabase } from "idb";
 import { Collection, MyDB } from "../../interfaces/model";
-import { getRandomColor } from "../../utils/helper";
+import { getCurrentLanguageId, getRandomColor } from "../../utils/helper";
 import { useState } from "react";
 import {
     addCollection,
-    getCollections,
+    getCollectionsByLanguageId,
 } from "../../services/CollectionService";
+import { languages } from "../../utils/constants";
+import { useLanguage } from "../../LanguageContext";
 
 export const CreateCollectionModal: React.FC<{
     db: IDBPDatabase<MyDB> | undefined;
@@ -15,17 +17,27 @@ export const CreateCollectionModal: React.FC<{
     const [color, setColor] = useState<string>("");
     const [name, setName] = useState<string>("");
 
+    const { translations } = useLanguage();
+
     const handleAddCollection = async () => {
         try {
             if (db) {
+                const currentLanguageId = await getCurrentLanguageId(
+                    languages,
+                    translations["language"]
+                );
                 const objCollection = {
                     name: name || "Default",
                     color: color || randomColor,
                     createdAt: new Date(),
+                    languageId: currentLanguageId,
                 } as Collection;
                 await addCollection(db, objCollection);
 
-                const storedCollections = await getCollections(db);
+                const storedCollections = await getCollectionsByLanguageId(
+                    db,
+                    currentLanguageId
+                );
                 setCollections(storedCollections);
                 reset();
             }
@@ -59,7 +71,7 @@ export const CreateCollectionModal: React.FC<{
                         }}
                     >
                         <h5 className="modal-title" id="add-collection">
-                            Create collection
+                            {translations["createForm.createCollection"]}
                         </h5>
                         <button
                             type="button"
@@ -67,7 +79,6 @@ export const CreateCollectionModal: React.FC<{
                             data-bs-dismiss="modal"
                             aria-label="Close"
                             style={{ border: "none", color: "#fff" }}
-                            // onClick={reset}
                         >
                             <i className="fas fa-times"></i>
                         </button>
@@ -87,7 +98,7 @@ export const CreateCollectionModal: React.FC<{
                             <input
                                 type="text"
                                 className="form-control"
-                                placeholder="Name"
+                                placeholder={translations["name"]}
                                 value={name}
                                 onChange={(event) =>
                                     setName(event.target.value)
@@ -102,7 +113,7 @@ export const CreateCollectionModal: React.FC<{
                             data-bs-dismiss="modal"
                             // onClick={reset}
                         >
-                            Cancel
+                            {translations["cancelBtn"]}
                         </button>
                         <button
                             type="button"
@@ -110,7 +121,7 @@ export const CreateCollectionModal: React.FC<{
                             onClick={handleAddCollection}
                             data-bs-dismiss="modal"
                         >
-                            Create
+                            {translations["createBtn"]}
                         </button>
                     </div>
                 </div>

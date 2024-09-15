@@ -1,6 +1,26 @@
+import { useEffect, useState } from "react";
 import { NavBarProps } from "../interfaces/mainProps";
+import { useLanguage } from "../LanguageContext";
+import { getActiveLanguages } from "../services/CollectionService";
 
-export const NavBar: React.FC<NavBarProps> = ({ collections }) => {
+export const NavBar: React.FC<NavBarProps> = ({
+    db,
+    collections,
+    languageCode,
+}) => {
+    const { translations } = useLanguage();
+    const [activeLanguages, setActiveLanguages] = useState<Array<any>>([]);
+
+    useEffect(() => {
+        const fetchLanguages = async () => {
+            if (db) {
+                const languages = await getActiveLanguages(db);
+                setActiveLanguages(languages);
+            }
+        };
+        fetchLanguages();
+    }, [translations["language"]]);
+
     return (
         <nav className="navbar navbar-expand-lg navbar-light bg-light">
             <div className="container">
@@ -23,110 +43,171 @@ export const NavBar: React.FC<NavBarProps> = ({ collections }) => {
                 >
                     <span className="navbar-toggler-icon"></span>
                 </button>
-                <div
-                    className="collapse navbar-collapse justify-content-end"
-                    id="navbar-toggle"
-                >
-                    <ul className="navbar-nav mb-2 mb-lg-0 text-center">
-                        <li
-                            className="nav-item dropdown mx-2"
-                            style={{ cursor: "pointer" }}
-                        >
-                            <a
-                                className="nav-link active"
-                                data-bs-toggle="dropdown"
-                                aria-expanded="false"
+                {languageCode !== "" ? (
+                    <div
+                        className="collapse navbar-collapse justify-content-end"
+                        id="navbar-toggle"
+                    >
+                        <ul className="navbar-nav mb-2 mb-lg-0 text-center">
+                            <li
+                                className="nav-item dropdown mx-2"
+                                style={{ cursor: "pointer" }}
                             >
-                                Collections
-                            </a>
-                            <ul className="dropdown-menu">
-                                <li>
-                                    <a
-                                        className="dropdown-item"
-                                        href="/collections"
-                                    >
-                                        <h6 className="dropdown-header">
-                                            All collections
-                                        </h6>
-                                    </a>
-                                </li>
-                                {collections.map((collection, index) => (
-                                    <li key={index}>
+                                <a
+                                    className="nav-link active"
+                                    data-bs-toggle="dropdown"
+                                    aria-expanded="false"
+                                >
+                                    {translations["navbar.collections"]}
+                                </a>
+                                <ul className="dropdown-menu">
+                                    <li>
+                                        <a
+                                            className="dropdown-item"
+                                            href={`/${translations["language"]}/collections`}
+                                        >
+                                            <h6 className="dropdown-header">
+                                                {
+                                                    translations[
+                                                        "navbar.collections.allCollections"
+                                                    ]
+                                                }
+                                            </h6>
+                                        </a>
+                                    </li>
+                                    {collections.map((collection, index) => (
+                                        <li key={index}>
+                                            <a
+                                                className="dropdown-item d-flex"
+                                                href={`/${translations["language"]}/collection/${collection.id}`}
+                                            >
+                                                <div
+                                                    style={{
+                                                        color: collection.color,
+                                                    }}
+                                                >
+                                                    <i className="fas fa-layer-group"></i>
+                                                </div>
+                                                <span className="ms-2">
+                                                    {collection.name}
+                                                </span>
+                                            </a>
+                                        </li>
+                                    ))}
+                                    <li>
+                                        <hr className="dropdown-divider" />
+                                    </li>
+                                    <li>
                                         <a
                                             className="dropdown-item d-flex"
-                                            href={`/collection/${collection.id}`}
+                                            href={`/${translations["language"]}/favorite`}
                                         >
                                             <div
                                                 style={{
-                                                    color: collection.color,
+                                                    color: "red",
                                                 }}
                                             >
                                                 <i className="fas fa-layer-group"></i>
                                             </div>
                                             <span className="ms-2">
-                                                {collection.name}
+                                                {
+                                                    translations[
+                                                        "navbar.collections.favorite"
+                                                    ]
+                                                }
                                             </span>
                                         </a>
                                     </li>
-                                ))}
-                                <li>
-                                    <hr className="dropdown-divider" />
-                                </li>
-                                <li>
-                                    <a
-                                        className="dropdown-item d-flex"
-                                        href="/favorite"
-                                    >
-                                        <div
-                                            // className="square"
-                                            style={{
-                                                color: "red",
-                                            }}
-                                        >
-                                            <i className="fas fa-layer-group"></i>
-                                        </div>
-                                        <span className="ms-2">Favorite</span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
+                                </ul>
+                            </li>
 
-                        <li className="nav-item mx-2">
+                            {/* <li className="nav-item mx-2">
                             <a className="nav-link active" href="/practices">
-                                Practices
-                            </a>
-                        </li>
-
-                        <li className="nav-item mx-2">
-                            <a className="nav-link active" href="/export">
-                                Export
-                            </a>
-                        </li>
-
-                        <li className="nav-item mx-2">
-                            <a
-                                className="nav-link active"
-                                href="/glossary"
-                                style={{
-                                    color: "#DD5746",
-                                }}
-                            >
-                                Glossary
-                            </a>
-                        </li>
-
-                        {/* <li className="nav-item mx-2">
-                            <a className="nav-link active" href="/">
-                                <span
-                                    className="fi fi-us"
-                                    style={{
-                                        borderRadius: "2px",
-                                    }}
-                                ></span>
+                                {translations["navbar.practices"]}
                             </a>
                         </li> */}
-                    </ul>
-                </div>
+
+                            <li className="nav-item mx-2">
+                                <a className="nav-link active" href="/export">
+                                    {translations["navbar.export"]}
+                                </a>
+                            </li>
+
+                            <li className="nav-item mx-2">
+                                <a
+                                    className="nav-link active"
+                                    href="/glossary"
+                                    style={{
+                                        color: "#DD5746",
+                                    }}
+                                >
+                                    {translations["navbar.glossary"]}
+                                </a>
+                            </li>
+
+                            {languageCode && (
+                                <li
+                                    className="nav-item dropdown mx-2"
+                                    style={{ cursor: "pointer" }}
+                                >
+                                    <a
+                                        className="nav-link active"
+                                        data-bs-toggle="dropdown"
+                                        aria-expanded="false"
+                                    >
+                                        <span
+                                            className={`fi fi-${languageCode}`}
+                                            style={{
+                                                borderRadius: "2px",
+                                            }}
+                                        ></span>
+                                        <span className="ms-2 text-muted">
+                                            <small>
+                                                {languageCode !== "us"
+                                                    ? languageCode
+                                                    : "en"}
+                                            </small>
+                                        </span>
+                                    </a>
+                                    <ul className="dropdown-menu">
+                                        {activeLanguages &&
+                                            activeLanguages.length > 0 &&
+                                            activeLanguages.map((language) => (
+                                                <li key={language.id}>
+                                                    <a
+                                                        className="dropdown-item d-flex"
+                                                        href={`/${language.code}/collections`}
+                                                    >
+                                                        <div>
+                                                            <i
+                                                                className={`fi fi-${language.code}`}
+                                                                style={{
+                                                                    borderRadius:
+                                                                        "2px",
+                                                                }}
+                                                            ></i>
+                                                        </div>{" "}
+                                                        <span className="ms-2">
+                                                            {language.language}
+                                                        </span>
+                                                    </a>
+                                                </li>
+                                            ))}
+                                    </ul>
+                                </li>
+                            )}
+                        </ul>
+                    </div>
+                ) : (
+                    <div
+                        className="collapse navbar-collapse justify-content-end"
+                        id="navbar-toggle"
+                    >
+                        <div className="text-center mx-4">
+                            Hi, what's good! 👋
+                        </div>
+                    </div>
+                )}
             </div>
         </nav>
     );

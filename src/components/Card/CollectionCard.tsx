@@ -3,14 +3,18 @@ import { CollectionCardProps } from "../../interfaces/mainProps";
 import { EditCollectionForm } from "../Form/EditCollectionForm";
 import { DeleteCollectionForm } from "../Form/DeleteCollectionForm";
 import { formatDate } from "../../utils/formatDateString";
+import { useLanguage } from "../../LanguageContext";
 
 export const CollectionCard: React.FC<CollectionCardProps> = ({
     db,
     collection,
     setCollections,
+    languageCode,
 }) => {
     const [isEdit, setIsEdit] = useState<boolean>(false);
     const [isDelete, setIsDelete] = useState<boolean>(false);
+
+    const { translations } = useLanguage();
 
     return (
         <div className="col-md-4 mb-4">
@@ -56,11 +60,16 @@ export const CollectionCard: React.FC<CollectionCardProps> = ({
                         data-bs-toggle="tooltip"
                         data-bs-placement="top"
                         title={`Created at ${formatDate(collection.createdAt)}`}
-                        href={`/collection/${collection.id}`}
+                        href={`/${languageCode}/collection/${collection.id}`}
                     >
                         <p>
-                            <i className="fas fa-book" /> Number of words:{" "}
-                            {collection.numOfWords}
+                            <i className="fas fa-book" />{" "}
+                            {
+                                translations[
+                                    "collectionPage.collectionCard.numberOfWords"
+                                ]
+                            }
+                            : {collection.numOfWords}
                         </p>
                     </a>
                 </div>
