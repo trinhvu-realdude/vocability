@@ -128,7 +128,10 @@ export const NavBar: React.FC<NavBarProps> = ({
                         </li> */}
 
                             <li className="nav-item mx-2">
-                                <a className="nav-link active" href="/export">
+                                <a
+                                    className="nav-link active"
+                                    href={`/${translations["language"]}/export`}
+                                >
                                     {translations["navbar.export"]}
                                 </a>
                             </li>
@@ -147,7 +150,11 @@ export const NavBar: React.FC<NavBarProps> = ({
 
                             {languageCode && (
                                 <li
-                                    className="nav-item dropdown mx-2"
+                                    className={`nav-item mx-2 ${
+                                        activeLanguages.length > 0
+                                            ? "dropdown"
+                                            : ""
+                                    }`}
                                     style={{ cursor: "pointer" }}
                                 >
                                     <a
@@ -169,31 +176,36 @@ export const NavBar: React.FC<NavBarProps> = ({
                                             </small>
                                         </span>
                                     </a>
-                                    <ul className="dropdown-menu">
-                                        {activeLanguages &&
-                                            activeLanguages.length > 0 &&
-                                            activeLanguages.map((language) => (
-                                                <li key={language.id}>
-                                                    <a
-                                                        className="dropdown-item d-flex"
-                                                        href={`/${language.code}/collections`}
-                                                    >
-                                                        <div>
-                                                            <i
-                                                                className={`fi fi-${language.code}`}
-                                                                style={{
-                                                                    borderRadius:
-                                                                        "2px",
-                                                                }}
-                                                            ></i>
-                                                        </div>{" "}
-                                                        <span className="ms-2">
-                                                            {language.language}
-                                                        </span>
-                                                    </a>
-                                                </li>
-                                            ))}
-                                    </ul>
+                                    {activeLanguages &&
+                                        activeLanguages.length > 0 && (
+                                            <ul className="dropdown-menu">
+                                                {activeLanguages.map(
+                                                    (language) => (
+                                                        <li key={language.id}>
+                                                            <a
+                                                                className="dropdown-item d-flex"
+                                                                href={`/${language.code}/collections`}
+                                                            >
+                                                                <div>
+                                                                    <i
+                                                                        className={`fi fi-${language.code}`}
+                                                                        style={{
+                                                                            borderRadius:
+                                                                                "2px",
+                                                                        }}
+                                                                    ></i>
+                                                                </div>{" "}
+                                                                <span className="ms-2">
+                                                                    {
+                                                                        language.language
+                                                                    }
+                                                                </span>
+                                                            </a>
+                                                        </li>
+                                                    )
+                                                )}
+                                            </ul>
+                                        )}
                                 </li>
                             )}
                         </ul>

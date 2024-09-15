@@ -22,8 +22,6 @@ export const HomePage: React.FC<HomePageProps> = ({ activeLanguages }) => {
         else setRemainLanguages(languages);
     }, [activeLanguages.length]);
 
-    console.log(selectedLanguage);
-
     return (
         <div className="container-list">
             <h4 className="text-center my-2">Languages</h4>
@@ -32,7 +30,9 @@ export const HomePage: React.FC<HomePageProps> = ({ activeLanguages }) => {
                 <div className="d-flex justify-content-center">
                     <select
                         className="form-select m-4 text-center custom-select"
-                        value={selectedLanguage}
+                        value={
+                            selectedLanguage ? selectedLanguage.language : ""
+                        }
                         onChange={(event) => {
                             const language = event.target.value;
                             setSelectedLanguage(
