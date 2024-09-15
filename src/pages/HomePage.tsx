@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { HomePageProps } from "../interfaces/rootProps";
 import { languages } from "../utils/constants";
 import { NoDataMessage } from "../components/NoDataMessage";
+import { HomePageProps } from "../interfaces/rootProps";
 
 export const HomePage: React.FC<HomePageProps> = ({ activeLanguages }) => {
     const [remainLanguages, setRemainLanguages] = useState<Array<any>>();
@@ -88,7 +88,7 @@ export const HomePage: React.FC<HomePageProps> = ({ activeLanguages }) => {
                 ) : (
                     <>
                         {!selectedLanguage && (
-                            <NoDataMessage message="🚀 Please choose a language to take note firstly" />
+                            <NoDataMessage message="🚀 Please choose a language to take note your vocabulary" />
                         )}
                     </>
                 )}
