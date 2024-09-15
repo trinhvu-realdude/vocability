@@ -1,4 +1,5 @@
 {
+    "flag": "🇩🇪",
     "language": "de",
     "navbar.collections": "Sammlungen",
     "navbar.collections.allCollections": "Alle Sammlungen",
@@ -18,5 +19,7 @@
     "collectionPage.createCollectionBtn": "Sammlung erstellen",
     "editForm.editCollection": "Sammlung bearbeiten",
     "cancelBtn": "Stornieren",
-    "editBtn": "Bearbeiten"
+    "editBtn": "Bearbeiten",
+    "deleteBtn": "Löschen",
+    "name": "Name"
 }

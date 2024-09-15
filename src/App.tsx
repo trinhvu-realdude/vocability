@@ -13,7 +13,7 @@ import { LanguageProvider } from "./LanguageContext";
 function App() {
     const [db, setDb] = useState<IDBPDatabase<MyDB>>();
     const [collections, setCollections] = useState<Collection[]>([]);
-    const [languageCode, setLanguageCode] = useState<string>("us");
+    const [languageCode, setLanguageCode] = useState<string>("");
 
     useEffect(() => {
         const initializeDB = async () => {
@@ -32,14 +32,14 @@ function App() {
             <BrowserRouter>
                 <React.Fragment>
                     <NavBar
+                        db={db}
                         collections={collections}
                         languageCode={languageCode}
                     />
 
                     {db && (
                         <Routes>
-                            {/* For production */}
-                            <Route path="/" element={<RootLayout />} />
+                            <Route path="/" element={<RootLayout db={db} />} />
                             <Route
                                 path="/:language/*"
                                 element={

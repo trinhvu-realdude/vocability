@@ -11,9 +11,9 @@ export const CollectionPage: React.FC<CommonProps> = ({
     collections,
     setCollections,
 }) => {
-    document.title = `${APP_NAME} | All collections`;
-
     const { translations } = useLanguage();
+
+    document.title = `${translations["flag"]} ${APP_NAME} | All collections`;
 
     return (
         <div className="container-list" id="collection-list">

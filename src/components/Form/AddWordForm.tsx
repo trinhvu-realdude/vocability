@@ -62,7 +62,12 @@ export const AddWordForm: React.FC<CommonProps> = ({
                     isFavorite: false,
                     createdAt: new Date(),
                 };
-                const addedWord = await addWord(db, objWord, objCollection);
+                const addedWord = await addWord(
+                    db,
+                    objWord,
+                    objCollection,
+                    currentLanguageId
+                );
 
                 const storedCollections = await getCollectionsByLanguageId(
                     db,

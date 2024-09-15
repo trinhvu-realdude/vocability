@@ -14,6 +14,7 @@ import { getCollectionById } from "../services/CollectionService";
 import { OffCanvas } from "../components/OffCanvas";
 import { APP_NAME } from "../utils/constants";
 import { EditWordForm } from "../components/Form/EditWordForm";
+import { useLanguage } from "../LanguageContext";
 
 export const WordDetailPage: React.FC<WordDetailPageProps> = ({ db }) => {
     const { wordId } = useParams();
@@ -30,7 +31,9 @@ export const WordDetailPage: React.FC<WordDetailPageProps> = ({ db }) => {
     const [isFavorite, setIsFavorite] = useState<boolean>(false);
     const [isEdit, setIsEdit] = useState<boolean>(false);
 
-    document.title = `${APP_NAME} | ${word?.word}`;
+    const { translations } = useLanguage();
+
+    document.title = `${translations["flag"]} ${APP_NAME} | ${word?.word}`;
 
     const handleAddFavorite = async (word: Word) => {
         setIsFavorite(!isFavorite);
@@ -86,7 +89,7 @@ export const WordDetailPage: React.FC<WordDetailPageProps> = ({ db }) => {
     return (
         <div className="container-list" id="word-detail">
             <PageHeader
-                href={`/collection/${word?.collectionId}`}
+                href={`/${translations["language"]}/collection/${word?.collectionId}`}
                 content={
                     <>
                         <strong>{word?.word}</strong>
@@ -113,7 +116,10 @@ export const WordDetailPage: React.FC<WordDetailPageProps> = ({ db }) => {
                                     }}
                                     onClick={() =>
                                         word?.word &&
-                                        handleTextToSpeech(word?.word)
+                                        handleTextToSpeech(
+                                            word?.word,
+                                            translations["language"]
+                                        )
                                     }
                                 >
                                     <i className="fas fa-volume-up"></i>
@@ -153,7 +159,9 @@ export const WordDetailPage: React.FC<WordDetailPageProps> = ({ db }) => {
                             <strong>Notes:</strong> {word?.notes}
                         </p>
                     )}
-                    <a href={`/collection/${word?.collectionId}`}>
+                    <a
+                        href={`/${translations["language"]}/collection/${word?.collectionId}`}
+                    >
                         <small className="text-muted">
                             &#8618; Go to{" "}
                             <span style={{ color: collection?.color }}>

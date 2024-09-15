@@ -1,4 +1,5 @@
 {
+    "flag": "🇪🇸",
     "language": "es",
     "navbar.collections": "Colecciones",
     "navbar.collections.allCollections": "Todas las colecciones",
@@ -20,5 +21,9 @@
     "searchBar.placeholder": "Buscar palabra en la colección",
     "editForm.editCollection": "Editar colección",
     "cancelBtn": "Cancelar",
-    "editBtn": "Editar"
+    "editBtn": "Editar",
+    "deleteBtn": "Borrar",
+    "createForm.createCollection": "Crea collection",
+    "createBtn": "Creare",
+    "name": "Nome"
 }

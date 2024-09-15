@@ -134,8 +134,11 @@ export const getHintWord = async (text: string) => {
 };
 
 export const getCurrentLanguageId = async (
-    languages: any,
+    languages: Array<any>,
     languageCode: string
-) => {
-    return languages.find((lang: any) => lang.code === languageCode)?.id;
+): Promise<any> => {
+    const currentLanguageId = await languages.find(
+        (lang: any) => lang.code === languageCode
+    )?.id;
+    return currentLanguageId;
 };

@@ -40,6 +40,7 @@ export type SearchBarProps = {
 };
 
 export type NavBarProps = {
+    db: IDBPDatabase<MyDB> | undefined;
     collections: Collection[];
     languageCode?: string;
 };

@@ -92,3 +92,7 @@ a.word-link:hover {
 .flag:hover {
     text-decoration: underline;
 }
+
+.custom-select {
+    width: 50%;
+}

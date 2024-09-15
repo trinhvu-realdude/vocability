@@ -2,7 +2,7 @@ import { useState } from "react";
 import { CollectionModalProps } from "../../interfaces/mainProps";
 import {
     getCollectionById,
-    getCollections,
+    getCollectionsByLanguageId,
     updateCollection,
 } from "../../services/CollectionService";
 import { useLanguage } from "../../LanguageContext";
@@ -28,7 +28,10 @@ export const EditCollectionModal: React.FC<CollectionModalProps> = ({
                     color !== "" ? color : collection.color
                 );
                 if (updatedCollection) {
-                    const storedCollections = await getCollections(db);
+                    const storedCollections = await getCollectionsByLanguageId(
+                        db,
+                        updatedCollection.languageId
+                    );
                     setCollections(storedCollections);
 
                     if (collection.id && setCollection) {

@@ -48,7 +48,7 @@ export const WordCard: React.FC<WordCardProps> = ({
                         <div className="row">
                             <h5 className="mb-1">
                                 <a
-                                    href={`/word/${word.id}`}
+                                    href={`/${translations["language"]}/word/${word.id}`}
                                     className="word-link"
                                 >
                                     <strong>{word.word}</strong>{" "}

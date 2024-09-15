@@ -1,4 +1,5 @@
 {
+    "flag": "🇵🇹",
     "language": "pt",
     "navbar.collections": "Coleções",
     "navbar.collections.allCollections": "Todas as coleções",
@@ -18,5 +19,9 @@
     "collectionPage.createCollectionBtn": "Criar coleção",
     "editForm.editCollection": "Editar coleção",
     "cancelBtn": "Cancelar",
-    "editBtn": "Editar"
+    "editBtn": "Editar",
+    "deleteBtn": "Eliminar",
+    "createForm.createCollection": "Criar coleção",
+    "createBtn": "Criar",
+    "name": "Nome"
 }

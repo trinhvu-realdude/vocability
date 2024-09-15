@@ -1,8 +1,17 @@
 import { IDBPDatabase } from "idb";
 import { Collection, MyDB } from "../interfaces/model";
 import { deleteWordsByCollectionId, getWords } from "./WordService";
+import { languages } from "../utils/constants";
 
 const storeName = "collections";
+
+export const getActiveLanguages = async (db: IDBPDatabase<MyDB>) => {
+    const collections = await getCollections(db);
+    const activeLanguageIds = new Set(
+        collections.map((collection) => collection.languageId)
+    );
+    return languages.filter((language) => activeLanguageIds.has(language.id));
+};
 
 export const getCollectionsByLanguageId = async (
     db: IDBPDatabase<MyDB>,
@@ -59,12 +68,17 @@ export const addCollection = async (
     return collectionId;
 };
 
-export const getCollectionByName = async (
+export const getCollectionByNameAndLanguageId = async (
     db: IDBPDatabase<MyDB>,
-    name: string
+    name: string,
+    currentLanguageId: number
 ): Promise<Collection | undefined> => {
     const collections: Collection[] = await getCollections(db);
-    return collections.find((collection) => collection.name === name);
+    return collections.find(
+        (collection) =>
+            collection.name === name &&
+            collection.languageId === currentLanguageId
+    );
 };
 
 export const getCollectionById = async (

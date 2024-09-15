@@ -71,7 +71,7 @@ export const CreateCollectionModal: React.FC<{
                         }}
                     >
                         <h5 className="modal-title" id="add-collection">
-                            Create collection
+                            {translations["createForm.createCollection"]}
                         </h5>
                         <button
                             type="button"
@@ -98,7 +98,7 @@ export const CreateCollectionModal: React.FC<{
                             <input
                                 type="text"
                                 className="form-control"
-                                placeholder="Name"
+                                placeholder={translations["name"]}
                                 value={name}
                                 onChange={(event) =>
                                     setName(event.target.value)
@@ -113,7 +113,7 @@ export const CreateCollectionModal: React.FC<{
                             data-bs-dismiss="modal"
                             // onClick={reset}
                         >
-                            Cancel
+                            {translations["cancelBtn"]}
                         </button>
                         <button
                             type="button"
@@ -121,7 +121,7 @@ export const CreateCollectionModal: React.FC<{
                             onClick={handleAddCollection}
                             data-bs-dismiss="modal"
                         >
-                            Create
+                            {translations["createBtn"]}
                         </button>
                     </div>
                 </div>
