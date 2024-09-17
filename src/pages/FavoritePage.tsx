@@ -185,7 +185,9 @@ export const FavoritePage: React.FC<CommonProps> = ({ db }) => {
                 (filteredWords.length <= 0 && (
                     <NoDataMessage
                         collectionColor="red"
-                        collectionName="Favorite"
+                        collectionName={
+                            translations["navbar.collections.favorite"]
+                        }
                     />
                 ))}
         </div>

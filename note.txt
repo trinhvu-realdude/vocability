@@ -40,3 +40,4 @@
     + Italian - it 
     + Portuguese - pt
 - Add translation
+- Update all texts for language respectively

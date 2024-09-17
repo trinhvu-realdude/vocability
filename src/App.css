@@ -79,7 +79,7 @@ a.word-link:hover {
 
 /* Ensure the dropdown menu does not disappear when hovering */
 .nav-item.dropdown .dropdown-menu {
-    margin-top: 0; 
+    margin-top: 0;
     visibility: hidden;
     opacity: 0;
     transition: visibility 0.2s, opacity 0.2s;
@@ -95,4 +95,9 @@ a.word-link:hover {
 
 .custom-select {
     width: 40%;
+}
+
+.dropdown-item.active {
+    background-color: #e9ecef;
+    color: black;
 }

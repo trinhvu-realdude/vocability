@@ -186,7 +186,14 @@ export const NavBar: React.FC<NavBarProps> = ({
                                                     (language: any) => (
                                                         <li key={language.id}>
                                                             <a
-                                                                className="dropdown-item d-flex"
+                                                                className={`dropdown-item d-flex ${
+                                                                    language.code ===
+                                                                    translations[
+                                                                        "language"
+                                                                    ]
+                                                                        ? "active"
+                                                                        : ""
+                                                                }`}
                                                                 href={`/${language.code}/collections`}
                                                             >
                                                                 <div>

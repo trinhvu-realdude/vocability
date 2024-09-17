@@ -93,7 +93,7 @@ export const WordPage: React.FC<WordPageProps> = ({
                             word={word}
                             collection={collection}
                             filterSorting={filterSorting}
-                            setWords={setWords}
+                            setWords={setFilteredWords}
                         />
                     ))}
             </div>

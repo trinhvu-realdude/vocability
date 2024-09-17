@@ -12,17 +12,19 @@ export const DeleteWordForm: React.FC<WordFormProps> = ({
 }) => {
     const { translations } = useLanguage();
 
-    const handleDeleteWord = async (word: Word) => {
+    const handleDeleteWord = async (wordData: Word) => {
         if (db) {
-            await deleteWord(db, word);
-            if (word.collectionId) {
+            await deleteWord(db, wordData);
+            if (wordData.collectionId) {
                 const objWord = await getWordsByCollectionId(
                     db,
-                    word.collectionId
+                    wordData.collectionId
                 );
+                console.log(objWord);
+
                 setWords(objWord);
             }
-            alert(`Deleted ${word.word} successfully`);
+            alert(`Deleted ${wordData.word} successfully`);
         }
     };
     return (
