@@ -4,6 +4,7 @@ import { getCurrentLanguageId, getRandomColor } from "../../utils/helper";
 import { useState } from "react";
 import {
     addCollection,
+    getActiveLanguages,
     getCollectionsByLanguageId,
 } from "../../services/CollectionService";
 import { languages } from "../../utils/constants";
@@ -17,7 +18,7 @@ export const CreateCollectionModal: React.FC<{
     const [color, setColor] = useState<string>("");
     const [name, setName] = useState<string>("");
 
-    const { translations } = useLanguage();
+    const { translations, setActiveLanguages } = useLanguage();
 
     const handleAddCollection = async () => {
         try {
@@ -38,6 +39,8 @@ export const CreateCollectionModal: React.FC<{
                     db,
                     currentLanguageId
                 );
+                const activeLanguages = await getActiveLanguages(db);
+                setActiveLanguages(activeLanguages);
                 setCollections(storedCollections);
                 reset();
             }

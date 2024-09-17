@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { NavBarProps } from "../interfaces/mainProps";
 import { useLanguage } from "../LanguageContext";
 import { getActiveLanguages } from "../services/CollectionService";
@@ -9,7 +9,7 @@ export const NavBar: React.FC<NavBarProps> = ({
     languageCode,
 }) => {
     const { translations } = useLanguage();
-    const [activeLanguages, setActiveLanguages] = useState<Array<any>>([]);
+    const { activeLanguages, setActiveLanguages } = useLanguage();
 
     useEffect(() => {
         const fetchLanguages = async () => {
@@ -122,10 +122,13 @@ export const NavBar: React.FC<NavBarProps> = ({
                             </li>
 
                             {/* <li className="nav-item mx-2">
-                            <a className="nav-link active" href="/practices">
-                                {translations["navbar.practices"]}
-                            </a>
-                        </li> */}
+                                <a
+                                    className="nav-link active"
+                                    href="/practices"
+                                >
+                                    {translations["navbar.practices"]}
+                                </a>
+                            </li> */}
 
                             <li className="nav-item mx-2">
                                 <a
@@ -180,7 +183,7 @@ export const NavBar: React.FC<NavBarProps> = ({
                                         activeLanguages.length > 0 && (
                                             <ul className="dropdown-menu">
                                                 {activeLanguages.map(
-                                                    (language) => (
+                                                    (language: any) => (
                                                         <li key={language.id}>
                                                             <a
                                                                 className="dropdown-item d-flex"

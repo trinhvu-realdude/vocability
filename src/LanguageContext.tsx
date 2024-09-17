@@ -13,6 +13,8 @@ type LanguageContextProps = {
     languageCode: string;
     translations: Record<string, string>;
     setLanguageCode: (code: string) => void;
+    activeLanguages: any;
+    setActiveLanguages: React.Dispatch<React.SetStateAction<any[]>>;
 };
 
 // Create Language Context
@@ -32,12 +34,16 @@ type LanguageProviderProps = {
     children: ReactNode;
     languageCode: string;
     setLanguageCode: (code: string) => void;
+    activeLanguages: any;
+    setActiveLanguages: React.Dispatch<React.SetStateAction<any[]>>;
 };
 
 export const LanguageProvider: React.FC<LanguageProviderProps> = ({
     children,
     languageCode,
     setLanguageCode,
+    activeLanguages,
+    setActiveLanguages,
 }) => {
     const [translations, setTranslations] = useState<Record<string, string>>(
         {}
@@ -60,7 +66,13 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({
 
     return (
         <LanguageContext.Provider
-            value={{ languageCode, translations, setLanguageCode }}
+            value={{
+                languageCode,
+                translations,
+                setLanguageCode,
+                activeLanguages,
+                setActiveLanguages,
+            }}
         >
             {children}
         </LanguageContext.Provider>

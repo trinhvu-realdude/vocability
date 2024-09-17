@@ -9,7 +9,10 @@ import {
 } from "../../services/WordService";
 import { getCurrentLanguageId, getRandomColor } from "../../utils/helper";
 import { Choice, CommonProps } from "../../interfaces/mainProps";
-import { getCollectionsByLanguageId } from "../../services/CollectionService";
+import {
+    getActiveLanguages,
+    getCollectionsByLanguageId,
+} from "../../services/CollectionService";
 import { useLanguage } from "../../LanguageContext";
 
 export const AddWordForm: React.FC<CommonProps> = ({
@@ -25,7 +28,7 @@ export const AddWordForm: React.FC<CommonProps> = ({
     const [partOfSpeech, setPartOfSpeech] = useState<string>("");
     const [choice, setChoice] = useState<SingleValue<Object>>();
 
-    const { translations } = useLanguage();
+    const { translations, setActiveLanguages } = useLanguage();
 
     const selectedPartsOfSpeech = partsOfSpeech.find(
         (language) => language.code === translations["language"]
@@ -73,6 +76,10 @@ export const AddWordForm: React.FC<CommonProps> = ({
                     db,
                     currentLanguageId
                 );
+
+                const activeLanguages = await getActiveLanguages(db);
+
+                setActiveLanguages(activeLanguages);
                 setCollections(storedCollections);
 
                 setWord("");

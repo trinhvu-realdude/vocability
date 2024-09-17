@@ -14,6 +14,7 @@ function App() {
     const [db, setDb] = useState<IDBPDatabase<MyDB>>();
     const [collections, setCollections] = useState<Collection[]>([]);
     const [languageCode, setLanguageCode] = useState<string>("");
+    const [activeLanguages, setActiveLanguages] = useState<Array<any>>([]);
 
     useEffect(() => {
         const initializeDB = async () => {
@@ -28,6 +29,8 @@ function App() {
         <LanguageProvider
             languageCode={languageCode}
             setLanguageCode={setLanguageCode}
+            activeLanguages={activeLanguages}
+            setActiveLanguages={setActiveLanguages}
         >
             <BrowserRouter>
                 <React.Fragment>

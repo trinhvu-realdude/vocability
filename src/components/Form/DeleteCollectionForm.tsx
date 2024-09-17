@@ -2,6 +2,7 @@ import { Collection } from "../../interfaces/model";
 import { CollectionFormProps } from "../../interfaces/mainProps";
 import {
     deleteCollection,
+    getActiveLanguages,
     getCollectionsByLanguageId,
 } from "../../services/CollectionService";
 import { getCurrentLanguageId } from "../../utils/helper";
@@ -14,7 +15,7 @@ export const DeleteCollectionForm: React.FC<CollectionFormProps> = ({
     setIsEditOrDelete,
     setCollections,
 }) => {
-    const { translations } = useLanguage();
+    const { translations, setActiveLanguages } = useLanguage();
 
     const handleDeleteCollection = async (collection: Collection) => {
         if (db) {
@@ -27,7 +28,9 @@ export const DeleteCollectionForm: React.FC<CollectionFormProps> = ({
                 db,
                 currentLanguageId
             );
+            const activeLanguages = await getActiveLanguages(db);
             setCollections(storedCollections);
+            setActiveLanguages(activeLanguages);
             alert(`Deleted ${collection.name} collection successfully`);
         }
     };
