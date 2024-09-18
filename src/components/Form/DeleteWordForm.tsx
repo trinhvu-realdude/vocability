@@ -20,11 +20,9 @@ export const DeleteWordForm: React.FC<WordFormProps> = ({
                     db,
                     wordData.collectionId
                 );
-                console.log(objWord);
-
                 setWords(objWord);
             }
-            alert(`Deleted ${wordData.word} successfully`);
+            alert(translations["alert.deleteWordSuccess"]);
         }
     };
     return (
@@ -36,7 +34,7 @@ export const DeleteWordForm: React.FC<WordFormProps> = ({
                     color: "#fff",
                 }}
             >
-                Delete word
+                {translations["deleteForm.deleteWord"]}
                 <div>
                     <div
                         className="btn btn-sm"
@@ -52,17 +50,7 @@ export const DeleteWordForm: React.FC<WordFormProps> = ({
             </div>
 
             <div className="card-body text-center">
-                <p>
-                    Are you sure to delete{" "}
-                    <span>
-                        <strong>{word.word}</strong>
-                    </span>{" "}
-                    from{" "}
-                    <span style={{ color: collection?.color }}>
-                        {collection?.name}
-                    </span>{" "}
-                    collection?
-                </p>
+                <p>{translations["deleteForm.deleteWordText"]}</p>
             </div>
 
             <div className="modal-footer">

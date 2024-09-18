@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { NavBarProps } from "../interfaces/mainProps";
 import { useLanguage } from "../LanguageContext";
 import { getActiveLanguages } from "../services/CollectionService";
+import { reorderActiveLanguages } from "../utils/helper";
 
 export const NavBar: React.FC<NavBarProps> = ({
     db,
@@ -15,7 +16,11 @@ export const NavBar: React.FC<NavBarProps> = ({
         const fetchLanguages = async () => {
             if (db) {
                 const languages = await getActiveLanguages(db);
-                setActiveLanguages(languages);
+                const reorderedLanguages = reorderActiveLanguages(
+                    languages,
+                    translations["language"]
+                );
+                setActiveLanguages(reorderedLanguages);
             }
         };
         fetchLanguages();
@@ -142,7 +147,7 @@ export const NavBar: React.FC<NavBarProps> = ({
                             <li className="nav-item mx-2">
                                 <a
                                     className="nav-link active"
-                                    href="/glossary"
+                                    href={`/${translations["language"]}/glossary`}
                                     style={{
                                         color: "#DD5746",
                                     }}

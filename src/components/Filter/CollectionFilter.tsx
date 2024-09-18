@@ -1,10 +1,13 @@
 import { CollectionFilterProps } from "../../interfaces/mainProps";
+import { useLanguage } from "../../LanguageContext";
 
 export const CollectionFilter: React.FC<CollectionFilterProps> = ({
     selectedCollection,
     collections,
     handleFilter,
 }) => {
+    const { translations } = useLanguage();
+
     return (
         <>
             <button
@@ -23,7 +26,7 @@ export const CollectionFilter: React.FC<CollectionFilterProps> = ({
                         <strong>{selectedCollection.name}</strong>
                     </span>
                 ) : (
-                    "All collections"
+                    translations["searchBar.allCollections"]
                 )}
             </button>
             <ul className="dropdown-menu">
@@ -31,7 +34,9 @@ export const CollectionFilter: React.FC<CollectionFilterProps> = ({
                     style={{ cursor: "default" }}
                     onClick={() => handleFilter && handleFilter(null)}
                 >
-                    <a className="dropdown-item">All collections</a>
+                    <a className="dropdown-item">
+                        {translations["searchBar.allCollections"]}
+                    </a>
                 </li>
                 {collections &&
                     handleFilter &&

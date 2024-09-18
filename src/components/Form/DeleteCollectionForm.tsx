@@ -31,7 +31,7 @@ export const DeleteCollectionForm: React.FC<CollectionFormProps> = ({
             const activeLanguages = await getActiveLanguages(db);
             setCollections(storedCollections);
             setActiveLanguages(activeLanguages);
-            alert(`Deleted ${collection.name} collection successfully`);
+            alert(translations["alert.deleteCollectionSuccess"]);
         }
     };
 
@@ -44,7 +44,7 @@ export const DeleteCollectionForm: React.FC<CollectionFormProps> = ({
                     color: "#fff",
                 }}
             >
-                Delete collection
+                {translations["deleteForm.deleteCollection"]}
                 <div>
                     <div
                         className="btn btn-sm"
@@ -59,7 +59,7 @@ export const DeleteCollectionForm: React.FC<CollectionFormProps> = ({
                 </div>
             </div>
             <div className="card-body text-center">
-                <p>Are you sure you want to delete this collection?</p>
+                <p>{translations["deleteForm.deleteCollectionText"]}</p>
             </div>
 
             <div className="modal-footer">
@@ -68,14 +68,14 @@ export const DeleteCollectionForm: React.FC<CollectionFormProps> = ({
                     className="btn btn-outline-secondary"
                     onClick={() => setIsEditOrDelete(false)}
                 >
-                    Cancel
+                    {translations["cancelBtn"]}
                 </button>
                 <button
                     type="button"
                     className="btn btn-outline-danger"
                     onClick={() => handleDeleteCollection(collection)}
                 >
-                    Delete now
+                    {translations["deleteBtn"]}
                 </button>
             </div>
         </div>

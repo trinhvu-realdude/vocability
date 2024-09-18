@@ -1,10 +1,13 @@
 import { DownloadDocumentModalProps } from "../../interfaces/mainProps";
+import { useLanguage } from "../../LanguageContext";
 
 export const DownloadDocumentModal: React.FC<DownloadDocumentModalProps> = ({
     collectionColor,
     filename,
     blobUrl,
 }) => {
+    const { translations } = useLanguage();
+
     return (
         <div
             className="modal fade"
@@ -23,7 +26,7 @@ export const DownloadDocumentModal: React.FC<DownloadDocumentModalProps> = ({
                         }}
                     >
                         <h5 className="modal-title" id={`download-document`}>
-                            Download document
+                            {translations["downloadDocument"]}
                         </h5>
                         <button
                             type="button"
@@ -42,7 +45,7 @@ export const DownloadDocumentModal: React.FC<DownloadDocumentModalProps> = ({
                             download={filename}
                             style={{ textDecoration: "underline" }}
                         >
-                            Download {filename}
+                            {translations["downloadBtn"]} {filename}
                         </a>
                     </div>
                     <div className="modal-footer">
@@ -51,7 +54,7 @@ export const DownloadDocumentModal: React.FC<DownloadDocumentModalProps> = ({
                             className="btn btn-outline-secondary"
                             data-bs-dismiss="modal"
                         >
-                            Cancel
+                            {translations["cancelBtn"]}
                         </button>
                     </div>
                 </div>

@@ -7,7 +7,11 @@ import {
     getPhonetic,
     getWordsByCollectionId,
 } from "../../services/WordService";
-import { getCurrentLanguageId, getRandomColor } from "../../utils/helper";
+import {
+    getCurrentLanguageId,
+    getRandomColor,
+    reorderActiveLanguages,
+} from "../../utils/helper";
 import { Choice, CommonProps } from "../../interfaces/mainProps";
 import {
     getActiveLanguages,
@@ -78,8 +82,11 @@ export const AddWordForm: React.FC<CommonProps> = ({
                 );
 
                 const activeLanguages = await getActiveLanguages(db);
-
-                setActiveLanguages(activeLanguages);
+                const reorderedLanguages = reorderActiveLanguages(
+                    activeLanguages,
+                    translations["language"]
+                );
+                setActiveLanguages(reorderedLanguages);
                 setCollections(storedCollections);
 
                 setWord("");
@@ -97,13 +104,13 @@ export const AddWordForm: React.FC<CommonProps> = ({
                     );
                     setWords(words);
                 }
-                alert(`Word ${addedWord.word} has been added successfully`);
+                alert(translations["alert.addWordSuccess"]);
             } else {
-                alert("Please choose or create the collection first");
+                alert(translations["alert.validateCollectionEmpty"]);
             }
         } catch (error) {
             console.log(error);
-            alert(`Failed to add ${word}`);
+            alert(translations["alert.addWordFailed"]);
         }
     };
 

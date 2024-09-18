@@ -1,4 +1,8 @@
-import { FilterSortingOption, SortFilterProps } from "../../interfaces/mainProps";
+import {
+    FilterSortingOption,
+    SortFilterProps,
+} from "../../interfaces/mainProps";
+import { useLanguage } from "../../LanguageContext";
 import { filterSortingOptions } from "../../utils/constants";
 import { sortWordsByFilter } from "../../utils/helper";
 
@@ -8,6 +12,8 @@ export const SortFilter: React.FC<SortFilterProps> = ({
     setFilterSorting,
     setFilteredWords,
 }) => {
+    const { translations } = useLanguage();
+
     const handleFilter = async (filter: FilterSortingOption) => {
         if (displayWords && setFilterSorting && setFilteredWords) {
             setFilterSorting(filter);
@@ -15,6 +21,10 @@ export const SortFilter: React.FC<SortFilterProps> = ({
             setFilteredWords(sortedWords);
         }
     };
+
+    const selectedFilterSortingOptions = filterSortingOptions.find(
+        (language) => language.code === translations["language"]
+    );
 
     return (
         <>
@@ -29,18 +39,24 @@ export const SortFilter: React.FC<SortFilterProps> = ({
                     borderBottomRightRadius: "0.25rem",
                 }}
             >
-                {filterSorting ? filterSorting.label : "Sort by"} &#8645;
+                {filterSorting
+                    ? filterSorting.label
+                    : translations["searchBar.sortBy"]}{" "}
+                &#8645;
             </button>
             <ul className="dropdown-menu">
-                {filterSortingOptions.map((filter, index) => (
-                    <li
-                        key={index}
-                        onClick={() => handleFilter(filter)}
-                        style={{ cursor: "default" }}
-                    >
-                        <a className="dropdown-item">{filter.label}</a>
-                    </li>
-                ))}
+                {selectedFilterSortingOptions &&
+                    selectedFilterSortingOptions["list"].map(
+                        (filter, index) => (
+                            <li
+                                key={index}
+                                onClick={() => handleFilter(filter)}
+                                style={{ cursor: "default" }}
+                            >
+                                <a className="dropdown-item">{filter.label}</a>
+                            </li>
+                        )
+                    )}
             </ul>
         </>
     );

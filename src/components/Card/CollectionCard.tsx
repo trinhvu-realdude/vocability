@@ -59,7 +59,10 @@ export const CollectionCard: React.FC<CollectionCardProps> = ({
                         className="card-body text-center"
                         data-bs-toggle="tooltip"
                         data-bs-placement="top"
-                        title={`Created at ${formatDate(collection.createdAt)}`}
+                        title={`${translations["createdAt"]} ${formatDate(
+                            collection.createdAt,
+                            translations["language"]
+                        )}`}
                         href={`/${languageCode}/collection/${collection.id}`}
                     >
                         <p>

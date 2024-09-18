@@ -1,23 +1,9 @@
 import { NoDataMessageProps } from "../interfaces/mainProps";
 
-export const NoDataMessage: React.FC<NoDataMessageProps> = ({
-    collectionName,
-    collectionColor,
-    message,
-}) => {
+export const NoDataMessage: React.FC<NoDataMessageProps> = ({ message }) => {
     return (
         <div className="text-center px-4">
-            {collectionColor && collectionName ? (
-                <p>
-                    &#128531; No found word in{" "}
-                    <span style={{ color: collectionColor }}>
-                        {collectionName}
-                    </span>{" "}
-                    collection
-                </p>
-            ) : (
-                <p>{message}</p>
-            )}
+            <p>{message}</p>
         </div>
     );
 };

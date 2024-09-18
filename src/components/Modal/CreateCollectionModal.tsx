@@ -1,6 +1,10 @@
 import { IDBPDatabase } from "idb";
 import { Collection, MyDB } from "../../interfaces/model";
-import { getCurrentLanguageId, getRandomColor } from "../../utils/helper";
+import {
+    getCurrentLanguageId,
+    getRandomColor,
+    reorderActiveLanguages,
+} from "../../utils/helper";
 import { useState } from "react";
 import {
     addCollection,
@@ -40,13 +44,17 @@ export const CreateCollectionModal: React.FC<{
                     currentLanguageId
                 );
                 const activeLanguages = await getActiveLanguages(db);
-                setActiveLanguages(activeLanguages);
+                const reorderedLanguages = reorderActiveLanguages(
+                    activeLanguages,
+                    translations["language"]
+                );
+                setActiveLanguages(reorderedLanguages);
                 setCollections(storedCollections);
                 reset();
             }
         } catch (error) {
             console.log(error);
-            alert("Failed to add collection");
+            alert(translations["alert.addCollectionFailed"]);
         }
     };
 

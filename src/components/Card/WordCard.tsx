@@ -110,14 +110,18 @@ export const WordCard: React.FC<WordCardProps> = ({
                     <p className="mb-1">{word.definition}</p>
                     {word.notes && (
                         <p className="mb-1">
-                            <strong>Notes:</strong> {word.notes}
+                            <strong>
+                                {translations["addWordForm.notes"]}:
+                            </strong>{" "}
+                            {word.notes}
                         </p>
                     )}
                     <small
                         className="text-muted mb-1"
                         style={{ fontSize: "12px" }}
                     >
-                        Created at {formatDate(word.createdAt)}
+                        {translations["createdAt"]}{" "}
+                        {formatDate(word.createdAt, translations["language"])}
                     </small>
                 </div>
             )}

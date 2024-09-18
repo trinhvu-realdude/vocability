@@ -53,7 +53,7 @@ export const EditCollectionForm: React.FC<CollectionFormProps> = ({
             }
         } catch (error) {
             console.log(error);
-            alert(`Failed to rename ${collection.name}`);
+            alert(translations["alert.renameCollectionFailed"]);
         }
     };
 

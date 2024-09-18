@@ -114,8 +114,6 @@ export type Choice = {
 };
 
 export type NoDataMessageProps = {
-    collectionName?: string;
-    collectionColor?: string;
     message?: string;
 };
 

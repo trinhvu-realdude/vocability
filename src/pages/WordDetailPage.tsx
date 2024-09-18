@@ -33,7 +33,8 @@ export const WordDetailPage: React.FC<WordDetailPageProps> = ({ db }) => {
 
     const { translations } = useLanguage();
 
-    document.title = `${translations["flag"]} ${APP_NAME} | ${word?.word}`;
+    if (translations)
+        document.title = `${translations["flag"]} ${APP_NAME} | ${word?.word}`;
 
     const handleAddFavorite = async (word: Word) => {
         setIsFavorite(!isFavorite);
@@ -163,11 +164,13 @@ export const WordDetailPage: React.FC<WordDetailPageProps> = ({ db }) => {
                         href={`/${translations["language"]}/collection/${word?.collectionId}`}
                     >
                         <small className="text-muted">
-                            &#8618; Go to{" "}
+                            &#8618; {translations["goTo"]}{" "}
                             <span style={{ color: collection?.color }}>
                                 <strong>{collection?.name}</strong>
                             </span>{" "}
-                            collection
+                            {new String(
+                                translations["addWordForm.collection"]
+                            ).toLowerCase()}
                         </small>
                     </a>
                     <br />
@@ -176,7 +179,11 @@ export const WordDetailPage: React.FC<WordDetailPageProps> = ({ db }) => {
                             className="text-muted"
                             style={{ fontSize: "12px" }}
                         >
-                            Created at {formatDate(word?.createdAt)}
+                            {translations["createdAt"]}{" "}
+                            {formatDate(
+                                word?.createdAt,
+                                translations["language"]
+                            )}
                         </small>
                     )}
                 </>

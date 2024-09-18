@@ -30,9 +30,9 @@ a.word-link:hover {
     transition: transform 0.2s ease-in-out;
 }
 
-#card-collection:hover {
+/* #card-collection:hover {
     box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 8px;
-}
+} */
 
 #card-practice:hover {
     transform: translateY(-5px);
