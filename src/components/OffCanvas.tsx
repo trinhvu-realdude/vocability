@@ -43,18 +43,20 @@ export const OffCanvas: React.FC<{
                 >
                     <strong>{word}</strong>
                 </h5>
-                <div
-                    className="btn btn-sm"
-                    data-bs-dismiss="offcanvas"
-                    aria-label="Close"
-                    onClick={onClose}
-                >
-                    <i className="fas fa-times"></i>
-                </div>
+                {!isLoading && (
+                    <div
+                        className="btn btn-sm"
+                        data-bs-dismiss="offcanvas"
+                        aria-label="Close"
+                        onClick={onClose}
+                    >
+                        <i className="fas fa-times"></i>
+                    </div>
+                )}
             </div>
             <div className="offcanvas-body text-start container">
                 {isLoading ? (
-                    <div className="container text-center">Loading...</div>
+                    <div className="mx-auto loader"></div>
                 ) : data && data instanceof Array ? (
                     data.map((element, index) => (
                         <div

@@ -45,7 +45,7 @@ export const EditCollectionModal: React.FC<CollectionModalProps> = ({
             }
         } catch (error) {
             console.log(error);
-            alert(`Failed to rename ${collection.name}`);
+            alert(translations["alert.renameCollectionFailed"]);
         }
     };
     return (

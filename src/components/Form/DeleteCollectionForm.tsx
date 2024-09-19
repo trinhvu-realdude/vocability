@@ -2,6 +2,7 @@ import { Collection } from "../../interfaces/model";
 import { CollectionFormProps } from "../../interfaces/mainProps";
 import {
     deleteCollection,
+    getActiveLanguages,
     getCollectionsByLanguageId,
 } from "../../services/CollectionService";
 import { getCurrentLanguageId } from "../../utils/helper";
@@ -14,7 +15,7 @@ export const DeleteCollectionForm: React.FC<CollectionFormProps> = ({
     setIsEditOrDelete,
     setCollections,
 }) => {
-    const { translations } = useLanguage();
+    const { translations, setActiveLanguages } = useLanguage();
 
     const handleDeleteCollection = async (collection: Collection) => {
         if (db) {
@@ -27,8 +28,10 @@ export const DeleteCollectionForm: React.FC<CollectionFormProps> = ({
                 db,
                 currentLanguageId
             );
+            const activeLanguages = await getActiveLanguages(db);
             setCollections(storedCollections);
-            alert(`Deleted ${collection.name} collection successfully`);
+            setActiveLanguages(activeLanguages);
+            alert(translations["alert.deleteCollectionSuccess"]);
         }
     };
 
@@ -41,7 +44,7 @@ export const DeleteCollectionForm: React.FC<CollectionFormProps> = ({
                     color: "#fff",
                 }}
             >
-                Delete collection
+                {translations["deleteForm.deleteCollection"]}
                 <div>
                     <div
                         className="btn btn-sm"
@@ -56,7 +59,7 @@ export const DeleteCollectionForm: React.FC<CollectionFormProps> = ({
                 </div>
             </div>
             <div className="card-body text-center">
-                <p>Are you sure you want to delete this collection?</p>
+                <p>{translations["deleteForm.deleteCollectionText"]}</p>
             </div>
 
             <div className="modal-footer">
@@ -65,14 +68,14 @@ export const DeleteCollectionForm: React.FC<CollectionFormProps> = ({
                     className="btn btn-outline-secondary"
                     onClick={() => setIsEditOrDelete(false)}
                 >
-                    Cancel
+                    {translations["cancelBtn"]}
                 </button>
                 <button
                     type="button"
                     className="btn btn-outline-danger"
                     onClick={() => handleDeleteCollection(collection)}
                 >
-                    Delete now
+                    {translations["deleteBtn"]}
                 </button>
             </div>
         </div>

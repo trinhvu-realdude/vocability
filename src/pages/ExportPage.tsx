@@ -10,9 +10,11 @@ import {
 } from "../services/CollectionService";
 import { formatFileName } from "../utils/formatDateString";
 import { PageHeader } from "../components/PageHeader";
+import { useLanguage } from "../LanguageContext";
 
 export const ExportPage: React.FC<CommonProps> = ({ db, collections }) => {
-    document.title = `${APP_NAME} | Export`;
+    const { translations } = useLanguage();
+    document.title = `${translations["flag"]} ${APP_NAME} | Export`;
 
     const [exportCollectionId, setExportCollectionId] = useState<number>();
     const [fileType, setFileType] = useState<string>("");
@@ -55,13 +57,13 @@ export const ExportPage: React.FC<CommonProps> = ({ db, collections }) => {
             }
             setDocumentUrl(url);
         } else {
-            alert("Please choose the collection and file format");
+            alert(translations["alert.validateExportForm"]);
         }
     };
 
     return (
         <div className="container-list" id="import-export">
-            <PageHeader content="Export" />
+            <PageHeader content={translations["export"]} />
             <div className="export-form">
                 <div className="input-group mb-2">
                     <select
@@ -73,7 +75,9 @@ export const ExportPage: React.FC<CommonProps> = ({ db, collections }) => {
                             )
                         }
                     >
-                        <option value="">Choose a collection</option>
+                        <option value="">
+                            {translations["export.chooseCollection"]}
+                        </option>
                         {collections &&
                             collections.map((collection) => (
                                 <option
@@ -89,7 +93,9 @@ export const ExportPage: React.FC<CommonProps> = ({ db, collections }) => {
                         id="file-formate"
                         onChange={(event) => setFileType(event.target.value)}
                     >
-                        <option value="">File format</option>
+                        <option value="">
+                            {translations["export.fileFormat"]}
+                        </option>
                         {documentFileFormats.map((format, index) => (
                             <option key={index} value={format.type}>
                                 {format.type}
@@ -104,7 +110,7 @@ export const ExportPage: React.FC<CommonProps> = ({ db, collections }) => {
                             border: "1px solid #ced4da",
                         }}
                     >
-                        <strong>From:</strong>{" "}
+                        <strong>{translations["export.fromDate"]}:</strong>{" "}
                         <input
                             type="date"
                             style={{ border: "none" }}
@@ -121,7 +127,7 @@ export const ExportPage: React.FC<CommonProps> = ({ db, collections }) => {
                             border: "1px solid #ced4da",
                         }}
                     >
-                        <strong>To:</strong>{" "}
+                        <strong>{translations["export.toDate"]}:</strong>{" "}
                         <input
                             type="date"
                             style={{ border: "none" }}
@@ -144,7 +150,7 @@ export const ExportPage: React.FC<CommonProps> = ({ db, collections }) => {
                         data-bs-target={`#download-document`}
                         onClick={handleGenerateDocument}
                     >
-                        Generate
+                        {translations["export.generateBtn"]}
                     </button>
                     {exportCollectionId && fileType && (
                         <DownloadDocumentModal

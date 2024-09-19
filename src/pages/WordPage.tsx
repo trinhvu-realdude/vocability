@@ -58,7 +58,9 @@ export const WordPage: React.FC<WordPageProps> = ({
                         <span style={{ color: collection?.color }}>
                             <strong>{collection?.name}</strong>
                         </span>{" "}
-                        collection
+                        {new String(
+                            translations["addWordForm.collection"]
+                        ).toLowerCase()}
                         <div
                             className="btn btn-sm mx-2"
                             style={{
@@ -93,17 +95,14 @@ export const WordPage: React.FC<WordPageProps> = ({
                             word={word}
                             collection={collection}
                             filterSorting={filterSorting}
-                            setWords={setWords}
+                            setWords={setFilteredWords}
                         />
                     ))}
             </div>
 
             {!filteredWords ||
                 (filteredWords.length <= 0 && (
-                    <NoDataMessage
-                        collectionColor={collection?.color}
-                        collectionName={collection?.name}
-                    />
+                    <NoDataMessage message={translations["noFoundWord"]} />
                 ))}
 
             {collection && (

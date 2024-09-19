@@ -142,3 +142,21 @@ export const getCurrentLanguageId = async (
     )?.id;
     return currentLanguageId;
 };
+
+export const reorderActiveLanguages = (
+    languages: Array<any>,
+    languageCode: string
+): any[] => {
+    const currentLanguage = languages.find(
+        (language) => language.code === languageCode
+    );
+
+    const otherLanguages = languages.filter(
+        (language) => language.code !== languageCode
+    );
+    const reorderedLanguages = currentLanguage
+        ? [currentLanguage, ...otherLanguages]
+        : languages;
+
+    return reorderedLanguages;
+};

@@ -13,6 +13,8 @@
 - Add search bar for Favorite collection - Done
 - Fix edit word in WordDetailPage, it is calling API 2 times
 - Fix components render 2 times - Pending
+- Update all texts for language respectively - Done
+- Check responsive for mobile screen with favorite, edit, delete button - In Progress
 - Research games for Practice
     + Flashcard Quiz - Done
     + Crossword Puzzles - In progress
@@ -31,12 +33,11 @@
     + xlsx
     + csv
     + png
-- Design for Root layout
-- Add Languagues - In Progress 
+- Add Languagues - Done
     + English - us
     + Spanish - es
     + French - fr
     + German - de 
     + Italian - it 
     + Portuguese - pt
-- Add translation
+- Design for Root layout

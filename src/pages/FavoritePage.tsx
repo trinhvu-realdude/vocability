@@ -42,7 +42,7 @@ export const FavoritePage: React.FC<CommonProps> = ({ db }) => {
                 setFavoriteWords(words);
                 setFilteredWords(words);
             }
-            alert(`Removed ${word.word} from Favorite collection`);
+            alert(translations["alert.removeFavoriteWord"]);
         }
     };
 
@@ -94,7 +94,7 @@ export const FavoritePage: React.FC<CommonProps> = ({ db }) => {
                 href={document.referrer}
                 content={
                     <>
-                        <span style={{ color: "red" }}>
+                        <span style={{ color: "#FFC000" }}>
                             <strong>
                                 {translations["navbar.collections.favorite"]}
                             </strong>
@@ -168,13 +168,15 @@ export const FavoritePage: React.FC<CommonProps> = ({ db }) => {
                                 href={`/${translations["language"]}/collection/${word.collection.id}`}
                             >
                                 <small className="text-muted">
-                                    &#8618; Go to{" "}
+                                    &#8618; {translations["goTo"]}{" "}
                                     <span
                                         style={{ color: word.collection.color }}
                                     >
                                         <strong>{word.collection.name}</strong>
                                     </span>{" "}
-                                    collection
+                                    {new String(
+                                        translations["addWordForm.collection"]
+                                    ).toLowerCase()}
                                 </small>
                             </a>
                         </div>
@@ -183,10 +185,7 @@ export const FavoritePage: React.FC<CommonProps> = ({ db }) => {
 
             {!filteredWords ||
                 (filteredWords.length <= 0 && (
-                    <NoDataMessage
-                        collectionColor="red"
-                        collectionName="Favorite"
-                    />
+                    <NoDataMessage message={translations["noFoundWord"]} />
                 ))}
         </div>
     );

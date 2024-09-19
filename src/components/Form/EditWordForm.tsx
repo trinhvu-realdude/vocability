@@ -63,7 +63,7 @@ export const EditWordForm: React.FC<WordFormProps> = ({
             }
         } catch (error) {
             console.log(error);
-            alert(`Failed to edit ${word.word}`);
+            alert(translations["alert.editWordFailed"]);
         }
     };
 
@@ -76,7 +76,7 @@ export const EditWordForm: React.FC<WordFormProps> = ({
                     color: "#fff",
                 }}
             >
-                Edit word
+                {translations["editForm.editWord"]}
                 <div>
                     <div
                         className="btn btn-sm"
@@ -125,7 +125,9 @@ export const EditWordForm: React.FC<WordFormProps> = ({
                 </div>
                 <div className="row">
                     <div className="input-group col-12 mb-2">
-                        <span className="input-group-text">Definition</span>
+                        <span className="input-group-text">
+                            {translations["addWordForm.definition"]}
+                        </span>
                         <input
                             type="text"
                             className="form-control"
@@ -136,7 +138,9 @@ export const EditWordForm: React.FC<WordFormProps> = ({
                         />
                     </div>
                     <div className="input-group col-12 mb-2">
-                        <span className="input-group-text">Notes</span>
+                        <span className="input-group-text">
+                            {translations["addWordForm.notes"]}
+                        </span>
                         <textarea
                             className="form-control"
                             defaultValue={word.notes}
@@ -154,14 +158,14 @@ export const EditWordForm: React.FC<WordFormProps> = ({
                     className="btn btn-outline-secondary"
                     onClick={() => setIsEditOrDelete(false)}
                 >
-                    Cancel
+                    {translations["cancelBtn"]}
                 </button>
                 <button
                     type="button"
                     className="btn btn-outline-success"
                     onClick={handleEditWord}
                 >
-                    Edit
+                    {translations["editBtn"]}
                 </button>
             </div>
         </div>

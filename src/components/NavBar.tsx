@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { NavBarProps } from "../interfaces/mainProps";
 import { useLanguage } from "../LanguageContext";
 import { getActiveLanguages } from "../services/CollectionService";
+import { reorderActiveLanguages } from "../utils/helper";
 
 export const NavBar: React.FC<NavBarProps> = ({
     db,
@@ -9,13 +10,17 @@ export const NavBar: React.FC<NavBarProps> = ({
     languageCode,
 }) => {
     const { translations } = useLanguage();
-    const [activeLanguages, setActiveLanguages] = useState<Array<any>>([]);
+    const { activeLanguages, setActiveLanguages } = useLanguage();
 
     useEffect(() => {
         const fetchLanguages = async () => {
             if (db) {
                 const languages = await getActiveLanguages(db);
-                setActiveLanguages(languages);
+                const reorderedLanguages = reorderActiveLanguages(
+                    languages,
+                    translations["language"]
+                );
+                setActiveLanguages(reorderedLanguages);
             }
         };
         fetchLanguages();
@@ -104,7 +109,7 @@ export const NavBar: React.FC<NavBarProps> = ({
                                         >
                                             <div
                                                 style={{
-                                                    color: "red",
+                                                    color: "#FFC000",
                                                 }}
                                             >
                                                 <i className="fas fa-layer-group"></i>
@@ -122,13 +127,19 @@ export const NavBar: React.FC<NavBarProps> = ({
                             </li>
 
                             {/* <li className="nav-item mx-2">
-                            <a className="nav-link active" href="/practices">
-                                {translations["navbar.practices"]}
-                            </a>
-                        </li> */}
+                                <a
+                                    className="nav-link active"
+                                    href={`/${translations["language"]}/practices`}
+                                >
+                                    {translations["navbar.practices"]}
+                                </a>
+                            </li> */}
 
                             <li className="nav-item mx-2">
-                                <a className="nav-link active" href="/export">
+                                <a
+                                    className="nav-link active"
+                                    href={`/${translations["language"]}/export`}
+                                >
                                     {translations["navbar.export"]}
                                 </a>
                             </li>
@@ -136,7 +147,7 @@ export const NavBar: React.FC<NavBarProps> = ({
                             <li className="nav-item mx-2">
                                 <a
                                     className="nav-link active"
-                                    href="/glossary"
+                                    href={`/${translations["language"]}/glossary`}
                                     style={{
                                         color: "#DD5746",
                                     }}
@@ -147,7 +158,11 @@ export const NavBar: React.FC<NavBarProps> = ({
 
                             {languageCode && (
                                 <li
-                                    className="nav-item dropdown mx-2"
+                                    className={`nav-item mx-2 ${
+                                        activeLanguages.length > 0
+                                            ? "dropdown"
+                                            : ""
+                                    }`}
                                     style={{ cursor: "pointer" }}
                                 >
                                     <a
@@ -169,31 +184,43 @@ export const NavBar: React.FC<NavBarProps> = ({
                                             </small>
                                         </span>
                                     </a>
-                                    <ul className="dropdown-menu">
-                                        {activeLanguages &&
-                                            activeLanguages.length > 0 &&
-                                            activeLanguages.map((language) => (
-                                                <li key={language.id}>
-                                                    <a
-                                                        className="dropdown-item d-flex"
-                                                        href={`/${language.code}/collections`}
-                                                    >
-                                                        <div>
-                                                            <i
-                                                                className={`fi fi-${language.code}`}
-                                                                style={{
-                                                                    borderRadius:
-                                                                        "2px",
-                                                                }}
-                                                            ></i>
-                                                        </div>{" "}
-                                                        <span className="ms-2">
-                                                            {language.language}
-                                                        </span>
-                                                    </a>
-                                                </li>
-                                            ))}
-                                    </ul>
+                                    {activeLanguages &&
+                                        activeLanguages.length > 0 && (
+                                            <ul className="dropdown-menu">
+                                                {activeLanguages.map(
+                                                    (language: any) => (
+                                                        <li key={language.id}>
+                                                            <a
+                                                                className={`dropdown-item d-flex ${
+                                                                    language.code ===
+                                                                    translations[
+                                                                        "language"
+                                                                    ]
+                                                                        ? "active"
+                                                                        : ""
+                                                                }`}
+                                                                href={`/${language.code}/collections`}
+                                                            >
+                                                                <div>
+                                                                    <i
+                                                                        className={`fi fi-${language.code}`}
+                                                                        style={{
+                                                                            borderRadius:
+                                                                                "2px",
+                                                                        }}
+                                                                    ></i>
+                                                                </div>{" "}
+                                                                <span className="ms-2">
+                                                                    {
+                                                                        language.language
+                                                                    }
+                                                                </span>
+                                                            </a>
+                                                        </li>
+                                                    )
+                                                )}
+                                            </ul>
+                                        )}
                                 </li>
                             )}
                         </ul>

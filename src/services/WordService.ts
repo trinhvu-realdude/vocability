@@ -176,32 +176,46 @@ export const updateWord = async (
 export const getPhonetic = async (
     word: string
 ): Promise<string | undefined> => {
-    if (word.split(" ").length > 1) {
-        return undefined;
-    }
-    const response = await fetch(
-        `https://api.dictionaryapi.dev/api/v2/entries/en/${word}`
-    );
-    const data = await response.json();
+    const fetchPhonetic = async (w: string) => {
+        const response = await fetch(
+            `https://api.dictionaryapi.dev/api/v2/entries/en/${w}`
+        );
+        const data = await response.json();
 
-    if (data instanceof Array) {
-        const phonetics = data[0].phonetics;
+        if (data instanceof Array) {
+            const phonetics = data[0].phonetics;
 
-        for (const element of phonetics) {
-            if (element.text && element.audio) {
-                return element.text;
+            for (const element of phonetics) {
+                if (element.text) {
+                    return element.text;
+                }
             }
         }
+        return undefined;
+    };
+
+    const phonetic = await fetchPhonetic(word);
+    if (!phonetic) {
+        let result = "";
+        for (const w of word.split(" ")) {
+            const data = await fetchPhonetic(w);
+            if (data) {
+                result += data + " ";
+            } else {
+                return undefined;
+            }
+        }
+        return "/" + result.replace(/\//g, "").trim() + "/";
     }
-    return undefined;
+    return phonetic;
 };
 
 export const getSynonymsAntonyms = async (
     word: Word
 ): Promise<{ synonyms: string[]; antonyms: string[] } | undefined> => {
-    if (word.word.split(" ").length > 1) {
-        return undefined;
-    }
+    // if (word.word.split(" ").length > 1) {
+    //     return undefined;
+    // }
     const response = await fetch(
         `https://api.dictionaryapi.dev/api/v2/entries/en/${word.word}`
     );

@@ -1,11 +1,16 @@
-export const formatDate = (createdAt: Date) => {
+export const formatDate = (createdAt: Date, languageCode: string) => {
     const date = new Date(createdAt);
-    const formattedDate = date.toLocaleDateString("en-US", {
-        weekday: "short",
-        month: "short",
-        day: "2-digit",
-        year: "numeric",
-    });
+    const formattedDate = date.toLocaleDateString(
+        languageCode !== "us" && languageCode
+            ? `${languageCode}-${languageCode.toUpperCase()}`
+            : "en-US",
+        {
+            weekday: "short",
+            month: "short",
+            day: "2-digit",
+            year: "numeric",
+        }
+    );
 
     const [weekday, month, day, year] = formattedDate
         .replace(",", "")

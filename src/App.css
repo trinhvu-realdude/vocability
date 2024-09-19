@@ -30,9 +30,9 @@ a.word-link:hover {
     transition: transform 0.2s ease-in-out;
 }
 
-#card-collection:hover {
+/* #card-collection:hover {
     box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 8px;
-}
+} */
 
 #card-practice:hover {
     transform: translateY(-5px);
@@ -79,7 +79,7 @@ a.word-link:hover {
 
 /* Ensure the dropdown menu does not disappear when hovering */
 .nav-item.dropdown .dropdown-menu {
-    margin-top: 0; /* Remove any margin that might push it down */
+    margin-top: 0;
     visibility: hidden;
     opacity: 0;
     transition: visibility 0.2s, opacity 0.2s;
@@ -94,5 +94,33 @@ a.word-link:hover {
 }
 
 .custom-select {
-    width: 50%;
+    width: 40%;
+}
+
+.dropdown-item.active {
+    background-color: #e9ecef;
+    color: black;
+}
+
+.loader {
+    width: 30px;
+    aspect-ratio: 4;
+    --_g: no-repeat radial-gradient(circle closest-side, #000 90%, #0000);
+    background: var(--_g) 0% 50%, var(--_g) 50% 50%, var(--_g) 100% 50%;
+    background-size: calc(100% / 3) 100%;
+    animation: l7 1s infinite linear;
+}
+@keyframes l7 {
+    33% {
+        background-size: calc(100% / 3) 0%, calc(100% / 3) 100%,
+            calc(100% / 3) 100%;
+    }
+    50% {
+        background-size: calc(100% / 3) 100%, calc(100% / 3) 0%,
+            calc(100% / 3) 100%;
+    }
+    66% {
+        background-size: calc(100% / 3) 100%, calc(100% / 3) 100%,
+            calc(100% / 3) 0%;
+    }
 }

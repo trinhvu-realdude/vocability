@@ -1,9 +1,14 @@
 import { IDBPDatabase } from "idb";
 import { Collection, MyDB } from "../../interfaces/model";
-import { getCurrentLanguageId, getRandomColor } from "../../utils/helper";
+import {
+    getCurrentLanguageId,
+    getRandomColor,
+    reorderActiveLanguages,
+} from "../../utils/helper";
 import { useState } from "react";
 import {
     addCollection,
+    getActiveLanguages,
     getCollectionsByLanguageId,
 } from "../../services/CollectionService";
 import { languages } from "../../utils/constants";
@@ -17,7 +22,7 @@ export const CreateCollectionModal: React.FC<{
     const [color, setColor] = useState<string>("");
     const [name, setName] = useState<string>("");
 
-    const { translations } = useLanguage();
+    const { translations, setActiveLanguages } = useLanguage();
 
     const handleAddCollection = async () => {
         try {
@@ -38,12 +43,18 @@ export const CreateCollectionModal: React.FC<{
                     db,
                     currentLanguageId
                 );
+                const activeLanguages = await getActiveLanguages(db);
+                const reorderedLanguages = reorderActiveLanguages(
+                    activeLanguages,
+                    translations["language"]
+                );
+                setActiveLanguages(reorderedLanguages);
                 setCollections(storedCollections);
                 reset();
             }
         } catch (error) {
             console.log(error);
-            alert("Failed to add collection");
+            alert(translations["alert.addCollectionFailed"]);
         }
     };
 
