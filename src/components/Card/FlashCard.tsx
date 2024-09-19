@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Word } from "../../interfaces/model";
-import { getHintWord, handleTextToSpeech } from "../../utils/helper";
+import { getHintWord } from "../../utils/helper";
 
 export const FlashCard: React.FC<{
     index: number;
@@ -109,7 +109,7 @@ export const FlashCard: React.FC<{
                 <div
                     className="text-center mt-4"
                     style={{ cursor: "pointer" }}
-                    onClick={() => handleTextToSpeech(word.word)}
+                    // onClick={() => handleTextToSpeech(word.word)}
                 >
                     <strong>{word.word}</strong>{" "}
                     <small>

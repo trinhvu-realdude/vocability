@@ -1,14 +1,14 @@
 import { PageHeader } from "../../components/PageHeader";
 import { PracticeMessage } from "../../components/PracticeMessage";
 import { VocabularyQuizPageProps } from "../../interfaces/practiceProps";
-import { generateQuestionsForVocabularyQuiz } from "../../services/PracticeService";
+// import { generateQuestionsForVocabularyQuiz } from "../../services/PracticeService";
 
 export const VocabularyQuizPage: React.FC<VocabularyQuizPageProps> = ({
     db,
 }) => {
     const handleGenerateQuiz = async () => {
         if (db) {
-            const questions = await generateQuestionsForVocabularyQuiz(db);
+            // const questions = await generateQuestionsForVocabularyQuiz(db);
         }
     };
 
