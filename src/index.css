@@ -25,6 +25,10 @@ input[type="number"] {
     -moz-appearance: textfield;
 }
 
+.three-dots {
+    display: none;
+}
+
 /* Media query for mobile devices */
 @media (max-width: 768px) {
     .flashcard {
@@ -50,5 +54,16 @@ input[type="number"] {
 
     .custom-select {
         width: 100%;
+    }
+}
+
+/* Media query for responsive buttons */
+@media (max-width: 992px) {
+    .function-buttons {
+        display: none;
+    }
+
+    .three-dots {
+        display: block;
     }
 }

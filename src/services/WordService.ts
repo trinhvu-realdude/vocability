@@ -194,28 +194,28 @@ export const getPhonetic = async (
         return undefined;
     };
 
-    if (word.split(" ").length > 1) {
+    const phonetic = await fetchPhonetic(word);
+    if (!phonetic) {
         let result = "";
         for (const w of word.split(" ")) {
-            const phonetic = await fetchPhonetic(w);
-            if (phonetic) {
-                result += phonetic + " ";
+            const data = await fetchPhonetic(w);
+            if (data) {
+                result += data + " ";
             } else {
                 return undefined;
             }
         }
         return "/" + result.replace(/\//g, "").trim() + "/";
     }
-    const phonetic = await fetchPhonetic(word);
     return phonetic;
 };
 
 export const getSynonymsAntonyms = async (
     word: Word
 ): Promise<{ synonyms: string[]; antonyms: string[] } | undefined> => {
-    if (word.word.split(" ").length > 1) {
-        return undefined;
-    }
+    // if (word.word.split(" ").length > 1) {
+    //     return undefined;
+    // }
     const response = await fetch(
         `https://api.dictionaryapi.dev/api/v2/entries/en/${word.word}`
     );
