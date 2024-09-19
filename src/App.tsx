@@ -57,7 +57,7 @@ function App() {
                             />
 
                             <Route
-                                path="/practices/*"
+                                path="/:language/practices/*"
                                 element={
                                     <PracticeLayout
                                         db={db}

@@ -129,7 +129,7 @@ export const NavBar: React.FC<NavBarProps> = ({
                             {/* <li className="nav-item mx-2">
                                 <a
                                     className="nav-link active"
-                                    href="/practices"
+                                    href={`/${translations["language"]}/practices`}
                                 >
                                     {translations["navbar.practices"]}
                                 </a>
