@@ -109,7 +109,7 @@ export const NavBar: React.FC<NavBarProps> = ({
                                         >
                                             <div
                                                 style={{
-                                                    color: "red",
+                                                    color: "#FFC000",
                                                 }}
                                             >
                                                 <i className="fas fa-layer-group"></i>

@@ -176,24 +176,38 @@ export const updateWord = async (
 export const getPhonetic = async (
     word: string
 ): Promise<string | undefined> => {
-    if (word.split(" ").length > 1) {
-        return undefined;
-    }
-    const response = await fetch(
-        `https://api.dictionaryapi.dev/api/v2/entries/en/${word}`
-    );
-    const data = await response.json();
+    const fetchPhonetic = async (w: string) => {
+        const response = await fetch(
+            `https://api.dictionaryapi.dev/api/v2/entries/en/${w}`
+        );
+        const data = await response.json();
 
-    if (data instanceof Array) {
-        const phonetics = data[0].phonetics;
+        if (data instanceof Array) {
+            const phonetics = data[0].phonetics;
 
-        for (const element of phonetics) {
-            if (element.text && element.audio) {
-                return element.text;
+            for (const element of phonetics) {
+                if (element.text) {
+                    return element.text;
+                }
             }
         }
+        return undefined;
+    };
+
+    if (word.split(" ").length > 1) {
+        let result = "";
+        for (const w of word.split(" ")) {
+            const phonetic = await fetchPhonetic(w);
+            if (phonetic) {
+                result += phonetic + " ";
+            } else {
+                return undefined;
+            }
+        }
+        return "/" + result.replace(/\//g, "").trim() + "/";
     }
-    return undefined;
+    const phonetic = await fetchPhonetic(word);
+    return phonetic;
 };
 
 export const getSynonymsAntonyms = async (

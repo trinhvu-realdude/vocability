@@ -135,13 +135,13 @@ export const WordDetailPage: React.FC<WordDetailPageProps> = ({ db }) => {
                                 <i
                                     className={`${
                                         word?.isFavorite ? "fas" : "far"
-                                    } fa-heart`}
+                                    } fa-bookmark`}
                                     onClick={() => {
                                         if (word) handleAddFavorite(word);
                                     }}
                                     style={{
                                         color: `${
-                                            word?.isFavorite ? "red" : ""
+                                            word?.isFavorite ? "#FFC000" : ""
                                         }`,
                                     }}
                                 ></i>
@@ -203,7 +203,7 @@ export const WordDetailPage: React.FC<WordDetailPageProps> = ({ db }) => {
             )}
 
             {isLoading ? (
-                <div className="container text-center">Loading...</div>
+                <div className="mx-auto loader"></div>
             ) : synonyms &&
               antonyms &&
               (synonyms.length > 0 || antonyms.length > 0) ? (

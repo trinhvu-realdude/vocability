@@ -13,7 +13,8 @@ import { PageHeader } from "../components/PageHeader";
 import { useLanguage } from "../LanguageContext";
 
 export const ExportPage: React.FC<CommonProps> = ({ db, collections }) => {
-    document.title = `${APP_NAME} | Export`;
+    const { translations } = useLanguage();
+    document.title = `${translations["flag"]} ${APP_NAME} | Export`;
 
     const [exportCollectionId, setExportCollectionId] = useState<number>();
     const [fileType, setFileType] = useState<string>("");
@@ -22,8 +23,6 @@ export const ExportPage: React.FC<CommonProps> = ({ db, collections }) => {
     const [documentUrl, setDocumentUrl] = useState<string>("");
     const [fromDate, setFromDate] = useState<Date>();
     const [toDate, setToDate] = useState<Date>();
-
-    const { translations } = useLanguage();
 
     const handleGenerateDocument = async () => {
         if (db && exportCollectionId && fileType) {

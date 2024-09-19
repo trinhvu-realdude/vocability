@@ -84,11 +84,11 @@ export const WordCard: React.FC<WordCardProps> = ({
                                 <i
                                     className={`${
                                         word.isFavorite ? "fas" : "far"
-                                    } fa-heart`}
+                                    } fa-bookmark`}
                                     onClick={() => handleAddFavorite(word)}
                                     style={{
                                         color: `${
-                                            word.isFavorite ? "red" : ""
+                                            word.isFavorite ? "#FFC000" : ""
                                         }`,
                                     }}
                                 ></i>

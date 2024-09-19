@@ -94,7 +94,7 @@ export const FavoritePage: React.FC<CommonProps> = ({ db }) => {
                 href={document.referrer}
                 content={
                     <>
-                        <span style={{ color: "red" }}>
+                        <span style={{ color: "#FFC000" }}>
                             <strong>
                                 {translations["navbar.collections.favorite"]}
                             </strong>
