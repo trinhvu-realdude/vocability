@@ -8,6 +8,7 @@ import { PageHeader } from "../../components/PageHeader";
 import { APP_NAME } from "../../utils/constants";
 import { generateWordsForFlashCards } from "../../services/PracticeService";
 import { PracticeMessage } from "../../components/PracticeMessage";
+import { useParams } from "react-router-dom";
 
 export const FlashcardQuizPage: React.FC<FlashcardQuizPageProps> = ({
     db,
@@ -22,6 +23,8 @@ export const FlashcardQuizPage: React.FC<FlashcardQuizPageProps> = ({
     const [isGetHint, setIsGetHint] = useState<boolean>(false);
     const [cardColor, setCardColor] = useState<string>("");
     const [currentIndex, setCurrentIndex] = useState(1);
+
+    const { language } = useParams();
 
     const handleGenerateFlashcard = async () => {
         setIsFlipped(false);
@@ -60,7 +63,7 @@ export const FlashcardQuizPage: React.FC<FlashcardQuizPageProps> = ({
     return (
         <div className="container-list" id="flashcard-quiz">
             <PageHeader
-                href="/practices"
+                href={`/${language}/practices`}
                 content={
                     <>
                         <span style={{ color: cardColor && cardColor }}>

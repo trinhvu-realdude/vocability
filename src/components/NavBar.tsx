@@ -126,14 +126,14 @@ export const NavBar: React.FC<NavBarProps> = ({
                                 </ul>
                             </li>
 
-                            {/* <li className="nav-item mx-2">
+                            <li className="nav-item mx-2">
                                 <a
                                     className="nav-link active"
                                     href={`/${translations["language"]}/practices`}
                                 >
                                     {translations["navbar.practices"]}
                                 </a>
-                            </li> */}
+                            </li>
 
                             <li className="nav-item mx-2">
                                 <a

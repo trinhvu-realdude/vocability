@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Word } from "../../interfaces/model";
-import { getHintWord } from "../../utils/helper";
+import { getHintWord, handleTextToSpeech } from "../../utils/helper";
+import { useLanguage } from "../../LanguageContext";
 
 export const FlashCard: React.FC<{
     index: number;
@@ -26,6 +27,8 @@ export const FlashCard: React.FC<{
         const hintWord = await getHintWord(word.word);
         setHint(hintWord);
     };
+
+    const { translations } = useLanguage();
 
     return (
         <div
@@ -109,7 +112,9 @@ export const FlashCard: React.FC<{
                 <div
                     className="text-center mt-4"
                     style={{ cursor: "pointer" }}
-                    // onClick={() => handleTextToSpeech(word.word)}
+                    onClick={() =>
+                        handleTextToSpeech(word.word, translations["language"])
+                    }
                 >
                     <strong>{word.word}</strong>{" "}
                     <small>

@@ -1,11 +1,12 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { StorageBar } from "../components/StorageBar";
 import { RootLayoutProps } from "../interfaces/rootProps";
 import { HomePage } from "../pages/HomePage";
 import { getActiveLanguages } from "../services/CollectionService";
+import { useLanguage } from "../LanguageContext";
 
 const RootLayout: React.FC<RootLayoutProps> = ({ db }) => {
-    const [activeLanguages, setActiveLanguages] = useState<Array<any>>([]);
+    const { activeLanguages, setActiveLanguages } = useLanguage();
 
     useEffect(() => {
         const fetchLanguages = async () => {
