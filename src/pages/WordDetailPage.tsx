@@ -38,6 +38,7 @@ export const WordDetailPage: React.FC<WordDetailPageProps> = ({ db }) => {
         SpeechSynthesisVoice[]
     >([]);
     const [selectedVoice, setSelectedVoice] = useState<SpeechSynthesisVoice>();
+    const [isAnimating, setIsAnimating] = useState(false);
 
     const { translations } = useLanguage();
 
@@ -126,16 +127,33 @@ export const WordDetailPage: React.FC<WordDetailPageProps> = ({ db }) => {
                                         padding: 0,
                                         margin: 0,
                                     }}
-                                    onClick={() =>
-                                        word?.word &&
-                                        handleTextToSpeech(
-                                            word?.word,
-                                            translations["language"],
-                                            selectedVoice
-                                        )
-                                    }
+                                    onClick={() => {
+                                        {
+                                            word?.word &&
+                                                handleTextToSpeech(
+                                                    word.word,
+                                                    translations["language"],
+                                                    selectedVoice
+                                                );
+                                        }
+                                        setIsAnimating(true);
+
+                                        // Remove the animation class after animation completes
+                                        setTimeout(
+                                            () => setIsAnimating(false),
+                                            600
+                                        );
+                                    }}
                                 >
-                                    <i className="fas fa-volume-up"></i>
+                                    <i
+                                        className={`fas fa-volume-up ${
+                                            isAnimating ? "pulse-animation" : ""
+                                        }`}
+                                        style={{
+                                            transition:
+                                                "transform 0.6s ease-in-out",
+                                        }}
+                                    ></i>
                                 </div>
                                 <select
                                     className="btn-sm mx-4"

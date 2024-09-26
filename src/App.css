@@ -102,6 +102,22 @@ a.word-link:hover {
     color: black;
 }
 
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.2);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.pulse-animation {
+    animation: pulse 0.6s ease-in-out;
+}
+
 .loader {
     width: 30px;
     aspect-ratio: 4;
