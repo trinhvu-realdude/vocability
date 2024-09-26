@@ -5,7 +5,11 @@ import {
     addWordToFavorite,
     getWordsByCollectionId,
 } from "../../services/WordService";
-import { handleTextToSpeech, sortWordsByFilter } from "../../utils/helper";
+import {
+    formatText,
+    handleTextToSpeech,
+    sortWordsByFilter,
+} from "../../utils/helper";
 import { EditWordForm } from "../Form/EditWordForm";
 import { DeleteWordForm } from "../Form/DeleteWordForm";
 import { formatDate } from "../../utils/formatDateString";
@@ -44,10 +48,13 @@ export const WordCard: React.FC<WordCardProps> = ({
     collection,
     filterSorting,
     setWords,
+    voicesByLanguage,
 }) => {
     const [isFavorite, setIsFavorite] = useState<boolean>(false);
     const [isEdit, setIsEdit] = useState<boolean>(false);
     const [isDelete, setIsDelete] = useState<boolean>(false);
+
+    const [selectedVoice, setSelectedVoice] = useState<SpeechSynthesisVoice>();
 
     const { translations } = useLanguage();
 
@@ -95,12 +102,43 @@ export const WordCard: React.FC<WordCardProps> = ({
                                     onClick={() =>
                                         handleTextToSpeech(
                                             word.word,
-                                            translations["language"]
+                                            translations["language"],
+                                            selectedVoice
                                         )
                                     }
                                 >
                                     <i className="fas fa-volume-up"></i>
                                 </div>
+                                <select
+                                    className="btn-sm mx-4"
+                                    id="voices-by-language"
+                                    style={{ fontSize: "12px" }}
+                                    onChange={(event) => {
+                                        const voices =
+                                            window.speechSynthesis.getVoices();
+                                        const voice = voices.find(
+                                            (v) => v.name === event.target.value
+                                        );
+                                        if (voice) setSelectedVoice(voice);
+                                    }}
+                                >
+                                    {voicesByLanguage &&
+                                        voicesByLanguage.map((voice, index) => (
+                                            <option
+                                                key={index}
+                                                value={voice.name}
+                                            >
+                                                {!voice.name.includes("Natural")
+                                                    ? voice.name
+                                                          .split(" ")[0]
+                                                          .trim()
+                                                    : voice.name
+                                                          .split(" ")[1]
+                                                          .trim()}
+                                                {` (${voice.lang})`}
+                                            </option>
+                                        ))}
+                                </select>
                             </h5>
                             <small>
                                 <i>{word.partOfSpeech}</i>
@@ -143,7 +181,11 @@ export const WordCard: React.FC<WordCardProps> = ({
                             <strong>
                                 {translations["addWordForm.notes"]}:
                             </strong>{" "}
-                            {word.notes}
+                            <span
+                                dangerouslySetInnerHTML={{
+                                    __html: formatText(word.notes),
+                                }}
+                            ></span>
                         </p>
                     )}
                     <small

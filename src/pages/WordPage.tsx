@@ -11,6 +11,7 @@ import { SearchBar } from "../components/SearchBar";
 import { PageHeader } from "../components/PageHeader";
 import { APP_NAME } from "../utils/constants";
 import { useLanguage } from "../LanguageContext";
+import { getVoicesByLanguage } from "../utils/helper";
 
 export const WordPage: React.FC<WordPageProps> = ({
     db,
@@ -23,6 +24,9 @@ export const WordPage: React.FC<WordPageProps> = ({
     const [collection, setCollection] = useState<Collection>();
     const [filteredWords, setFilteredWords] = useState<Word[]>(words);
     const [filterSorting, setFilterSorting] = useState<FilterSortingOption>();
+    const [voicesByLanguage, setVoicesByLanguage] = useState<
+        SpeechSynthesisVoice[]
+    >([]);
 
     const { translations } = useLanguage();
 
@@ -44,10 +48,13 @@ export const WordPage: React.FC<WordPageProps> = ({
                     Number.parseInt(collectionId)
                 );
                 setWords(objWord);
+                setVoicesByLanguage(
+                    await getVoicesByLanguage(translations["language"])
+                );
             }
         };
         fetchCollection();
-    }, []);
+    }, [translations["language"]]);
 
     return (
         <div className="container-list" id="word-list">
@@ -96,6 +103,7 @@ export const WordPage: React.FC<WordPageProps> = ({
                             collection={collection}
                             filterSorting={filterSorting}
                             setWords={setFilteredWords}
+                            voicesByLanguage={voicesByLanguage}
                         />
                     ))}
             </div>
