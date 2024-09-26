@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Collection, WordDto } from "../interfaces/model";
 import { addWordToFavorite, getFavoriteWords } from "../services/WordService";
 import { CommonProps } from "../interfaces/mainProps";
-import { getCurrentLanguageId, handleTextToSpeech } from "../utils/helper";
+import { getCurrentLanguageId } from "../utils/helper";
 import { NoDataMessage } from "../components/NoDataMessage";
 import { SearchBar } from "../components/SearchBar";
 import { PageHeader } from "../components/PageHeader";
@@ -132,21 +132,6 @@ export const FavoritePage: React.FC<CommonProps> = ({ db }) => {
                                         >
                                             {word.phonetic}
                                         </small>{" "}
-                                        <div
-                                            className="btn btn-sm"
-                                            style={{
-                                                padding: 0,
-                                                margin: 0,
-                                            }}
-                                            onClick={() =>
-                                                handleTextToSpeech(
-                                                    word.word,
-                                                    language ? language : ""
-                                                )
-                                            }
-                                        >
-                                            <i className="fas fa-volume-up"></i>
-                                        </div>
                                     </h5>
                                     <small>
                                         <i>{word.partOfSpeech}</i>

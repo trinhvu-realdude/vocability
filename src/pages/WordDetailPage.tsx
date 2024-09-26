@@ -9,7 +9,11 @@ import {
 } from "../services/WordService";
 import { WordDetailPageProps } from "../interfaces/mainProps";
 import { formatDate } from "../utils/formatDateString";
-import { handleTextToSpeech } from "../utils/helper";
+import {
+    formatText,
+    getVoicesByLanguage,
+    handleTextToSpeech,
+} from "../utils/helper";
 import { getCollectionById } from "../services/CollectionService";
 import { OffCanvas } from "../components/OffCanvas";
 import { APP_NAME } from "../utils/constants";
@@ -30,6 +34,10 @@ export const WordDetailPage: React.FC<WordDetailPageProps> = ({ db }) => {
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [isFavorite, setIsFavorite] = useState<boolean>(false);
     const [isEdit, setIsEdit] = useState<boolean>(false);
+    const [voicesByLanguage, setVoicesByLanguage] = useState<
+        SpeechSynthesisVoice[]
+    >([]);
+    const [selectedVoice, setSelectedVoice] = useState<SpeechSynthesisVoice>();
 
     const { translations } = useLanguage();
 
@@ -64,6 +72,9 @@ export const WordDetailPage: React.FC<WordDetailPageProps> = ({ db }) => {
                     }
                     if (objWord) {
                         setWord(objWord);
+                        setVoicesByLanguage(
+                            await getVoicesByLanguage(translations["language"])
+                        );
                         const objSynonymsAntonyms = await getSynonymsAntonyms(
                             objWord
                         );
@@ -81,7 +92,7 @@ export const WordDetailPage: React.FC<WordDetailPageProps> = ({ db }) => {
             }
         };
         fetchWord();
-    }, [isEdit ? word?.word : null]);
+    }, [isEdit ? word?.word : null, translations["language"]]);
 
     const handleShowOffCanvas = async (id: string) => {
         setVisibleOffCanvas(id);
@@ -119,12 +130,43 @@ export const WordDetailPage: React.FC<WordDetailPageProps> = ({ db }) => {
                                         word?.word &&
                                         handleTextToSpeech(
                                             word?.word,
-                                            translations["language"]
+                                            translations["language"],
+                                            selectedVoice
                                         )
                                     }
                                 >
                                     <i className="fas fa-volume-up"></i>
                                 </div>
+                                <select
+                                    className="btn-sm mx-4"
+                                    id="voices-by-language"
+                                    style={{ fontSize: "12px" }}
+                                    onChange={(event) => {
+                                        const voices =
+                                            window.speechSynthesis.getVoices();
+                                        const voice = voices.find(
+                                            (v) => v.name === event.target.value
+                                        );
+                                        if (voice) setSelectedVoice(voice);
+                                    }}
+                                >
+                                    {voicesByLanguage &&
+                                        voicesByLanguage.map((voice, index) => (
+                                            <option
+                                                key={index}
+                                                value={voice.name}
+                                            >
+                                                {!voice.name.includes("Natural")
+                                                    ? voice.name
+                                                          .split(" ")[0]
+                                                          .trim()
+                                                    : voice.name
+                                                          .split(" ")[1]
+                                                          .trim()}
+                                                {` (${voice.lang})`}
+                                            </option>
+                                        ))}
+                                </select>
                             </h5>
                             <small>
                                 <i>{word?.partOfSpeech}</i>
@@ -157,7 +199,12 @@ export const WordDetailPage: React.FC<WordDetailPageProps> = ({ db }) => {
                     <p className="mb-1">{word?.definition}</p>
                     {word?.notes && (
                         <p className="mb-1">
-                            <strong>Notes:</strong> {word?.notes}
+                            <strong>Notes:</strong>{" "}
+                            <span
+                                dangerouslySetInnerHTML={{
+                                    __html: formatText(word.notes),
+                                }}
+                            ></span>
                         </p>
                     )}
                     <a
