@@ -52,41 +52,47 @@ export const sortWordsByFilter = (words: Word[], filterValue: string) => {
     return sortedWords;
 };
 
-export const handleTextToSpeech = async (text: string, language: string) => {
+export const handleTextToSpeech = async (
+    text: string,
+    language: string,
+    selectedVoice: SpeechSynthesisVoice | undefined
+) => {
     const speech = new SpeechSynthesisUtterance();
     speech.text = text;
 
-    // Wait for voices to be loaded
-    await new Promise((resolve) => {
-        const checkVoices = () => {
+    const voices = await getVoicesByLanguage(language);
+
+    if (!selectedVoice) {
+        selectedVoice = voices.find((voice) => voice.default) || voices[0];
+    }
+
+    speech.voice = selectedVoice;
+
+    window.speechSynthesis.speak(speech);
+};
+
+export const getVoicesByLanguage = async (language: string) => {
+    if (language === "us") language = "en";
+
+    // Create a promise to wait for the voices to be available
+    const loadVoices = () =>
+        new Promise<SpeechSynthesisVoice[]>((resolve) => {
             const voices = window.speechSynthesis.getVoices();
             if (voices.length > 0) {
                 resolve(voices);
             } else {
+                // Wait for the voices to be loaded
                 window.speechSynthesis.onvoiceschanged = () => {
-                    const updatedVoices = window.speechSynthesis.getVoices();
-                    if (updatedVoices.length > 0) {
-                        resolve(updatedVoices);
-                    }
+                    resolve(window.speechSynthesis.getVoices());
                 };
             }
-        };
-        checkVoices();
-    });
+        });
 
-    const voices = window.speechSynthesis.getVoices();
-    // Find a voice that matches the specified language
-    const selectedVoice = voices.find((voice) =>
-        voice.lang.startsWith(language)
+    const voices = await loadVoices(); // Wait for the voices to load
+
+    return voices.filter(
+        (voice) => voice.lang.startsWith(language) && !voice.default
     );
-
-    if (selectedVoice) {
-        speech.voice = selectedVoice;
-    } else {
-        console.warn(`No voice found for language: ${language}`);
-    }
-
-    window.speechSynthesis.speak(speech);
 };
 
 export const getHintWord = async (text: string) => {
@@ -159,4 +165,36 @@ export const reorderActiveLanguages = (
         : languages;
 
     return reorderedLanguages;
+};
+
+export const formatText = (text: string) => {
+    // Break the text into lines
+    const lines = text.split("\n");
+
+    let formattedText = "";
+    let insideList = false;
+
+    lines.forEach((line) => {
+        // Check if the line starts with a list indicator (e.g., "-", "*")
+        if (line.startsWith("- ") || line.startsWith("* ")) {
+            if (!insideList) {
+                formattedText += "<ul style='margin-bottom: 0'>"; // Start the list
+                insideList = true;
+            }
+            formattedText += `<li>${line.substring(2)}</li>`; // Add list item, removing the "- " or "* "
+        } else {
+            if (insideList) {
+                formattedText += "</ul>"; // Close the list
+                insideList = false;
+            }
+            formattedText += `${line}<br/>`; // Regular line with <br/> for line break
+        }
+    });
+
+    // If the last line was a list, close it
+    if (insideList) {
+        formattedText += "</ul>";
+    }
+
+    return formattedText;
 };

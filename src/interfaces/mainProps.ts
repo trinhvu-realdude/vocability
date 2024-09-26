@@ -58,6 +58,7 @@ export type WordCardProps = {
     collection: Collection | undefined;
     filterSorting?: FilterSortingOption;
     setWords: React.Dispatch<React.SetStateAction<Word[]>>;
+    voicesByLanguage: SpeechSynthesisVoice[];
 };
 
 export type CollectionFormProps = {
