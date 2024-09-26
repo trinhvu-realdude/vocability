@@ -81,7 +81,8 @@ export const OffCanvas: React.FC<{
                                         onClick={() =>
                                             handleTextToSpeech(
                                                 element.word,
-                                                translations["language"]
+                                                translations["language"],
+                                                undefined
                                             )
                                         }
                                     >
