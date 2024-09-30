@@ -1,3 +1,4 @@
+import { useParams } from "react-router-dom";
 import { PageHeader } from "../../components/PageHeader";
 import { PracticeMessage } from "../../components/PracticeMessage";
 import { CrosswordPuzzlePageProps } from "../../interfaces/practiceProps";
@@ -7,6 +8,8 @@ import { APP_NAME } from "../../utils/constants";
 export const CrosswordPuzzlePage: React.FC<CrosswordPuzzlePageProps> = ({
     db,
 }) => {
+    const { language } = useParams();
+
     document.title = `${APP_NAME} | Crossword Puzzles`;
 
     const handleGeneratePuzzle = async () => {
@@ -26,7 +29,10 @@ export const CrosswordPuzzlePage: React.FC<CrosswordPuzzlePageProps> = ({
 
     return (
         <div className="container-list" id="crossword-puzzles">
-            <PageHeader href="/practices" content="Crossword Puzzles" />
+            <PageHeader
+                href={`/${language}/practices`}
+                content="Crossword Puzzles"
+            />
 
             <div className="text-center my-4">
                 <button

@@ -1,3 +1,4 @@
+import { useParams } from "react-router-dom";
 import { PageHeader } from "../../components/PageHeader";
 import { PracticeMessage } from "../../components/PracticeMessage";
 import { VocabularyQuizPageProps } from "../../interfaces/practiceProps";
@@ -6,6 +7,8 @@ import { VocabularyQuizPageProps } from "../../interfaces/practiceProps";
 export const VocabularyQuizPage: React.FC<VocabularyQuizPageProps> = ({
     db,
 }) => {
+    const { language } = useParams();
+
     const handleGenerateQuiz = async () => {
         if (db) {
             // const questions = await generateQuestionsForVocabularyQuiz(db);
@@ -14,7 +17,7 @@ export const VocabularyQuizPage: React.FC<VocabularyQuizPageProps> = ({
 
     return (
         <div className="container-list" id="vocabulary-quiz">
-            <PageHeader href="/practices" content="Vocabulary Quiz" />
+            <PageHeader href={`/${language}/practices`} content="Vocabulary Quiz" />
 
             <div className="text-center my-4">
                 <button
