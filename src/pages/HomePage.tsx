@@ -76,6 +76,8 @@ export const HomePage: React.FC<HomePageProps> = ({ activeLanguages }) => {
                                         cursor: "pointer",
                                         fontSize: "100px",
                                         borderRadius: "0.25rem",
+                                        boxShadow:
+                                            "rgba(0, 0, 0, 0.16) 0px 1px 4px",
                                     }}
                                     className={`fi fi-${language.code} mb-4`}
                                 ></span>
