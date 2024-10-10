@@ -12,6 +12,7 @@ export const OffCanvas: React.FC<{
 }> = ({ id, word, show, onClose }) => {
     const [data, setData] = useState<ExternalWord[] | { message: string }>();
     const [isLoading, setIsLoading] = useState<boolean>(true);
+    const [isAnimating, setIsAnimating] = useState(false);
 
     const { translations } = useLanguage();
 
@@ -78,15 +79,32 @@ export const OffCanvas: React.FC<{
                                             padding: 0,
                                             margin: 0,
                                         }}
-                                        onClick={() =>
+                                        onClick={() => {
                                             handleTextToSpeech(
                                                 element.word,
                                                 translations["language"],
                                                 undefined
-                                            )
-                                        }
+                                            );
+                                            setIsAnimating(true);
+
+                                            // Remove the animation class after animation completes
+                                            setTimeout(
+                                                () => setIsAnimating(false),
+                                                600
+                                            );
+                                        }}
                                     >
-                                        <i className="fas fa-volume-up"></i>
+                                        <i
+                                            className={`fas fa-volume-up ${
+                                                isAnimating
+                                                    ? "pulse-animation"
+                                                    : ""
+                                            }`}
+                                            style={{
+                                                transition:
+                                                    "transform 0.6s ease-in-out",
+                                            }}
+                                        ></i>
                                     </div>
                                 </h5>
                                 {element.meanings &&
