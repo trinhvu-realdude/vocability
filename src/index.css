@@ -66,4 +66,12 @@ input[type="number"] {
     .three-dots {
         display: block;
     }
+
+    .left {
+        width: 40%;
+    }
+
+    .right {
+        width: 60%;
+    }
 }
