@@ -79,138 +79,171 @@ export const WordCard: React.FC<WordCardProps> = ({
         <>
             {!isEdit && !isDelete && (
                 <div className="list-group-item">
-                    <div className="d-flex w-100 justify-content-between mb-2">
-                        <div className="row">
-                            <h5 className="mb-1">
+                    <div className="d-flex w-100 justify-content-between">
+                        <div
+                            className="left px-1"
+                            style={{
+                                borderRight: "1px solid rgba(0, 0, 0, .125)",
+                            }}
+                        >
+                            <h5>
                                 <a
                                     href={`/${translations["language"]}/word/${word.id}`}
                                     className="word-link"
+                                    style={{
+                                        backgroundColor: word.isFavorite
+                                            ? "#FFC000"
+                                            : "",
+                                    }}
                                 >
                                     <strong>{word.word}</strong>{" "}
                                 </a>
-                                <small
-                                    className="text-muted mb-1"
-                                    style={{ fontSize: "14px" }}
-                                >
-                                    {word.phonetic}
-                                </small>{" "}
-                                <div
-                                    className="btn btn-sm"
-                                    style={{
-                                        padding: 0,
-                                        margin: 0,
-                                    }}
-                                    onClick={() => {
-                                        handleTextToSpeech(
-                                            word.word,
-                                            translations["language"],
-                                            selectedVoice
-                                        );
-                                        setIsAnimating(true);
-
-                                        // Remove the animation class after animation completes
-                                        setTimeout(
-                                            () => setIsAnimating(false),
-                                            600
-                                        );
-                                    }}
-                                >
-                                    <i
-                                        className={`fas fa-volume-up ${
-                                            isAnimating ? "pulse-animation" : ""
-                                        }`}
-                                        style={{
-                                            transition:
-                                                "transform 0.6s ease-in-out",
-                                        }}
-                                    ></i>
-                                </div>
-                                <select
-                                    className="btn-sm mx-4"
-                                    id="voices-by-language"
-                                    style={{ fontSize: "12px" }}
-                                    onChange={(event) => {
-                                        const voices =
-                                            window.speechSynthesis.getVoices();
-                                        const voice = voices.find(
-                                            (v) => v.name === event.target.value
-                                        );
-                                        if (voice) setSelectedVoice(voice);
-                                    }}
-                                >
-                                    {voicesByLanguage &&
-                                        voicesByLanguage.map((voice, index) => (
-                                            <option
-                                                key={index}
-                                                value={voice.name}
-                                            >
-                                                {!voice.name.includes("Natural")
-                                                    ? voice.name
-                                                          .split(" ")[0]
-                                                          .trim()
-                                                    : voice.name
-                                                          .split(" ")[1]
-                                                          .trim()}
-                                                {` (${voice.lang})`}
-                                            </option>
-                                        ))}
-                                </select>
                             </h5>
                             <small>
                                 <i>{word.partOfSpeech}</i>
                             </small>
                         </div>
-                        <div className="function-buttons">
-                            <ButtonGroup
-                                word={word}
-                                handleAddFavorite={handleAddFavorite}
-                                setIsEdit={setIsEdit}
-                                setIsDelete={setIsDelete}
-                            />
-                        </div>
-                        <div className="dropdown three-dots">
-                            <i
-                                className="fa fa-ellipsis-v"
-                                style={{ cursor: "pointer", fontSize: "14px" }}
-                                id="dropdown-three-buttons"
-                                data-bs-toggle="dropdown"
-                                aria-expanded="false"
-                            ></i>
-                            <ul
-                                className="dropdown-menu"
-                                aria-labelledby="dropdown-three-buttons"
-                            >
-                                <li className="d-flex justify-content-between px-3">
+                        <div className="right px-4">
+                            <div className="d-flex justify-content-between mb-2">
+                                <div className="text-speech">
+                                    <small
+                                        className="text-muted mb-1"
+                                        style={{ fontSize: "14px" }}
+                                    >
+                                        {word.phonetic}
+                                    </small>{" "}
+                                    <div
+                                        className="btn btn-sm"
+                                        style={{
+                                            padding: 0,
+                                            margin: 0,
+                                        }}
+                                        onClick={() => {
+                                            handleTextToSpeech(
+                                                word.word,
+                                                translations["language"],
+                                                selectedVoice
+                                            );
+                                            setIsAnimating(true);
+
+                                            // Remove the animation class after animation completes
+                                            setTimeout(
+                                                () => setIsAnimating(false),
+                                                600
+                                            );
+                                        }}
+                                    >
+                                        <i
+                                            className={`fas fa-volume-up ${
+                                                isAnimating
+                                                    ? "pulse-animation"
+                                                    : ""
+                                            }`}
+                                            style={{
+                                                transition:
+                                                    "transform 0.6s ease-in-out",
+                                            }}
+                                        ></i>
+                                    </div>
+                                    <select
+                                        className="btn-sm mx-4"
+                                        id="voices-by-language"
+                                        style={{ fontSize: "12px" }}
+                                        onChange={(event) => {
+                                            const voices =
+                                                window.speechSynthesis.getVoices();
+                                            const voice = voices.find(
+                                                (v) =>
+                                                    v.name ===
+                                                    event.target.value
+                                            );
+                                            if (voice) setSelectedVoice(voice);
+                                        }}
+                                    >
+                                        {voicesByLanguage &&
+                                            voicesByLanguage.map(
+                                                (voice, index) => (
+                                                    <option
+                                                        key={index}
+                                                        value={voice.name}
+                                                    >
+                                                        {!voice.name.includes(
+                                                            "Natural"
+                                                        )
+                                                            ? voice.name
+                                                                  .split(" ")[0]
+                                                                  .trim()
+                                                            : voice.name
+                                                                  .split(" ")[1]
+                                                                  .trim()}
+                                                        {` (${voice.lang})`}
+                                                    </option>
+                                                )
+                                            )}
+                                    </select>
+                                </div>
+                                <div className="function-buttons">
                                     <ButtonGroup
                                         word={word}
                                         handleAddFavorite={handleAddFavorite}
                                         setIsEdit={setIsEdit}
                                         setIsDelete={setIsDelete}
                                     />
-                                </li>
-                            </ul>
+                                </div>
+                                <div className="dropdown three-dots">
+                                    <i
+                                        className="fa fa-ellipsis-v"
+                                        style={{
+                                            cursor: "pointer",
+                                            fontSize: "14px",
+                                        }}
+                                        id="dropdown-three-buttons"
+                                        data-bs-toggle="dropdown"
+                                        aria-expanded="false"
+                                    ></i>
+                                    <ul
+                                        className="dropdown-menu"
+                                        aria-labelledby="dropdown-three-buttons"
+                                    >
+                                        <li className="d-flex justify-content-between px-3">
+                                            <ButtonGroup
+                                                word={word}
+                                                handleAddFavorite={
+                                                    handleAddFavorite
+                                                }
+                                                setIsEdit={setIsEdit}
+                                                setIsDelete={setIsDelete}
+                                            />
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <p className="mb-2">{word.definition}</p>
+                            {word.notes && (
+                                <p className="mb-2">
+                                    <strong>
+                                        {translations["addWordForm.notes"]}:
+                                    </strong>{" "}
+                                    <span
+                                        dangerouslySetInnerHTML={{
+                                            __html: formatText(word.notes),
+                                        }}
+                                    ></span>
+                                </p>
+                            )}
+                            <small
+                                className="text-muted mb-2"
+                                style={{ fontSize: "12px" }}
+                            >
+                                {translations["createdAt"]}{" "}
+                                {formatDate(
+                                    word.createdAt,
+                                    translations["language"]
+                                )}
+                            </small>
                         </div>
                     </div>
-                    <p className="mb-1">{word.definition}</p>
-                    {word.notes && (
-                        <p className="mb-1">
-                            <strong>
-                                {translations["addWordForm.notes"]}:
-                            </strong>{" "}
-                            <span
-                                dangerouslySetInnerHTML={{
-                                    __html: formatText(word.notes),
-                                }}
-                            ></span>
-                        </p>
-                    )}
-                    <small
-                        className="text-muted mb-1"
-                        style={{ fontSize: "12px" }}
-                    >
-                        {translations["createdAt"]}{" "}
-                        {formatDate(word.createdAt, translations["language"])}
-                    </small>
                 </div>
             )}
 
