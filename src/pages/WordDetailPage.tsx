@@ -15,7 +15,7 @@ import {
     handleTextToSpeech,
 } from "../utils/helper";
 import { getCollectionById } from "../services/CollectionService";
-import { OffCanvas } from "../components/OffCanvas";
+import { OffCanvas } from "../components/BottomOffCanvas";
 import { APP_NAME } from "../utils/constants";
 import { EditWordForm } from "../components/Form/EditWordForm";
 import { useLanguage } from "../LanguageContext";

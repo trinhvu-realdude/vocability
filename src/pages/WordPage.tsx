@@ -12,6 +12,7 @@ import { PageHeader } from "../components/PageHeader";
 import { APP_NAME } from "../utils/constants";
 import { useLanguage } from "../LanguageContext";
 import { getVoicesByLanguage } from "../utils/helper";
+import { LeftOffCanvas } from "../components/LeftOffCanvas";
 
 export const WordPage: React.FC<WordPageProps> = ({
     db,
@@ -58,6 +59,20 @@ export const WordPage: React.FC<WordPageProps> = ({
 
     return (
         <div className="container-list" id="word-list">
+            <button
+                className="word-list-btn"
+                data-bs-toggle="offcanvas"
+                data-bs-target="#offcanvasWithBackdrop"
+                aria-controls="offcanvasWithBackdrop"
+                style={{
+                    backgroundColor: collection?.color,
+                }}
+            >
+                <i className="fa fa-angle-right"></i>
+            </button>
+
+            <LeftOffCanvas collection={collection} words={words} />
+
             <PageHeader
                 href={`/${translations["language"]}/collections`}
                 content={

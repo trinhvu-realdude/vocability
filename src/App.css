@@ -110,6 +110,39 @@ a.word-link:hover {
     width: 80%;
 }
 
+.gototop {
+    cursor: pointer;
+    position: fixed;
+    bottom: 20%;
+    right: 40px;
+    background-color: #999;
+    width: 35px;
+    height: 35px;
+    border: 0;
+    color: #fff;
+    border-radius: 0.25rem;
+    font-size: 24px;
+}
+
+.gototop:hover {
+    background-color: #ffc000;
+}
+
+.word-list-btn {
+    position: fixed;
+    left: 0;
+    top: 50%;
+    color: #fff;
+    width: 35px;
+    height: 35px;
+    cursor: pointer;
+    z-index: 1000;
+    border: 0;
+    font-size: 24px;
+    border-top-right-radius: 0.25rem;
+    border-bottom-right-radius: 0.25rem;
+}
+
 @keyframes pulse {
     0% {
         transform: scale(1);
