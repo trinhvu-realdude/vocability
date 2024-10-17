@@ -98,7 +98,7 @@ export const WordCard: React.FC<WordCardProps> = ({
                     id={new String(word.id).toString()}
                     style={{
                         border: isBorderVisible
-                            ? `1px dashed ${collection?.color}`
+                            ? `2px dashed ${collection?.color}`
                             : "",
                     }}
                 >
