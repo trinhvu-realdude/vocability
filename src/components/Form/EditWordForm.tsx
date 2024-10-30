@@ -47,7 +47,7 @@ export const EditWordForm: React.FC<WordFormProps> = ({
                         definitionValue !== ""
                             ? definitionValue.trim()
                             : word.definition,
-                    notes: notesValue.trim(),
+                    notes: notesValue !== "" ? notesValue.trim() : word.notes,
                 };
                 const updatedWord = await updateWord(db, word, editValue);
 
