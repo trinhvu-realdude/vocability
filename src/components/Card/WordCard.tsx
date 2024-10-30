@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { WordCardProps } from "../../interfaces/mainProps";
 import { Word } from "../../interfaces/model";
 import {
@@ -57,7 +57,7 @@ export const WordCard: React.FC<WordCardProps> = ({
 
     const [selectedVoice, setSelectedVoice] = useState<SpeechSynthesisVoice>();
 
-    const { translations } = useLanguage();
+    const { translations, selectedWord, setSelectedWord } = useLanguage();
 
     const handleAddFavorite = async (word: Word) => {
         setIsFavorite(!isFavorite);
@@ -75,10 +75,33 @@ export const WordCard: React.FC<WordCardProps> = ({
         }
     };
 
+    const [isBorderVisible, setIsBorderVisible] = useState(false);
+
+    useEffect(() => {
+        if (selectedWord && selectedWord.id === word.id) {
+            setIsBorderVisible(true);
+
+            const timer = setTimeout(() => {
+                setIsBorderVisible(false);
+                setSelectedWord(undefined);
+            }, 3000); // Border visible for 0.6 seconds
+
+            return () => clearTimeout(timer); // Cleanup the timer if component unmounts or word changes
+        }
+    }, [selectedWord, word.id]);
+
     return (
         <>
             {!isEdit && !isDelete && (
-                <div className="list-group-item">
+                <div
+                    className="list-group-item"
+                    id={new String(word.id).toString()}
+                    style={{
+                        border: isBorderVisible
+                            ? `2px dashed ${collection?.color}`
+                            : "",
+                    }}
+                >
                     <div className="d-flex w-100 justify-content-between">
                         <div
                             className="left px-1"

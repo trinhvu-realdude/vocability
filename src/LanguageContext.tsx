@@ -8,6 +8,7 @@ import React, {
     useState,
 } from "react";
 import { languageFiles } from "./locales";
+import { Word } from "./interfaces/model";
 
 type LanguageContextProps = {
     languageCode: string;
@@ -15,6 +16,8 @@ type LanguageContextProps = {
     setLanguageCode: (code: string) => void;
     activeLanguages: any;
     setActiveLanguages: React.Dispatch<React.SetStateAction<any[]>>;
+    selectedWord: Word | undefined;
+    setSelectedWord: React.Dispatch<React.SetStateAction<Word | undefined>>;
 };
 
 // Create Language Context
@@ -36,6 +39,8 @@ type LanguageProviderProps = {
     setLanguageCode: (code: string) => void;
     activeLanguages: any;
     setActiveLanguages: React.Dispatch<React.SetStateAction<any[]>>;
+    selectedWord: Word | undefined;
+    setSelectedWord: React.Dispatch<React.SetStateAction<Word | undefined>>;
 };
 
 export const LanguageProvider: React.FC<LanguageProviderProps> = ({
@@ -44,6 +49,8 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({
     setLanguageCode,
     activeLanguages,
     setActiveLanguages,
+    selectedWord,
+    setSelectedWord,
 }) => {
     const [translations, setTranslations] = useState<Record<string, string>>(
         {}
@@ -51,6 +58,8 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({
 
     useEffect(() => {
         const loadTranslations = async () => {
+            console.log("Selected word: ", selectedWord);
+
             const loadLanguage = languageFiles[languageCode]; // Fetch the translation loader function
             if (loadLanguage) {
                 try {
@@ -72,6 +81,8 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({
                 setLanguageCode,
                 activeLanguages,
                 setActiveLanguages,
+                selectedWord,
+                setSelectedWord,
             }}
         >
             {children}
