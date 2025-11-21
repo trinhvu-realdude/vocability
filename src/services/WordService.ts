@@ -65,7 +65,7 @@ export const getWordsByCollectionId = async (
     const store = tx.objectStore(storeName);
     const words = (await store.getAll()).filter(
         (word) => word.collectionId === collectionId
-    );
+    ).sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
     await tx.done;
     return words;
 };
