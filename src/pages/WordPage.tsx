@@ -71,7 +71,14 @@ export const WordPage: React.FC<WordPageProps> = ({
                 <i className="fa fa-angle-right"></i>
             </button>
 
-            <LeftOffCanvas collection={collection} words={words} />
+            {db && collection && words.length > 0 && (
+                <LeftOffCanvas
+                    db={db}
+                    collection={collection}
+                    words={words}
+                    setWords={setWords}
+                />
+            )}
 
             <PageHeader
                 href={`/${translations["language"]}/collections`}

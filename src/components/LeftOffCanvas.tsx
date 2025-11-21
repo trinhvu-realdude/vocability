@@ -1,12 +1,33 @@
-import { Collection, Word } from "../interfaces/model";
+import { useEffect } from "react";
+import { Collection, MyDB, Word } from "../interfaces/model";
 import { useLanguage } from "../LanguageContext";
 import { handleTextToSpeech } from "../utils/helper";
+import { IDBPDatabase } from "idb";
+import { useParams } from "react-router-dom";
+import { getWordsByCollectionId } from "../services/WordService";
 
 export const LeftOffCanvas: React.FC<{
+    db: IDBPDatabase<MyDB>;
     collection: Collection | undefined;
     words: Word[];
-}> = ({ collection, words }) => {
+    setWords: React.Dispatch<React.SetStateAction<Word[]>>;
+}> = ({ db, collection, words, setWords }) => {
     const { translations, setSelectedWord } = useLanguage();
+
+    const { collectionId } = useParams();
+
+    useEffect(() => {
+        const fetchData = async () => {
+            if (collectionId) {
+                const updatedWords = await getWordsByCollectionId(
+                    db,
+                    Number.parseInt(collectionId)
+                );
+                setWords(updatedWords);
+            }
+        };
+        fetchData();
+    }, [words.length]);
 
     return (
         <div

@@ -84,7 +84,7 @@ export const WordCard: React.FC<WordCardProps> = ({
             const timer = setTimeout(() => {
                 setIsBorderVisible(false);
                 setSelectedWord(undefined);
-            }, 3000); // Border visible for 0.6 seconds
+            }, 1000);
 
             return () => clearTimeout(timer); // Cleanup the timer if component unmounts or word changes
         }
