@@ -10,6 +10,7 @@ import { PageHeader } from "../components/PageHeader";
 import { APP_NAME, languages } from "../utils/constants";
 import { useParams } from "react-router-dom";
 import { useLanguage } from "../LanguageContext";
+import { TextToSpeechButton } from "../components/TextToSpeechButton";
 
 export const FavoritePage: React.FC<CommonProps> = ({ db }) => {
     const { translations } = useLanguage();
@@ -109,6 +110,7 @@ export const FavoritePage: React.FC<CommonProps> = ({ db }) => {
             {collections.length > 0 && (
                 <SearchBar
                     isFavorite={true}
+                    type="word"
                     filteredWords={filteredWords}
                     collections={collections}
                     selectedCollection={selectedCollection}
@@ -132,6 +134,7 @@ export const FavoritePage: React.FC<CommonProps> = ({ db }) => {
                                         >
                                             {word.phonetic}
                                         </small>{" "}
+                                        <TextToSpeechButton word={word.word} />
                                     </h5>
                                     <small>
                                         <i>{word.partOfSpeech}</i>
@@ -148,7 +151,32 @@ export const FavoritePage: React.FC<CommonProps> = ({ db }) => {
                                     </div>
                                 </div>
                             </div>
-                            <p className="mb-1">{word.definition}</p>
+
+                            <ul className="list-group list-group-flush">
+                                {/* Single definition view */}
+                                {word.definition && word.definition.trim() !== "" && (
+                                    <li className="list-group-item">
+                                        <p className="mb-2">
+                                            {word.definition.trim()}
+                                        </p>
+                                    </li>
+                                )}
+
+                                {/* Multiple definitions view */}
+                                {word.definitions &&
+                                    word.definitions.map(
+                                        (definition, index) => (
+                                            <li
+                                                className="list-group-item"
+                                                key={index}
+                                            >
+                                                <p className="mb-2">
+                                                    {definition.definition.trim()}
+                                                </p>
+                                            </li>
+                                        )
+                                    )}
+                            </ul>
                             <a
                                 href={`/${translations["language"]}/collection/${word.collection.id}`}
                             >

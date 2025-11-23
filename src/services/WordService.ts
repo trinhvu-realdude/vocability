@@ -136,6 +136,7 @@ export const getFavoriteWords = async (
                     collection: collection,
                     word: word.word,
                     phonetic: word.phonetic,
+                    definitions: word.definitions,
                     definition: word.definition,
                     notes: word.notes,
                     partOfSpeech: word.partOfSpeech,

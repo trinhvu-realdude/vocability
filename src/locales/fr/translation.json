@@ -1,6 +1,7 @@
 {
     "flag": "🇫🇷",
     "language": "fr",
+    "languageVoice": "fr-CA",
     "navbar.collections": "Collections",
     "navbar.collections.allCollections": "Toutes les collections",
     "navbar.collections.favorite": "Favoris",
@@ -19,6 +20,8 @@
     "collectionPage.createCollectionBtn": "Créer une collection",
     "collectionPage.collectionCard.numberOfWords": "Nombre de mots",
     "searchBar.placeholder": "Rechercher un mot dans la collection",
+    "searchBar.placeholderCollection": "Rechercher une collection",
+
     "searchBar.sortBy": "Trier par",
     "searchBar.allCollections": "Toutes les collections",
     "editForm.editCollection": "Modifier la collection",

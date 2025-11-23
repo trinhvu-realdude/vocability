@@ -7,6 +7,7 @@ import { useLanguage } from "../LanguageContext";
 
 export const SearchBar: React.FC<{
     isFavorite: boolean;
+    type: "word" | "collection";
     collections?: Collection[];
     selectedCollection?: Collection | undefined;
     filterSorting?: FilterSortingOption | undefined;
@@ -18,9 +19,11 @@ export const SearchBar: React.FC<{
     setFilterSorting?: React.Dispatch<
         React.SetStateAction<FilterSortingOption | undefined>
     >;
+    setFilteredCollections?: React.Dispatch<React.SetStateAction<Collection[]>>;
 }> = React.memo(
     ({
         isFavorite,
+        type,
         collections,
         selectedCollection,
         filterSorting,
@@ -30,9 +33,13 @@ export const SearchBar: React.FC<{
         setFilterSorting,
         setFilteredWords,
         setDisplayWordDtos,
+        setFilteredCollections,
     }) => {
         const [searchValue, setSearchValue] = useState<string>("");
         const [displayWords, setDisplayWords] = useState<Word[]>([]); // for SortFilter component
+        const [displayCollections, setDisplayCollections] = useState<
+            Collection[]
+        >([]); // for SortFilter component
 
         const { translations } = useLanguage();
 
@@ -54,7 +61,8 @@ export const SearchBar: React.FC<{
                           filtered &&
                           setDisplayWordDtos(filtered);
                   }, [searchValue, filteredWords])
-                : useEffect(() => {
+                : type === "word"
+                ? useEffect(() => {
                       // Search for main collections
                       const lowerCaseSearchValue = searchValue
                           .toLowerCase()
@@ -70,16 +78,43 @@ export const SearchBar: React.FC<{
                       setFilteredWords &&
                           filtered &&
                           setFilteredWords(filtered);
-                  }, [searchValue, words]);
+                  }, [searchValue, words])
+                : useEffect(() => {
+                      // Search for collections
+                      const lowerCaseSearchValue = searchValue
+                          .toLowerCase()
+                          .trim();
+                      const filtered =
+                          collections &&
+                          collections.filter((collection) =>
+                              collection.name
+                                  .toLowerCase()
+                                  .includes(lowerCaseSearchValue)
+                          );
+                      setDisplayCollections &&
+                          filtered &&
+                          setDisplayCollections(filtered);
+                      setFilteredCollections &&
+                          filtered &&
+                          setFilteredCollections(filtered);
+                  }, [searchValue, collections]);
         }
 
         return (
-            <div className="input-group d-flex justify-content-center mt-4">
+            <div className="input-group d-flex justify-content-center my-4">
                 <input
                     className="form-control"
                     type="search"
-                    placeholder={translations["searchBar.placeholder"]}
-                    aria-label={translations["searchBar.placeholder"]}
+                    placeholder={
+                        type === "collection"
+                            ? translations["searchBar.placeholderCollection"]
+                            : translations["searchBar.placeholder"]
+                    }
+                    aria-label={
+                        type === "collection"
+                            ? translations["searchBar.placeholderCollection"]
+                            : translations["searchBar.placeholder"]
+                    }
                     value={searchValue}
                     onChange={(event) => setSearchValue(event.target.value)}
                 />
@@ -90,12 +125,44 @@ export const SearchBar: React.FC<{
                         handleFilter={handleFilter}
                     />
                 ) : (
-                    <SortFilter
-                        displayWords={displayWords}
-                        filterSorting={filterSorting}
-                        setFilterSorting={setFilterSorting}
-                        setFilteredWords={setFilteredWords}
-                    />
+                    <>
+                        <SortFilter
+                            displayWords={displayWords}
+                            displayCollections={displayCollections}
+                            filterSorting={filterSorting}
+                            setFilterSorting={setFilterSorting}
+                            setFilteredWords={setFilteredWords}
+                            setFilteredCollections={setFilteredCollections}
+                        />
+
+                        {type === "collection" && (
+                            <button
+                                className="btn btn-outline-secondary"
+                                data-bs-toggle="modal"
+                                data-bs-target="#add-collection"
+                                style={{
+                                    borderRadius: "0.25rem",
+                                    marginRight: "8px",
+                                }}
+                            >
+                                <strong>&#x2B;</strong>
+                            </button>
+                        )}
+
+                        <button
+                            className="btn"
+                            type="button"
+                            data-bs-toggle="modal"
+                            data-bs-target="#add-word"
+                            style={{
+                                borderRadius: "0.25rem",
+                                backgroundColor: "rgb(221, 87, 70)",
+                                color: "#fff",
+                            }}
+                        >
+                            Add word
+                        </button>
+                    </>
                 )}
             </div>
         );

@@ -9,16 +9,13 @@ import {
 } from "../services/WordService";
 import { WordDetailPageProps } from "../interfaces/mainProps";
 import { formatDate } from "../utils/formatDateString";
-import {
-    formatText,
-    getVoicesByLanguage,
-    handleTextToSpeech,
-} from "../utils/helper";
+import { formatText, getVoicesByLanguage } from "../utils/helper";
 import { getCollectionById } from "../services/CollectionService";
 import { OffCanvas } from "../components/BottomOffCanvas";
 import { APP_NAME } from "../utils/constants";
 import { EditWordForm } from "../components/Form/EditWordForm";
 import { useLanguage } from "../LanguageContext";
+import { TextToSpeechButton } from "../components/TextToSpeechButton";
 
 export const WordDetailPage: React.FC<WordDetailPageProps> = ({ db }) => {
     const { wordId } = useParams();
@@ -38,7 +35,6 @@ export const WordDetailPage: React.FC<WordDetailPageProps> = ({ db }) => {
         SpeechSynthesisVoice[]
     >([]);
     const [selectedVoice, setSelectedVoice] = useState<SpeechSynthesisVoice>();
-    const [isAnimating, setIsAnimating] = useState(false);
 
     const { translations } = useLanguage();
 
@@ -121,41 +117,8 @@ export const WordDetailPage: React.FC<WordDetailPageProps> = ({ db }) => {
                                 >
                                     {word?.phonetic}
                                 </small>{" "}
-                                <div
-                                    className="btn btn-sm"
-                                    style={{
-                                        padding: 0,
-                                        margin: 0,
-                                    }}
-                                    onClick={() => {
-                                        {
-                                            word?.word &&
-                                                handleTextToSpeech(
-                                                    word.word,
-                                                    translations["language"],
-                                                    selectedVoice
-                                                );
-                                        }
-                                        setIsAnimating(true);
-
-                                        // Remove the animation class after animation completes
-                                        setTimeout(
-                                            () => setIsAnimating(false),
-                                            600
-                                        );
-                                    }}
-                                >
-                                    <i
-                                        className={`fas fa-volume-up ${
-                                            isAnimating ? "pulse-animation" : ""
-                                        }`}
-                                        style={{
-                                            transition:
-                                                "transform 0.6s ease-in-out",
-                                        }}
-                                    ></i>
-                                </div>
-                                <select
+                                <TextToSpeechButton word={word?.word || ""} />
+                                {/* <select
                                     className="btn-sm mx-4"
                                     id="voices-by-language"
                                     style={{ fontSize: "12px" }}
@@ -184,7 +147,7 @@ export const WordDetailPage: React.FC<WordDetailPageProps> = ({ db }) => {
                                                 {` (${voice.lang})`}
                                             </option>
                                         ))}
-                                </select>
+                                </select> */}
                             </h5>
                             <small>
                                 <i>{word?.partOfSpeech}</i>
@@ -214,17 +177,61 @@ export const WordDetailPage: React.FC<WordDetailPageProps> = ({ db }) => {
                             </div> */}
                         </div>
                     </div>
-                    <p className="mb-1">{word?.definition}</p>
-                    {word?.notes && (
-                        <p className="mb-1">
-                            <strong>Notes:</strong>{" "}
-                            <span
-                                dangerouslySetInnerHTML={{
-                                    __html: formatText(word.notes),
-                                }}
-                            ></span>
-                        </p>
-                    )}
+
+                    <ul className="list-group list-group-flush">
+                        {/* Single definition view */}
+                        {word?.definition && word?.definition.trim() !== "" && (
+                            <li className="list-group-item">
+                                <p className="mb-2">
+                                    {word?.definition.trim()}
+                                </p>
+                                {word?.notes && (
+                                    <p className="mb-2">
+                                        <strong>
+                                            {translations["addWordForm.notes"]}:
+                                        </strong>{" "}
+                                        <span
+                                            dangerouslySetInnerHTML={{
+                                                __html: formatText(
+                                                    word.notes.trim()
+                                                ),
+                                            }}
+                                        ></span>
+                                    </p>
+                                )}
+                            </li>
+                        )}
+
+                        {/* Multiple definitions view */}
+                        {word?.definitions &&
+                            word?.definitions.map((definition, index) => (
+                                <li key={index} className="list-group-item">
+                                    <p className="mb-2">
+                                        {definition.definition.trim()}
+                                    </p>
+                                    {definition.notes && (
+                                        <p className="mb-2">
+                                            <strong>
+                                                {
+                                                    translations[
+                                                        "addWordForm.notes"
+                                                    ]
+                                                }
+                                                :
+                                            </strong>{" "}
+                                            <span
+                                                dangerouslySetInnerHTML={{
+                                                    __html: formatText(
+                                                        definition.notes.trim()
+                                                    ),
+                                                }}
+                                            ></span>
+                                        </p>
+                                    )}
+                                </li>
+                            ))}
+                    </ul>
+
                     <a
                         href={`/${translations["language"]}/collection/${word?.collectionId}`}
                     >

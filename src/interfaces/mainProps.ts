@@ -90,11 +90,13 @@ export type DownloadDocumentModalProps = {
 
 export type SortFilterProps = {
     displayWords?: Word[];
+    displayCollections?: Collection[];
     filterSorting?: FilterSortingOption;
     setFilterSorting?: React.Dispatch<
         React.SetStateAction<FilterSortingOption | undefined>
     >;
     setFilteredWords?: React.Dispatch<React.SetStateAction<Word[]>>;
+    setFilteredCollections?: React.Dispatch<React.SetStateAction<Collection[]>>;
 };
 
 export type CollectionFilterProps = {
@@ -111,6 +113,7 @@ export type FilterSortingOption = {
 export type Choice = {
     label: string;
     value: string;
+    color: string;
     __isNew__: boolean;
 };
 

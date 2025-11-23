@@ -7,6 +7,7 @@ import {
     updateWord,
 } from "../../services/WordService";
 import { useLanguage } from "../../LanguageContext";
+import { Definition } from "../../interfaces/model";
 
 export const EditWordForm: React.FC<WordFormProps> = ({
     db,
@@ -20,6 +21,9 @@ export const EditWordForm: React.FC<WordFormProps> = ({
     const [wordValue, setWordValue] = useState<string>("");
     const [definitionValue, setDefinitionValue] = useState<string>("");
     const [notesValue, setNotesValue] = useState<string>("");
+    const [definitions, setDefinitions] = useState<Definition[]>([
+        { definition: "", notes: "" }, // default 1 set
+    ]);
 
     const { translations } = useLanguage();
 
@@ -149,6 +153,23 @@ export const EditWordForm: React.FC<WordFormProps> = ({
                             }
                         ></textarea>
                     </div>
+                </div>
+
+                <div className="d-flex justify-content-center align-items-center input-group">
+                    <button
+                        type="button"
+                        className="btn btn-outline-secondary"
+                        // onClick={handleAddDefinitionRow}
+                    >
+                        <b>+</b>
+                    </button>
+                    <button
+                        type="button"
+                        className="btn btn-outline-secondary"
+                        // onClick={handleRemoveDefinitionRow}
+                    >
+                        <b>-</b>
+                    </button>
                 </div>
             </div>
 

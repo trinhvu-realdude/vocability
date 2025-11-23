@@ -22,7 +22,7 @@ export const getCollectionsByLanguageId = async (
 
     const collections = (await store.getAll()).filter(
         (collection) => collection.languageId === currentLanguageId
-    );
+    ).sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
 
     const words = await getWords(db);
 

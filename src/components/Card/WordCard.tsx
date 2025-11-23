@@ -5,15 +5,12 @@ import {
     addWordToFavorite,
     getWordsByCollectionId,
 } from "../../services/WordService";
-import {
-    formatText,
-    handleTextToSpeech,
-    sortWordsByFilter,
-} from "../../utils/helper";
+import { formatText, sortWordsByFilter } from "../../utils/helper";
 import { EditWordForm } from "../Form/EditWordForm";
 import { DeleteWordForm } from "../Form/DeleteWordForm";
 import { formatDate } from "../../utils/formatDateString";
 import { useLanguage } from "../../LanguageContext";
+import { TextToSpeechButton } from "../TextToSpeechButton";
 
 const ButtonGroup: React.FC<{
     word: Word;
@@ -53,8 +50,6 @@ export const WordCard: React.FC<WordCardProps> = ({
     const [isFavorite, setIsFavorite] = useState<boolean>(false);
     const [isEdit, setIsEdit] = useState<boolean>(false);
     const [isDelete, setIsDelete] = useState<boolean>(false);
-    const [isAnimating, setIsAnimating] = useState(false);
-
     const [selectedVoice, setSelectedVoice] = useState<SpeechSynthesisVoice>();
 
     const { translations, selectedWord, setSelectedWord } = useLanguage();
@@ -135,40 +130,8 @@ export const WordCard: React.FC<WordCardProps> = ({
                                     >
                                         {word.phonetic}
                                     </small>{" "}
-                                    <div
-                                        className="btn btn-sm"
-                                        style={{
-                                            padding: 0,
-                                            margin: 0,
-                                        }}
-                                        onClick={() => {
-                                            handleTextToSpeech(
-                                                word.word,
-                                                translations["language"],
-                                                selectedVoice
-                                            );
-                                            setIsAnimating(true);
-
-                                            // Remove the animation class after animation completes
-                                            setTimeout(
-                                                () => setIsAnimating(false),
-                                                600
-                                            );
-                                        }}
-                                    >
-                                        <i
-                                            className={`fas fa-volume-up ${
-                                                isAnimating
-                                                    ? "pulse-animation"
-                                                    : ""
-                                            }`}
-                                            style={{
-                                                transition:
-                                                    "transform 0.6s ease-in-out",
-                                            }}
-                                        ></i>
-                                    </div>
-                                    <select
+                                    <TextToSpeechButton word={word.word} />
+                                    {/* <select
                                         className="btn-sm mx-4"
                                         id="voices-by-language"
                                         style={{ fontSize: "12px" }}
@@ -203,7 +166,7 @@ export const WordCard: React.FC<WordCardProps> = ({
                                                     </option>
                                                 )
                                             )}
-                                    </select>
+                                    </select> */}
                                 </div>
                                 <div className="function-buttons">
                                     <ButtonGroup
@@ -242,19 +205,71 @@ export const WordCard: React.FC<WordCardProps> = ({
                                 </div>
                             </div>
 
-                            <p className="mb-2">{word.definition}</p>
-                            {word.notes && (
-                                <p className="mb-2">
-                                    <strong>
-                                        {translations["addWordForm.notes"]}:
-                                    </strong>{" "}
-                                    <span
-                                        dangerouslySetInnerHTML={{
-                                            __html: formatText(word.notes),
-                                        }}
-                                    ></span>
-                                </p>
-                            )}
+                            <ul className="list-group list-group-flush">
+                                {/* Single definition view */}
+                                {word.definition &&
+                                    word.definition.trim() !== "" && (
+                                        <li className="list-group-item">
+                                            <p className="mb-2">
+                                                {word.definition.trim()}
+                                            </p>
+                                            {word.notes &&
+                                                word.notes.trim() !== "" && (
+                                                    <p className="mb-2">
+                                                        <strong>
+                                                            {
+                                                                translations[
+                                                                    "addWordForm.notes"
+                                                                ]
+                                                            }
+                                                            :
+                                                        </strong>{" "}
+                                                        <span
+                                                            dangerouslySetInnerHTML={{
+                                                                __html: formatText(
+                                                                    word.notes.trim()
+                                                                ),
+                                                            }}
+                                                        ></span>
+                                                    </p>
+                                                )}
+                                        </li>
+                                    )}
+
+                                {/* Multiple definitions view */}
+                                {word.definitions &&
+                                    word.definitions.map(
+                                        (definition, index) => (
+                                            <li
+                                                key={index}
+                                                className="list-group-item"
+                                            >
+                                                <p className="mb-2">
+                                                    {definition.definition.trim()}
+                                                </p>
+                                                {definition.notes && (
+                                                    <p className="mb-2">
+                                                        <strong>
+                                                            {
+                                                                translations[
+                                                                    "addWordForm.notes"
+                                                                ]
+                                                            }
+                                                            :
+                                                        </strong>{" "}
+                                                        <span
+                                                            dangerouslySetInnerHTML={{
+                                                                __html: formatText(
+                                                                    definition.notes.trim()
+                                                                ),
+                                                            }}
+                                                        ></span>
+                                                    </p>
+                                                )}
+                                            </li>
+                                        )
+                                    )}
+                            </ul>
                             <small
                                 className="text-muted mb-2"
                                 style={{ fontSize: "12px" }}

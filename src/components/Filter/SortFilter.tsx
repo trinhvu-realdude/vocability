@@ -4,13 +4,15 @@ import {
 } from "../../interfaces/mainProps";
 import { useLanguage } from "../../LanguageContext";
 import { filterSortingOptions } from "../../utils/constants";
-import { sortWordsByFilter } from "../../utils/helper";
+import { sortCollectionsByFilter, sortWordsByFilter } from "../../utils/helper";
 
 export const SortFilter: React.FC<SortFilterProps> = ({
     filterSorting,
     displayWords,
+    displayCollections,
     setFilterSorting,
     setFilteredWords,
+    setFilteredCollections
 }) => {
     const { translations } = useLanguage();
 
@@ -19,6 +21,13 @@ export const SortFilter: React.FC<SortFilterProps> = ({
             setFilterSorting(filter);
             const sortedWords = sortWordsByFilter(displayWords, filter.value);
             setFilteredWords(sortedWords);
+        }
+        console.log(filter, displayCollections, setFilterSorting, setFilteredCollections);
+        
+        if (displayCollections && setFilteredCollections && setFilterSorting) {
+            setFilterSorting(filter);
+            const sortedCollections = sortCollectionsByFilter(displayCollections, filter.value);
+            setFilteredCollections(sortedCollections);
         }
     };
 
@@ -37,6 +46,7 @@ export const SortFilter: React.FC<SortFilterProps> = ({
                     border: "1px solid #ced4da",
                     borderTopRightRadius: "0.25rem",
                     borderBottomRightRadius: "0.25rem",
+                    marginRight: "8px",
                 }}
             >
                 {filterSorting

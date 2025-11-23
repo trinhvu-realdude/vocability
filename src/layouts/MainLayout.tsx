@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { MainLayoutProps } from "../interfaces/mainProps";
 import { StorageBar } from "../components/StorageBar";
-import { AddWordForm } from "../components/Form/AddWordForm";
 import { Route, Routes, useParams } from "react-router-dom";
 import { WordPage } from "../pages/WordPage";
 import { FavoritePage } from "../pages/FavoritePage";
@@ -13,6 +12,7 @@ import { WordDetailPage } from "../pages/WordDetailPage";
 import { getCurrentLanguageId } from "../utils/helper";
 import { languages } from "../utils/constants";
 import { getCollectionsByLanguageId } from "../services/CollectionService";
+import { AddWordModal } from "../components/Modal/AddWordModal";
 
 const MainLayout: React.FC<MainLayoutProps> = ({
     db,
@@ -46,7 +46,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({
     return (
         <div className="container my-4">
             <StorageBar />
-            <AddWordForm
+            <AddWordModal
                 db={db}
                 collections={collections}
                 setCollections={setCollections}

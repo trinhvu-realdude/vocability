@@ -1,4 +1,4 @@
-import { Word } from "../interfaces/model";
+import { Collection, Word } from "../interfaces/model";
 
 export const getRandomColor = () => {
     const letters = "0123456789ABCDEF";
@@ -52,6 +52,52 @@ export const sortWordsByFilter = (words: Word[], filterValue: string) => {
     return sortedWords;
 };
 
+export const sortCollectionsByFilter = (
+    collections: Collection[],
+    filterValue: string
+) => {
+    let sortedCollections;
+    switch (filterValue) {
+        case "a-z":
+            sortedCollections = [...collections].sort((a, b) => {
+                if (a.name.toLowerCase() < b.name.toLowerCase()) {
+                    return -1;
+                }
+                if (a.name.toLowerCase() > b.name.toLowerCase()) {
+                    return 1;
+                }
+                return 0;
+            });
+            break;
+
+        case "z-a":
+            sortedCollections = [...collections].sort((a, b) => {
+                if (a.name.toLowerCase() > b.name.toLowerCase()) {
+                    return -1;
+                }
+                if (a.name.toLowerCase() < b.name.toLowerCase()) {
+                    return 1;
+                }
+                return 0;
+            });
+            break;
+        case "newest-first":
+            sortedCollections = [...collections].sort(
+                (a, b) => b.createdAt.getTime() - a.createdAt.getTime()
+            );
+            break;
+        case "oldest-first":
+            sortedCollections = [...collections].sort(
+                (a, b) => a.createdAt.getTime() - b.createdAt.getTime()
+            );
+            break;
+        default:
+            sortedCollections = [...collections];
+            break;
+    }
+    return sortedCollections;
+};
+
 export const handleTextToSpeech = async (
     text: string,
     language: string,
@@ -62,17 +108,19 @@ export const handleTextToSpeech = async (
 
     const voices = await getVoicesByLanguage(language);
 
-    if (!selectedVoice) {
-        selectedVoice = voices.find((voice) => voice.default) || voices[0];
-    }
+    // if (!selectedVoice) {
+    //     selectedVoice = voices.find((voice) => voice.default) || voices[0];
+    // }
 
-    speech.voice = selectedVoice;
+    // speech.voice = selectedVoice;
+
+    speech.lang = language;
 
     window.speechSynthesis.speak(speech);
 };
 
 export const getVoicesByLanguage = async (language: string) => {
-    if (language === "us") language = "en";
+    // if (language === "us") language = "en";
 
     // Create a promise to wait for the voices to be available
     const loadVoices = () =>
@@ -91,7 +139,7 @@ export const getVoicesByLanguage = async (language: string) => {
     const voices = await loadVoices(); // Wait for the voices to load
 
     return voices.filter(
-        (voice) => voice.lang.startsWith(language) && !voice.default
+        (voice) => voice.lang.match(language) && !voice.default
     );
 };
 
