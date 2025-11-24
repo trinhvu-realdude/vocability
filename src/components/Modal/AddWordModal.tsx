@@ -130,13 +130,13 @@ export const AddWordModal: React.FC<CommonProps> = ({
 
     const handleDefinitionChange = (index: number, value: string) => {
         const updated = [...definitions];
-        updated[index].definition = value.trim();
+        updated[index].definition = value;
         setDefinitions(updated);
     };
 
     const handleNotesChange = (index: number, value: string) => {
         const updated = [...definitions];
-        updated[index].notes = value.trim();
+        updated[index].notes = value;
         setDefinitions(updated);
     };
 
