@@ -170,6 +170,17 @@ export const AddWordModal: React.FC<CommonProps> = ({
                     </div>
                     <div className="modal-body">
                         <div className="input-group mb-2">
+                            <input
+                                type="text"
+                                className="form-control"
+                                placeholder={
+                                    translations["addWordForm.noteYourWord"]
+                                }
+                                value={word}
+                                onChange={(event) =>
+                                    setWord(event.target.value)
+                                }
+                            />
                             <select
                                 className="form-select"
                                 id="part-of-speech"
@@ -193,18 +204,6 @@ export const AddWordModal: React.FC<CommonProps> = ({
                                         )
                                     )}
                             </select>
-
-                            <input
-                                type="text"
-                                className="form-control"
-                                placeholder={
-                                    translations["addWordForm.noteYourWord"]
-                                }
-                                value={word}
-                                onChange={(event) =>
-                                    setWord(event.target.value)
-                                }
-                            />
                         </div>
                         <div className="row">
                             <div className="input-group col-12 mb-2">

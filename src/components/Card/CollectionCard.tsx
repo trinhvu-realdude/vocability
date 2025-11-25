@@ -31,7 +31,17 @@ export const CollectionCard: React.FC<CollectionCardProps> = ({
                             color: "#fff",
                         }}
                     >
-                        {collection.name}
+                        <span
+                            style={{
+                                maxWidth: "60%",
+                                whiteSpace: "nowrap",
+                                overflow: "hidden",
+                                textOverflow: "ellipsis",
+                                display: "inline-block",
+                            }}
+                        >
+                            {collection.name}
+                        </span>
                         <div>
                             <div
                                 className="btn btn-sm"
