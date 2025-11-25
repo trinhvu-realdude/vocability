@@ -52,7 +52,7 @@ export const AddWordModal: React.FC<CommonProps> = ({
 
                 const objCollection = {
                     name: collection.value,
-                    color: getRandomColor(),
+                    color: randomColor,
                     createdAt: new Date(),
                     languageId: currentLanguageId ? currentLanguageId : -1,
                 };

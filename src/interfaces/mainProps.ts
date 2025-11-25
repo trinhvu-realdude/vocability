@@ -1,5 +1,5 @@
 import { IDBPDatabase } from "idb";
-import { Collection, MyDB, Word } from "./model";
+import { Collection, Definition, MyDB, Word } from "./model";
 
 export interface CommonProps {
     db: IDBPDatabase<MyDB> | undefined;
@@ -125,6 +125,7 @@ export type EditWordObj = {
     word: string;
     phonetic: string | undefined;
     partOfSpeech: string;
+    definitions: Definition[];
     definition: string;
     notes: string;
 };

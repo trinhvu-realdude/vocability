@@ -164,6 +164,7 @@ export const updateWord = async (
             objWord.word = editValue.word;
             objWord.phonetic = editValue.phonetic;
             objWord.partOfSpeech = editValue.partOfSpeech;
+            objWord.definitions = editValue.definitions;
             objWord.definition = editValue.definition;
             objWord.notes = editValue.notes;
             await store.put(objWord);

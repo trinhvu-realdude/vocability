@@ -21,9 +21,22 @@ export const EditWordForm: React.FC<WordFormProps> = ({
     const [wordValue, setWordValue] = useState<string>("");
     const [definitionValue, setDefinitionValue] = useState<string>("");
     const [notesValue, setNotesValue] = useState<string>("");
-    const [definitions, setDefinitions] = useState<Definition[]>([
-        { definition: "", notes: "" }, // default 1 set
-    ]);
+    const [definitions, setDefinitions] = useState<Definition[]>(() => {
+        if (word.definitions && word.definitions.length > 0) {
+            return word.definitions;
+        }
+
+        if (word.definition || word.notes) {
+            return [
+                {
+                    definition: word.definition,
+                    notes: word.notes,
+                },
+            ];
+        }
+
+        return [{ definition: "", notes: "" }];
+    });
 
     const { translations } = useLanguage();
 
@@ -47,6 +60,7 @@ export const EditWordForm: React.FC<WordFormProps> = ({
                         partOfSpeechValue !== ""
                             ? partOfSpeechValue.trim()
                             : word.partOfSpeech,
+                    definitions: definitions,
                     definition:
                         definitionValue !== ""
                             ? definitionValue.trim()
@@ -69,6 +83,31 @@ export const EditWordForm: React.FC<WordFormProps> = ({
             console.log(error);
             alert(translations["alert.editWordFailed"]);
         }
+    };
+
+    console.log(word);
+    
+
+    const handleAddDefinitionRow = () => {
+        setDefinitions([...definitions, { definition: "", notes: "" }]);
+    };
+
+    const handleRemoveDefinitionRow = () => {
+        if (definitions.length > 1) {
+            setDefinitions(definitions.slice(0, -1));
+        }
+    };
+
+    const handleDefinitionChange = (index: number, value: string) => {
+        const updated = [...definitions];
+        updated[index].definition = value;
+        setDefinitions(updated);
+    };
+
+    const handleNotesChange = (index: number, value: string) => {
+        const updated = [...definitions];
+        updated[index].notes = value;
+        setDefinitions(updated);
     };
 
     return (
@@ -97,6 +136,13 @@ export const EditWordForm: React.FC<WordFormProps> = ({
 
             <div className="card-body">
                 <div className="input-group mb-2">
+                    <input
+                        type="text"
+                        className="form-control"
+                        placeholder="Add a word"
+                        defaultValue={word.word}
+                        onChange={(event) => setWordValue(event.target.value)}
+                    />
                     <select
                         className="form-select"
                         id="part-of-speech"
@@ -118,55 +164,61 @@ export const EditWordForm: React.FC<WordFormProps> = ({
                                 )
                             )}
                     </select>
-
-                    <input
-                        type="text"
-                        className="form-control"
-                        placeholder="Add a word"
-                        defaultValue={word.word}
-                        onChange={(event) => setWordValue(event.target.value)}
-                    />
                 </div>
                 <div className="row">
-                    <div className="input-group col-12 mb-2">
-                        <span className="input-group-text">
-                            {translations["addWordForm.definition"]}
-                        </span>
-                        <input
-                            type="text"
-                            className="form-control"
-                            defaultValue={word.definition}
-                            onChange={(event) =>
-                                setDefinitionValue(event.target.value)
-                            }
-                        />
-                    </div>
-                    <div className="input-group col-12 mb-2">
-                        <span className="input-group-text">
-                            {translations["addWordForm.notes"]}
-                        </span>
-                        <textarea
-                            className="form-control"
-                            defaultValue={word.notes}
-                            onChange={(event) =>
-                                setNotesValue(event.target.value)
-                            }
-                        ></textarea>
-                    </div>
+                    {/* Multiple definitions view */}
+                    {definitions &&
+                        definitions.map((def, index) => (
+                            <div key={index}>
+                                <div className="input-group col-12 mb-2">
+                                    <span className="input-group-text">
+                                        {translations["addWordForm.definition"]}
+                                    </span>
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        defaultValue={def.definition}
+                                        onChange={(event) =>
+                                            handleDefinitionChange(
+                                                index,
+                                                event.target.value
+                                            )
+                                        }
+                                    />
+                                </div>
+                                <div className="input-group col-12 mb-2">
+                                    <span className="input-group-text">
+                                        {translations["addWordForm.notes"]}
+                                    </span>
+                                    <textarea
+                                        className="form-control"
+                                        defaultValue={def.notes}
+                                        onChange={(event) =>
+                                            handleNotesChange(
+                                                index,
+                                                event.target.value
+                                            )
+                                        }
+                                    ></textarea>
+                                </div>
+                                {definitions.length > 1 &&
+                                    index < definitions.length - 1 && <hr />}
+                            </div>
+                        ))}
                 </div>
 
                 <div className="d-flex justify-content-center align-items-center input-group">
                     <button
                         type="button"
                         className="btn btn-outline-secondary"
-                        // onClick={handleAddDefinitionRow}
+                        onClick={handleAddDefinitionRow}
                     >
                         <b>+</b>
                     </button>
                     <button
                         type="button"
                         className="btn btn-outline-secondary"
-                        // onClick={handleRemoveDefinitionRow}
+                        onClick={handleRemoveDefinitionRow}
                     >
                         <b>-</b>
                     </button>
