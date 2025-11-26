@@ -25,8 +25,6 @@ export interface Word {
     word: string;
     phonetic?: string;
     definitions: Definition[];
-    definition: string;
-    notes: string;
     partOfSpeech: string;
     isFavorite: boolean;
     collectionId?: number;

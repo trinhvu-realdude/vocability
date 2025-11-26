@@ -137,8 +137,6 @@ export const getFavoriteWords = async (
                     word: word.word,
                     phonetic: word.phonetic,
                     definitions: word.definitions,
-                    definition: word.definition,
-                    notes: word.notes,
                     partOfSpeech: word.partOfSpeech,
                     isFavorite: word.isFavorite,
                     createdAt: word.createdAt,
@@ -165,8 +163,6 @@ export const updateWord = async (
             objWord.phonetic = editValue.phonetic;
             objWord.partOfSpeech = editValue.partOfSpeech;
             objWord.definitions = editValue.definitions;
-            objWord.definition = editValue.definition;
-            objWord.notes = editValue.notes;
             await store.put(objWord);
             await tx.done;
             return objWord;

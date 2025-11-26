@@ -153,15 +153,6 @@ export const FavoritePage: React.FC<CommonProps> = ({ db }) => {
                             </div>
 
                             <ul className="list-group list-group-flush">
-                                {/* Single definition view */}
-                                {word.definition && word.definition.trim() !== "" && (
-                                    <li className="list-group-item">
-                                        <p className="mb-2">
-                                            {word.definition.trim()}
-                                        </p>
-                                    </li>
-                                )}
-
                                 {/* Multiple definitions view */}
                                 {word.definitions &&
                                     word.definitions.map(

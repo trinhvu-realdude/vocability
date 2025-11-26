@@ -156,16 +156,14 @@ export const WordDetailPage: React.FC<WordDetailPageProps> = ({ db }) => {
                         <div>
                             <div className="btn btn-sm">
                                 <i
-                                    className={`${
-                                        word?.isFavorite ? "fas" : "far"
-                                    } fa-bookmark`}
+                                    className={`${word?.isFavorite ? "fas" : "far"
+                                        } fa-bookmark`}
                                     onClick={() => {
                                         if (word) handleAddFavorite(word);
                                     }}
                                     style={{
-                                        color: `${
-                                            word?.isFavorite ? "#FFC000" : ""
-                                        }`,
+                                        color: `${word?.isFavorite ? "#FFC000" : ""
+                                            }`,
                                     }}
                                 ></i>
                             </div>
@@ -179,29 +177,6 @@ export const WordDetailPage: React.FC<WordDetailPageProps> = ({ db }) => {
                     </div>
 
                     <ul className="list-group list-group-flush">
-                        {/* Single definition view */}
-                        {word?.definition && word?.definition.trim() !== "" && (
-                            <li className="list-group-item">
-                                <p className="mb-2">
-                                    {word?.definition.trim()}
-                                </p>
-                                {word?.notes && (
-                                    <p className="mb-2">
-                                        <strong>
-                                            {translations["addWordForm.notes"]}:
-                                        </strong>{" "}
-                                        <span
-                                            dangerouslySetInnerHTML={{
-                                                __html: formatText(
-                                                    word.notes.trim()
-                                                ),
-                                            }}
-                                        ></span>
-                                    </p>
-                                )}
-                            </li>
-                        )}
-
                         {/* Multiple definitions view */}
                         {word?.definitions &&
                             word?.definitions.map((definition, index) => (
@@ -214,7 +189,7 @@ export const WordDetailPage: React.FC<WordDetailPageProps> = ({ db }) => {
                                             <strong>
                                                 {
                                                     translations[
-                                                        "addWordForm.notes"
+                                                    "addWordForm.notes"
                                                     ]
                                                 }
                                                 :
@@ -267,7 +242,7 @@ export const WordDetailPage: React.FC<WordDetailPageProps> = ({ db }) => {
                     word={word}
                     collection={collection}
                     setIsEditOrDelete={setIsEdit}
-                    setWords={() => {}}
+                    setWords={() => { }}
                     setWord={setWord}
                     setSynonyms={setSynonyms}
                     setAntonyms={setAntonyms}
@@ -277,8 +252,8 @@ export const WordDetailPage: React.FC<WordDetailPageProps> = ({ db }) => {
             {isLoading ? (
                 <div className="mx-auto loader"></div>
             ) : synonyms &&
-              antonyms &&
-              (synonyms.length > 0 || antonyms.length > 0) ? (
+                antonyms &&
+                (synonyms.length > 0 || antonyms.length > 0) ? (
                 <table
                     className="table table-bordered table-sm mt-2"
                     style={{ borderRadius: "0.25rem" }}
@@ -311,17 +286,17 @@ export const WordDetailPage: React.FC<WordDetailPageProps> = ({ db }) => {
 
                                             {visibleOffCanvas ===
                                                 `offcanvas-bottom-synonym-${index}` && (
-                                                <OffCanvas
-                                                    id={`offcanvas-bottom-synonym-${index}`}
-                                                    word={synonym}
-                                                    show={true}
-                                                    onClose={() =>
-                                                        setVisibleOffCanvas(
-                                                            null
-                                                        )
-                                                    }
-                                                />
-                                            )}
+                                                    <OffCanvas
+                                                        id={`offcanvas-bottom-synonym-${index}`}
+                                                        word={synonym}
+                                                        show={true}
+                                                        onClose={() =>
+                                                            setVisibleOffCanvas(
+                                                                null
+                                                            )
+                                                        }
+                                                    />
+                                                )}
                                         </div>
                                     ))}
                             </td>
@@ -350,17 +325,17 @@ export const WordDetailPage: React.FC<WordDetailPageProps> = ({ db }) => {
 
                                             {visibleOffCanvas ===
                                                 `offcanvas-bottom-antonym-${index}` && (
-                                                <OffCanvas
-                                                    id={`offcanvas-bottom-antonym-${index}`}
-                                                    word={antonym}
-                                                    show={true}
-                                                    onClose={() =>
-                                                        setVisibleOffCanvas(
-                                                            null
-                                                        )
-                                                    }
-                                                />
-                                            )}
+                                                    <OffCanvas
+                                                        id={`offcanvas-bottom-antonym-${index}`}
+                                                        word={antonym}
+                                                        show={true}
+                                                        onClose={() =>
+                                                            setVisibleOffCanvas(
+                                                                null
+                                                            )
+                                                        }
+                                                    />
+                                                )}
                                         </div>
                                     ))}
                             </td>

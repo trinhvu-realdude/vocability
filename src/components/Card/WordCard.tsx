@@ -206,36 +206,6 @@ export const WordCard: React.FC<WordCardProps> = ({
                             </div>
 
                             <ul className="list-group list-group-flush">
-                                {/* Single definition view */}
-                                {word.definition &&
-                                    word.definition.trim() !== "" && (
-                                        <li className="list-group-item">
-                                            <p className="mb-2">
-                                                {word.definition.trim()}
-                                            </p>
-                                            {word.notes &&
-                                                word.notes.trim() !== "" && (
-                                                    <p className="mb-2">
-                                                        <strong>
-                                                            {
-                                                                translations[
-                                                                    "addWordForm.notes"
-                                                                ]
-                                                            }
-                                                            :
-                                                        </strong>{" "}
-                                                        <span
-                                                            dangerouslySetInnerHTML={{
-                                                                __html: formatText(
-                                                                    word.notes.trim()
-                                                                ),
-                                                            }}
-                                                        ></span>
-                                                    </p>
-                                                )}
-                                        </li>
-                                    )}
-
                                 {/* Multiple definitions view */}
                                 {word.definitions &&
                                     word.definitions.map(

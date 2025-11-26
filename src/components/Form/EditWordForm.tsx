@@ -19,24 +19,7 @@ export const EditWordForm: React.FC<WordFormProps> = ({
 }) => {
     const [partOfSpeechValue, setPartOfSpeechValue] = useState<string>("");
     const [wordValue, setWordValue] = useState<string>("");
-    const [definitionValue, setDefinitionValue] = useState<string>("");
-    const [notesValue, setNotesValue] = useState<string>("");
-    const [definitions, setDefinitions] = useState<Definition[]>(() => {
-        if (word.definitions && word.definitions.length > 0) {
-            return word.definitions;
-        }
-
-        if (word.definition || word.notes) {
-            return [
-                {
-                    definition: word.definition,
-                    notes: word.notes,
-                },
-            ];
-        }
-
-        return [{ definition: "", notes: "" }];
-    });
+    const [definitions, setDefinitions] = useState<Definition[]>(word.definitions && word.definitions.length > 0 ? word.definitions : [{ definition: "", notes: "" }]);
 
     const { translations } = useLanguage();
 
@@ -60,12 +43,7 @@ export const EditWordForm: React.FC<WordFormProps> = ({
                         partOfSpeechValue !== ""
                             ? partOfSpeechValue.trim()
                             : word.partOfSpeech,
-                    definitions: definitions,
-                    definition:
-                        definitionValue !== ""
-                            ? definitionValue.trim()
-                            : word.definition,
-                    notes: notesValue !== "" ? notesValue.trim() : word.notes,
+                    definitions: definitions.filter(def => def.definition.trim() !== "" && def.definition !== ""),
                 };
                 const updatedWord = await updateWord(db, word, editValue);
 
@@ -84,9 +62,6 @@ export const EditWordForm: React.FC<WordFormProps> = ({
             alert(translations["alert.editWordFailed"]);
         }
     };
-
-    console.log(word);
-    
 
     const handleAddDefinitionRow = () => {
         setDefinitions([...definitions, { definition: "", notes: "" }]);

@@ -126,8 +126,6 @@ export type EditWordObj = {
     phonetic: string | undefined;
     partOfSpeech: string;
     definitions: Definition[];
-    definition: string;
-    notes: string;
 };
 
 export type ExternalWord = {

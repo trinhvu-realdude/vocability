@@ -55,7 +55,7 @@ export const FlashCard: React.FC<{
                             style={{ backgroundColor: "#fff" }}
                         >
                             <div className="definition p-4">
-                                {word.definition}
+                                {/* {word.definition} */}
                             </div>
                         </div>
                     </div>
