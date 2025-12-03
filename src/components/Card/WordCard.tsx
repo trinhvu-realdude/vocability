@@ -85,6 +85,9 @@ export const WordCard: React.FC<WordCardProps> = ({
         }
     }, [selectedWord, word.id]);
 
+    console.log(word.definitions);
+
+
     return (
         <>
             {!isEdit && !isDelete && (
@@ -222,7 +225,7 @@ export const WordCard: React.FC<WordCardProps> = ({
                                                         <strong>
                                                             {
                                                                 translations[
-                                                                    "addWordForm.notes"
+                                                                "addWordForm.notes"
                                                                 ]
                                                             }
                                                             :

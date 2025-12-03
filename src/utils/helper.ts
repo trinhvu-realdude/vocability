@@ -246,3 +246,43 @@ export const formatText = (text: string) => {
 
     return formattedText;
 };
+
+export const validateInputs = (word: string, partOfSpeech: string, choice: any, definitions: Array<any>, setErrors: any) => {
+    const newErrors: {
+        word?: string;
+        partOfSpeech?: string;
+        collection?: string;
+        definitions?: { [index: number]: string };
+    } = {};
+    let isValid = true;
+
+    if (!word.trim()) {
+        newErrors.word = "* Word is required";
+        isValid = false;
+    }
+
+    if (!partOfSpeech) {
+        newErrors.partOfSpeech = "* Part of speech is required";
+        isValid = false;
+    }
+
+    if (!choice) {
+        newErrors.collection = "* Collection is required";
+        isValid = false;
+    }
+
+    const definitionErrors: { [index: number]: string } = {};
+    definitions.forEach((def, index) => {
+        if (!def.definition.trim()) {
+            definitionErrors[index] = "* Definition is required";
+            isValid = false;
+        }
+    });
+
+    if (Object.keys(definitionErrors).length > 0) {
+        newErrors.definitions = definitionErrors;
+    }
+
+    setErrors(newErrors);
+    return isValid;
+};

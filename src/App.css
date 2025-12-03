@@ -40,7 +40,8 @@ a.word-link:hover {
 }
 
 #card-practice {
-    height: 180px; /* Set a fixed height for the card */
+    height: 180px;
+    /* Set a fixed height for the card */
 }
 
 .description {
@@ -48,7 +49,8 @@ a.word-link:hover {
     margin-top: 10px;
     white-space: nowrap;
     overflow: hidden;
-    text-overflow: ellipsis; /* Truncate long descriptions */
+    text-overflow: ellipsis;
+    /* Truncate long descriptions */
 }
 
 .card-header {
@@ -147,9 +149,11 @@ a.word-link:hover {
     0% {
         transform: scale(1);
     }
+
     50% {
         transform: scale(1.2);
     }
+
     100% {
         transform: scale(1);
     }
@@ -167,15 +171,18 @@ a.word-link:hover {
     background-size: calc(100% / 3) 100%;
     animation: l7 1s infinite linear;
 }
+
 @keyframes l7 {
     33% {
         background-size: calc(100% / 3) 0%, calc(100% / 3) 100%,
             calc(100% / 3) 100%;
     }
+
     50% {
         background-size: calc(100% / 3) 100%, calc(100% / 3) 0%,
             calc(100% / 3) 100%;
     }
+
     66% {
         background-size: calc(100% / 3) 100%, calc(100% / 3) 100%,
             calc(100% / 3) 0%;

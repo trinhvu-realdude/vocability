@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { EditWordObj, WordFormProps } from "../../interfaces/mainProps";
 import { partsOfSpeech } from "../../utils/constants";
 import {
@@ -8,6 +8,7 @@ import {
 } from "../../services/WordService";
 import { useLanguage } from "../../LanguageContext";
 import { Definition } from "../../interfaces/model";
+import { validateInputs } from "../../utils/helper";
 
 export const EditWordForm: React.FC<WordFormProps> = ({
     db,
@@ -17,8 +18,8 @@ export const EditWordForm: React.FC<WordFormProps> = ({
     setWords,
     setWord,
 }) => {
-    const [partOfSpeechValue, setPartOfSpeechValue] = useState<string>("");
-    const [wordValue, setWordValue] = useState<string>("");
+    const [partOfSpeechValue, setPartOfSpeechValue] = useState<string>(word.partOfSpeech || "");
+    const [wordValue, setWordValue] = useState<string>(word.word || "");
     const [definitions, setDefinitions] = useState<Definition[]>(word.definitions && word.definitions.length > 0 ? word.definitions : [{ definition: "", notes: "" }]);
 
     const { translations } = useLanguage();
@@ -27,23 +28,31 @@ export const EditWordForm: React.FC<WordFormProps> = ({
         (language) => language.code === translations["language"]
     );
 
+    const [errors, setErrors] = useState<{
+        word?: string;
+        partOfSpeech?: string;
+        collection?: string;
+        definitions?: { [index: number]: string };
+    }>({});
+
+    const closeBtnRef = useRef<HTMLButtonElement>(null);
+
     const handleEditWord = async () => {
+        const wordEdit = wordValue.trim();
+        const partOfSpeechEdit = partOfSpeechValue.trim();
+        const definitionsEdit = definitions;
+        if (!validateInputs(wordEdit, partOfSpeechEdit, collection, definitionsEdit, setErrors)) return;
         let phonetic;
         if (translations["language"] === "us") {
-            phonetic = await getPhonetic(
-                wordValue !== "" ? wordValue.trim() : word.word
-            );
+            phonetic = await getPhonetic(wordEdit);
         }
         try {
             if (db) {
                 const editValue: EditWordObj = {
-                    word: wordValue !== "" ? wordValue.trim() : word.word,
+                    word: wordEdit,
                     phonetic: phonetic,
-                    partOfSpeech:
-                        partOfSpeechValue !== ""
-                            ? partOfSpeechValue.trim()
-                            : word.partOfSpeech,
-                    definitions: definitions.filter(def => def.definition.trim() !== "" && def.definition !== ""),
+                    partOfSpeech: partOfSpeechEdit,
+                    definitions: definitionsEdit,
                 };
                 const updatedWord = await updateWord(db, word, editValue);
 
@@ -56,6 +65,7 @@ export const EditWordForm: React.FC<WordFormProps> = ({
                 }
                 if (setWord) setWord(updatedWord);
                 setIsEditOrDelete(false);
+                closeBtnRef.current?.click();
             }
         } catch (error) {
             console.log(error);
@@ -77,6 +87,16 @@ export const EditWordForm: React.FC<WordFormProps> = ({
         const updated = [...definitions];
         updated[index].definition = value;
         setDefinitions(updated);
+        if (errors.definitions && errors.definitions[index]) {
+            const newErrors = { ...errors };
+            if (newErrors.definitions) {
+                delete newErrors.definitions[index];
+                if (Object.keys(newErrors.definitions).length === 0) {
+                    delete newErrors.definitions;
+                }
+            }
+            setErrors(newErrors);
+        }
     };
 
     const handleNotesChange = (index: number, value: string) => {
@@ -110,56 +130,99 @@ export const EditWordForm: React.FC<WordFormProps> = ({
             </div>
 
             <div className="card-body">
-                <div className="input-group mb-2">
-                    <input
-                        type="text"
-                        className="form-control"
-                        placeholder="Add a word"
-                        defaultValue={word.word}
-                        onChange={(event) => setWordValue(event.target.value)}
-                    />
-                    <select
-                        className="form-select"
-                        id="part-of-speech"
-                        defaultValue={word.partOfSpeech}
-                        onChange={(event) =>
-                            setPartOfSpeechValue(event.target.value)
-                        }
-                    >
-                        <option value="">Part of speech</option>
-                        {selectedPartsOfSpeech &&
-                            selectedPartsOfSpeech["list"].map(
-                                (partOfSpeech, index) => (
-                                    <option
-                                        key={index}
-                                        value={partOfSpeech.value}
-                                    >
-                                        {partOfSpeech.label}
-                                    </option>
-                                )
+                <div className="mb-2">
+                    <div className="row g-2">
+                        <div className="col">
+                            <input
+                                type="text"
+                                className="form-control"
+                                placeholder={translations["addWordForm.noteYourWord"]}
+                                value={wordValue}
+                                onChange={(event) => {
+                                    setWordValue(event.target.value);
+                                    console.log(errors.word);
+
+                                    if (errors.word) {
+                                        setErrors({ ...errors, word: undefined });
+                                    }
+                                }}
+                            />
+                        </div>
+
+                        <div className="col">
+                            <select
+                                className="form-select"
+                                id="part-of-speech"
+                                value={partOfSpeechValue}
+                                onChange={(event) => {
+                                    setPartOfSpeechValue(event.target.value);
+                                    if (errors.partOfSpeech) {
+                                        setErrors({
+                                            ...errors,
+                                            partOfSpeech: undefined,
+                                        });
+                                    }
+                                }}
+                            >
+                                <option value="">{translations["addWordForm.partOfSpeech"]}</option>
+                                {selectedPartsOfSpeech &&
+                                    selectedPartsOfSpeech.list.map(
+                                        (partOfSpeech, index) => (
+                                            <option
+                                                key={index}
+                                                value={partOfSpeech.value}
+                                            >
+                                                {partOfSpeech.label}
+                                            </option>
+                                        )
+                                    )}
+                            </select>
+                        </div>
+                    </div>
+
+                    <div className="row g-2">
+                        <div className="col">
+                            {errors.word && (
+                                <div className="text-danger small">{errors.word}</div>
                             )}
-                    </select>
+                        </div>
+
+                        <div className="col">
+                            {errors.partOfSpeech && (
+                                <div className="text-danger small">
+                                    {errors.partOfSpeech}
+                                </div>
+                            )}
+                        </div>
+                    </div>
                 </div>
                 <div className="row">
                     {/* Multiple definitions view */}
                     {definitions &&
                         definitions.map((def, index) => (
                             <div key={index}>
-                                <div className="input-group col-12 mb-2">
-                                    <span className="input-group-text">
-                                        {translations["addWordForm.definition"]}
-                                    </span>
-                                    <input
-                                        type="text"
-                                        className="form-control"
-                                        defaultValue={def.definition}
-                                        onChange={(event) =>
-                                            handleDefinitionChange(
-                                                index,
-                                                event.target.value
-                                            )
-                                        }
-                                    />
+                                <div className="mb-2">
+                                    <div className="input-group col-12">
+                                        <span className="input-group-text">
+                                            {translations["addWordForm.definition"]}
+                                        </span>
+                                        <input
+                                            type="text"
+                                            className="form-control"
+                                            value={def.definition}
+                                            onChange={(event) =>
+                                                handleDefinitionChange(
+                                                    index,
+                                                    event.target.value
+                                                )
+                                            }
+                                        />
+                                    </div>
+                                    {errors.definitions && errors.definitions[index] && (
+                                        <div className="text-danger small">
+                                            {errors.definitions[index]}
+                                        </div>
+                                    )}
                                 </div>
                                 <div className="input-group col-12 mb-2">
                                     <span className="input-group-text">
@@ -167,7 +230,7 @@ export const EditWordForm: React.FC<WordFormProps> = ({
                                     </span>
                                     <textarea
                                         className="form-control"
-                                        defaultValue={def.notes}
+                                        value={def.notes}
                                         onChange={(event) =>
                                             handleNotesChange(
                                                 index,
@@ -204,6 +267,7 @@ export const EditWordForm: React.FC<WordFormProps> = ({
                 <button
                     type="button"
                     className="btn btn-outline-secondary"
+                    ref={closeBtnRef}
                     onClick={() => setIsEditOrDelete(false)}
                 >
                     {translations["cancelBtn"]}

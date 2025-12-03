@@ -22,7 +22,6 @@ export const SortFilter: React.FC<SortFilterProps> = ({
             const sortedWords = sortWordsByFilter(displayWords, filter.value);
             setFilteredWords(sortedWords);
         }
-        console.log(filter, displayCollections, setFilterSorting, setFilteredCollections);
         
         if (displayCollections && setFilteredCollections && setFilterSorting) {
             setFilterSorting(filter);

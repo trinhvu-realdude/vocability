@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Choice, CommonProps } from "../../interfaces/mainProps";
 import { useLanguage } from "../../LanguageContext";
 import ReactSelectCreatable from "react-select/creatable";
@@ -6,6 +6,7 @@ import {
     getCurrentLanguageId,
     getRandomColor,
     reorderActiveLanguages,
+    validateInputs,
 } from "../../utils/helper";
 import { Definition } from "../../interfaces/model";
 import { SingleValue } from "react-select";
@@ -40,7 +41,17 @@ export const AddWordModal: React.FC<CommonProps> = ({
         (language) => language.code === translations["language"]
     );
 
+    const [errors, setErrors] = useState<{
+        word?: string;
+        partOfSpeech?: string;
+        collection?: string;
+        definitions?: { [index: number]: string };
+    }>({});
+
+    const closeBtnRef = useRef<HTMLButtonElement>(null);
+
     const handleAddWord = async () => {
+        if (!validateInputs(word, partOfSpeech, choice, definitions, setErrors)) return;
         try {
             const collection = choice as Choice;
 
@@ -66,8 +77,6 @@ export const AddWordModal: React.FC<CommonProps> = ({
                     word: word.toLowerCase().trim(),
                     phonetic: phonetic && phonetic,
                     definitions: definitions,
-                    definition: "",
-                    notes: "",
                     partOfSpeech: partOfSpeech,
                     isFavorite: false,
                     createdAt: new Date(),
@@ -109,6 +118,7 @@ export const AddWordModal: React.FC<CommonProps> = ({
                     setWords(words);
                 }
                 alert(translations["alert.addWordSuccess"]);
+                closeBtnRef.current?.click();
             } else {
                 alert(translations["alert.validateCollectionEmpty"]);
             }
@@ -132,12 +142,30 @@ export const AddWordModal: React.FC<CommonProps> = ({
         const updated = [...definitions];
         updated[index].definition = value;
         setDefinitions(updated);
+        if (errors.definitions && errors.definitions[index]) {
+            const newErrors = { ...errors };
+            if (newErrors.definitions) {
+                delete newErrors.definitions[index];
+                if (Object.keys(newErrors.definitions).length === 0) {
+                    delete newErrors.definitions;
+                }
+            }
+            setErrors(newErrors);
+        }
     };
 
     const handleNotesChange = (index: number, value: string) => {
         const updated = [...definitions];
         updated[index].notes = value;
         setDefinitions(updated);
+    };
+
+    const handleClose = () => {
+        setWord("");
+        setPartOfSpeech("");
+        setDefinitions([{ definition: "", notes: "" }]);
+        setChoice(undefined);
+        setErrors({});
     };
 
     return (
@@ -157,54 +185,84 @@ export const AddWordModal: React.FC<CommonProps> = ({
                             color: "#fff",
                         }}
                     >
-                        <h5 className="modal-title">Add new word</h5>
+                        <h5 className="modal-title">{translations["addWordForm.addWordBtn"]}</h5>
                         <button
                             type="button"
                             className="btn btn-sm"
                             data-bs-dismiss="modal"
                             aria-label="Close"
+                            ref={closeBtnRef}
                             style={{ border: "none", color: "#fff" }}
+                            onClick={handleClose}
                         >
                             <i className="fas fa-times"></i>
                         </button>
                     </div>
                     <div className="modal-body">
-                        <div className="input-group mb-2">
-                            <input
-                                type="text"
-                                className="form-control"
-                                placeholder={
-                                    translations["addWordForm.noteYourWord"]
-                                }
-                                value={word}
-                                onChange={(event) =>
-                                    setWord(event.target.value)
-                                }
-                            />
-                            <select
-                                className="form-select"
-                                id="part-of-speech"
-                                value={partOfSpeech}
-                                onChange={(event) =>
-                                    setPartOfSpeech(event.target.value)
-                                }
-                            >
-                                <option value="">
-                                    {translations["addWordForm.partOfSpeech"]}
-                                </option>
-                                {selectedPartsOfSpeech &&
-                                    selectedPartsOfSpeech["list"].map(
-                                        (partOfSpeech, index) => (
-                                            <option
-                                                key={index}
-                                                value={partOfSpeech.value}
-                                            >
-                                                {partOfSpeech.label}
-                                            </option>
-                                        )
+                        <div className="mb-2">
+                            {/* Row 1: inputs */}
+                            <div className="row g-2">
+                                <div className="col">
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        placeholder={translations["addWordForm.noteYourWord"]}
+                                        value={word}
+                                        onChange={(event) => {
+                                            setWord(event.target.value);
+                                            if (errors.word) {
+                                                setErrors({ ...errors, word: undefined });
+                                            }
+                                        }}
+                                    />
+                                </div>
+
+                                <div className="col">
+                                    <select
+                                        className="form-select"
+                                        id="part-of-speech"
+                                        value={partOfSpeech}
+                                        onChange={(event) => {
+                                            setPartOfSpeech(event.target.value);
+                                            if (errors.partOfSpeech) {
+                                                setErrors({
+                                                    ...errors,
+                                                    partOfSpeech: undefined,
+                                                });
+                                            }
+                                        }}
+                                    >
+                                        <option value="">
+                                            {translations["addWordForm.partOfSpeech"]}
+                                        </option>
+                                        {selectedPartsOfSpeech &&
+                                            selectedPartsOfSpeech.list.map((pos, index) => (
+                                                <option key={index} value={pos.value}>
+                                                    {pos.label}
+                                                </option>
+                                            ))}
+                                    </select>
+                                </div>
+                            </div>
+
+                            {/* Row 2: error messages */}
+                            <div className="row g-2">
+                                <div className="col">
+                                    {errors.word && (
+                                        <div className="text-danger small">{errors.word}</div>
                                     )}
-                            </select>
+                                </div>
+
+                                <div className="col">
+                                    {errors.partOfSpeech && (
+                                        <div className="text-danger small">
+                                            {errors.partOfSpeech}
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
                         </div>
+
                         <div className="row">
                             <div className="input-group col-12 mb-2">
                                 <ReactSelectCreatable
@@ -222,11 +280,17 @@ export const AddWordModal: React.FC<CommonProps> = ({
                                     })}
                                     noOptionsMessage={() =>
                                         translations[
-                                            "addWordForm.noOptionsMessage"
+                                        "addWordForm.noOptionsMessage"
                                         ]
                                     }
                                     onChange={(choice: any) => {
                                         setChoice(choice);
+                                        if (errors.collection) {
+                                            setErrors({
+                                                ...errors,
+                                                collection: undefined,
+                                            });
+                                        }
                                         // update modal header color instantly
                                         if (choice?.color) {
                                             setRandomColor(choice.color);
@@ -241,28 +305,36 @@ export const AddWordModal: React.FC<CommonProps> = ({
                                         }),
                                     }}
                                 />
+                                {errors.collection && (
+                                    <div className="text-danger small">
+                                        {errors.collection}
+                                    </div>
+                                )}
                             </div>
                             {definitions.map((def, index) => (
                                 <div key={index}>
-                                    <div className="input-group col-12 mb-2">
-                                        <span className="input-group-text">
-                                            {
-                                                translations[
-                                                    "addWordForm.definition"
-                                                ]
-                                            }
-                                        </span>
-                                        <input
-                                            type="text"
-                                            className="form-control"
-                                            value={def.definition}
-                                            onChange={(event) =>
-                                                handleDefinitionChange(
-                                                    index,
-                                                    event.target.value
-                                                )
-                                            }
-                                        />
+                                    <div className="mb-2">
+                                        <div className="input-group col-12">
+                                            <span className="input-group-text">
+                                                {translations["addWordForm.definition"]}
+                                            </span>
+
+                                            <input
+                                                type="text"
+                                                className="form-control"
+                                                value={def.definition}
+                                                onChange={(event) =>
+                                                    handleDefinitionChange(index, event.target.value)
+                                                }
+                                            />
+                                        </div>
+
+                                        {/* Error row */}
+                                        {errors.definitions && errors.definitions[index] && (
+                                            <div className="text-danger small">
+                                                {errors.definitions[index]}
+                                            </div>
+                                        )}
                                     </div>
                                     <div className="input-group col-12 mb-2">
                                         <span className="input-group-text">
@@ -308,12 +380,8 @@ export const AddWordModal: React.FC<CommonProps> = ({
                             type="button"
                             className="btn btn-outline-secondary"
                             data-bs-dismiss="modal"
-                            onClick={() => {
-                                setWord("");
-                                setPartOfSpeech("");
-                                setDefinitions([{ definition: "", notes: "" }]);
-                                setChoice(undefined);
-                            }}
+                            ref={closeBtnRef}
+                            onClick={handleClose}
                         >
                             {translations["cancelBtn"]}
                         </button>
@@ -321,7 +389,6 @@ export const AddWordModal: React.FC<CommonProps> = ({
                             type="button"
                             className="btn btn-outline-success"
                             onClick={handleAddWord}
-                            data-bs-dismiss="modal"
                         >
                             {translations["addWordForm.addWordBtn"]}
                         </button>
