@@ -188,3 +188,215 @@ a.word-link:hover {
             calc(100% / 3) 0%;
     }
 }
+
+/* Folder Delete Form Styling */
+.folder-delete-form {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.folder-delete-preview {
+    position: relative;
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.folder-delete-preview .fa-folder-open {
+    font-size: 80px;
+    transition: transform 0.3s ease;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+.delete-warning-badge {
+    position: absolute;
+    top: -5px;
+    right: 50%;
+    transform: translateX(50%);
+    background: #dc3545;
+    color: #fff;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    box-shadow: 0 2px 8px rgba(220, 53, 69, 0.4);
+    animation: deleteWarningPulse 2s ease-in-out infinite;
+}
+
+@keyframes deleteWarningPulse {
+
+    0%,
+    100% {
+        transform: translateX(50%) scale(1);
+        box-shadow: 0 2px 8px rgba(220, 53, 69, 0.4);
+    }
+
+    50% {
+        transform: translateX(50%) scale(1.1);
+        box-shadow: 0 4px 12px rgba(220, 53, 69, 0.6);
+    }
+}
+
+.folder-delete-message {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.delete-warning-text {
+    font-size: 15px;
+    color: #6c757d;
+    margin-bottom: 15px;
+    line-height: 1.5;
+}
+
+.delete-collection-name {
+    font-size: 18px;
+    color: #212529;
+    margin-bottom: 0;
+    padding: 12px 20px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border-left: 4px solid #dc3545;
+}
+
+.delete-collection-name strong {
+    font-weight: 700;
+}
+
+/* Folder Delete Form Styling - Compact */
+.folder-delete-form {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.folder-delete-preview {
+    position: relative;
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.folder-delete-preview .fa-folder-open {
+    font-size: 60px;
+    transition: transform 0.3s ease;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+.delete-warning-badge {
+    position: absolute;
+    top: -5px;
+    right: 50%;
+    transform: translateX(50%);
+    background: #dc3545;
+    color: #fff;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    box-shadow: 0 2px 8px rgba(220, 53, 69, 0.4);
+    animation: deleteWarningPulse 2s ease-in-out infinite;
+}
+
+@keyframes deleteWarningPulse {
+
+    0%,
+    100% {
+        transform: translateX(50%) scale(1);
+        box-shadow: 0 2px 8px rgba(220, 53, 69, 0.4);
+    }
+
+    50% {
+        transform: translateX(50%) scale(1.1);
+        box-shadow: 0 4px 12px rgba(220, 53, 69, 0.6);
+    }
+}
+
+.folder-delete-message {
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.delete-warning-text {
+    font-size: 14px;
+    color: #6c757d;
+    margin-bottom: 10px;
+    line-height: 1.4;
+}
+
+.delete-collection-name {
+    font-size: 16px;
+    color: #212529;
+    margin-bottom: 0;
+    padding: 8px 15px;
+    background: #f8f9fa;
+    border-radius: 6px;
+    border-left: 3px solid #dc3545;
+}
+
+.delete-collection-name strong {
+    font-weight: 700;
+}
+
+/* Word Modal Styling */
+.word-modal-content {
+    border: none;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+}
+
+.word-modal-header {
+    padding: 20px 25px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid rgba(0, 0, 0, 0.1);
+}
+
+.word-modal-title {
+    color: #fff;
+    font-weight: 600;
+    font-size: 18px;
+    margin: 0;
+    display: flex;
+    align-items: center;
+}
+
+.word-modal-close {
+    background: transparent;
+    border: none;
+    color: #fff;
+    font-size: 20px;
+    cursor: pointer;
+    padding: 5px 10px;
+    border-radius: 4px;
+    transition: background 0.2s ease;
+}
+
+.word-modal-close:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.word-modal-body {
+    padding: 30px;
+    background: #f8f9fa;
+    max-height: 70vh;
+    overflow-y: auto;
+}
+
+.word-modal-footer {
+    padding: 20px 30px;
+    background: #fff;
+    border-top: 1px solid #dee2e6;
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+}
+
+.word-modal-footer .btn {
+    min-width: 120px;
+}

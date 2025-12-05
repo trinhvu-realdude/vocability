@@ -58,63 +58,84 @@ export const EditCollectionForm: React.FC<CollectionFormProps> = ({
     };
 
     return (
-        <div className="card" style={{ borderColor: collection.color }}>
+        <div className="folder-edit-form">
+            {/* Folder Tab Header */}
             <div
-                className="card-header d-flex justify-content-between align-items-center"
+                className="folder-form-tab"
                 style={{
                     backgroundColor: color !== "" ? color : collection.color,
-                    color: "#fff",
                 }}
             >
-                {translations["editForm.editCollection"]}
-                <div>
-                    <div
-                        className="btn btn-sm"
-                        style={{
-                            border: "none",
-                            color: "#fff",
-                        }}
-                        onClick={() => setIsEditOrDelete(false)}
-                    >
-                        <i className="fas fa-times"></i>
-                    </div>
+                <div className="folder-form-tab-content">
+                    <i className="fas fa-folder-open me-2"></i>
+                    <span>{translations["editForm.editCollection"]}</span>
                 </div>
-            </div>
-
-            <div className="card-body">
-                <div className="input-group mb-2">
-                    <input
-                        type="color"
-                        className="form-control form-control-color"
-                        id="color-input"
-                        value={color !== "" ? color : collection.color}
-                        title="Choose your color"
-                        onChange={(event) => setColor(event.target.value)}
-                    />
-                    <input
-                        type="text"
-                        className="form-control"
-                        defaultValue={collection.name}
-                        onChange={(event) => setRenameValue(event.target.value)}
-                    />
-                </div>
-            </div>
-
-            <div className="modal-footer">
                 <button
-                    type="button"
-                    className="btn btn-outline-secondary"
+                    className="folder-form-close-btn"
                     onClick={() => setIsEditOrDelete(false)}
                 >
-                    {translations["cancelBtn"]}
+                    <i className="fas fa-times"></i>
                 </button>
-                <button
-                    type="button"
-                    className="btn btn-outline-success"
-                    onClick={handleEditCollection}
-                >
-                    {translations["editBtn"]}
-                </button>
+            </div>
+
+            {/* Folder Body */}
+            <div
+                className="folder-form-body"
+                style={{
+                    borderColor: color !== "" ? color : collection.color,
+                }}
+            >
+                {/* Folder Icon Preview */}
+                <div className="folder-form-preview">
+                    <i
+                        className="fas fa-folder"
+                        style={{ color: color !== "" ? color : collection.color }}
+                    ></i>
+                </div>
+
+                {/* Form Inputs */}
+                <div className="folder-form-inputs">
+                    <div className="input-group mb-3">
+                        <span className="input-group-text">
+                            <i className="fas fa-palette"></i>
+                        </span>
+                        <input
+                            type="color"
+                            className="form-control form-control-color"
+                            id="color-input"
+                            value={color !== "" ? color : collection.color}
+                            title="Choose your color"
+                            onChange={(event) => setColor(event.target.value)}
+                        />
+                        <input
+                            type="text"
+                            className="form-control"
+                            defaultValue={collection.name}
+                            placeholder={translations["name"]}
+                            onChange={(event) => setRenameValue(event.target.value)}
+                        />
+                    </div>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="folder-form-actions">
+                    <button
+                        type="button"
+                        className="btn btn-outline-secondary"
+                        onClick={() => setIsEditOrDelete(false)}
+                    >
+                        <i className="fas fa-times me-1"></i>
+                        {translations["cancelBtn"]}
+                    </button>
+                    <button
+                        type="button"
+                        className="btn btn-success"
+                        onClick={handleEditCollection}
+                    >
+                        <i className="fas fa-save me-1"></i>
+                        {translations["editBtn"]}
+                    </button>
+                </div>
             </div>
         </div>
     );

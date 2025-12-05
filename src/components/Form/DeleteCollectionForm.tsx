@@ -36,47 +36,71 @@ export const DeleteCollectionForm: React.FC<CollectionFormProps> = ({
     };
 
     return (
-        <div className="card" style={{ borderColor: collection.color }}>
+        <div className="folder-delete-form">
+            {/* Folder Tab Header */}
             <div
-                className="card-header d-flex justify-content-between align-items-center"
+                className="folder-form-tab"
                 style={{
-                    backgroundColor: collection.color,
-                    color: "#fff",
+                    backgroundColor: "#dc3545",
                 }}
             >
-                {translations["deleteForm.deleteCollection"]}
-                <div>
-                    <div
-                        className="btn btn-sm"
-                        style={{
-                            border: "none",
-                            color: "#fff",
-                        }}
-                        onClick={() => setIsEditOrDelete(false)}
-                    >
-                        <i className="fas fa-times"></i>
-                    </div>
+                <div className="folder-form-tab-content">
+                    <i className="fas fa-trash-alt me-2"></i>
+                    <span>{translations["deleteForm.deleteCollection"]}</span>
                 </div>
-            </div>
-            <div className="card-body text-center">
-                <p>{translations["deleteForm.deleteCollectionText"]}</p>
-            </div>
-
-            <div className="modal-footer">
                 <button
-                    type="button"
-                    className="btn btn-outline-secondary"
+                    className="folder-form-close-btn"
                     onClick={() => setIsEditOrDelete(false)}
                 >
-                    {translations["cancelBtn"]}
+                    <i className="fas fa-times"></i>
                 </button>
-                <button
-                    type="button"
-                    className="btn btn-outline-danger"
-                    onClick={() => handleDeleteCollection(collection)}
-                >
-                    {translations["deleteBtn"]}
-                </button>
+            </div>
+
+            {/* Folder Body */}
+            <div
+                className="folder-form-body"
+                style={{
+                    borderColor: "#dc3545",
+                }}
+            >
+                {/* Warning Icon */}
+                <div className="folder-delete-preview">
+                    <i
+                        className="fas fa-folder-open"
+                        style={{ color: collection.color }}
+                    ></i>
+                    <div className="delete-warning-badge">
+                        <i className="fas fa-exclamation-triangle"></i>
+                    </div>
+                </div>
+
+                {/* Delete Message */}
+                <div className="folder-delete-message">
+                    <p className="delete-collection-name">
+                        <i className="fas fa-folder me-2" style={{ color: collection.color }}></i>
+                        <strong>{collection.name}</strong>
+                    </p>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="folder-form-actions">
+                    <button
+                        type="button"
+                        className="btn btn-outline-secondary"
+                        onClick={() => setIsEditOrDelete(false)}
+                    >
+                        <i className="fas fa-times me-1"></i>
+                        {translations["cancelBtn"]}
+                    </button>
+                    <button
+                        type="button"
+                        className="btn btn-danger"
+                        onClick={() => handleDeleteCollection(collection)}
+                    >
+                        <i className="fas fa-trash-alt me-1"></i>
+                        {translations["deleteBtn"]}
+                    </button>
+                </div>
             </div>
         </div>
     );

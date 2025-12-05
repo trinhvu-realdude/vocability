@@ -20,7 +20,12 @@ export const EditWordForm: React.FC<WordFormProps> = ({
 }) => {
     const [partOfSpeechValue, setPartOfSpeechValue] = useState<string>(word.partOfSpeech || "");
     const [wordValue, setWordValue] = useState<string>(word.word || "");
-    const [definitions, setDefinitions] = useState<Definition[]>(word.definitions && word.definitions.length > 0 ? word.definitions : [{ definition: "", notes: "" }]);
+    // Create a deep copy of definitions to avoid mutating the original word object
+    const [definitions, setDefinitions] = useState<Definition[]>(
+        word.definitions && word.definitions.length > 0
+            ? JSON.parse(JSON.stringify(word.definitions))
+            : [{ definition: "", notes: "" }]
+    );
 
     const { translations } = useLanguage();
 
@@ -140,8 +145,6 @@ export const EditWordForm: React.FC<WordFormProps> = ({
                                 value={wordValue}
                                 onChange={(event) => {
                                     setWordValue(event.target.value);
-                                    console.log(errors.word);
-
                                     if (errors.word) {
                                         setErrors({ ...errors, word: undefined });
                                     }

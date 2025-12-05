@@ -176,29 +176,30 @@ export const AddWordModal: React.FC<CommonProps> = ({
             aria-labelledby="#add-word"
             aria-hidden="true"
         >
-            <div className="modal-dialog modal-lg">
-                <div className="modal-content">
+            <div className="modal-dialog modal-lg modal-dialog-centered">
+                <div className="modal-content word-modal-content">
                     <div
-                        className="modal-header"
+                        className="word-modal-header"
                         style={{
                             backgroundColor: randomColor,
-                            color: "#fff",
                         }}
                     >
-                        <h5 className="modal-title">{translations["addWordForm.addWordBtn"]}</h5>
+                        <h5 className="word-modal-title">
+                            <i className="fas fa-book-medical me-2"></i>
+                            {translations["addWordForm.addWordBtn"]}
+                        </h5>
                         <button
                             type="button"
-                            className="btn btn-sm"
+                            className="btn btn-sm word-modal-close"
                             data-bs-dismiss="modal"
                             aria-label="Close"
                             ref={closeBtnRef}
-                            style={{ border: "none", color: "#fff" }}
                             onClick={handleClose}
                         >
                             <i className="fas fa-times"></i>
                         </button>
                     </div>
-                    <div className="modal-body">
+                    <div className="word-modal-body">
                         <div className="mb-2">
                             {/* Row 1: inputs */}
                             <div className="row g-2">
@@ -375,7 +376,7 @@ export const AddWordModal: React.FC<CommonProps> = ({
                             </div>
                         </div>
                     </div>
-                    <div className="modal-footer">
+                    <div className="word-modal-footer">
                         <button
                             type="button"
                             className="btn btn-outline-secondary"
@@ -383,13 +384,15 @@ export const AddWordModal: React.FC<CommonProps> = ({
                             ref={closeBtnRef}
                             onClick={handleClose}
                         >
+                            <i className="fas fa-times me-1"></i>
                             {translations["cancelBtn"]}
                         </button>
                         <button
                             type="button"
-                            className="btn btn-outline-success"
+                            className="btn btn-success"
                             onClick={handleAddWord}
                         >
+                            <i className="fas fa-plus me-1"></i>
                             {translations["addWordForm.addWordBtn"]}
                         </button>
                     </div>

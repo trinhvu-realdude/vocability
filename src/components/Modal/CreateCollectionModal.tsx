@@ -72,66 +72,85 @@ export const CreateCollectionModal: React.FC<{
             aria-labelledby="#add-collection"
             aria-hidden="true"
         >
-            <div className="modal-dialog modal-sm">
-                <div className="modal-content">
+            <div className="modal-dialog modal-dialog-centered">
+                <div className="modal-content folder-modal-content">
+                    {/* Folder Tab Header */}
                     <div
-                        className="modal-header"
+                        className="folder-modal-tab"
                         style={{
                             backgroundColor: color !== "" ? color : randomColor,
-                            color: "#fff",
                         }}
                     >
-                        <h5 className="modal-title" id="add-collection">
+                        <h5 className="folder-modal-title">
+                            <i className="fas fa-folder-plus me-2"></i>
                             {translations["createForm.createCollection"]}
                         </h5>
                         <button
                             type="button"
-                            className="btn btn-sm"
+                            className="btn btn-sm folder-modal-close"
                             data-bs-dismiss="modal"
                             aria-label="Close"
-                            style={{ border: "none", color: "#fff" }}
                         >
                             <i className="fas fa-times"></i>
                         </button>
                     </div>
-                    <div className="modal-body text-center">
-                        <div className="input-group mb-2">
-                            <input
-                                type="color"
-                                className="form-control form-control-color"
-                                id="color-input"
-                                value={color !== "" ? color : randomColor}
-                                title="Choose your color"
-                                onChange={(event) =>
-                                    setColor(event.target.value)
-                                }
-                            />
-                            <input
-                                type="text"
-                                className="form-control"
-                                placeholder={translations["name"]}
-                                value={name}
-                                onChange={(event) =>
-                                    setName(event.target.value)
-                                }
-                            />
+
+                    {/* Folder Modal Body */}
+                    <div className="folder-modal-body">
+                        {/* Folder Icon Preview */}
+                        <div className="folder-preview-large">
+                            <i
+                                className="fas fa-folder"
+                                style={{ color: color !== "" ? color : randomColor }}
+                            ></i>
+                        </div>
+
+                        {/* Form Inputs */}
+                        <div className="folder-form-inputs">
+                            <div className="input-group mb-3">
+                                <span className="input-group-text">
+                                    <i className="fas fa-palette"></i>
+                                </span>
+                                <input
+                                    type="color"
+                                    className="form-control form-control-color"
+                                    id="color-input"
+                                    value={color !== "" ? color : randomColor}
+                                    title="Choose your color"
+                                    onChange={(event) =>
+                                        setColor(event.target.value)
+                                    }
+                                />
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    placeholder={translations["name"]}
+                                    value={name}
+                                    onChange={(event) =>
+                                        setName(event.target.value)
+                                    }
+                                />
+                            </div>
                         </div>
                     </div>
-                    <div className="modal-footer">
+
+                    {/* Folder Modal Footer */}
+                    <div className="folder-modal-footer">
                         <button
                             type="button"
                             className="btn btn-outline-secondary"
                             data-bs-dismiss="modal"
-                            // onClick={reset}
                         >
+                            <i className="fas fa-times me-1"></i>
                             {translations["cancelBtn"]}
                         </button>
                         <button
                             type="button"
-                            className="btn btn-outline-success"
+                            className="btn btn-success"
                             onClick={handleAddCollection}
                             data-bs-dismiss="modal"
                         >
+                            <i className="fas fa-plus me-1"></i>
                             {translations["createBtn"]}
                         </button>
                     </div>

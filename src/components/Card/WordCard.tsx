@@ -11,6 +11,7 @@ import { DeleteWordForm } from "../Form/DeleteWordForm";
 import { formatDate } from "../../utils/formatDateString";
 import { useLanguage } from "../../LanguageContext";
 import { TextToSpeechButton } from "../TextToSpeechButton";
+import "../../styles/WordCard.css";
 
 const ButtonGroup: React.FC<{
     word: Word;
@@ -85,14 +86,11 @@ export const WordCard: React.FC<WordCardProps> = ({
         }
     }, [selectedWord, word.id]);
 
-    console.log(word.definitions);
-
-
     return (
         <>
             {!isEdit && !isDelete && (
                 <div
-                    className="list-group-item"
+                    className="list-group-item word-card-hover"
                     id={new String(word.id).toString()}
                     style={{
                         border: isBorderVisible
@@ -171,7 +169,7 @@ export const WordCard: React.FC<WordCardProps> = ({
                                             )}
                                     </select> */}
                                 </div>
-                                <div className="function-buttons">
+                                <div className="function-buttons word-actions">
                                     <ButtonGroup
                                         word={word}
                                         handleAddFavorite={handleAddFavorite}
@@ -260,6 +258,7 @@ export const WordCard: React.FC<WordCardProps> = ({
 
             {isEdit && (
                 <EditWordForm
+                    key={`edit-${word.id}-${isEdit}`}
                     db={db}
                     word={word}
                     collection={collection}

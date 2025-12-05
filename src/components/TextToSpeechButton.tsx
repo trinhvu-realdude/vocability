@@ -26,9 +26,8 @@ export const TextToSpeechButton: React.FC<{ word: string }> = ({ word }) => {
             }}
         >
             <i
-                className={`fas fa-volume-up ${
-                    isAnimating ? "pulse-animation" : ""
-                }`}
+                className={`fas fa-volume-up ${isAnimating ? "pulse-animation" : ""
+                    }`}
                 style={{
                     transition: "transform 0.6s ease-in-out",
                 }}

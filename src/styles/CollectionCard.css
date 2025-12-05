@@ -1,0 +1,612 @@
+/* Folder Card Styling */
+.folder-card {
+    position: relative;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    height: 200px;
+}
+
+.folder-card:hover {
+    transform: translateY(-8px);
+}
+
+/* Folder Tab (like folder tab at top) */
+.folder-tab {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 50%;
+    height: 35px;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    display: flex;
+    align-items: center;
+    padding: 0 15px;
+    z-index: 2;
+    box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.folder-tab-name {
+    color: #fff;
+    font-weight: 600;
+    font-size: 14px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+}
+
+/* Folder Body */
+.folder-body {
+    position: absolute;
+    top: 25px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #fff;
+    border: 2px solid;
+    border-radius: 8px;
+    padding: 20px 15px 15px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease;
+}
+
+.folder-card:hover .folder-body {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+/* Action Buttons */
+.folder-actions {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: flex;
+    gap: 5px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.folder-card:hover .folder-actions {
+    opacity: 1;
+}
+
+.folder-action-btn {
+    background: rgba(0, 0, 0, 0.05);
+    border: none;
+    border-radius: 4px;
+    padding: 4px 8px;
+    transition: all 0.2s ease;
+}
+
+.folder-action-btn:hover {
+    background: rgba(0, 0, 0, 0.1);
+    transform: scale(1.1);
+}
+
+/* Folder Content */
+.folder-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: inherit;
+    margin-top: 10px;
+}
+
+.folder-content:hover {
+    text-decoration: none;
+    color: inherit;
+}
+
+.folder-icon-wrapper {
+    margin-bottom: 15px;
+}
+
+.folder-icon-wrapper .fa-folder {
+    font-size: 64px;
+    transition: transform 0.3s ease;
+}
+
+.folder-card:hover .folder-icon-wrapper .fa-folder {
+    transform: scale(1.1);
+}
+
+.folder-info {
+    text-align: center;
+}
+
+.folder-word-count {
+    margin: 0;
+    font-size: 14px;
+    color: #6c757d;
+}
+
+.folder-word-count strong {
+    color: #000;
+    font-size: 16px;
+}
+
+/* Folder Edit Form Styling */
+.folder-edit-form {
+    height: auto;
+    min-height: 250px;
+}
+
+.folder-close-btn {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #fff;
+    border: none;
+    padding: 4px 8px;
+    transition: all 0.2s ease;
+}
+
+.folder-close-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-50%) scale(1.1);
+}
+
+.folder-form-body {
+    padding: 30px 20px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.folder-preview {
+    text-align: center;
+    margin-top: 10px;
+}
+
+.folder-preview .fa-folder {
+    font-size: 48px;
+    transition: transform 0.3s ease;
+}
+
+.folder-preview .fa-folder:hover {
+    transform: scale(1.1);
+}
+
+.folder-form-inputs {
+    flex: 1;
+}
+
+.folder-form-inputs .input-group-text {
+    background-color: #f8f9fa;
+    border-right: none;
+}
+
+.folder-form-inputs .form-control {
+    border-left: none;
+}
+
+.folder-form-inputs .form-control:focus {
+    border-left: none;
+    box-shadow: none;
+}
+
+.folder-form-inputs .input-group:focus-within .input-group-text {
+    border-color: #86b7fe;
+}
+
+.folder-form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding-top: 15px;
+    border-top: 1px solid #dee2e6;
+}
+
+/* Folder Modal Styling */
+.folder-modal-content {
+    border: none;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+}
+
+.folder-modal-tab {
+    background-color: #007bff;
+    color: #fff;
+    padding: 20px 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+}
+
+.folder-modal-tab::before {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 0;
+    right: 0;
+    height: 10px;
+    background: inherit;
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 0);
+}
+
+.folder-modal-title {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+}
+
+.folder-modal-close {
+    color: #fff;
+    border: none;
+    padding: 6px 10px;
+    transition: all 0.2s ease;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+}
+
+.folder-modal-close:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.1);
+}
+
+.folder-modal-body {
+    padding: 30px 25px;
+    background: #f8f9fa;
+}
+
+.folder-preview-large {
+    text-align: center;
+    margin-bottom: 25px;
+    padding: 20px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.folder-preview-large .fa-folder {
+    font-size: 80px;
+    transition: transform 0.3s ease;
+}
+
+.folder-preview-large:hover .fa-folder {
+    transform: scale(1.1) rotate(-5deg);
+}
+
+.folder-modal-footer {
+    padding: 20px 25px;
+    background: #fff;
+    border-top: 1px solid #dee2e6;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.folder-modal-footer .btn {
+    padding: 8px 20px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.folder-modal-footer .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.folder-modal-footer .btn-success {
+    background-color: #28a745;
+    border-color: #28a745;
+}
+
+.folder-modal-footer .btn-success:hover {
+    background-color: #218838;
+    border-color: #1e7e34;
+}
+
+/* Folder Edit Form Styling */
+.folder-edit-form {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.folder-form-tab {
+    position: relative;
+    width: 65%;
+    height: 45px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.1);
+    z-index: 2;
+}
+
+.folder-form-tab-content {
+    color: #fff;
+    font-weight: 600;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+}
+
+.folder-form-close-btn {
+    background: transparent;
+    border: none;
+    color: #fff;
+    font-size: 18px;
+    cursor: pointer;
+    padding: 5px 10px;
+    border-radius: 4px;
+    transition: background 0.2s ease;
+}
+
+.folder-form-close-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.folder-form-body {
+    position: relative;
+    background: #fff;
+    border: 2px solid;
+    border-radius: 10px;
+    padding: 30px 20px 20px;
+    margin-top: -10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.folder-form-preview {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.folder-form-preview .fa-folder {
+    font-size: 80px;
+    transition: transform 0.3s ease;
+}
+
+.folder-form-preview .fa-folder:hover {
+    transform: scale(1.05);
+}
+
+.folder-form-inputs {
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.folder-form-actions {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+/* Folder Modal Styling */
+.folder-modal-content {
+    border: none;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+}
+
+.folder-modal-tab {
+    position: relative;
+    padding: 20px 25px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid rgba(0, 0, 0, 0.1);
+}
+
+.folder-modal-title {
+    color: #fff;
+    font-weight: 600;
+    font-size: 18px;
+    margin: 0;
+    display: flex;
+    align-items: center;
+}
+
+.folder-modal-close {
+    background: transparent;
+    border: none;
+    color: #fff;
+    font-size: 20px;
+    cursor: pointer;
+    padding: 5px 10px;
+    border-radius: 4px;
+    transition: background 0.2s ease;
+}
+
+.folder-modal-close:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.folder-modal-body {
+    padding: 40px 30px;
+    background: #f8f9fa;
+}
+
+.folder-preview-large {
+    text-align: center;
+    margin-bottom: 30px;
+    animation: folderBounce 0.6s ease;
+}
+
+.folder-preview-large .fa-folder {
+    font-size: 100px;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.15));
+    transition: transform 0.3s ease;
+}
+
+.folder-preview-large .fa-folder:hover {
+    transform: scale(1.08) rotate(-5deg);
+}
+
+@keyframes folderBounce {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+.folder-modal-footer {
+    padding: 20px 30px;
+    background: #fff;
+    border-top: 1px solid #dee2e6;
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+}
+
+.folder-modal-footer .btn {
+    min-width: 120px;
+}
+
+/* Folder Card Styling */
+.folder-card {
+    position: relative;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    height: 220px;
+}
+
+.folder-card:hover {
+    transform: translateY(-8px);
+}
+
+/* Folder Tab (like folder tab at top) */
+.folder-tab {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 55%;
+    height: 38px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    display: flex;
+    align-items: center;
+    padding: 0 18px;
+    z-index: 2;
+    box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.12);
+}
+
+.folder-tab-name {
+    color: #fff;
+    font-weight: 600;
+    font-size: 15px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+}
+
+/* Folder Body */
+.folder-body {
+    position: absolute;
+    top: 28px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #fff;
+    border: 2px solid;
+    border-radius: 10px;
+    padding: 25px 15px 15px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
+    transition: box-shadow 0.3s ease;
+}
+
+.folder-card:hover .folder-body {
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.18);
+}
+
+/* Action Buttons */
+.folder-actions {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    display: flex;
+    gap: 6px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 10;
+}
+
+.folder-card:hover .folder-actions {
+    opacity: 1;
+}
+
+.folder-action-btn {
+    background: rgba(0, 0, 0, 0.06);
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    transition: all 0.2s ease;
+    color: #495057;
+}
+
+.folder-action-btn:hover {
+    background: rgba(0, 0, 0, 0.12);
+    transform: scale(1.15);
+    color: #212529;
+}
+
+/* Folder Content */
+.folder-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: inherit;
+    margin-top: 15px;
+}
+
+.folder-content:hover {
+    text-decoration: none;
+    color: inherit;
+}
+
+.folder-icon-wrapper {
+    margin-bottom: 18px;
+}
+
+.folder-icon-wrapper .fa-folder {
+    font-size: 72px;
+    transition: transform 0.3s ease;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+.folder-card:hover .folder-icon-wrapper .fa-folder {
+    transform: scale(1.12);
+}
+
+.folder-info {
+    text-align: center;
+}
+
+.folder-word-count {
+    margin: 0;
+    font-size: 14px;
+    color: #6c757d;
+    line-height: 1.5;
+}
+
+.folder-word-count strong {
+    color: #000;
+    font-size: 18px;
+    font-weight: 700;
+}

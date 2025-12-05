@@ -4,6 +4,7 @@ import { EditCollectionForm } from "../Form/EditCollectionForm";
 import { DeleteCollectionForm } from "../Form/DeleteCollectionForm";
 import { formatDate } from "../../utils/formatDateString";
 import { useLanguage } from "../../LanguageContext";
+import "../../styles/CollectionCard.css"
 
 export const CollectionCard: React.FC<CollectionCardProps> = ({
     db,
@@ -19,72 +20,74 @@ export const CollectionCard: React.FC<CollectionCardProps> = ({
     return (
         <div className="col-md-4 mb-4">
             {!isEdit && !isDelete && (
-                <div
-                    className="card"
-                    id="card-collection"
-                    style={{ borderColor: collection.color }}
-                >
+                <div className="folder-card">
+                    {/* Folder Tab */}
                     <div
-                        className="card-header d-flex justify-content-between align-items-center"
+                        className="folder-tab"
                         style={{
                             backgroundColor: collection.color,
-                            color: "#fff",
                         }}
                     >
-                        <span
-                            style={{
-                                maxWidth: "60%",
-                                whiteSpace: "nowrap",
-                                overflow: "hidden",
-                                textOverflow: "ellipsis",
-                                display: "inline-block",
-                            }}
-                        >
+                        <span className="folder-tab-name">
                             {collection.name}
                         </span>
-                        <div>
+                    </div>
+
+                    {/* Folder Body */}
+                    <div
+                        className="folder-body"
+                        style={{
+                            borderColor: collection.color,
+                        }}
+                    >
+                        {/* Action Buttons */}
+                        <div className="folder-actions">
                             <div
-                                className="btn btn-sm"
-                                style={{
-                                    border: "none",
-                                    color: "#fff",
-                                }}
+                                className="btn btn-sm folder-action-btn"
                                 onClick={() => setIsEdit(true)}
+                                title="Edit"
                             >
                                 <i className="fas fa-pen"></i>
                             </div>
                             <div
-                                className="btn btn-sm"
-                                style={{
-                                    border: "none",
-                                    color: "#fff",
-                                }}
+                                className="btn btn-sm folder-action-btn"
                                 onClick={() => setIsDelete(true)}
+                                title="Delete"
                             >
                                 <i className="fas fa-times"></i>
                             </div>
                         </div>
+
+                        {/* Folder Content */}
+                        <a
+                            className="folder-content"
+                            data-bs-toggle="tooltip"
+                            data-bs-placement="top"
+                            title={`${translations["createdAt"]} ${formatDate(
+                                collection.createdAt,
+                                translations["language"]
+                            )}`}
+                            href={`/${languageCode}/collection/${collection.id}`}
+                        >
+                            <div className="folder-icon-wrapper">
+                                <i
+                                    className="fas fa-folder"
+                                    style={{ color: collection.color }}
+                                ></i>
+                            </div>
+                            <div className="folder-info">
+                                <p className="folder-word-count">
+                                    <i className="fas fa-book" />{" "}
+                                    {
+                                        translations[
+                                        "collectionPage.collectionCard.numberOfWords"
+                                        ]
+                                    }
+                                    : <strong>{collection.numOfWords}</strong>
+                                </p>
+                            </div>
+                        </a>
                     </div>
-                    <a
-                        className="card-body text-center"
-                        data-bs-toggle="tooltip"
-                        data-bs-placement="top"
-                        title={`${translations["createdAt"]} ${formatDate(
-                            collection.createdAt,
-                            translations["language"]
-                        )}`}
-                        href={`/${languageCode}/collection/${collection.id}`}
-                    >
-                        <p>
-                            <i className="fas fa-book" />{" "}
-                            {
-                                translations[
-                                    "collectionPage.collectionCard.numberOfWords"
-                                ]
-                            }
-                            : {collection.numOfWords}
-                        </p>
-                    </a>
                 </div>
             )}
 

@@ -46,58 +46,58 @@ export const SearchBar: React.FC<{
         {
             isFavorite
                 ? useEffect(() => {
-                      // Search for Favorite collection
-                      const lowerCaseSearchValue = searchValue
-                          .toLowerCase()
-                          .trim();
-                      const filtered =
-                          filteredWords &&
-                          filteredWords.filter((word) =>
-                              word.word
-                                  .toLowerCase()
-                                  .includes(lowerCaseSearchValue)
-                          );
-                      setDisplayWordDtos &&
-                          filtered &&
-                          setDisplayWordDtos(filtered);
-                  }, [searchValue, filteredWords])
+                    // Search for Favorite collection
+                    const lowerCaseSearchValue = searchValue
+                        .toLowerCase()
+                        .trim();
+                    const filtered =
+                        filteredWords &&
+                        filteredWords.filter((word) =>
+                            word.word
+                                .toLowerCase()
+                                .includes(lowerCaseSearchValue)
+                        );
+                    setDisplayWordDtos &&
+                        filtered &&
+                        setDisplayWordDtos(filtered);
+                }, [searchValue, filteredWords])
                 : type === "word"
-                ? useEffect(() => {
-                      // Search for main collections
-                      const lowerCaseSearchValue = searchValue
-                          .toLowerCase()
-                          .trim();
-                      const filtered =
-                          words &&
-                          words.filter((word) =>
-                              word.word
-                                  .toLowerCase()
-                                  .includes(lowerCaseSearchValue)
-                          );
-                      setDisplayWords && filtered && setDisplayWords(filtered);
-                      setFilteredWords &&
-                          filtered &&
-                          setFilteredWords(filtered);
-                  }, [searchValue, words])
-                : useEffect(() => {
-                      // Search for collections
-                      const lowerCaseSearchValue = searchValue
-                          .toLowerCase()
-                          .trim();
-                      const filtered =
-                          collections &&
-                          collections.filter((collection) =>
-                              collection.name
-                                  .toLowerCase()
-                                  .includes(lowerCaseSearchValue)
-                          );
-                      setDisplayCollections &&
-                          filtered &&
-                          setDisplayCollections(filtered);
-                      setFilteredCollections &&
-                          filtered &&
-                          setFilteredCollections(filtered);
-                  }, [searchValue, collections]);
+                    ? useEffect(() => {
+                        // Search for main collections
+                        const lowerCaseSearchValue = searchValue
+                            .toLowerCase()
+                            .trim();
+                        const filtered =
+                            words &&
+                            words.filter((word) =>
+                                word.word
+                                    .toLowerCase()
+                                    .includes(lowerCaseSearchValue)
+                            );
+                        setDisplayWords && filtered && setDisplayWords(filtered);
+                        setFilteredWords &&
+                            filtered &&
+                            setFilteredWords(filtered);
+                    }, [searchValue, words])
+                    : useEffect(() => {
+                        // Search for collections
+                        const lowerCaseSearchValue = searchValue
+                            .toLowerCase()
+                            .trim();
+                        const filtered =
+                            collections &&
+                            collections.filter((collection) =>
+                                collection.name
+                                    .toLowerCase()
+                                    .includes(lowerCaseSearchValue)
+                            );
+                        setDisplayCollections &&
+                            filtered &&
+                            setDisplayCollections(filtered);
+                        setFilteredCollections &&
+                            filtered &&
+                            setFilteredCollections(filtered);
+                    }, [searchValue, collections]);
         }
 
         return (
@@ -135,9 +135,9 @@ export const SearchBar: React.FC<{
                             setFilteredCollections={setFilteredCollections}
                         />
 
-                        {type === "collection" && (
+                        {/* {type === "collection" && (
                             <button
-                                className="btn btn-outline-secondary"
+                                className="btn btn-outline-success"
                                 data-bs-toggle="modal"
                                 data-bs-target="#add-collection"
                                 style={{
@@ -145,9 +145,9 @@ export const SearchBar: React.FC<{
                                     marginRight: "8px",
                                 }}
                             >
-                                <strong>&#x2B;</strong>
+                                Create collection
                             </button>
-                        )}
+                        )} */}
 
                         <button
                             className="btn"
@@ -160,7 +160,7 @@ export const SearchBar: React.FC<{
                                 color: "#fff",
                             }}
                         >
-                            Add word
+                            {translations["addWordForm.addWordBtn"]}
                         </button>
                     </>
                 )}
