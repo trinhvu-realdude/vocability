@@ -51,8 +51,8 @@ export const FavoritePage: React.FC<CommonProps> = ({ db }) => {
         setSelectedCollection(collection || undefined);
         const filtered = collection
             ? favoriteWords.filter(
-                  (word) => word.collection.name === collection.name
-              )
+                (word) => word.collection.name === collection.name
+            )
             : favoriteWords;
         setFilteredWords(filtered);
         setDisplayWords(filtered);
@@ -123,7 +123,7 @@ export const FavoritePage: React.FC<CommonProps> = ({ db }) => {
                 {displayWords &&
                     displayWords.length > 0 &&
                     displayWords.map((word) => (
-                        <div className="list-group-item" key={word.id}>
+                        <div className="list-group-item word-card-hover p-4" key={word.id}>
                             <div className="d-flex w-100 justify-content-between mb-2">
                                 <div className="row">
                                     <h5 className="mb-1">

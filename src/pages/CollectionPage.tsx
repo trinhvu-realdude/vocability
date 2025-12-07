@@ -34,7 +34,7 @@ export const CollectionPage: React.FC<CommonProps> = ({
                 setFilterSorting={setFilterSorting}
                 setFilteredCollections={setFilteredCollections}
             />
-            <div className="text-center">
+            {/* <div className="text-center">
                 <button
                     className="btn btn-outline-success"
                     data-bs-toggle="modal"
@@ -44,9 +44,9 @@ export const CollectionPage: React.FC<CommonProps> = ({
                         marginRight: "8px",
                     }}
                 >
-                    Create collection
+                    {translations["collectionPage.createCollectionBtn"]}
                 </button>
-            </div>
+            </div> */}
             <div className="row mt-4 mb-2">
                 {filteredCollections && filteredCollections.length > 0 ? (
                     filteredCollections.map((collection) => (

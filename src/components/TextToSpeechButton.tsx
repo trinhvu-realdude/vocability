@@ -17,7 +17,6 @@ export const TextToSpeechButton: React.FC<{ word: string }> = ({ word }) => {
                 handleTextToSpeech(
                     word,
                     translations["languageVoice"],
-                    undefined
                 );
                 setIsAnimating(true);
 

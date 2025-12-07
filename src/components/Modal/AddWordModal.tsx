@@ -20,6 +20,7 @@ import {
     getActiveLanguages,
     getCollectionsByLanguageId,
 } from "../../services/CollectionService";
+import "../../styles/AddWordModal.css";
 
 export const AddWordModal: React.FC<CommonProps> = ({
     db,
@@ -358,20 +359,23 @@ export const AddWordModal: React.FC<CommonProps> = ({
                                         )}
                                 </div>
                             ))}
-                            <div className="d-flex justify-content-center align-items-center input-group">
+                            <div className="definition-controls">
                                 <button
                                     type="button"
-                                    className="btn btn-outline-secondary mb-2"
+                                    className="btn btn-definition-add"
                                     onClick={handleAddDefinitionRow}
+                                    title="Add definition"
                                 >
-                                    <b>+</b>
+                                    <i className="fas fa-plus"></i>
                                 </button>
                                 <button
                                     type="button"
-                                    className="btn btn-outline-secondary mb-2"
+                                    className="btn btn-definition-remove"
                                     onClick={handleRemoveDefinitionRow}
+                                    disabled={definitions.length <= 1}
+                                    title="Remove definition"
                                 >
-                                    <b>-</b>
+                                    <i className="fas fa-minus"></i>
                                 </button>
                             </div>
                         </div>

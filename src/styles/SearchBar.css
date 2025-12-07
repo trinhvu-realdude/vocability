@@ -1,0 +1,299 @@
+/* Search Bar & Filter Components - Light Theme */
+
+/* Search Bar Container */
+.search-bar-container {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin: 1.5rem 0;
+    flex-wrap: wrap;
+}
+
+/* Search Input Group */
+.search-input-wrapper {
+    position: relative;
+    flex: 1;
+    min-width: 280px;
+}
+
+.search-input-wrapper .search-icon {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #6c757d;
+    font-size: 1rem;
+    pointer-events: none;
+    transition: color 0.3s ease;
+}
+
+.search-input-wrapper input.search-input {
+    width: 100%;
+    padding: 0.75rem 1rem 0.75rem 2.75rem;
+    border: 2px solid #e9ecef;
+    border-radius: 10px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background: #ffffff;
+    color: #495057;
+}
+
+.search-input-wrapper input.search-input::placeholder {
+    color: #adb5bd;
+}
+
+.search-input-wrapper input.search-input:focus {
+    outline: none;
+    border-color: #DD5746;
+    box-shadow: 0 0 0 3px rgba(221, 87, 70, 0.1);
+    background: #ffffff;
+}
+
+.search-input-wrapper input.search-input:focus~.search-icon {
+    color: #DD5746;
+}
+
+/* Filter Buttons */
+.filter-button {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.25rem;
+    border: 2px solid #e9ecef;
+    border-radius: 10px;
+    background: #ffffff;
+    color: #495057;
+    font-weight: 500;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.filter-button:hover {
+    border-color: #DD5746;
+    background: rgba(221, 87, 70, 0.05);
+    color: #DD5746;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+}
+
+.filter-button:focus {
+    outline: none;
+    border-color: #DD5746;
+    box-shadow: 0 0 0 3px rgba(221, 87, 70, 0.1);
+}
+
+.filter-button .filter-icon {
+    font-size: 1rem;
+    transition: transform 0.3s ease;
+}
+
+.filter-button:hover .filter-icon {
+    transform: rotate(180deg);
+}
+
+.filter-button.active {
+    border-color: #DD5746;
+    background: rgba(221, 87, 70, 0.08);
+    color: #DD5746;
+}
+
+/* Collection Filter Badge */
+.collection-filter-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 6px;
+    background: rgba(221, 87, 70, 0.1);
+    font-weight: 600;
+}
+
+/* Filter Dropdown Menu */
+.filter-dropdown-menu {
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+    padding: 0.5rem;
+    margin-top: 0.5rem;
+    min-width: 200px;
+}
+
+.filter-dropdown-menu .dropdown-item {
+    border-radius: 6px;
+    padding: 0.65rem 1rem;
+    margin: 0.15rem 0;
+    transition: all 0.2s ease;
+    color: #495057;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.filter-dropdown-menu .dropdown-item:hover {
+    background: rgba(221, 87, 70, 0.08);
+    color: #DD5746;
+    transform: translateX(4px);
+    padding-left: 1.15rem;
+}
+
+.filter-dropdown-menu .dropdown-item.active {
+    background: rgba(221, 87, 70, 0.12);
+    color: #DD5746;
+    font-weight: 600;
+}
+
+/* Action Buttons */
+.action-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.action-button i {
+    font-size: 1rem;
+    transition: transform 0.3s ease;
+}
+
+.action-button:hover i {
+    transform: scale(1.1);
+}
+
+/* Add Word Button - Primary */
+.btn-add-word {
+    background: linear-gradient(135deg, #DD5746 0%, #c94435 100%);
+    color: #ffffff;
+    box-shadow: 0 2px 8px rgba(221, 87, 70, 0.25);
+}
+
+.btn-add-word:hover {
+    background: linear-gradient(135deg, #c94435 0%, #b33d2e 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(221, 87, 70, 0.35);
+    color: #ffffff;
+}
+
+.btn-add-word:active {
+    transform: translateY(0);
+}
+
+/* Create Collection Button - Secondary */
+.btn-create-collection {
+    background: #ffffff;
+    color: #28a745;
+    border: 2px solid #28a745;
+    box-shadow: 0 2px 6px rgba(40, 167, 69, 0.15);
+}
+
+.btn-create-collection:hover {
+    background: #28a745;
+    color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(40, 167, 69, 0.3);
+}
+
+.btn-create-collection:active {
+    transform: translateY(0);
+}
+
+/* Button Group */
+.search-bar-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+/* Responsive Design */
+@media (max-width: 991.98px) {
+    .search-bar-container {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.75rem;
+    }
+
+    .search-input-wrapper {
+        min-width: 100%;
+    }
+
+    .search-bar-actions {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .filter-button {
+        flex: 1;
+        justify-content: center;
+    }
+
+    .action-button {
+        flex: 1;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .search-input-wrapper input.search-input {
+        padding: 0.65rem 1rem 0.65rem 2.5rem;
+        font-size: 0.9rem;
+    }
+
+    .filter-button,
+    .action-button {
+        padding: 0.65rem 1rem;
+        font-size: 0.9rem;
+    }
+
+    .search-bar-actions {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .filter-button,
+    .action-button {
+        width: 100%;
+    }
+}
+
+/* Loading State */
+.search-input-wrapper.loading::after {
+    content: '';
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 16px;
+    height: 16px;
+    border: 2px solid #e9ecef;
+    border-top-color: #DD5746;
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: translateY(-50%) rotate(360deg);
+    }
+}
+
+/* Accessibility */
+.filter-button:focus-visible,
+.action-button:focus-visible {
+    outline: 2px solid rgba(221, 87, 70, 0.5);
+    outline-offset: 2px;
+}
+
+/* Smooth Transitions */
+* {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}

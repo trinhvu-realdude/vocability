@@ -23,7 +23,7 @@ const ButtonGroup: React.FC<{
         <>
             <div className="btn btn-sm">
                 <i
-                    className={`${word.isFavorite ? "fas" : "far"} fa-bookmark`}
+                    className={`${word.isFavorite ? "fas" : "far"} fa-star`}
                     onClick={() => handleAddFavorite(word)}
                     style={{
                         color: `${word.isFavorite ? "#FFC000" : ""}`,
@@ -46,12 +46,10 @@ export const WordCard: React.FC<WordCardProps> = ({
     collection,
     filterSorting,
     setWords,
-    voicesByLanguage,
 }) => {
     const [isFavorite, setIsFavorite] = useState<boolean>(false);
     const [isEdit, setIsEdit] = useState<boolean>(false);
     const [isDelete, setIsDelete] = useState<boolean>(false);
-    const [selectedVoice, setSelectedVoice] = useState<SpeechSynthesisVoice>();
 
     const { translations, selectedWord, setSelectedWord } = useLanguage();
 
@@ -90,7 +88,7 @@ export const WordCard: React.FC<WordCardProps> = ({
         <>
             {!isEdit && !isDelete && (
                 <div
-                    className="list-group-item word-card-hover"
+                    className="list-group-item word-card-hover p-4"
                     id={new String(word.id).toString()}
                     style={{
                         border: isBorderVisible
@@ -132,42 +130,6 @@ export const WordCard: React.FC<WordCardProps> = ({
                                         {word.phonetic}
                                     </small>{" "}
                                     <TextToSpeechButton word={word.word} />
-                                    {/* <select
-                                        className="btn-sm mx-4"
-                                        id="voices-by-language"
-                                        style={{ fontSize: "12px" }}
-                                        onChange={(event) => {
-                                            const voices =
-                                                window.speechSynthesis.getVoices();
-                                            const voice = voices.find(
-                                                (v) =>
-                                                    v.name ===
-                                                    event.target.value
-                                            );
-                                            if (voice) setSelectedVoice(voice);
-                                        }}
-                                    >
-                                        {voicesByLanguage &&
-                                            voicesByLanguage.map(
-                                                (voice, index) => (
-                                                    <option
-                                                        key={index}
-                                                        value={voice.name}
-                                                    >
-                                                        {!voice.name.includes(
-                                                            "Natural"
-                                                        )
-                                                            ? voice.name
-                                                                  .split(" ")[0]
-                                                                  .trim()
-                                                            : voice.name
-                                                                  .split(" ")[1]
-                                                                  .trim()}
-                                                        {` (${voice.lang})`}
-                                                    </option>
-                                                )
-                                            )}
-                                    </select> */}
                                 </div>
                                 <div className="function-buttons word-actions">
                                     <ButtonGroup

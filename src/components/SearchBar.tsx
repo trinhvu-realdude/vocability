@@ -4,6 +4,7 @@ import { FilterSortingOption } from "../interfaces/mainProps";
 import { SortFilter } from "./Filter/SortFilter";
 import { CollectionFilter } from "./Filter/CollectionFilter";
 import { useLanguage } from "../LanguageContext";
+import "../styles/SearchBar.css";
 
 export const SearchBar: React.FC<{
     isFavorite: boolean;
@@ -101,69 +102,68 @@ export const SearchBar: React.FC<{
         }
 
         return (
-            <div className="input-group d-flex justify-content-center my-4">
-                <input
-                    className="form-control"
-                    type="search"
-                    placeholder={
-                        type === "collection"
-                            ? translations["searchBar.placeholderCollection"]
-                            : translations["searchBar.placeholder"]
-                    }
-                    aria-label={
-                        type === "collection"
-                            ? translations["searchBar.placeholderCollection"]
-                            : translations["searchBar.placeholder"]
-                    }
-                    value={searchValue}
-                    onChange={(event) => setSearchValue(event.target.value)}
-                />
-                {isFavorite ? (
-                    <CollectionFilter
-                        collections={collections}
-                        selectedCollection={selectedCollection}
-                        handleFilter={handleFilter}
+            <div className="search-bar-container">
+                <div className="search-input-wrapper">
+                    <i className="fas fa-search search-icon"></i>
+                    <input
+                        className="search-input"
+                        type="search"
+                        placeholder={
+                            type === "collection"
+                                ? translations["searchBar.placeholderCollection"]
+                                : translations["searchBar.placeholder"]
+                        }
+                        aria-label={
+                            type === "collection"
+                                ? translations["searchBar.placeholderCollection"]
+                                : translations["searchBar.placeholder"]
+                        }
+                        value={searchValue}
+                        onChange={(event) => setSearchValue(event.target.value)}
                     />
-                ) : (
-                    <>
-                        <SortFilter
-                            displayWords={displayWords}
-                            displayCollections={displayCollections}
-                            filterSorting={filterSorting}
-                            setFilterSorting={setFilterSorting}
-                            setFilteredWords={setFilteredWords}
-                            setFilteredCollections={setFilteredCollections}
+                </div>
+
+                <div className="search-bar-actions">
+                    {isFavorite ? (
+                        <CollectionFilter
+                            collections={collections}
+                            selectedCollection={selectedCollection}
+                            handleFilter={handleFilter}
                         />
+                    ) : (
+                        <>
+                            <SortFilter
+                                displayWords={displayWords}
+                                displayCollections={displayCollections}
+                                filterSorting={filterSorting}
+                                setFilterSorting={setFilterSorting}
+                                setFilteredWords={setFilteredWords}
+                                setFilteredCollections={setFilteredCollections}
+                            />
 
-                        {/* {type === "collection" && (
+                            {type === "collection" && (
+                                <button
+                                    className="action-button btn-create-collection"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#add-collection"
+                                >
+                                    <i className="fas fa-plus"></i>
+                                    {translations["collectionPage.createCollectionBtn"]}
+                                </button>
+                            )}
+
                             <button
-                                className="btn btn-outline-success"
+                                className="action-button btn-add-word"
+                                type="button"
                                 data-bs-toggle="modal"
-                                data-bs-target="#add-collection"
-                                style={{
-                                    borderRadius: "0.25rem",
-                                    marginRight: "8px",
-                                }}
+                                data-bs-target="#add-word"
                             >
-                                Create collection
+                                <i className="fas fa-plus-circle"></i>
+                                {translations["addWordForm.addWordBtn"]}
                             </button>
-                        )} */}
-
-                        <button
-                            className="btn"
-                            type="button"
-                            data-bs-toggle="modal"
-                            data-bs-target="#add-word"
-                            style={{
-                                borderRadius: "0.25rem",
-                                backgroundColor: "rgb(221, 87, 70)",
-                                color: "#fff",
-                            }}
-                        >
-                            {translations["addWordForm.addWordBtn"]}
-                        </button>
-                    </>
-                )}
+                        </>
+                    )}
+                </div>
             </div>
         );
     }

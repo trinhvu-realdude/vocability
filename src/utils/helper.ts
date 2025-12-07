@@ -101,12 +101,11 @@ export const sortCollectionsByFilter = (
 export const handleTextToSpeech = async (
     text: string,
     language: string,
-    selectedVoice: SpeechSynthesisVoice | undefined
 ) => {
     const speech = new SpeechSynthesisUtterance();
     speech.text = text;
 
-    const voices = await getVoicesByLanguage(language);
+    // const voices = await getVoicesByLanguage(language);
 
     // if (!selectedVoice) {
     //     selectedVoice = voices.find((voice) => voice.default) || voices[0];

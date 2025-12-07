@@ -1032,34 +1032,227 @@ export const FILETYPE = {
 
 export const practices = [
     {
-        name: "📚 Flashcard Quiz",
-        href: "/practices/flashcard-quiz",
-        description: "Test your vocabulary knowledge with flashcards",
+        code: "us", // English
+        list: [
+            {
+                name: "📚 Flashcard Quiz",
+                href: "/practices/flashcard-quiz",
+                description: "Test your vocabulary knowledge with flashcards",
+            },
+            {
+                name: "🧩 Crossword Puzzles",
+                href: "/practices/crossword-puzzles",
+                description: "Solve crossword puzzles with your vocabulary",
+            },
+            {
+                name: "🔡 Word Scramble",
+                href: "/practices/word-scramble",
+                description: "Unscramble letters to form words",
+            },
+            {
+                name: "📝 Vocabulary Quiz",
+                href: "/practices/vocabulary-quiz",
+                description: "Take a quiz to test your vocabulary skills",
+            },
+            {
+                name: "🔗 Word Matching",
+                href: "/practices/word-matching",
+                description: "Match words with their correct meanings",
+            },
+            {
+                name: "🃏 Memory Card",
+                href: "/practices/memory-card",
+                description: "Test your memory with a vocabulary card game",
+            },
+        ],
     },
     {
-        name: "🧩 Crossword Puzzles",
-        href: "/practices/crossword-puzzles",
-        description: "Solve crossword puzzles with your vocabulary",
+        code: "es", // Spanish
+        list: [
+            {
+                name: "📚 Quiz de Tarjetas",
+                href: "/practices/flashcard-quiz",
+                description: "Pon a prueba tu vocabulario con tarjetas",
+            },
+            {
+                name: "🧩 Crucigramas",
+                href: "/practices/crossword-puzzles",
+                description: "Resuelve crucigramas con tu vocabulario",
+            },
+            {
+                name: "🔡 Palabras Desordenadas",
+                href: "/practices/word-scramble",
+                description: "Reordena las letras para formar palabras",
+            },
+            {
+                name: "📝 Quiz de Vocabulario",
+                href: "/practices/vocabulary-quiz",
+                description: "Haz un quiz para probar tu vocabulario",
+            },
+            {
+                name: "🔗 Emparejamiento de Palabras",
+                href: "/practices/word-matching",
+                description: "Empareja palabras con sus significados correctos",
+            },
+            {
+                name: "🃏 Juego de Memoria",
+                href: "/practices/memory-card",
+                description:
+                    "Pon a prueba tu memoria con un juego de cartas de vocabulario",
+            },
+        ],
     },
     {
-        name: "🔡 Word Scramble",
-        href: "/practices/word-scramble",
-        description: "Unscramble letters to form words",
+        code: "fr", // French
+        list: [
+            {
+                name: "📚 Quiz de Cartes Flash",
+                href: "/practices/flashcard-quiz",
+                description:
+                    "Testez vos connaissances en vocabulaire avec des cartes flash",
+            },
+            {
+                name: "🧩 Mots Croisés",
+                href: "/practices/crossword-puzzles",
+                description: "Résolvez des mots croisés avec votre vocabulaire",
+            },
+            {
+                name: "🔡 Anagramme",
+                href: "/practices/word-scramble",
+                description: "Recomposez les lettres pour former des mots",
+            },
+            {
+                name: "📝 Quiz de Vocabulaire",
+                href: "/practices/vocabulary-quiz",
+                description:
+                    "Faites un quiz pour tester vos compétences en vocabulaire",
+            },
+            {
+                name: "🔗 Association de Mots",
+                href: "/practices/word-matching",
+                description:
+                    "Associez les mots avec leurs significations correctes",
+            },
+            {
+                name: "🃏 Jeu de Mémoire",
+                href: "/practices/memory-card",
+                description:
+                    "Testez votre mémoire avec un jeu de cartes de vocabulaire",
+            },
+        ],
     },
     {
-        name: "📝 Vocabulary Quiz",
-        href: "/practices/vocabulary-quiz",
-        description: "Take a quiz to test your vocabulary skills",
+        code: "de", // German
+        list: [
+            {
+                name: "📚 Karteikarten Quiz",
+                href: "/practices/flashcard-quiz",
+                description: "Teste dein Vokabular mit Karteikarten",
+            },
+            {
+                name: "🧩 Kreuzworträtsel",
+                href: "/practices/crossword-puzzles",
+                description: "Löse Kreuzworträtsel mit deinem Vokabular",
+            },
+            {
+                name: "🔡 Buchstabensalat",
+                href: "/practices/word-scramble",
+                description: "Entwirre die Buchstaben, um Wörter zu bilden",
+            },
+            {
+                name: "📝 Vokabelquiz",
+                href: "/practices/vocabulary-quiz",
+                description: "Mach ein Quiz, um dein Vokabelwissen zu testen",
+            },
+            {
+                name: "🔗 Wortpaare",
+                href: "/practices/word-matching",
+                description: "Ordne die Wörter ihren richtigen Bedeutungen zu",
+            },
+            {
+                name: "🃏 Gedächtnisspiel",
+                href: "/practices/memory-card",
+                description:
+                    "Teste dein Gedächtnis mit einem Vokabelkarten-Spiel",
+            },
+        ],
     },
     {
-        name: "🔗 Word Matching",
-        href: "/practices/word-matching",
-        description: "Match words with their correct meanings",
+        code: "it", // Italian
+        list: [
+            {
+                name: "📚 Quiz con Flashcard",
+                href: "/practices/flashcard-quiz",
+                description:
+                    "Metti alla prova il tuo vocabolario con flashcard",
+            },
+            {
+                name: "🧩 Cruciverba",
+                href: "/practices/crossword-puzzles",
+                description: "Risolvi cruciverba con il tuo vocabolario",
+            },
+            {
+                name: "🔡 Parole Mischiate",
+                href: "/practices/word-scramble",
+                description: "Riorganizza le lettere per formare parole",
+            },
+            {
+                name: "📝 Quiz di Vocabolario",
+                href: "/practices/vocabulary-quiz",
+                description:
+                    "Fai un quiz per mettere alla prova il tuo vocabolario",
+            },
+            {
+                name: "🔗 Abbinamento di Parole",
+                href: "/practices/word-matching",
+                description: "Abbina le parole con i loro significati corretti",
+            },
+            {
+                name: "🃏 Gioco di Memoria",
+                href: "/practices/memory-card",
+                description:
+                    "Metti alla prova la tua memoria con un gioco di carte di vocabolario",
+            },
+        ],
     },
     {
-        name: "🃏 Memory Card",
-        href: "/practices/memory-card",
-        description: "Test your memory with a vocabulary card game",
+        code: "pt", // Portuguese
+        list: [
+            {
+                name: "📚 Quiz de Flashcards",
+                href: "/practices/flashcard-quiz",
+                description:
+                    "Teste seu conhecimento de vocabulário com flashcards",
+            },
+            {
+                name: "🧩 Palavras Cruzadas",
+                href: "/practices/crossword-puzzles",
+                description: "Resolva palavras cruzadas com seu vocabulário",
+            },
+            {
+                name: "🔡 Jogo de Letras Embaralhadas",
+                href: "/practices/word-scramble",
+                description: "Desembaralhe as letras para formar palavras",
+            },
+            {
+                name: "📝 Quiz de Vocabulário",
+                href: "/practices/vocabulary-quiz",
+                description:
+                    "Faça um quiz para testar suas habilidades de vocabulário",
+            },
+            {
+                name: "🔗 Correspondência de Palavras",
+                href: "/practices/word-matching",
+                description:
+                    "Combine as palavras com seus significados corretos",
+            },
+            {
+                name: "🃏 Jogo da Memória",
+                href: "/practices/memory-card",
+                description:
+                    "Teste sua memória com um jogo de cartas de vocabulário",
+            },
+        ],
     },
 ];
 

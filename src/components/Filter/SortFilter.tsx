@@ -5,6 +5,7 @@ import {
 import { useLanguage } from "../../LanguageContext";
 import { filterSortingOptions } from "../../utils/constants";
 import { sortCollectionsByFilter, sortWordsByFilter } from "../../utils/helper";
+import "../../styles/SearchBar.css";
 
 export const SortFilter: React.FC<SortFilterProps> = ({
     filterSorting,
@@ -22,7 +23,7 @@ export const SortFilter: React.FC<SortFilterProps> = ({
             const sortedWords = sortWordsByFilter(displayWords, filter.value);
             setFilteredWords(sortedWords);
         }
-        
+
         if (displayCollections && setFilteredCollections && setFilterSorting) {
             setFilterSorting(filter);
             const sortedCollections = sortCollectionsByFilter(displayCollections, filter.value);
@@ -35,38 +36,35 @@ export const SortFilter: React.FC<SortFilterProps> = ({
     );
 
     return (
-        <>
+        <div className="dropdown">
             <button
-                className="btn"
+                className="filter-button"
                 type="button"
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
-                style={{
-                    border: "1px solid #ced4da",
-                    borderTopRightRadius: "0.25rem",
-                    borderBottomRightRadius: "0.25rem",
-                    marginRight: "8px",
-                }}
             >
                 {filterSorting
                     ? filterSorting.label
-                    : translations["searchBar.sortBy"]}{" "}
-                &#8645;
+                    : translations["searchBar.sortBy"]}
+                <i className="fas fa-sort filter-icon"></i>
             </button>
-            <ul className="dropdown-menu">
+            <ul className="dropdown-menu filter-dropdown-menu">
                 {selectedFilterSortingOptions &&
                     selectedFilterSortingOptions["list"].map(
                         (filter, index) => (
                             <li
                                 key={index}
                                 onClick={() => handleFilter(filter)}
-                                style={{ cursor: "default" }}
                             >
-                                <a className="dropdown-item">{filter.label}</a>
+                                <a
+                                    className={`dropdown-item ${filterSorting?.value === filter.value ? 'active' : ''}`}
+                                >
+                                    {filter.label}
+                                </a>
                             </li>
                         )
                     )}
             </ul>
-        </>
+        </div>
     );
 };

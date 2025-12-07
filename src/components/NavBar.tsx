@@ -1,8 +1,9 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { NavBarProps } from "../interfaces/mainProps";
 import { useLanguage } from "../LanguageContext";
 import { getActiveLanguages } from "../services/CollectionService";
 import { reorderActiveLanguages } from "../utils/helper";
+import "../styles/NavBar.css";
 
 export const NavBar: React.FC<NavBarProps> = ({
     db,
@@ -11,6 +12,7 @@ export const NavBar: React.FC<NavBarProps> = ({
 }) => {
     const { translations } = useLanguage();
     const { activeLanguages, setActiveLanguages } = useLanguage();
+    const [scrolled, setScrolled] = useState(false);
 
     useEffect(() => {
         const fetchLanguages = async () => {
@@ -26,14 +28,22 @@ export const NavBar: React.FC<NavBarProps> = ({
         fetchLanguages();
     }, [translations["language"]]);
 
+    useEffect(() => {
+        const handleScroll = () => {
+            setScrolled(window.scrollY > 20);
+        };
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
+
     return (
-        <nav className="navbar navbar-expand-lg navbar-light bg-light">
+        <nav className={`navbar navbar-expand-lg ${scrolled ? 'scrolled' : ''}`}>
             <div className="container">
                 <a className="navbar-brand d-flex align-items-center" href="/">
                     <div>
                         <strong>
                             Voc
-                            <span style={{ color: "#DD5746" }}>ability</span>
+                            <span className="brand-highlight">ability</span>
                         </strong>
                     </div>
                 </a>
@@ -74,7 +84,7 @@ export const NavBar: React.FC<NavBarProps> = ({
                                             <h6 className="dropdown-header">
                                                 {
                                                     translations[
-                                                        "navbar.collections.allCollections"
+                                                    "navbar.collections.allCollections"
                                                     ]
                                                 }
                                             </h6>
@@ -83,10 +93,11 @@ export const NavBar: React.FC<NavBarProps> = ({
                                     {collections.map((collection, index) => (
                                         <li key={index}>
                                             <a
-                                                className="dropdown-item d-flex"
+                                                className="dropdown-item d-flex align-items-center"
                                                 href={`/${translations["language"]}/collection/${collection.id}`}
                                             >
                                                 <div
+                                                    className="collection-icon"
                                                     style={{
                                                         color: collection.color,
                                                     }}
@@ -104,20 +115,21 @@ export const NavBar: React.FC<NavBarProps> = ({
                                     </li>
                                     <li>
                                         <a
-                                            className="dropdown-item d-flex"
+                                            className="dropdown-item d-flex align-items-center"
                                             href={`/${translations["language"]}/favorite`}
                                         >
                                             <div
+                                                className="collection-icon"
                                                 style={{
                                                     color: "#FFC000",
                                                 }}
                                             >
-                                                <i className="fas fa-layer-group"></i>
+                                                <i className="fas fa-star"></i>
                                             </div>
                                             <span className="ms-2">
                                                 {
                                                     translations[
-                                                        "navbar.collections.favorite"
+                                                    "navbar.collections.favorite"
                                                     ]
                                                 }
                                             </span>
@@ -146,11 +158,8 @@ export const NavBar: React.FC<NavBarProps> = ({
 
                             <li className="nav-item mx-2">
                                 <a
-                                    className="nav-link active"
+                                    className="nav-link active glossary-link"
                                     href={`/${translations["language"]}/glossary`}
-                                    style={{
-                                        color: "#DD5746",
-                                    }}
                                 >
                                     {translations["navbar.glossary"]}
                                 </a>
@@ -158,30 +167,24 @@ export const NavBar: React.FC<NavBarProps> = ({
 
                             {languageCode && (
                                 <li
-                                    className={`nav-item mx-2 ${
-                                        activeLanguages.length > 0
-                                            ? "dropdown"
-                                            : ""
-                                    }`}
+                                    className={`nav-item mx-2 ${activeLanguages.length > 0
+                                        ? "dropdown"
+                                        : ""
+                                        }`}
                                     style={{ cursor: "pointer" }}
                                 >
                                     <a
-                                        className="nav-link active"
+                                        className="nav-link active language-selector"
                                         data-bs-toggle="dropdown"
                                         aria-expanded="false"
                                     >
                                         <span
-                                            className={`fi fi-${languageCode}`}
-                                            style={{
-                                                borderRadius: "2px",
-                                            }}
+                                            className={`fi fi-${languageCode} language-flag`}
                                         ></span>
-                                        <span className="ms-2 text-muted">
-                                            <small>
-                                                {languageCode !== "us"
-                                                    ? languageCode
-                                                    : "en"}
-                                            </small>
+                                        <span className="language-code">
+                                            {languageCode !== "us"
+                                                ? languageCode
+                                                : "en"}
                                         </span>
                                     </a>
                                     {activeLanguages &&
@@ -191,14 +194,13 @@ export const NavBar: React.FC<NavBarProps> = ({
                                                     (language: any) => (
                                                         <li key={language.id}>
                                                             <a
-                                                                className={`dropdown-item d-flex ${
-                                                                    language.code ===
+                                                                className={`dropdown-item d-flex ${language.code ===
                                                                     translations[
-                                                                        "language"
+                                                                    "language"
                                                                     ]
-                                                                        ? "active"
-                                                                        : ""
-                                                                }`}
+                                                                    ? "active"
+                                                                    : ""
+                                                                    }`}
                                                                 href={`/${language.code}/collections`}
                                                             >
                                                                 <div>
@@ -230,7 +232,7 @@ export const NavBar: React.FC<NavBarProps> = ({
                         className="collapse navbar-collapse justify-content-end"
                         id="navbar-toggle"
                     >
-                        <div className="text-center mx-4">
+                        <div className="navbar-greeting">
                             Hi, what's good! 👋
                         </div>
                     </div>

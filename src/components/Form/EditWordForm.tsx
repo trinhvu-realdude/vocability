@@ -9,6 +9,7 @@ import {
 import { useLanguage } from "../../LanguageContext";
 import { Definition } from "../../interfaces/model";
 import { validateInputs } from "../../utils/helper";
+import "../../styles/AddWordModal.css";
 
 export const EditWordForm: React.FC<WordFormProps> = ({
     db,
@@ -111,30 +112,27 @@ export const EditWordForm: React.FC<WordFormProps> = ({
     };
 
     return (
-        <div className="card" style={{ borderColor: collection?.color }}>
+        <div className="card word-modal-content" style={{ borderColor: collection?.color }}>
             <div
-                className="card-header d-flex justify-content-between align-items-center"
+                className="word-modal-header"
                 style={{
                     backgroundColor: collection?.color,
-                    color: "#fff",
                 }}
             >
-                {translations["editForm.editWord"]}
-                <div>
-                    <div
-                        className="btn btn-sm"
-                        style={{
-                            border: "none",
-                            color: "#fff",
-                        }}
-                        onClick={() => setIsEditOrDelete(false)}
-                    >
-                        <i className="fas fa-times"></i>
-                    </div>
-                </div>
+                <h5 className="word-modal-title">
+                    <i className="fas fa-edit me-2"></i>
+                    {translations["editForm.editWord"]}
+                </h5>
+                <button
+                    type="button"
+                    className="btn btn-sm word-modal-close"
+                    onClick={() => setIsEditOrDelete(false)}
+                >
+                    <i className="fas fa-times"></i>
+                </button>
             </div>
 
-            <div className="card-body">
+            <div className="word-modal-body">
                 <div className="mb-2">
                     <div className="row g-2">
                         <div className="col">
@@ -248,38 +246,43 @@ export const EditWordForm: React.FC<WordFormProps> = ({
                         ))}
                 </div>
 
-                <div className="d-flex justify-content-center align-items-center input-group">
+                <div className="definition-controls">
                     <button
                         type="button"
-                        className="btn btn-outline-secondary"
+                        className="btn btn-definition-add"
                         onClick={handleAddDefinitionRow}
+                        title="Add definition"
                     >
-                        <b>+</b>
+                        <i className="fas fa-plus"></i>
                     </button>
                     <button
                         type="button"
-                        className="btn btn-outline-secondary"
+                        className="btn btn-definition-remove"
                         onClick={handleRemoveDefinitionRow}
+                        disabled={definitions.length <= 1}
+                        title="Remove definition"
                     >
-                        <b>-</b>
+                        <i className="fas fa-minus"></i>
                     </button>
                 </div>
             </div>
 
-            <div className="modal-footer">
+            <div className="word-modal-footer">
                 <button
                     type="button"
                     className="btn btn-outline-secondary"
                     ref={closeBtnRef}
                     onClick={() => setIsEditOrDelete(false)}
                 >
+                    <i className="fas fa-times me-1"></i>
                     {translations["cancelBtn"]}
                 </button>
                 <button
                     type="button"
-                    className="btn btn-outline-success"
+                    className="btn btn-success"
                     onClick={handleEditWord}
                 >
+                    <i className="fas fa-save me-1"></i>
                     {translations["editBtn"]}
                 </button>
             </div>
