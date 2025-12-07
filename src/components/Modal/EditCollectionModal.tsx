@@ -58,21 +58,20 @@ export const EditCollectionModal: React.FC<CollectionModalProps> = ({
             aria-hidden="true"
         >
             <div className="modal-dialog modal-dialog-centered">
-                <div className="modal-content folder-modal-content">
-                    {/* Folder Tab Header */}
+                <div className="modal-content word-modal-content">
                     <div
-                        className="folder-modal-tab"
+                        className="word-modal-header"
                         style={{
                             backgroundColor: color !== "" ? color : collection.color,
                         }}
                     >
-                        <h5 className="folder-modal-title">
+                        <h5 className="word-modal-title">
                             <i className="fas fa-folder-open me-2"></i>
                             {translations["editForm.editCollection"]}
                         </h5>
                         <button
                             type="button"
-                            className="btn btn-sm folder-modal-close"
+                            className="btn btn-sm word-modal-close"
                             data-bs-dismiss="modal"
                             aria-label="Close"
                         >
@@ -80,47 +79,40 @@ export const EditCollectionModal: React.FC<CollectionModalProps> = ({
                         </button>
                     </div>
 
-                    {/* Folder Modal Body */}
-                    <div className="folder-modal-body">
-                        {/* Folder Icon Preview */}
-                        <div className="folder-preview-large">
+                    <div className="word-modal-body">
+                        <div className="text-center mb-3">
                             <i
                                 className="fas fa-folder"
-                                style={{ color: color !== "" ? color : collection.color }}
+                                style={{
+                                    color: color !== "" ? color : collection.color,
+                                    fontSize: "4rem"
+                                }}
                             ></i>
                         </div>
 
-                        {/* Form Inputs */}
-                        <div className="folder-form-inputs">
-                            <div className="input-group mb-3">
-                                <span className="input-group-text">
-                                    <i className="fas fa-palette"></i>
-                                </span>
-                                <input
-                                    type="color"
-                                    className="form-control form-control-color"
-                                    id="color-input"
-                                    value={color !== "" ? color : collection.color}
-                                    title="Choose your color"
-                                    onChange={(event) =>
-                                        setColor(event.target.value)
-                                    }
-                                />
-                                <input
-                                    type="text"
-                                    className="form-control"
-                                    defaultValue={collection.name}
-                                    placeholder={translations["name"]}
-                                    onChange={(event) =>
-                                        setRenameValue(event.target.value)
-                                    }
-                                />
-                            </div>
+                        <div className="input-group mb-3">
+                            <span className="input-group-text">
+                                <i className="fas fa-palette"></i>
+                            </span>
+                            <input
+                                type="color"
+                                className="form-control form-control-color"
+                                id="color-input"
+                                value={color !== "" ? color : collection.color}
+                                title="Choose your color"
+                                onChange={(event) => setColor(event.target.value)}
+                            />
+                            <input
+                                type="text"
+                                className="form-control"
+                                defaultValue={collection.name}
+                                placeholder={translations["name"]}
+                                onChange={(event) => setRenameValue(event.target.value)}
+                            />
                         </div>
                     </div>
 
-                    {/* Folder Modal Footer */}
-                    <div className="folder-modal-footer">
+                    <div className="word-modal-footer">
                         <button
                             type="button"
                             className="btn btn-outline-secondary"
