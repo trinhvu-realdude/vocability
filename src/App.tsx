@@ -11,6 +11,8 @@ import RootLayout from "./layouts/RootLayout";
 import { LanguageProvider } from "./LanguageContext";
 import { ButtonOnTop } from "./components/ButtonOnTop";
 
+import { AddWordModal } from "./components/Modal/AddWordModal";
+
 function App() {
     const [db, setDb] = useState<IDBPDatabase<MyDB>>();
     const [collections, setCollections] = useState<Collection[]>([]);
@@ -19,6 +21,7 @@ function App() {
     const [selectedWord, setSelectedWord] = useState<Word | undefined>(
         undefined
     );
+    const [quickAddWord, setQuickAddWord] = useState<string>("");
 
     useEffect(() => {
         const initializeDB = async () => {
@@ -28,6 +31,10 @@ function App() {
         };
         initializeDB();
     }, []);
+
+    const handleQuickAddWord = (word: string) => {
+        setQuickAddWord(word);
+    };
 
     return (
         <LanguageProvider
@@ -44,6 +51,17 @@ function App() {
                         db={db}
                         collections={collections}
                         languageCode={languageCode}
+                        onQuickAddWord={handleQuickAddWord}
+                    />
+
+                    {/* Global Add Word Modal for Quick Search */}
+                    <AddWordModal
+                        db={db}
+                        collections={collections}
+                        setCollections={setCollections}
+                        setWords={() => { }} // No-op, effectively global
+                        modalId="global-add-word"
+                        initialWord={quickAddWord}
                     />
 
                     {db && (
@@ -55,7 +73,7 @@ function App() {
                                     <MainLayout
                                         db={db}
                                         collections={collections}
-                                        setWords={(): void => {}}
+                                        setWords={(): void => { }}
                                         setCollections={setCollections}
                                         setLanguageCode={setLanguageCode}
                                     />

@@ -4,11 +4,17 @@ import { useLanguage } from "../LanguageContext";
 import { getActiveLanguages } from "../services/CollectionService";
 import { reorderActiveLanguages } from "../utils/helper";
 import "../styles/NavBar.css";
+import { QuickSearchBar } from "./QuickSearchBar";
 
-export const NavBar: React.FC<NavBarProps> = ({
+interface ExtendedNavBarProps extends NavBarProps {
+    onQuickAddWord: (word: string) => void;
+}
+
+export const NavBar: React.FC<ExtendedNavBarProps> = ({
     db,
     collections,
     languageCode,
+    onQuickAddWord,
 }) => {
     const { translations } = useLanguage();
     const { activeLanguages, setActiveLanguages } = useLanguage();
@@ -47,6 +53,14 @@ export const NavBar: React.FC<NavBarProps> = ({
                         </strong>
                     </div>
                 </a>
+
+                {/* Search Bar on Mobile/Desktop */}
+                {db && languageCode && (
+                    <div className="d-none d-lg-block ms-4" style={{ width: "300px" }}>
+                        <QuickSearchBar db={db} onAddWord={onQuickAddWord} languageCode={languageCode} />
+                    </div>
+                )}
+
                 <button
                     className="navbar-toggler"
                     type="button"
