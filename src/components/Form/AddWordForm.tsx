@@ -18,6 +18,7 @@ import {
     getCollectionsByLanguageId,
 } from "../../services/CollectionService";
 import { useLanguage } from "../../LanguageContext";
+import { Definition } from "../../interfaces/model";
 
 export const AddWordForm: React.FC<CommonProps> = ({
     db,
@@ -27,8 +28,9 @@ export const AddWordForm: React.FC<CommonProps> = ({
     setWords,
 }) => {
     const [word, setWord] = useState<string>("");
-    const [definition, setDefinition] = useState<string>("");
-    const [notes, setNotes] = useState<string>("");
+    const [definitions, setDefinitions] = useState<Definition[]>([
+        { definition: "", notes: "" }, // default 1 set
+    ]);
     const [partOfSpeech, setPartOfSpeech] = useState<string>("");
     const [choice, setChoice] = useState<SingleValue<Object>>();
 
@@ -63,8 +65,9 @@ export const AddWordForm: React.FC<CommonProps> = ({
                 const objWord = {
                     word: word.toLowerCase().trim(),
                     phonetic: phonetic && phonetic,
-                    definition: definition.trim(),
-                    notes: notes.trim(),
+                    definitions: definitions,
+                    definition: "",
+                    notes: "",
                     partOfSpeech: partOfSpeech,
                     isFavorite: false,
                     createdAt: new Date(),
@@ -91,6 +94,7 @@ export const AddWordForm: React.FC<CommonProps> = ({
 
                 setWord("");
                 setPartOfSpeech("");
+                setDefinitions([{ definition: "", notes: "" }]);
                 setChoice(undefined);
 
                 if (
@@ -112,6 +116,28 @@ export const AddWordForm: React.FC<CommonProps> = ({
             console.log(error);
             alert(translations["alert.addWordFailed"]);
         }
+    };
+
+    const handleAddDefinitionRow = () => {
+        setDefinitions([...definitions, { definition: "", notes: "" }]);
+    };
+
+    const handleRemoveDefinitionRow = () => {
+        if (definitions.length > 1) {
+            setDefinitions(definitions.slice(0, -1)); // remove last row
+        }
+    };
+
+    const handleDefinitionChange = (index: number, value: string) => {
+        const updated = [...definitions];
+        updated[index].definition = value.trim();
+        setDefinitions(updated);
+    };
+
+    const handleNotesChange = (index: number, value: string) => {
+        const updated = [...definitions];
+        updated[index].notes = value.trim();
+        setDefinitions(updated);
     };
 
     return (
@@ -169,28 +195,60 @@ export const AddWordForm: React.FC<CommonProps> = ({
                             }}
                         />
                     </div>
-                    <div className="input-group col-12 mb-2">
-                        <span className="input-group-text">
-                            {translations["addWordForm.definition"]}
-                        </span>
-                        <input
-                            type="text"
-                            className="form-control"
-                            onChange={(event) =>
-                                setDefinition(event.target.value)
-                            }
-                        />
+                    {definitions.map((def, index) => (
+                        <div key={index}>
+                            <div className="input-group col-12 mb-2">
+                                <span className="input-group-text">
+                                    {translations["addWordForm.definition"]}
+                                </span>
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    value={def.definition}
+                                    onChange={(event) =>
+                                        handleDefinitionChange(
+                                            index,
+                                            event.target.value
+                                        )
+                                    }
+                                />
+                            </div>
+                            <div className="input-group col-12 mb-2">
+                                <span className="input-group-text">
+                                    {translations["addWordForm.notes"]}
+                                </span>
+                                <textarea
+                                    className="form-control"
+                                    value={def.notes}
+                                    onChange={(event) =>
+                                        handleNotesChange(
+                                            index,
+                                            event.target.value
+                                        )
+                                    }
+                                ></textarea>
+                            </div>
+                            {definitions.length > 1 &&
+                                index < definitions.length - 1 && <hr />}
+                        </div>
+                    ))}
+                    <div className="d-flex justify-content-center align-items-center input-group">
+                        <button
+                            type="button"
+                            className="btn btn-outline-secondary mb-2"
+                            onClick={handleAddDefinitionRow}
+                        >
+                            <b>+</b>
+                        </button>
+                        <button
+                            type="button"
+                            className="btn btn-outline-secondary mb-2"
+                            onClick={handleRemoveDefinitionRow}
+                        >
+                            <b>-</b>
+                        </button>
                     </div>
-                    <div className="input-group col-12 mb-2">
-                        <span className="input-group-text">
-                            {translations["addWordForm.notes"]}
-                        </span>
-                        <textarea
-                            className="form-control"
-                            onChange={(event) => setNotes(event.target.value)}
-                        ></textarea>
-                    </div>
-                    <div className="d-flex input-group col-12">
+                    <div className="d-flex justify-content-center align-items-center input-group">
                         <button
                             className="btn btn-outline-success"
                             onClick={handleAddWord}

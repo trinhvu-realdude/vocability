@@ -50,7 +50,7 @@ export const WordPage: React.FC<WordPageProps> = ({
                 );
                 setWords(objWord);
                 setVoicesByLanguage(
-                    await getVoicesByLanguage(translations["language"])
+                    await getVoicesByLanguage(translations["languageVoice"])
                 );
             }
         };
@@ -104,15 +104,14 @@ export const WordPage: React.FC<WordPageProps> = ({
                 }
             />
 
-            {words.length > 0 && (
-                <SearchBar
-                    isFavorite={false}
-                    words={words}
-                    filterSorting={filterSorting}
-                    setFilterSorting={setFilterSorting}
-                    setFilteredWords={setFilteredWords}
-                />
-            )}
+            <SearchBar
+                isFavorite={false}
+                type="word"
+                words={words}
+                filterSorting={filterSorting}
+                setFilterSorting={setFilterSorting}
+                setFilteredWords={setFilteredWords}
+            />
 
             <div className="list-group mt-4">
                 {filteredWords &&

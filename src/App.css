@@ -40,15 +40,17 @@ a.word-link:hover {
 }
 
 #card-practice {
-    height: 180px; /* Set a fixed height for the card */
+    height: 180px;
+    /* Set a fixed height for the card */
 }
 
 .description {
-    font-size: 0.9rem;
+    font-size: 0.875rem;
     margin-top: 10px;
     white-space: nowrap;
     overflow: hidden;
-    text-overflow: ellipsis; /* Truncate long descriptions */
+    text-overflow: ellipsis;
+    /* Truncate long descriptions */
 }
 
 .card-header {
@@ -115,7 +117,7 @@ a.word-link:hover {
     position: fixed;
     bottom: 20%;
     right: 40px;
-    background-color: #999;
+    background-color: #000;
     width: 35px;
     height: 35px;
     border: 0;
@@ -125,7 +127,7 @@ a.word-link:hover {
 }
 
 .gototop:hover {
-    background-color: #ffc000;
+    background-color: rgb(221, 87, 70);
 }
 
 .word-list-btn {
@@ -147,9 +149,11 @@ a.word-link:hover {
     0% {
         transform: scale(1);
     }
+
     50% {
         transform: scale(1.2);
     }
+
     100% {
         transform: scale(1);
     }
@@ -167,17 +171,24 @@ a.word-link:hover {
     background-size: calc(100% / 3) 100%;
     animation: l7 1s infinite linear;
 }
+
 @keyframes l7 {
     33% {
         background-size: calc(100% / 3) 0%, calc(100% / 3) 100%,
             calc(100% / 3) 100%;
     }
+
     50% {
         background-size: calc(100% / 3) 100%, calc(100% / 3) 0%,
             calc(100% / 3) 100%;
     }
+
     66% {
         background-size: calc(100% / 3) 100%, calc(100% / 3) 100%,
             calc(100% / 3) 0%;
     }
+}
+
+.list-group {
+    border-radius: 10px;
 }

@@ -1,5 +1,6 @@
 import { CollectionFilterProps } from "../../interfaces/mainProps";
 import { useLanguage } from "../../LanguageContext";
+import "../../styles/SearchBar.css";
 
 export const CollectionFilter: React.FC<CollectionFilterProps> = ({
     selectedCollection,
@@ -9,32 +10,37 @@ export const CollectionFilter: React.FC<CollectionFilterProps> = ({
     const { translations } = useLanguage();
 
     return (
-        <>
+        <div className="dropdown">
             <button
-                className="btn"
+                className="filter-button"
                 type="button"
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
-                style={{
-                    border: "1px solid #ced4da",
-                    borderTopRightRadius: "0.25rem",
-                    borderBottomRightRadius: "0.25rem",
-                }}
             >
                 {selectedCollection ? (
-                    <span style={{ color: selectedCollection.color }}>
-                        <strong>{selectedCollection.name}</strong>
+                    <span
+                        className="collection-filter-badge"
+                        style={{
+                            background: `${selectedCollection.color}20`,
+                            color: selectedCollection.color
+                        }}
+                    >
+                        <i className="fas fa-layer-group"></i>
+                        {selectedCollection.name}
                     </span>
                 ) : (
-                    translations["searchBar.allCollections"]
+                    <>
+                        <i className="fas fa-filter"></i>
+                        {translations["searchBar.allCollections"]}
+                    </>
                 )}
             </button>
-            <ul className="dropdown-menu">
+            <ul className="dropdown-menu filter-dropdown-menu">
                 <li
-                    style={{ cursor: "default" }}
                     onClick={() => handleFilter && handleFilter(null)}
                 >
-                    <a className="dropdown-item">
+                    <a className={`dropdown-item ${!selectedCollection ? 'active' : ''}`}>
+                        <i className="fas fa-th-large" style={{ marginRight: '0.5rem', color: '#6c757d' }}></i>
                         {translations["searchBar.allCollections"]}
                     </a>
                 </li>
@@ -43,17 +49,21 @@ export const CollectionFilter: React.FC<CollectionFilterProps> = ({
                     collections.map((collection, index) => (
                         <li
                             key={index}
-                            style={{ cursor: "default" }}
                             onClick={() => handleFilter(collection)}
                         >
-                            <a className="dropdown-item d-flex">
-                                <span style={{ color: collection.color }}>
-                                    <strong>{collection.name}</strong>
-                                </span>
+                            <a className={`dropdown-item ${selectedCollection?.id === collection.id ? 'active' : ''}`}>
+                                <i
+                                    className="fas fa-layer-group"
+                                    style={{
+                                        marginRight: '0.5rem',
+                                        color: collection.color
+                                    }}
+                                ></i>
+                                {collection.name}
                             </a>
                         </li>
                     ))}
             </ul>
-        </>
+        </div>
     );
 };

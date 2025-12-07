@@ -68,6 +68,8 @@ function App() {
                                     <PracticeLayout
                                         db={db}
                                         collections={collections}
+                                        setCollections={setCollections}
+                                        setLanguageCode={setLanguageCode}
                                     />
                                 }
                             />

@@ -10,6 +10,7 @@ import { PageHeader } from "../components/PageHeader";
 import { APP_NAME, languages } from "../utils/constants";
 import { useParams } from "react-router-dom";
 import { useLanguage } from "../LanguageContext";
+import { TextToSpeechButton } from "../components/TextToSpeechButton";
 
 export const FavoritePage: React.FC<CommonProps> = ({ db }) => {
     const { translations } = useLanguage();
@@ -50,8 +51,8 @@ export const FavoritePage: React.FC<CommonProps> = ({ db }) => {
         setSelectedCollection(collection || undefined);
         const filtered = collection
             ? favoriteWords.filter(
-                  (word) => word.collection.name === collection.name
-              )
+                (word) => word.collection.name === collection.name
+            )
             : favoriteWords;
         setFilteredWords(filtered);
         setDisplayWords(filtered);
@@ -109,6 +110,7 @@ export const FavoritePage: React.FC<CommonProps> = ({ db }) => {
             {collections.length > 0 && (
                 <SearchBar
                     isFavorite={true}
+                    type="word"
                     filteredWords={filteredWords}
                     collections={collections}
                     selectedCollection={selectedCollection}
@@ -121,7 +123,7 @@ export const FavoritePage: React.FC<CommonProps> = ({ db }) => {
                 {displayWords &&
                     displayWords.length > 0 &&
                     displayWords.map((word) => (
-                        <div className="list-group-item" key={word.id}>
+                        <div className="list-group-item word-card-hover p-4" key={word.id}>
                             <div className="d-flex w-100 justify-content-between mb-2">
                                 <div className="row">
                                     <h5 className="mb-1">
@@ -132,6 +134,7 @@ export const FavoritePage: React.FC<CommonProps> = ({ db }) => {
                                         >
                                             {word.phonetic}
                                         </small>{" "}
+                                        <TextToSpeechButton word={word.word} />
                                     </h5>
                                     <small>
                                         <i>{word.partOfSpeech}</i>
@@ -148,7 +151,23 @@ export const FavoritePage: React.FC<CommonProps> = ({ db }) => {
                                     </div>
                                 </div>
                             </div>
-                            <p className="mb-1">{word.definition}</p>
+
+                            <ul className="list-group list-group-flush">
+                                {/* Multiple definitions view */}
+                                {word.definitions &&
+                                    word.definitions.map(
+                                        (definition, index) => (
+                                            <li
+                                                className="list-group-item"
+                                                key={index}
+                                            >
+                                                <p className="mb-2">
+                                                    {definition.definition.trim()}
+                                                </p>
+                                            </li>
+                                        )
+                                    )}
+                            </ul>
                             <a
                                 href={`/${translations["language"]}/collection/${word.collection.id}`}
                             >

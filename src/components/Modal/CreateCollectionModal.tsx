@@ -13,6 +13,7 @@ import {
 } from "../../services/CollectionService";
 import { languages } from "../../utils/constants";
 import { useLanguage } from "../../LanguageContext";
+import "../../styles/AddWordModal.css";
 
 export const CreateCollectionModal: React.FC<{
     db: IDBPDatabase<MyDB> | undefined;
@@ -72,30 +73,43 @@ export const CreateCollectionModal: React.FC<{
             aria-labelledby="#add-collection"
             aria-hidden="true"
         >
-            <div className="modal-dialog modal-sm">
-                <div className="modal-content">
+            <div className="modal-dialog modal-dialog-centered">
+                <div className="modal-content word-modal-content">
                     <div
-                        className="modal-header"
+                        className="word-modal-header"
                         style={{
                             backgroundColor: color !== "" ? color : randomColor,
-                            color: "#fff",
                         }}
                     >
-                        <h5 className="modal-title" id="add-collection">
+                        <h5 className="word-modal-title">
+                            <i className="fas fa-folder-plus me-2"></i>
                             {translations["createForm.createCollection"]}
                         </h5>
                         <button
                             type="button"
-                            className="btn btn-sm"
+                            className="btn btn-sm word-modal-close"
                             data-bs-dismiss="modal"
                             aria-label="Close"
-                            style={{ border: "none", color: "#fff" }}
                         >
                             <i className="fas fa-times"></i>
                         </button>
                     </div>
-                    <div className="modal-body text-center">
-                        <div className="input-group mb-2">
+
+                    <div className="word-modal-body">
+                        <div className="text-center mb-3">
+                            <i
+                                className="fas fa-folder"
+                                style={{
+                                    color: color !== "" ? color : randomColor,
+                                    fontSize: "4rem"
+                                }}
+                            ></i>
+                        </div>
+
+                        <div className="input-group mb-3">
+                            <span className="input-group-text">
+                                <i className="fas fa-palette"></i>
+                            </span>
                             <input
                                 type="color"
                                 className="form-control form-control-color"
@@ -117,21 +131,23 @@ export const CreateCollectionModal: React.FC<{
                             />
                         </div>
                     </div>
-                    <div className="modal-footer">
+
+                    <div className="word-modal-footer">
                         <button
                             type="button"
                             className="btn btn-outline-secondary"
                             data-bs-dismiss="modal"
-                            // onClick={reset}
                         >
+                            <i className="fas fa-times me-1"></i>
                             {translations["cancelBtn"]}
                         </button>
                         <button
                             type="button"
-                            className="btn btn-outline-success"
+                            className="btn btn-success"
                             onClick={handleAddCollection}
                             data-bs-dismiss="modal"
                         >
+                            <i className="fas fa-plus me-1"></i>
                             {translations["createBtn"]}
                         </button>
                     </div>

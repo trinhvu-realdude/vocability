@@ -24,14 +24,26 @@ export const exportToPdf = async (words: Word[]) => {
     doc.setFontSize(18);
 
     // Define the table columns
-    const tableColumn = ["Word", "Definition", "Notes"];
+    const tableColumn = ["Word", "Definitions", "Notes"];
 
     // Map words to table rows
-    const tableRows = words.map((word) => [
-        word.word,
-        `(${word.partOfSpeech}): ${word.definition}`,
-        word.notes || "", // Notes may be empty
-    ]);
+    const tableRows = words.map((word) => {
+        // Format definitions and notes
+        const formattedDefinitions = word.definitions
+            .map((def, index) => `${index + 1}. (${word.partOfSpeech}) ${def.definition}`)
+            .join("\n");
+
+        const formattedNotes = word.definitions
+            .map((def, index) => def.notes ? `${index + 1}. ${def.notes}` : "")
+            .filter(note => note !== "")
+            .join("\n");
+
+        return [
+            word.word,
+            formattedDefinitions,
+            formattedNotes
+        ];
+    });
 
     // Add the table to the PDF
     doc.autoTable({
@@ -72,7 +84,7 @@ export const exportToDocx = async (words: Word[]) => {
                 children: [
                     new Paragraph({
                         children: [
-                            new TextRun({ text: "Definition", bold: true }),
+                            new TextRun({ text: "Definitions", bold: true }),
                         ],
                     }),
                 ],
@@ -98,22 +110,35 @@ export const exportToDocx = async (words: Word[]) => {
                         children: [new Paragraph(word.word)],
                     }),
                     new TableCell({
-                        children: [
+                        children: word.definitions.map((def, index) =>
                             new Paragraph({
                                 children: [
                                     new TextRun({
-                                        text: `(${word.partOfSpeech}): `,
-                                        italics: true, // Optional: makes the partOfSpeech bold
+                                        text: `${index + 1}. (${word.partOfSpeech}): `,
+                                        italics: true,
+                                        bold: true
                                     }),
                                     new TextRun({
-                                        text: word.definition,
+                                        text: def.definition,
                                     }),
                                 ],
-                            }),
-                        ],
+                                spacing: { after: 100 } // Add some space between definitions
+                            })
+                        ),
                     }),
                     new TableCell({
-                        children: [new Paragraph(word.notes)],
+                        children: word.definitions
+                            .filter(def => def.notes && def.notes.trim() !== "")
+                            .map((def, index) =>
+                                new Paragraph({
+                                    children: [
+                                        new TextRun({
+                                            text: `${index + 1}. ${def.notes}`,
+                                        }),
+                                    ],
+                                    spacing: { after: 100 }
+                                })
+                            ),
                     }),
                 ],
             })

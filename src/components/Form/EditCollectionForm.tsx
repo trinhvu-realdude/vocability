@@ -8,6 +8,7 @@ import {
 import { languages } from "../../utils/constants";
 import { useLanguage } from "../../LanguageContext";
 import { getCurrentLanguageId } from "../../utils/helper";
+import "../../styles/AddWordModal.css";
 
 export const EditCollectionForm: React.FC<CollectionFormProps> = ({
     db,
@@ -58,31 +59,41 @@ export const EditCollectionForm: React.FC<CollectionFormProps> = ({
     };
 
     return (
-        <div className="card" style={{ borderColor: collection.color }}>
+        <div className="card word-modal-content" style={{ borderColor: color !== "" ? color : collection.color }}>
             <div
-                className="card-header d-flex justify-content-between align-items-center"
+                className="word-modal-header"
                 style={{
                     backgroundColor: color !== "" ? color : collection.color,
-                    color: "#fff",
                 }}
             >
-                {translations["editForm.editCollection"]}
-                <div>
-                    <div
-                        className="btn btn-sm"
-                        style={{
-                            border: "none",
-                            color: "#fff",
-                        }}
-                        onClick={() => setIsEditOrDelete(false)}
-                    >
-                        <i className="fas fa-times"></i>
-                    </div>
-                </div>
+                <h5 className="word-modal-title">
+                    <i className="fas fa-folder-open me-2"></i>
+                    {translations["editForm.editCollection"]}
+                </h5>
+                <button
+                    type="button"
+                    className="btn btn-sm word-modal-close"
+                    onClick={() => setIsEditOrDelete(false)}
+                >
+                    <i className="fas fa-times"></i>
+                </button>
             </div>
 
-            <div className="card-body">
-                <div className="input-group mb-2">
+            <div className="word-modal-body">
+                <div className="text-center mb-3">
+                    <i
+                        className="fas fa-folder"
+                        style={{
+                            color: color !== "" ? color : collection.color,
+                            fontSize: "4rem"
+                        }}
+                    ></i>
+                </div>
+
+                <div className="input-group mb-3">
+                    <span className="input-group-text">
+                        <i className="fas fa-palette"></i>
+                    </span>
                     <input
                         type="color"
                         className="form-control form-control-color"
@@ -95,24 +106,27 @@ export const EditCollectionForm: React.FC<CollectionFormProps> = ({
                         type="text"
                         className="form-control"
                         defaultValue={collection.name}
+                        placeholder={translations["name"]}
                         onChange={(event) => setRenameValue(event.target.value)}
                     />
                 </div>
             </div>
 
-            <div className="modal-footer">
+            <div className="word-modal-footer">
                 <button
                     type="button"
                     className="btn btn-outline-secondary"
                     onClick={() => setIsEditOrDelete(false)}
                 >
+                    <i className="fas fa-times me-1"></i>
                     {translations["cancelBtn"]}
                 </button>
                 <button
                     type="button"
-                    className="btn btn-outline-success"
+                    className="btn btn-success"
                     onClick={handleEditCollection}
                 >
+                    <i className="fas fa-save me-1"></i>
                     {translations["editBtn"]}
                 </button>
             </div>

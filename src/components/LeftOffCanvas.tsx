@@ -1,10 +1,10 @@
 import { useEffect } from "react";
 import { Collection, MyDB, Word } from "../interfaces/model";
 import { useLanguage } from "../LanguageContext";
-import { handleTextToSpeech } from "../utils/helper";
 import { IDBPDatabase } from "idb";
 import { useParams } from "react-router-dom";
 import { getWordsByCollectionId } from "../services/WordService";
+import { TextToSpeechButton } from "./TextToSpeechButton";
 
 export const LeftOffCanvas: React.FC<{
     db: IDBPDatabase<MyDB>;
@@ -12,7 +12,7 @@ export const LeftOffCanvas: React.FC<{
     words: Word[];
     setWords: React.Dispatch<React.SetStateAction<Word[]>>;
 }> = ({ db, collection, words, setWords }) => {
-    const { translations, setSelectedWord } = useLanguage();
+    const { setSelectedWord } = useLanguage();
 
     const { collectionId } = useParams();
 
@@ -36,9 +36,9 @@ export const LeftOffCanvas: React.FC<{
             id="offcanvasWithBackdrop"
             aria-labelledby="offcanvasWithBackdropLabel"
         >
-            <div className="offcanvas-header">
+            <div className="offcanvas-header" style={{backgroundColor: collection?.color, color: "#fff"}}>
                 <h5 className="offcanvas-title" id="offcanvasWithBackdropLabel">
-                    <span style={{ color: collection?.color }}>
+                    <span>
                         <strong>{collection?.name}</strong>
                     </span>
                 </h5>
@@ -46,6 +46,7 @@ export const LeftOffCanvas: React.FC<{
                     className="btn btn-sm"
                     data-bs-dismiss="offcanvas"
                     aria-label="Close"
+                    style={{color: "#fff"}}
                 >
                     <i className="fas fa-times"></i>
                 </div>
@@ -69,22 +70,7 @@ export const LeftOffCanvas: React.FC<{
                                 >
                                     {index + 1}. {word.word}
                                 </a>
-                                <div
-                                    className="btn btn-sm"
-                                    style={{
-                                        padding: 0,
-                                        margin: 0,
-                                    }}
-                                    onClick={() => {
-                                        handleTextToSpeech(
-                                            word.word,
-                                            translations["language"],
-                                            undefined
-                                        );
-                                    }}
-                                >
-                                    <i className="fas fa-volume-up"></i>
-                                </div>
+                                <TextToSpeechButton word={word.word} />
                             </li>
                         ))}
                 </ul>

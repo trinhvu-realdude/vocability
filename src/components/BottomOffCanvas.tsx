@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import { ExternalWord } from "../interfaces/mainProps";
-import { handleTextToSpeech } from "../utils/helper";
 import { getExternalWord } from "../services/WordService";
-import { useLanguage } from "../LanguageContext";
+import { TextToSpeechButton } from "./TextToSpeechButton";
 
 export const OffCanvas: React.FC<{
     id: string;
@@ -12,9 +11,6 @@ export const OffCanvas: React.FC<{
 }> = ({ id, word, show, onClose }) => {
     const [data, setData] = useState<ExternalWord[] | { message: string }>();
     const [isLoading, setIsLoading] = useState<boolean>(true);
-    const [isAnimating, setIsAnimating] = useState(false);
-
-    const { translations } = useLanguage();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -73,39 +69,7 @@ export const OffCanvas: React.FC<{
                                     >
                                         {element.phonetic}
                                     </small>{" "}
-                                    <div
-                                        className="btn btn-sm"
-                                        style={{
-                                            padding: 0,
-                                            margin: 0,
-                                        }}
-                                        onClick={() => {
-                                            handleTextToSpeech(
-                                                element.word,
-                                                translations["language"],
-                                                undefined
-                                            );
-                                            setIsAnimating(true);
-
-                                            // Remove the animation class after animation completes
-                                            setTimeout(
-                                                () => setIsAnimating(false),
-                                                600
-                                            );
-                                        }}
-                                    >
-                                        <i
-                                            className={`fas fa-volume-up ${
-                                                isAnimating
-                                                    ? "pulse-animation"
-                                                    : ""
-                                            }`}
-                                            style={{
-                                                transition:
-                                                    "transform 0.6s ease-in-out",
-                                            }}
-                                        ></i>
-                                    </div>
+                                    <TextToSpeechButton word={element.word} />
                                 </h5>
                                 {element.meanings &&
                                     element.meanings.map((meaning, index) => (

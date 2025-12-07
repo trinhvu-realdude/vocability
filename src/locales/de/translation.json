@@ -1,6 +1,7 @@
 {
     "flag": "🇩🇪",
     "language": "de",
+    "languageVoice": "de-DE",
     "navbar.collections": "Sammlungen",
     "navbar.collections.allCollections": "Alle Sammlungen",
     "navbar.collections.favorite": "Favoriten",

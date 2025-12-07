@@ -11,6 +11,7 @@ import {
 import { formatFileName } from "../utils/formatDateString";
 import { PageHeader } from "../components/PageHeader";
 import { useLanguage } from "../LanguageContext";
+import "../styles/AddWordModal.css";
 
 export const ExportPage: React.FC<CommonProps> = ({ db, collections }) => {
     const { translations } = useLanguage();
@@ -64,11 +65,14 @@ export const ExportPage: React.FC<CommonProps> = ({ db, collections }) => {
     return (
         <div className="container-list" id="import-export">
             <PageHeader content={translations["export"]} />
-            <div className="export-form">
-                <div className="input-group mb-2">
+            <div className="export-form word-modal-body p-4 bg-white rounded shadow-sm">
+                <div className="mb-3">
+                    <label htmlFor="export-collection" className="form-label text-muted small fw-bold">
+                        {translations["export.chooseCollection"]}
+                    </label>
                     <select
                         className="form-select"
-                        id="part-of-speech"
+                        id="export-collection"
                         onChange={(event) =>
                             setExportCollectionId(
                                 Number.parseInt(event.target.value)
@@ -88,9 +92,15 @@ export const ExportPage: React.FC<CommonProps> = ({ db, collections }) => {
                                 </option>
                             ))}
                     </select>
+                </div>
+
+                <div className="mb-3">
+                    <label htmlFor="file-format" className="form-label text-muted small fw-bold">
+                        {translations["export.fileFormat"]}
+                    </label>
                     <select
                         className="form-select"
-                        id="file-formate"
+                        id="file-format"
                         onChange={(event) => setFileType(event.target.value)}
                     >
                         <option value="">
@@ -103,53 +113,65 @@ export const ExportPage: React.FC<CommonProps> = ({ db, collections }) => {
                         ))}
                     </select>
                 </div>
-                <div className="d-flex justify-content-between mb-2">
-                    <button
-                        className="btn"
-                        style={{
-                            border: "1px solid #ced4da",
-                        }}
-                    >
-                        <strong>{translations["export.fromDate"]}:</strong>{" "}
-                        <input
-                            type="date"
-                            style={{ border: "none" }}
-                            onChange={(event) =>
-                                setFromDate(
-                                    new Date(`${event.target.value}T00:00:00`)
-                                )
-                            }
-                        />
-                    </button>
-                    <button
-                        className="btn"
-                        style={{
-                            border: "1px solid #ced4da",
-                        }}
-                    >
-                        <strong>{translations["export.toDate"]}:</strong>{" "}
-                        <input
-                            type="date"
-                            style={{ border: "none" }}
-                            onChange={(event) =>
-                                setToDate(
-                                    new Date(
-                                        `${event.target.value}T23:59:59.999`
+
+                <div className="row g-3 mb-4">
+                    <div className="col-md-6">
+                        <label className="form-label text-muted small fw-bold">
+                            {translations["export.fromDate"]}
+                        </label>
+                        <div className="input-group">
+                            <span className="input-group-text bg-light border-end-0">
+                                <i className="fas fa-calendar-alt text-muted"></i>
+                            </span>
+                            <input
+                                type="date"
+                                className="form-control"
+                                onChange={(event) =>
+                                    setFromDate(
+                                        new Date(`${event.target.value}T00:00:00`)
                                     )
-                                )
-                            }
-                        />
-                    </button>
+                                }
+                            />
+                        </div>
+                    </div>
+                    <div className="col-md-6">
+                        <label className="form-label text-muted small fw-bold">
+                            {translations["export.toDate"]}
+                        </label>
+                        <div className="input-group">
+                            <span className="input-group-text bg-light border-end-0">
+                                <i className="fas fa-calendar-check text-muted"></i>
+                            </span>
+                            <input
+                                type="date"
+                                className="form-control"
+                                onChange={(event) =>
+                                    setToDate(
+                                        new Date(
+                                            `${event.target.value}T23:59:59.999`
+                                        )
+                                    )
+                                }
+                            />
+                        </div>
+                    </div>
                 </div>
 
-                <div className="input-group">
+                <div className="d-grid gap-2">
                     <button
-                        className="btn btn-outline-secondary"
-                        style={{ width: "100%" }}
+                        className="btn btn-success text-white py-2 fw-bold"
+                        style={{
+                            background: "linear-gradient(135deg, #28a745 0%, #218838 100%)",
+                            border: "none",
+                            borderRadius: "10px",
+                            boxShadow: "0 4px 6px rgba(40, 167, 69, 0.2)"
+                        }}
                         data-bs-toggle="modal"
                         data-bs-target={`#download-document`}
                         onClick={handleGenerateDocument}
+                        disabled={!exportCollectionId || !fileType}
                     >
+                        <i className="fas fa-file-export me-2"></i>
                         {translations["export.generateBtn"]}
                     </button>
                     {exportCollectionId && fileType && (

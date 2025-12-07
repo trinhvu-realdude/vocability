@@ -9,16 +9,13 @@ import {
 } from "../services/WordService";
 import { WordDetailPageProps } from "../interfaces/mainProps";
 import { formatDate } from "../utils/formatDateString";
-import {
-    formatText,
-    getVoicesByLanguage,
-    handleTextToSpeech,
-} from "../utils/helper";
+import { formatText } from "../utils/helper";
 import { getCollectionById } from "../services/CollectionService";
 import { OffCanvas } from "../components/BottomOffCanvas";
 import { APP_NAME } from "../utils/constants";
 import { EditWordForm } from "../components/Form/EditWordForm";
 import { useLanguage } from "../LanguageContext";
+import { TextToSpeechButton } from "../components/TextToSpeechButton";
 
 export const WordDetailPage: React.FC<WordDetailPageProps> = ({ db }) => {
     const { wordId } = useParams();
@@ -34,11 +31,6 @@ export const WordDetailPage: React.FC<WordDetailPageProps> = ({ db }) => {
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [isFavorite, setIsFavorite] = useState<boolean>(false);
     const [isEdit, setIsEdit] = useState<boolean>(false);
-    const [voicesByLanguage, setVoicesByLanguage] = useState<
-        SpeechSynthesisVoice[]
-    >([]);
-    const [selectedVoice, setSelectedVoice] = useState<SpeechSynthesisVoice>();
-    const [isAnimating, setIsAnimating] = useState(false);
 
     const { translations } = useLanguage();
 
@@ -73,9 +65,6 @@ export const WordDetailPage: React.FC<WordDetailPageProps> = ({ db }) => {
                     }
                     if (objWord) {
                         setWord(objWord);
-                        setVoicesByLanguage(
-                            await getVoicesByLanguage(translations["language"])
-                        );
                         const objSynonymsAntonyms = await getSynonymsAntonyms(
                             objWord
                         );
@@ -121,70 +110,7 @@ export const WordDetailPage: React.FC<WordDetailPageProps> = ({ db }) => {
                                 >
                                     {word?.phonetic}
                                 </small>{" "}
-                                <div
-                                    className="btn btn-sm"
-                                    style={{
-                                        padding: 0,
-                                        margin: 0,
-                                    }}
-                                    onClick={() => {
-                                        {
-                                            word?.word &&
-                                                handleTextToSpeech(
-                                                    word.word,
-                                                    translations["language"],
-                                                    selectedVoice
-                                                );
-                                        }
-                                        setIsAnimating(true);
-
-                                        // Remove the animation class after animation completes
-                                        setTimeout(
-                                            () => setIsAnimating(false),
-                                            600
-                                        );
-                                    }}
-                                >
-                                    <i
-                                        className={`fas fa-volume-up ${
-                                            isAnimating ? "pulse-animation" : ""
-                                        }`}
-                                        style={{
-                                            transition:
-                                                "transform 0.6s ease-in-out",
-                                        }}
-                                    ></i>
-                                </div>
-                                <select
-                                    className="btn-sm mx-4"
-                                    id="voices-by-language"
-                                    style={{ fontSize: "12px" }}
-                                    onChange={(event) => {
-                                        const voices =
-                                            window.speechSynthesis.getVoices();
-                                        const voice = voices.find(
-                                            (v) => v.name === event.target.value
-                                        );
-                                        if (voice) setSelectedVoice(voice);
-                                    }}
-                                >
-                                    {voicesByLanguage &&
-                                        voicesByLanguage.map((voice, index) => (
-                                            <option
-                                                key={index}
-                                                value={voice.name}
-                                            >
-                                                {!voice.name.includes("Natural")
-                                                    ? voice.name
-                                                          .split(" ")[0]
-                                                          .trim()
-                                                    : voice.name
-                                                          .split(" ")[1]
-                                                          .trim()}
-                                                {` (${voice.lang})`}
-                                            </option>
-                                        ))}
-                                </select>
+                                <TextToSpeechButton word={word?.word || ""} />
                             </h5>
                             <small>
                                 <i>{word?.partOfSpeech}</i>
@@ -193,16 +119,14 @@ export const WordDetailPage: React.FC<WordDetailPageProps> = ({ db }) => {
                         <div>
                             <div className="btn btn-sm">
                                 <i
-                                    className={`${
-                                        word?.isFavorite ? "fas" : "far"
-                                    } fa-bookmark`}
+                                    className={`${word?.isFavorite ? "fas" : "far"
+                                        } fa-bookmark`}
                                     onClick={() => {
                                         if (word) handleAddFavorite(word);
                                     }}
                                     style={{
-                                        color: `${
-                                            word?.isFavorite ? "#FFC000" : ""
-                                        }`,
+                                        color: `${word?.isFavorite ? "#FFC000" : ""
+                                            }`,
                                     }}
                                 ></i>
                             </div>
@@ -214,17 +138,38 @@ export const WordDetailPage: React.FC<WordDetailPageProps> = ({ db }) => {
                             </div> */}
                         </div>
                     </div>
-                    <p className="mb-1">{word?.definition}</p>
-                    {word?.notes && (
-                        <p className="mb-1">
-                            <strong>Notes:</strong>{" "}
-                            <span
-                                dangerouslySetInnerHTML={{
-                                    __html: formatText(word.notes),
-                                }}
-                            ></span>
-                        </p>
-                    )}
+
+                    <ul className="list-group list-group-flush">
+                        {/* Multiple definitions view */}
+                        {word?.definitions &&
+                            word?.definitions.map((definition, index) => (
+                                <li key={index} className="list-group-item">
+                                    <p className="mb-2">
+                                        {definition.definition.trim()}
+                                    </p>
+                                    {definition.notes && (
+                                        <p className="mb-2">
+                                            <strong>
+                                                {
+                                                    translations[
+                                                    "addWordForm.notes"
+                                                    ]
+                                                }
+                                                :
+                                            </strong>{" "}
+                                            <span
+                                                dangerouslySetInnerHTML={{
+                                                    __html: formatText(
+                                                        definition.notes.trim()
+                                                    ),
+                                                }}
+                                            ></span>
+                                        </p>
+                                    )}
+                                </li>
+                            ))}
+                    </ul>
+
                     <a
                         href={`/${translations["language"]}/collection/${word?.collectionId}`}
                     >
@@ -260,7 +205,7 @@ export const WordDetailPage: React.FC<WordDetailPageProps> = ({ db }) => {
                     word={word}
                     collection={collection}
                     setIsEditOrDelete={setIsEdit}
-                    setWords={() => {}}
+                    setWords={() => { }}
                     setWord={setWord}
                     setSynonyms={setSynonyms}
                     setAntonyms={setAntonyms}
@@ -270,8 +215,8 @@ export const WordDetailPage: React.FC<WordDetailPageProps> = ({ db }) => {
             {isLoading ? (
                 <div className="mx-auto loader"></div>
             ) : synonyms &&
-              antonyms &&
-              (synonyms.length > 0 || antonyms.length > 0) ? (
+                antonyms &&
+                (synonyms.length > 0 || antonyms.length > 0) ? (
                 <table
                     className="table table-bordered table-sm mt-2"
                     style={{ borderRadius: "0.25rem" }}
@@ -304,17 +249,17 @@ export const WordDetailPage: React.FC<WordDetailPageProps> = ({ db }) => {
 
                                             {visibleOffCanvas ===
                                                 `offcanvas-bottom-synonym-${index}` && (
-                                                <OffCanvas
-                                                    id={`offcanvas-bottom-synonym-${index}`}
-                                                    word={synonym}
-                                                    show={true}
-                                                    onClose={() =>
-                                                        setVisibleOffCanvas(
-                                                            null
-                                                        )
-                                                    }
-                                                />
-                                            )}
+                                                    <OffCanvas
+                                                        id={`offcanvas-bottom-synonym-${index}`}
+                                                        word={synonym}
+                                                        show={true}
+                                                        onClose={() =>
+                                                            setVisibleOffCanvas(
+                                                                null
+                                                            )
+                                                        }
+                                                    />
+                                                )}
                                         </div>
                                     ))}
                             </td>
@@ -343,17 +288,17 @@ export const WordDetailPage: React.FC<WordDetailPageProps> = ({ db }) => {
 
                                             {visibleOffCanvas ===
                                                 `offcanvas-bottom-antonym-${index}` && (
-                                                <OffCanvas
-                                                    id={`offcanvas-bottom-antonym-${index}`}
-                                                    word={antonym}
-                                                    show={true}
-                                                    onClose={() =>
-                                                        setVisibleOffCanvas(
-                                                            null
-                                                        )
-                                                    }
-                                                />
-                                            )}
+                                                    <OffCanvas
+                                                        id={`offcanvas-bottom-antonym-${index}`}
+                                                        word={antonym}
+                                                        show={true}
+                                                        onClose={() =>
+                                                            setVisibleOffCanvas(
+                                                                null
+                                                            )
+                                                        }
+                                                    />
+                                                )}
                                         </div>
                                     ))}
                             </td>

@@ -5,15 +5,13 @@ import {
     addWordToFavorite,
     getWordsByCollectionId,
 } from "../../services/WordService";
-import {
-    formatText,
-    handleTextToSpeech,
-    sortWordsByFilter,
-} from "../../utils/helper";
+import { formatText, sortWordsByFilter } from "../../utils/helper";
 import { EditWordForm } from "../Form/EditWordForm";
 import { DeleteWordForm } from "../Form/DeleteWordForm";
 import { formatDate } from "../../utils/formatDateString";
 import { useLanguage } from "../../LanguageContext";
+import { TextToSpeechButton } from "../TextToSpeechButton";
+import "../../styles/WordCard.css";
 
 const ButtonGroup: React.FC<{
     word: Word;
@@ -25,7 +23,7 @@ const ButtonGroup: React.FC<{
         <>
             <div className="btn btn-sm">
                 <i
-                    className={`${word.isFavorite ? "fas" : "far"} fa-bookmark`}
+                    className={`${word.isFavorite ? "fas" : "far"} fa-star`}
                     onClick={() => handleAddFavorite(word)}
                     style={{
                         color: `${word.isFavorite ? "#FFC000" : ""}`,
@@ -48,14 +46,10 @@ export const WordCard: React.FC<WordCardProps> = ({
     collection,
     filterSorting,
     setWords,
-    voicesByLanguage,
 }) => {
     const [isFavorite, setIsFavorite] = useState<boolean>(false);
     const [isEdit, setIsEdit] = useState<boolean>(false);
     const [isDelete, setIsDelete] = useState<boolean>(false);
-    const [isAnimating, setIsAnimating] = useState(false);
-
-    const [selectedVoice, setSelectedVoice] = useState<SpeechSynthesisVoice>();
 
     const { translations, selectedWord, setSelectedWord } = useLanguage();
 
@@ -94,7 +88,7 @@ export const WordCard: React.FC<WordCardProps> = ({
         <>
             {!isEdit && !isDelete && (
                 <div
-                    className="list-group-item"
+                    className="list-group-item word-card-hover p-4"
                     id={new String(word.id).toString()}
                     style={{
                         border: isBorderVisible
@@ -135,77 +129,9 @@ export const WordCard: React.FC<WordCardProps> = ({
                                     >
                                         {word.phonetic}
                                     </small>{" "}
-                                    <div
-                                        className="btn btn-sm"
-                                        style={{
-                                            padding: 0,
-                                            margin: 0,
-                                        }}
-                                        onClick={() => {
-                                            handleTextToSpeech(
-                                                word.word,
-                                                translations["language"],
-                                                selectedVoice
-                                            );
-                                            setIsAnimating(true);
-
-                                            // Remove the animation class after animation completes
-                                            setTimeout(
-                                                () => setIsAnimating(false),
-                                                600
-                                            );
-                                        }}
-                                    >
-                                        <i
-                                            className={`fas fa-volume-up ${
-                                                isAnimating
-                                                    ? "pulse-animation"
-                                                    : ""
-                                            }`}
-                                            style={{
-                                                transition:
-                                                    "transform 0.6s ease-in-out",
-                                            }}
-                                        ></i>
-                                    </div>
-                                    <select
-                                        className="btn-sm mx-4"
-                                        id="voices-by-language"
-                                        style={{ fontSize: "12px" }}
-                                        onChange={(event) => {
-                                            const voices =
-                                                window.speechSynthesis.getVoices();
-                                            const voice = voices.find(
-                                                (v) =>
-                                                    v.name ===
-                                                    event.target.value
-                                            );
-                                            if (voice) setSelectedVoice(voice);
-                                        }}
-                                    >
-                                        {voicesByLanguage &&
-                                            voicesByLanguage.map(
-                                                (voice, index) => (
-                                                    <option
-                                                        key={index}
-                                                        value={voice.name}
-                                                    >
-                                                        {!voice.name.includes(
-                                                            "Natural"
-                                                        )
-                                                            ? voice.name
-                                                                  .split(" ")[0]
-                                                                  .trim()
-                                                            : voice.name
-                                                                  .split(" ")[1]
-                                                                  .trim()}
-                                                        {` (${voice.lang})`}
-                                                    </option>
-                                                )
-                                            )}
-                                    </select>
+                                    <TextToSpeechButton word={word.word} />
                                 </div>
-                                <div className="function-buttons">
+                                <div className="function-buttons word-actions">
                                     <ButtonGroup
                                         word={word}
                                         handleAddFavorite={handleAddFavorite}
@@ -242,19 +168,41 @@ export const WordCard: React.FC<WordCardProps> = ({
                                 </div>
                             </div>
 
-                            <p className="mb-2">{word.definition}</p>
-                            {word.notes && (
-                                <p className="mb-2">
-                                    <strong>
-                                        {translations["addWordForm.notes"]}:
-                                    </strong>{" "}
-                                    <span
-                                        dangerouslySetInnerHTML={{
-                                            __html: formatText(word.notes),
-                                        }}
-                                    ></span>
-                                </p>
-                            )}
+                            <ul className="list-group list-group-flush">
+                                {/* Multiple definitions view */}
+                                {word.definitions &&
+                                    word.definitions.map(
+                                        (definition, index) => (
+                                            <li
+                                                key={index}
+                                                className="list-group-item"
+                                            >
+                                                <p className="mb-2">
+                                                    {definition.definition.trim()}
+                                                </p>
+                                                {definition.notes && (
+                                                    <p className="mb-2">
+                                                        <strong>
+                                                            {
+                                                                translations[
+                                                                "addWordForm.notes"
+                                                                ]
+                                                            }
+                                                            :
+                                                        </strong>{" "}
+                                                        <span
+                                                            dangerouslySetInnerHTML={{
+                                                                __html: formatText(
+                                                                    definition.notes.trim()
+                                                                ),
+                                                            }}
+                                                        ></span>
+                                                    </p>
+                                                )}
+                                            </li>
+                                        )
+                                    )}
+                            </ul>
                             <small
                                 className="text-muted mb-2"
                                 style={{ fontSize: "12px" }}
@@ -272,6 +220,7 @@ export const WordCard: React.FC<WordCardProps> = ({
 
             {isEdit && (
                 <EditWordForm
+                    key={`edit-${word.id}-${isEdit}`}
                     db={db}
                     word={word}
                     collection={collection}

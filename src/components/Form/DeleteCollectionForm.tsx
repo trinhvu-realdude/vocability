@@ -8,6 +8,7 @@ import {
 import { getCurrentLanguageId } from "../../utils/helper";
 import { languages } from "../../utils/constants";
 import { useLanguage } from "../../LanguageContext";
+import "../../styles/AddWordModal.css";
 
 export const DeleteCollectionForm: React.FC<CollectionFormProps> = ({
     db,
@@ -36,45 +37,61 @@ export const DeleteCollectionForm: React.FC<CollectionFormProps> = ({
     };
 
     return (
-        <div className="card" style={{ borderColor: collection.color }}>
+        <div className="card word-modal-content" style={{ borderColor: "#dc3545" }}>
             <div
-                className="card-header d-flex justify-content-between align-items-center"
+                className="word-modal-header"
                 style={{
-                    backgroundColor: collection.color,
-                    color: "#fff",
+                    backgroundColor: "#dc3545",
                 }}
             >
-                {translations["deleteForm.deleteCollection"]}
-                <div>
-                    <div
-                        className="btn btn-sm"
-                        style={{
-                            border: "none",
-                            color: "#fff",
-                        }}
-                        onClick={() => setIsEditOrDelete(false)}
-                    >
-                        <i className="fas fa-times"></i>
-                    </div>
-                </div>
-            </div>
-            <div className="card-body text-center">
-                <p>{translations["deleteForm.deleteCollectionText"]}</p>
+                <h5 className="word-modal-title">
+                    <i className="fas fa-trash-alt me-2"></i>
+                    {translations["deleteForm.deleteCollection"]}
+                </h5>
+                <button
+                    type="button"
+                    className="btn btn-sm word-modal-close"
+                    onClick={() => setIsEditOrDelete(false)}
+                >
+                    <i className="fas fa-times"></i>
+                </button>
             </div>
 
-            <div className="modal-footer">
+            <div className="word-modal-body text-center">
+                <div className="mb-3">
+                    <i
+                        className="fas fa-folder"
+                        style={{
+                            color: collection.color,
+                            fontSize: "4rem"
+                        }}
+                    ></i>
+                    <div className="mt-2">
+                        <i className="fas fa-exclamation-triangle" style={{ color: "#dc3545", fontSize: "2rem" }}></i>
+                    </div>
+                </div>
+
+                <p className="mb-0">
+                    <i className="fas fa-folder me-2" style={{ color: collection.color }}></i>
+                    <strong>{collection.name}</strong>
+                </p>
+            </div>
+
+            <div className="word-modal-footer">
                 <button
                     type="button"
                     className="btn btn-outline-secondary"
                     onClick={() => setIsEditOrDelete(false)}
                 >
+                    <i className="fas fa-times me-1"></i>
                     {translations["cancelBtn"]}
                 </button>
                 <button
                     type="button"
-                    className="btn btn-outline-danger"
+                    className="btn btn-danger"
                     onClick={() => handleDeleteCollection(collection)}
                 >
+                    <i className="fas fa-trash-alt me-1"></i>
                     {translations["deleteBtn"]}
                 </button>
             </div>

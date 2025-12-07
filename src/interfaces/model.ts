@@ -24,12 +24,16 @@ export interface Word {
     id?: number;
     word: string;
     phonetic?: string;
-    definition: string;
-    notes: string;
+    definitions: Definition[];
     partOfSpeech: string;
     isFavorite: boolean;
     collectionId?: number;
     createdAt: Date;
+}
+
+export interface Definition{
+    definition: string;
+    notes: string;
 }
 
 export interface WordDto extends Word {

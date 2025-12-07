@@ -1,0 +1,55 @@
+/* Word Card Hover Effects */
+.word-card-hover {
+    position: relative;
+    transition: box-shadow 0.3s ease;
+}
+
+.word-card-hover:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Word Action Buttons */
+.word-actions {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.word-card-hover:hover .word-actions {
+    opacity: 1;
+}
+
+.word-actions .btn {
+    background: rgba(0, 0, 0, 0.05);
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    margin: 0 2px;
+    transition: all 0.2s ease;
+}
+
+.word-actions .btn:hover {
+    background: rgba(0, 0, 0, 0.1);
+    transform: scale(1.1);
+}
+
+/* Keep dropdown visible on mobile */
+@media (max-width: 768px) {
+    .word-actions {
+        display: none;
+    }
+
+    .three-dots {
+        display: block !important;
+    }
+}
+
+/* Hide dropdown on desktop, show action buttons */
+@media (min-width: 769px) {
+    .three-dots {
+        display: none;
+    }
+
+    .word-actions {
+        display: flex;
+    }
+}
