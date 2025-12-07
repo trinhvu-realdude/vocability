@@ -55,7 +55,7 @@ export const WordPage: React.FC<WordPageProps> = ({
             }
         };
         fetchCollection();
-    }, [translations["language"]]);
+    }, [translations["language"], collectionId, db]);
 
     return (
         <div className="container-list" id="word-list">

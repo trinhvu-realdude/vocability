@@ -7,6 +7,8 @@ export interface CommonProps {
     collectionId?: string;
     setCollections: React.Dispatch<React.SetStateAction<Collection[]>>;
     setWords: React.Dispatch<React.SetStateAction<Word[]>>;
+    modalId?: string;
+    initialWord?: string;
 }
 
 export interface MainLayoutProps extends CommonProps {

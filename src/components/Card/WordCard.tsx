@@ -75,6 +75,12 @@ export const WordCard: React.FC<WordCardProps> = ({
         if (selectedWord && selectedWord.id === word.id) {
             setIsBorderVisible(true);
 
+            // Scroll element into view
+            const element = document.getElementById(new String(word.id).toString());
+            if (element) {
+                element.scrollIntoView({ behavior: "smooth", block: "center" });
+            }
+
             const timer = setTimeout(() => {
                 setIsBorderVisible(false);
                 setSelectedWord(undefined);

@@ -4,8 +4,11 @@ import {
     addCollection,
     getCollectionById,
     getCollectionByNameAndLanguageId,
+    getCollectionsByLanguageId,
 } from "./CollectionService";
 import { EditWordObj, ExternalWord } from "../interfaces/mainProps";
+import { getCurrentLanguageId } from "../utils/helper";
+import { languages } from "../utils/constants";
 
 const storeName = "words";
 
@@ -240,4 +243,18 @@ export const getExternalWord = async (
     );
     const data = await response.json();
     return data as ExternalWord[];
+};
+
+export const getWordsByLanguageCode = async (
+    db: IDBPDatabase<MyDB>,
+    languageCode: string
+): Promise<Word[]> => {
+    const allWords = await getWords(db);
+    const currentLanguageId = await getCurrentLanguageId(languages, languageCode);
+    const collections = (await getCollectionsByLanguageId(db, currentLanguageId)).map(c => c.id);
+
+    const filteredWords = allWords.filter(word =>
+        collections.includes(word.collectionId)
+    );
+    return filteredWords;
 };

@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Choice, CommonProps } from "../../interfaces/mainProps";
 import { useLanguage } from "../../LanguageContext";
 import ReactSelectCreatable from "react-select/creatable";
@@ -28,15 +28,24 @@ export const AddWordModal: React.FC<CommonProps> = ({
     collectionId,
     setCollections,
     setWords,
+    modalId = "add-word",
+    initialWord = "",
 }) => {
     const { translations, setActiveLanguages } = useLanguage();
     const [randomColor, setRandomColor] = useState<string>(getRandomColor());
-    const [word, setWord] = useState<string>("");
+    const [word, setWord] = useState<string>(initialWord);
     const [definitions, setDefinitions] = useState<Definition[]>([
         { definition: "", notes: "" }, // default 1 set
     ]);
     const [partOfSpeech, setPartOfSpeech] = useState<string>("");
     const [choice, setChoice] = useState<SingleValue<Object>>();
+
+    // Sync initialWord with local state when it changes
+    useEffect(() => {
+        if (initialWord) {
+            setWord(initialWord);
+        }
+    }, [initialWord]);
 
     const selectedPartsOfSpeech = partsOfSpeech.find(
         (language) => language.code === translations["language"]
@@ -172,9 +181,9 @@ export const AddWordModal: React.FC<CommonProps> = ({
     return (
         <div
             className="modal fade"
-            id="add-word"
+            id={modalId}
             tabIndex={-1}
-            aria-labelledby="#add-word"
+            aria-labelledby={modalId}
             aria-hidden="true"
         >
             <div className="modal-dialog modal-lg modal-dialog-centered">
