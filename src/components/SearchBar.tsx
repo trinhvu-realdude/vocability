@@ -44,62 +44,54 @@ export const SearchBar: React.FC<{
 
         const { translations } = useLanguage();
 
-        {
-            isFavorite
-                ? useEffect(() => {
-                    // Search for Favorite collection
-                    const lowerCaseSearchValue = searchValue
-                        .toLowerCase()
-                        .trim();
-                    const filtered =
-                        filteredWords &&
-                        filteredWords.filter((word) =>
-                            word.word
-                                .toLowerCase()
-                                .includes(lowerCaseSearchValue)
-                        );
-                    setDisplayWordDtos &&
-                        filtered &&
-                        setDisplayWordDtos(filtered);
-                }, [searchValue, filteredWords])
-                : type === "word"
-                    ? useEffect(() => {
-                        // Search for main collections
-                        const lowerCaseSearchValue = searchValue
-                            .toLowerCase()
-                            .trim();
-                        const filtered =
-                            words &&
-                            words.filter((word) =>
-                                word.word
-                                    .toLowerCase()
-                                    .includes(lowerCaseSearchValue)
-                            );
-                        setDisplayWords && filtered && setDisplayWords(filtered);
-                        setFilteredWords &&
-                            filtered &&
-                            setFilteredWords(filtered);
-                    }, [searchValue, words])
-                    : useEffect(() => {
-                        // Search for collections
-                        const lowerCaseSearchValue = searchValue
-                            .toLowerCase()
-                            .trim();
-                        const filtered =
-                            collections &&
-                            collections.filter((collection) =>
-                                collection.name
-                                    .toLowerCase()
-                                    .includes(lowerCaseSearchValue)
-                            );
-                        setDisplayCollections &&
-                            filtered &&
-                            setDisplayCollections(filtered);
-                        setFilteredCollections &&
-                            filtered &&
-                            setFilteredCollections(filtered);
-                    }, [searchValue, collections]);
-        }
+           useEffect(() => {
+             if (isFavorite) {
+               // Search for Favorite collection
+               const lowerCaseSearchValue = searchValue.toLowerCase().trim();
+               const filtered =
+                 filteredWords &&
+                 filteredWords.filter((word) =>
+                   word.word.toLowerCase().includes(lowerCaseSearchValue)
+                 );
+               setDisplayWordDtos && filtered && setDisplayWordDtos(filtered);
+             }
+
+             if (type === "word") {
+               // Search for main collections
+               const lowerCaseSearchValue = searchValue.toLowerCase().trim();
+               const filtered =
+                 words &&
+                 words.filter((word) =>
+                   word.word.toLowerCase().includes(lowerCaseSearchValue)
+                 );
+               setDisplayWords && filtered && setDisplayWords(filtered);
+               setFilteredWords && filtered && setFilteredWords(filtered);
+             } else {
+               // Search for collections
+               const lowerCaseSearchValue = searchValue.toLowerCase().trim();
+               const filtered =
+                 collections &&
+                 collections.filter((collection) =>
+                   collection.name.toLowerCase().includes(lowerCaseSearchValue)
+                 );
+               setDisplayCollections &&
+                 filtered &&
+                 setDisplayCollections(filtered);
+               setFilteredCollections &&
+                 filtered &&
+                 setFilteredCollections(filtered);
+             }
+           }, [
+             isFavorite,
+             type,
+             searchValue,
+             filteredWords,
+             setDisplayWordDtos,
+             collections,
+             setFilteredCollections,
+             setFilteredWords,
+             words,
+           ]);
 
         return (
             <div className="search-bar-container">
