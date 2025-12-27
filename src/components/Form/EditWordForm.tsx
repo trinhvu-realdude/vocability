@@ -18,6 +18,7 @@ export const EditWordForm: React.FC<WordFormProps> = ({
     setIsEditOrDelete,
     setWords,
     setWord,
+    onShowToast,
 }) => {
     const [partOfSpeechValue, setPartOfSpeechValue] = useState<string>(word.partOfSpeech || "");
     const [wordValue, setWordValue] = useState<string>(word.word || "");
@@ -27,6 +28,7 @@ export const EditWordForm: React.FC<WordFormProps> = ({
             ? JSON.parse(JSON.stringify(word.definitions))
             : [{ definition: "", notes: "" }]
     );
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const { translations } = useLanguage();
 
@@ -48,6 +50,8 @@ export const EditWordForm: React.FC<WordFormProps> = ({
         const partOfSpeechEdit = partOfSpeechValue.trim();
         const definitionsEdit = definitions;
         if (!validateInputs(wordEdit, partOfSpeechEdit, collection, definitionsEdit, setErrors)) return;
+
+        setIsLoading(true);
         let phonetic;
         if (translations["language"] === "us") {
             phonetic = await getPhonetic(wordEdit);
@@ -70,12 +74,27 @@ export const EditWordForm: React.FC<WordFormProps> = ({
                     setWords(words);
                 }
                 if (setWord) setWord(updatedWord);
+
+                // Close form first
                 setIsEditOrDelete(false);
                 closeBtnRef.current?.click();
+
+                // Show success toast after form closes
+                setTimeout(() => {
+                    onShowToast?.(
+                        translations["alert.editWordSuccess"] || "Word updated successfully!",
+                        "success"
+                    );
+                }, 300);
             }
         } catch (error) {
             console.log(error);
-            alert(translations["alert.editWordFailed"]);
+            onShowToast?.(
+                translations["alert.editWordFailed"],
+                "error"
+            );
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -273,6 +292,7 @@ export const EditWordForm: React.FC<WordFormProps> = ({
                     className="btn btn-outline-secondary"
                     ref={closeBtnRef}
                     onClick={() => setIsEditOrDelete(false)}
+                    disabled={isLoading}
                 >
                     <i className="fas fa-times me-1"></i>
                     {translations["cancelBtn"]}
@@ -281,9 +301,19 @@ export const EditWordForm: React.FC<WordFormProps> = ({
                     type="button"
                     className="btn btn-success"
                     onClick={handleEditWord}
+                    disabled={isLoading}
                 >
-                    <i className="fas fa-save me-1"></i>
-                    {translations["editBtn"]}
+                    {isLoading ? (
+                        <>
+                            <i className="fas fa-spinner fa-spin me-1"></i>
+                            {translations["loading"] || "Saving..."}
+                        </>
+                    ) : (
+                        <>
+                            <i className="fas fa-save me-1"></i>
+                            {translations["editBtn"]}
+                        </>
+                    )}
                 </button>
             </div>
         </div>

@@ -46,6 +46,7 @@ export const WordCard: React.FC<WordCardProps> = ({
     collection,
     filterSorting,
     setWords,
+    onShowToast,
 }) => {
     const [isFavorite, setIsFavorite] = useState<boolean>(false);
     const [isEdit, setIsEdit] = useState<boolean>(false);
@@ -232,6 +233,7 @@ export const WordCard: React.FC<WordCardProps> = ({
                     collection={collection}
                     setIsEditOrDelete={setIsEdit}
                     setWords={setWords}
+                    onShowToast={onShowToast}
                 />
             )}
 
@@ -242,6 +244,7 @@ export const WordCard: React.FC<WordCardProps> = ({
                     collection={collection}
                     setIsEditOrDelete={setIsDelete}
                     setWords={setWords}
+                    onShowToast={onShowToast}
                 />
             )}
         </>

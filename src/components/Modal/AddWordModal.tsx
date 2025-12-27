@@ -30,6 +30,7 @@ export const AddWordModal: React.FC<CommonProps> = ({
     setWords,
     modalId = "add-word",
     initialWord = "",
+    onShowToast,
 }) => {
     const { translations, setActiveLanguages } = useLanguage();
     const [randomColor, setRandomColor] = useState<string>(getRandomColor());
@@ -39,6 +40,7 @@ export const AddWordModal: React.FC<CommonProps> = ({
     ]);
     const [partOfSpeech, setPartOfSpeech] = useState<string>("");
     const [choice, setChoice] = useState<SingleValue<Object>>();
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     // Sync initialWord with local state when it changes
     useEffect(() => {
@@ -62,6 +64,7 @@ export const AddWordModal: React.FC<CommonProps> = ({
 
     const handleAddWord = async () => {
         if (!validateInputs(word, partOfSpeech, choice, definitions, setErrors)) return;
+        setIsLoading(true);
         try {
             const collection = choice as Choice;
 
@@ -127,14 +130,31 @@ export const AddWordModal: React.FC<CommonProps> = ({
                     );
                     setWords(words);
                 }
-                alert(translations["alert.addWordSuccess"]);
+
+                // Close modal first
                 closeBtnRef.current?.click();
+
+                // Show success toast after modal closes
+                setTimeout(() => {
+                    onShowToast?.(
+                        translations["alert.addWordSuccess"],
+                        "success"
+                    );
+                }, 300);
             } else {
-                alert(translations["alert.validateCollectionEmpty"]);
+                onShowToast?.(
+                    translations["alert.validateCollectionEmpty"],
+                    "warning"
+                );
             }
         } catch (error) {
             console.log(error);
-            alert(translations["alert.addWordFailed"]);
+            onShowToast?.(
+                translations["alert.addWordFailed"],
+                "error"
+            );
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -176,6 +196,7 @@ export const AddWordModal: React.FC<CommonProps> = ({
         setDefinitions([{ definition: "", notes: "" }]);
         setChoice(undefined);
         setErrors({});
+        setIsLoading(false);
     };
 
     return (
@@ -404,9 +425,19 @@ export const AddWordModal: React.FC<CommonProps> = ({
                             type="button"
                             className="btn btn-success"
                             onClick={handleAddWord}
+                            disabled={isLoading}
                         >
-                            <i className="fas fa-plus me-1"></i>
-                            {translations["addWordForm.addWordBtn"]}
+                            {isLoading ? (
+                                <>
+                                    <i className="fas fa-spinner fa-spin me-1"></i>
+                                    {translations["loading"] || "Loading..."}
+                                </>
+                            ) : (
+                                <>
+                                    <i className="fas fa-plus me-1"></i>
+                                    {translations["addWordForm.addWordBtn"]}
+                                </>
+                            )}
                         </button>
                     </div>
                 </div>

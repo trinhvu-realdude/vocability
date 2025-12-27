@@ -20,6 +20,7 @@ export const WordPage: React.FC<WordPageProps> = ({
     setWords,
     setCollections,
     setCurrentCollectionId,
+    onShowToast,
 }) => {
     const { collectionId } = useParams();
     const [collection, setCollection] = useState<Collection>();
@@ -125,6 +126,7 @@ export const WordPage: React.FC<WordPageProps> = ({
                             filterSorting={filterSorting}
                             setWords={setFilteredWords}
                             voicesByLanguage={voicesByLanguage}
+                            onShowToast={onShowToast}
                         />
                     ))}
             </div>

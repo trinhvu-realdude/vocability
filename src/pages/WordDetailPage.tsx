@@ -17,7 +17,7 @@ import { EditWordForm } from "../components/Form/EditWordForm";
 import { useLanguage } from "../LanguageContext";
 import { TextToSpeechButton } from "../components/TextToSpeechButton";
 
-export const WordDetailPage: React.FC<WordDetailPageProps> = ({ db }) => {
+export const WordDetailPage: React.FC<WordDetailPageProps> = ({ db, onShowToast }) => {
     const { wordId } = useParams();
 
     const [word, setWord] = useState<Word>();
@@ -209,6 +209,7 @@ export const WordDetailPage: React.FC<WordDetailPageProps> = ({ db }) => {
                     setWord={setWord}
                     setSynonyms={setSynonyms}
                     setAntonyms={setAntonyms}
+                    onShowToast={onShowToast}
                 />
             )}
 
