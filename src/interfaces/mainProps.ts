@@ -1,5 +1,6 @@
 import { IDBPDatabase } from "idb";
 import { Collection, Definition, MyDB, Word } from "./model";
+import { ToastType } from "../components/Toast";
 
 export interface CommonProps {
     db: IDBPDatabase<MyDB> | undefined;
@@ -9,6 +10,7 @@ export interface CommonProps {
     setWords: React.Dispatch<React.SetStateAction<Word[]>>;
     modalId?: string;
     initialWord?: string;
+    onShowToast?: (message: string, type: ToastType) => void;
 }
 
 export interface MainLayoutProps extends CommonProps {
@@ -21,10 +23,12 @@ export interface WordPageProps {
     setWords: React.Dispatch<React.SetStateAction<Word[]>>;
     setCollections: React.Dispatch<React.SetStateAction<Collection[]>>;
     setCurrentCollectionId: React.Dispatch<React.SetStateAction<string>>;
+    onShowToast?: (message: string, type: ToastType) => void;
 }
 
 export interface WordDetailPageProps {
     db: IDBPDatabase<MyDB> | undefined;
+    onShowToast?: (message: string, type: ToastType) => void;
 }
 
 export type CollectionModalProps = {
@@ -61,6 +65,7 @@ export type WordCardProps = {
     filterSorting?: FilterSortingOption;
     setWords: React.Dispatch<React.SetStateAction<Word[]>>;
     voicesByLanguage: SpeechSynthesisVoice[];
+    onShowToast?: (message: string, type: ToastType) => void;
 };
 
 export type CollectionFormProps = {
@@ -82,6 +87,7 @@ export type WordFormProps = {
     setWord?: React.Dispatch<React.SetStateAction<Word | undefined>>;
     setSynonyms?: React.Dispatch<React.SetStateAction<string[] | undefined>>;
     setAntonyms?: React.Dispatch<React.SetStateAction<string[] | undefined>>;
+    onShowToast?: (message: string, type: ToastType) => void;
 };
 
 export type DownloadDocumentModalProps = {

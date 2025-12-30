@@ -13,6 +13,7 @@ import { getCurrentLanguageId } from "../utils/helper";
 import { languages } from "../utils/constants";
 import { getCollectionsByLanguageId } from "../services/CollectionService";
 import { AddWordModal } from "../components/Modal/AddWordModal";
+import { Toast, ToastType } from "../components/Toast";
 
 const MainLayout: React.FC<MainLayoutProps> = ({
     db,
@@ -22,6 +23,10 @@ const MainLayout: React.FC<MainLayoutProps> = ({
 }) => {
     const [words, setWords] = useState<Word[]>([]);
     const [currentCollectionId, setCurrentCollectionId] = useState<string>("");
+    const [toast, setToast] = useState<{
+        message: string;
+        type: ToastType;
+    } | null>(null);
 
     const { language } = useParams();
 
@@ -52,6 +57,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({
                 setCollections={setCollections}
                 setWords={setWords}
                 collectionId={currentCollectionId}
+                onShowToast={(message, type) => setToast({ message, type })}
             />
 
             <Routes>
@@ -75,12 +81,13 @@ const MainLayout: React.FC<MainLayoutProps> = ({
                             setWords={setWords}
                             setCollections={setCollections}
                             setCurrentCollectionId={setCurrentCollectionId}
+                            onShowToast={(message, type) => setToast({ message, type })}
                         />
                     }
                 />
                 <Route
                     path="/word/:wordId"
-                    element={<WordDetailPage db={db} />}
+                    element={<WordDetailPage db={db} onShowToast={(message, type) => setToast({ message, type })} />}
                 />
                 <Route
                     path="/favorite"
@@ -106,6 +113,13 @@ const MainLayout: React.FC<MainLayoutProps> = ({
                 />
                 <Route path="/glossary" element={<GlossaryPage />} />
             </Routes>
+            {toast && (
+                <Toast
+                    message={toast.message}
+                    type={toast.type}
+                    onClose={() => setToast(null)}
+                />
+            )}
         </div>
     );
 };

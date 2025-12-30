@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Word } from "../../interfaces/model";
 import { WordFormProps } from "../../interfaces/mainProps";
 import { deleteWord, getWordsByCollectionId } from "../../services/WordService";
@@ -9,22 +10,46 @@ export const DeleteWordForm: React.FC<WordFormProps> = ({
     word,
     setIsEditOrDelete,
     setWords,
+    onShowToast,
 }) => {
     const { translations } = useLanguage();
+    const [isLoading, setIsLoading] = useState(false);
 
     const handleDeleteWord = async (wordData: Word) => {
-        if (db) {
-            await deleteWord(db, wordData);
-            if (wordData.collectionId) {
-                const objWord = await getWordsByCollectionId(
-                    db,
-                    wordData.collectionId
-                );
-                setWords(objWord);
+        setIsLoading(true);
+        try {
+            if (db) {
+                await deleteWord(db, wordData);
+                if (wordData.collectionId) {
+                    const objWord = await getWordsByCollectionId(
+                        db,
+                        wordData.collectionId
+                    );
+                    setWords(objWord);
+                }
+
+                // Close form first
+                setIsEditOrDelete(false);
+
+                // Show success toast after form closes
+                setTimeout(() => {
+                    onShowToast?.(
+                        translations["alert.deleteWordSuccess"],
+                        "success"
+                    );
+                }, 300);
             }
-            alert(translations["alert.deleteWordSuccess"]);
+        } catch (error) {
+            console.log(error);
+            onShowToast?.(
+                translations["alert.deleteWordFailed"] || "Failed to delete word",
+                "error"
+            );
+        } finally {
+            setIsLoading(false);
         }
     };
+
     return (
         <div className="card word-modal-content" style={{ borderColor: "#dc3545" }}>
             <div
@@ -58,6 +83,7 @@ export const DeleteWordForm: React.FC<WordFormProps> = ({
                     type="button"
                     className="btn btn-outline-secondary"
                     onClick={() => setIsEditOrDelete(false)}
+                    disabled={isLoading}
                 >
                     <i className="fas fa-times me-1"></i>
                     {translations["cancelBtn"]}
@@ -66,9 +92,19 @@ export const DeleteWordForm: React.FC<WordFormProps> = ({
                     type="button"
                     className="btn btn-danger"
                     onClick={() => handleDeleteWord(word)}
+                    disabled={isLoading}
                 >
-                    <i className="fas fa-trash-alt me-1"></i>
-                    {translations["deleteBtn"]}
+                    {isLoading ? (
+                        <>
+                            <i className="fas fa-spinner fa-spin me-1"></i>
+                            {translations["loading"] || "Deleting..."}
+                        </>
+                    ) : (
+                        <>
+                            <i className="fas fa-trash-alt me-1"></i>
+                            {translations["deleteBtn"]}
+                        </>
+                    )}
                 </button>
             </div>
         </div>

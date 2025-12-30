@@ -30,6 +30,7 @@ export const AddWordModal: React.FC<CommonProps> = ({
     setWords,
     modalId = "add-word",
     initialWord = "",
+    onShowToast,
 }) => {
     const { translations, setActiveLanguages } = useLanguage();
     const [randomColor, setRandomColor] = useState<string>(getRandomColor());
@@ -39,6 +40,26 @@ export const AddWordModal: React.FC<CommonProps> = ({
     ]);
     const [partOfSpeech, setPartOfSpeech] = useState<string>("");
     const [choice, setChoice] = useState<SingleValue<Object>>();
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    // Sync choice with collectionId when it changes or when collections change
+    useEffect(() => {
+        if (typeof collectionId === 'string' && collectionId.trim() !== '') {
+            const currentCollection = collections.find(
+                (c) => c.id === Number.parseInt(collectionId)
+            );
+            if (currentCollection) {
+                setChoice({
+                    label: currentCollection.name,
+                    value: currentCollection.name,
+                    color: currentCollection.color,
+                });
+                setRandomColor(currentCollection.color);
+            }
+        } else {
+            setChoice(undefined);
+            setRandomColor(getRandomColor());
+        }
+    }, [collectionId, collections]);
 
     // Sync initialWord with local state when it changes
     useEffect(() => {
@@ -62,6 +83,7 @@ export const AddWordModal: React.FC<CommonProps> = ({
 
     const handleAddWord = async () => {
         if (!validateInputs(word, partOfSpeech, choice, definitions, setErrors)) return;
+        setIsLoading(true);
         try {
             const collection = choice as Choice;
 
@@ -111,11 +133,6 @@ export const AddWordModal: React.FC<CommonProps> = ({
                 setActiveLanguages(reorderedLanguages);
                 setCollections(storedCollections);
 
-                setWord("");
-                setPartOfSpeech("");
-                setDefinitions([{ definition: "", notes: "" }]);
-                setChoice(undefined);
-
                 if (
                     addedWord.collectionId &&
                     collectionId &&
@@ -127,14 +144,31 @@ export const AddWordModal: React.FC<CommonProps> = ({
                     );
                     setWords(words);
                 }
-                alert(translations["alert.addWordSuccess"]);
+
+                // Close modal first
                 closeBtnRef.current?.click();
+
+                // Show success toast after modal closes
+                setTimeout(() => {
+                    onShowToast?.(
+                        translations["alert.addWordSuccess"],
+                        "success"
+                    );
+                }, 300);
             } else {
-                alert(translations["alert.validateCollectionEmpty"]);
+                onShowToast?.(
+                    translations["alert.validateCollectionEmpty"],
+                    "warning"
+                );
             }
         } catch (error) {
             console.log(error);
-            alert(translations["alert.addWordFailed"]);
+            onShowToast?.(
+                translations["alert.addWordFailed"],
+                "error"
+            );
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -174,8 +208,27 @@ export const AddWordModal: React.FC<CommonProps> = ({
         setWord("");
         setPartOfSpeech("");
         setDefinitions([{ definition: "", notes: "" }]);
-        setChoice(undefined);
         setErrors({});
+        setIsLoading(false);
+        if (typeof collectionId === 'string' && collectionId.trim() !== '') {
+            const currentCollection = collections.find(
+                (c) => c.id === Number.parseInt(collectionId)
+            );
+            if (currentCollection) {
+                setChoice({
+                    label: currentCollection.name,
+                    value: currentCollection.name,
+                    color: currentCollection.color,
+                });
+                setRandomColor(currentCollection.color);
+            } else {
+                setChoice(undefined);
+                setRandomColor(getRandomColor());
+            }
+        } else {
+            setChoice(undefined);
+            setRandomColor(getRandomColor());
+        }
     };
 
     return (
@@ -404,9 +457,19 @@ export const AddWordModal: React.FC<CommonProps> = ({
                             type="button"
                             className="btn btn-success"
                             onClick={handleAddWord}
+                            disabled={isLoading}
                         >
-                            <i className="fas fa-plus me-1"></i>
-                            {translations["addWordForm.addWordBtn"]}
+                            {isLoading ? (
+                                <>
+                                    <i className="fas fa-spinner fa-spin me-1"></i>
+                                    {translations["loading"] || "Loading..."}
+                                </>
+                            ) : (
+                                <>
+                                    <i className="fas fa-plus me-1"></i>
+                                    {translations["addWordForm.addWordBtn"]}
+                                </>
+                            )}
                         </button>
                     </div>
                 </div>
