@@ -41,6 +41,25 @@ export const AddWordModal: React.FC<CommonProps> = ({
     const [partOfSpeech, setPartOfSpeech] = useState<string>("");
     const [choice, setChoice] = useState<SingleValue<Object>>();
     const [isLoading, setIsLoading] = useState<boolean>(false);
+    // Sync choice with collectionId when it changes or when collections change
+    useEffect(() => {
+        if (typeof collectionId === 'string' && collectionId.trim() !== '') {
+            const currentCollection = collections.find(
+                (c) => c.id === Number.parseInt(collectionId)
+            );
+            if (currentCollection) {
+                setChoice({
+                    label: currentCollection.name,
+                    value: currentCollection.name,
+                    color: currentCollection.color,
+                });
+                setRandomColor(currentCollection.color);
+            }
+        } else {
+            setChoice(undefined);
+            setRandomColor(getRandomColor());
+        }
+    }, [collectionId, collections]);
 
     // Sync initialWord with local state when it changes
     useEffect(() => {
@@ -113,11 +132,6 @@ export const AddWordModal: React.FC<CommonProps> = ({
                 );
                 setActiveLanguages(reorderedLanguages);
                 setCollections(storedCollections);
-
-                setWord("");
-                setPartOfSpeech("");
-                setDefinitions([{ definition: "", notes: "" }]);
-                setChoice(undefined);
 
                 if (
                     addedWord.collectionId &&
@@ -194,9 +208,27 @@ export const AddWordModal: React.FC<CommonProps> = ({
         setWord("");
         setPartOfSpeech("");
         setDefinitions([{ definition: "", notes: "" }]);
-        setChoice(undefined);
         setErrors({});
         setIsLoading(false);
+        if (typeof collectionId === 'string' && collectionId.trim() !== '') {
+            const currentCollection = collections.find(
+                (c) => c.id === Number.parseInt(collectionId)
+            );
+            if (currentCollection) {
+                setChoice({
+                    label: currentCollection.name,
+                    value: currentCollection.name,
+                    color: currentCollection.color,
+                });
+                setRandomColor(currentCollection.color);
+            } else {
+                setChoice(undefined);
+                setRandomColor(getRandomColor());
+            }
+        } else {
+            setChoice(undefined);
+            setRandomColor(getRandomColor());
+        }
     };
 
     return (
