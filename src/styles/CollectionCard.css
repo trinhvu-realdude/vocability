@@ -538,7 +538,8 @@
     top: 12px;
     right: 12px;
     display: flex;
-    gap: 6px;
+    gap: 12px;
+    /* Increased gap to prevent badge overlap */
     opacity: 0;
     transition: opacity 0.3s ease;
     z-index: 10;
@@ -549,18 +550,31 @@
 }
 
 .folder-action-btn {
-    background: rgba(0, 0, 0, 0.06);
-    border: none;
-    border-radius: 5px;
-    padding: 5px 10px;
-    transition: all 0.2s ease;
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    /* Subtle border */
+    border-radius: 50%;
+    /* Circular buttons */
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    /* Bouncy transition */
     color: #495057;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    /* Soft shadow */
+    cursor: pointer;
 }
 
 .folder-action-btn:hover {
-    background: rgba(0, 0, 0, 0.12);
-    transform: scale(1.15);
-    color: #212529;
+    background: #fff;
+    transform: translateY(-3px) scale(1.1);
+    /* Lift up effect */
+    color: #DD5746;
+    /* Using user preferred color */
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
 }
 
 /* Folder Content */

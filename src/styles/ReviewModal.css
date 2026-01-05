@@ -1,0 +1,441 @@
+/* Review Modal Styling - Clean Theme */
+
+/* Modal Content */
+.review-modal-content {
+    border: none;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+    /* Animation like AddWordModal (Bootstrap fade/slide simulation) */
+    animation: modalSlideDown 0.3s ease-out forwards;
+}
+
+@keyframes modalSlideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-50px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Modal Header */
+.review-modal-header {
+    padding: 1.5rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: none;
+}
+
+.review-modal-title {
+    color: #fff;
+    font-weight: 700;
+    font-size: 1.25rem;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.review-modal-close {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: #fff;
+    font-size: 1.25rem;
+    cursor: pointer;
+    padding: 0.5rem 0.75rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.review-modal-close:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: rotate(90deg);
+}
+
+/* Modal Body */
+.review-modal-body {
+    padding: 2rem;
+    background: #f8f9fa;
+    min-height: 400px;
+    max-height: 70vh;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Review Card Container */
+.review-card-container {
+    width: 100%;
+    max-width: 550px;
+    margin: 0 auto;
+}
+
+/* Review FlashCard */
+.review-flashcard {
+    perspective: 1000px;
+    width: 100%;
+    height: 320px;
+    margin-bottom: 2rem;
+}
+
+.review-flashcard-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-style: preserve-3d;
+}
+
+.review-flashcard.flipped .review-flashcard-inner {
+    transform: rotateY(180deg);
+}
+
+.review-flashcard-front,
+.review-flashcard-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    display: flex;
+    flex-direction: column;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #ffffff;
+    border: 2px solid;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.review-flashcard-back {
+    transform: rotateY(180deg);
+    background: #ffffff;
+}
+
+.review-flashcard-front .card-header,
+.review-flashcard-back .card-header {
+    padding: 1rem 1.5rem;
+    font-size: 1.1rem;
+    font-weight: 700;
+    text-align: center;
+    color: #fff;
+    border-bottom: none;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.review-flashcard-front .card-body,
+.review-flashcard-back .card-body {
+    flex: 1;
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.review-definition {
+    font-size: 1.25rem;
+    line-height: 1.6;
+    color: #212529;
+    font-weight: 500;
+    text-align: center;
+    overflow-y: auto;
+    max-height: 100%;
+}
+
+.review-word {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #212529;
+    line-height: 1.3;
+}
+
+.review-word small {
+    font-size: 1rem;
+    color: #6c757d;
+    font-weight: 500;
+    display: block;
+    margin-top: 0.5rem;
+}
+
+/* Flip Button - Matched to AddWordModal style */
+.review-flip-btn {
+    padding: 0.75rem 2rem;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.review-flip-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Quality Rating Buttons */
+.review-quality-section {
+    width: 100%;
+    margin-top: 2rem;
+}
+
+.review-quality-title {
+    text-align: center;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #495057;
+    margin-bottom: 1.5rem;
+}
+
+.review-quality-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.review-quality-btn {
+    flex: 1;
+    min-width: 90px;
+    padding: 0.75rem 1rem;
+    border: 2px solid;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: center;
+    background: #ffffff;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.review-quality-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.review-quality-btn small {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 500;
+    margin-top: 4px;
+}
+
+.review-quality-btn.again {
+    border-color: #dc3545;
+    color: #dc3545;
+}
+
+.review-quality-btn.again:hover {
+    background: #dc3545;
+    color: #ffffff;
+}
+
+.review-quality-btn.hard {
+    border-color: #fd7e14;
+    color: #fd7e14;
+}
+
+.review-quality-btn.hard:hover {
+    background: #fd7e14;
+    color: #ffffff;
+}
+
+.review-quality-btn.good {
+    border-color: #ffc107;
+    color: #e0a800;
+}
+
+.review-quality-btn.good:hover {
+    background: #ffc107;
+    color: #ffffff;
+}
+
+.review-quality-btn.easy {
+    border-color: #28a745;
+    color: #28a745;
+}
+
+.review-quality-btn.easy:hover {
+    background: #28a745;
+    color: #ffffff;
+}
+
+.review-quality-btn.perfect {
+    border-color: #007bff;
+    color: #007bff;
+}
+
+.review-quality-btn.perfect:hover {
+    background: #007bff;
+    color: #ffffff;
+}
+
+/* Progress Bar */
+.review-progress {
+    width: 100%;
+    margin-bottom: 2rem;
+}
+
+.review-progress-text {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+    color: #6c757d;
+    font-weight: 600;
+}
+
+.review-progress-bar-container {
+    width: 100%;
+    height: 10px;
+    background: #e9ecef;
+    border-radius: 50px;
+    overflow: hidden;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.review-progress-bar {
+    height: 100%;
+    border-radius: 50px;
+    transition: width 0.4s ease;
+}
+
+/* Session Summary */
+.review-summary {
+    text-align: center;
+    padding: 2rem;
+}
+
+.review-summary-icon {
+    font-size: 5rem;
+    color: #28a745;
+    margin-bottom: 1.5rem;
+    animation: bounceIn 0.6s ease;
+}
+
+.review-summary-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #343a40;
+    margin-bottom: 0.5rem;
+}
+
+.review-summary-stats {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.review-summary-stat {
+    background: #ffffff;
+    padding: 1.5rem 2rem;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    min-width: 140px;
+}
+
+.review-summary-stat-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #007bff;
+    display: block;
+}
+
+.review-summary-stat-label {
+    font-size: 0.9rem;
+    color: #6c757d;
+    margin-top: 0.5rem;
+    display: block;
+}
+
+/* Modal Footer */
+.review-modal-footer {
+    padding: 1.5rem 2rem;
+    background: #fff;
+    border-top: 1px solid #dee2e6;
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.review-modal-footer .btn {
+    min-width: 140px;
+    padding: 0.75rem 1.5rem;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.review-modal-footer .btn-outline-secondary {
+    background: #ffffff;
+    color: #6c757d;
+    border: 2px solid #6c757d;
+    box-shadow: 0 2px 6px rgba(108, 117, 125, 0.15);
+}
+
+.review-modal-footer .btn-outline-secondary:hover {
+    background: #6c757d;
+    color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(108, 117, 125, 0.3);
+}
+
+/* Animation matches */
+@keyframes bounceIn {
+    0% {
+        transform: scale(0);
+    }
+
+    50% {
+        transform: scale(1.1);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .review-modal-body {
+        padding: 1.5rem 1rem;
+    }
+
+    .review-flashcard {
+        height: 300px;
+    }
+
+    .review-definition {
+        font-size: 1.1rem;
+    }
+
+    .review-word {
+        font-size: 1.8rem;
+    }
+
+    .review-quality-buttons {
+        gap: 0.5rem;
+    }
+
+    .review-quality-btn {
+        min-width: 80px;
+        padding: 0.5rem;
+        font-size: 0.85rem;
+    }
+}

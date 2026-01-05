@@ -21,7 +21,7 @@ const ButtonGroup: React.FC<{
 }> = ({ word, handleAddFavorite, setIsEdit, setIsDelete }) => {
     return (
         <>
-            <div className="btn btn-sm">
+            <div className="btn btn-sm" title="Add Favorite">
                 <i
                     className={`${word.isFavorite ? "fas" : "far"} fa-star`}
                     onClick={() => handleAddFavorite(word)}
@@ -30,10 +30,10 @@ const ButtonGroup: React.FC<{
                     }}
                 ></i>
             </div>
-            <div className="btn btn-sm" onClick={() => setIsEdit(true)}>
+            <div className="btn btn-sm" title="Edit Word" onClick={() => setIsEdit(true)}>
                 <i className="fas fa-pen"></i>
             </div>
-            <div className="btn btn-sm" onClick={() => setIsDelete(true)}>
+            <div className="btn btn-sm" title="Delete Word" onClick={() => setIsDelete(true)}>
                 <i className="fas fa-times"></i>
             </div>
         </>
@@ -129,13 +129,13 @@ export const WordCard: React.FC<WordCardProps> = ({
                         </div>
                         <div className="right px-4">
                             <div className="d-flex justify-content-between mb-2">
-                                <div className="text-speech">
+                                <div className="text-speech d-flex align-items-center gap-2">
                                     <small
-                                        className="text-muted mb-1"
+                                        className="text-muted"
                                         style={{ fontSize: "14px" }}
                                     >
                                         {word.phonetic}
-                                    </small>{" "}
+                                    </small>
                                     <TextToSpeechButton word={word.word} />
                                 </div>
                                 <div className="function-buttons word-actions">

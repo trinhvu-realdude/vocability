@@ -29,9 +29,14 @@ export interface Word {
     isFavorite: boolean;
     collectionId?: number;
     createdAt: Date;
+    // Spaced repetition fields
+    easeFactor?: number; // Difficulty rating (default: 2.5)
+    interval?: number; // Days until next review (default: 0)
+    repetitions?: number; // Number of successful reviews (default: 0)
+    nextReviewDate?: Date; // Next scheduled review date
 }
 
-export interface Definition{
+export interface Definition {
     definition: string;
     notes: string;
 }
