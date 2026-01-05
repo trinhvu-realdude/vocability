@@ -7,7 +7,8 @@ import { CreateCollectionModal } from "../components/Modal/CreateCollectionModal
 import { useLanguage } from "../LanguageContext";
 import { SearchBar } from "../components/SearchBar";
 import { Collection } from "../interfaces/model";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { ReviewModal } from "../components/Modal/ReviewModal";
 
 export const CollectionPage: React.FC<CommonProps> = ({
     db,
@@ -18,6 +19,28 @@ export const CollectionPage: React.FC<CommonProps> = ({
     const [filteredCollections, setFilteredCollections] =
         useState<Collection[]>(collections);
     const [filterSorting, setFilterSorting] = useState<FilterSortingOption>();
+
+    // Review Modal State
+    const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
+    const [reviewCollectionId, setReviewCollectionId] = useState<number | null>(null);
+    const [reviewCollectionName, setReviewCollectionName] = useState("");
+    const [reviewCollectionColor, setReviewCollectionColor] = useState("");
+
+    // Listen for review modal open event from CollectionCard
+    useEffect(() => {
+        const handleOpenReviewModal = (event: any) => {
+            const { collectionId, collectionName, collectionColor } = event.detail;
+            setReviewCollectionId(collectionId);
+            setReviewCollectionName(collectionName);
+            setReviewCollectionColor(collectionColor);
+            setIsReviewModalOpen(true);
+        };
+
+        window.addEventListener('openReviewModal', handleOpenReviewModal);
+        return () => {
+            window.removeEventListener('openReviewModal', handleOpenReviewModal);
+        };
+    }, []);
 
     document.title = `${translations["flag"]} ${APP_NAME} | All collections`;
 
@@ -65,6 +88,16 @@ export const CollectionPage: React.FC<CommonProps> = ({
                 )}
             </div>
             <CreateCollectionModal db={db} setCollections={setCollections} />
+
+            {/* Review Modal */}
+            <ReviewModal
+                db={db}
+                collectionId={reviewCollectionId}
+                collectionName={reviewCollectionName}
+                collectionColor={reviewCollectionColor}
+                isOpen={isReviewModalOpen}
+                onClose={() => setIsReviewModalOpen(false)}
+            />
         </div>
     );
 };
