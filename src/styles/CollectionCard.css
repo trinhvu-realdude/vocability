@@ -82,7 +82,7 @@
 
 .folder-action-btn:hover {
     background: rgba(0, 0, 0, 0.1);
-    transform: scale(1.1);
+    /* transform: scale(1.1); */
 }
 
 /* Folder Content */
@@ -570,7 +570,7 @@
 
 .folder-action-btn:hover {
     background: #fff;
-    transform: translateY(-3px) scale(1.1);
+    /* transform: translateY(-3px) scale(1.1); */
     /* Lift up effect */
     color: #DD5746;
     /* Using user preferred color */
