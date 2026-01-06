@@ -62,3 +62,72 @@
         display: flex;
     }
 }
+
+.revealed-definition {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-5px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.word-card-right-content {
+    position: relative;
+    transition: filter 0.3s ease, opacity 0.3s ease;
+}
+
+.content-blurred {
+    filter: blur(8px);
+    opacity: 0.3;
+    pointer-events: none;
+    user-select: none;
+}
+
+.word-card-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.btn-show-definition {
+    background: rgba(255, 255, 255, 0.9);
+    color: #333;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    padding: 0.75rem 1.5rem;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 1rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    backdrop-filter: blur(4px);
+}
+
+.btn-show-definition:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    background: #fff;
+    color: #000;
+}
+
+.btn-show-definition i {
+    color: #6366f1;
+}

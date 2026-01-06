@@ -47,7 +47,6 @@ export type SearchBarProps = {
 
 export type NavBarProps = {
     db: IDBPDatabase<MyDB> | undefined;
-    collections: Collection[];
     languageCode?: string;
 };
 
@@ -66,6 +65,7 @@ export type WordCardProps = {
     setWords: React.Dispatch<React.SetStateAction<Word[]>>;
     voicesByLanguage: SpeechSynthesisVoice[];
     onShowToast?: (message: string, type: ToastType) => void;
+    isHideDefinition?: boolean;
 };
 
 export type CollectionFormProps = {

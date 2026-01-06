@@ -47,10 +47,18 @@ export const WordCard: React.FC<WordCardProps> = ({
     filterSorting,
     setWords,
     onShowToast,
+    isHideDefinition,
 }) => {
     const [isFavorite, setIsFavorite] = useState<boolean>(false);
     const [isEdit, setIsEdit] = useState<boolean>(false);
     const [isDelete, setIsDelete] = useState<boolean>(false);
+    const [isRevealed, setIsRevealed] = useState<boolean>(false);
+
+    useEffect(() => {
+        if (isHideDefinition) {
+            setIsRevealed(false);
+        }
+    }, [isHideDefinition]);
 
     const { translations, selectedWord, setSelectedWord } = useLanguage();
 
@@ -127,99 +135,114 @@ export const WordCard: React.FC<WordCardProps> = ({
                                 <i>{word.partOfSpeech}</i>
                             </small>
                         </div>
-                        <div className="right px-4">
-                            <div className="d-flex justify-content-between mb-2">
-                                <div className="text-speech d-flex align-items-center gap-2">
-                                    <small
-                                        className="text-muted"
-                                        style={{ fontSize: "14px" }}
-                                    >
-                                        {word.phonetic}
-                                    </small>
-                                    <TextToSpeechButton word={word.word} />
+                        <div className="right px-4" style={{ position: 'relative' }}>
+                            <div className={`word-card-right-content ${isHideDefinition && !isRevealed ? 'content-blurred' : ''}`}>
+                                <div className="d-flex justify-content-between mb-2">
+                                    <div className="text-speech d-flex align-items-center gap-2">
+                                        <small
+                                            className="text-muted"
+                                            style={{ fontSize: "14px" }}
+                                        >
+                                            {word.phonetic}
+                                        </small>
+                                        <TextToSpeechButton word={word.word} />
+                                    </div>
+                                    <div className="function-buttons word-actions">
+                                        <ButtonGroup
+                                            word={word}
+                                            handleAddFavorite={handleAddFavorite}
+                                            setIsEdit={setIsEdit}
+                                            setIsDelete={setIsDelete}
+                                        />
+                                    </div>
+                                    <div className="dropdown three-dots">
+                                        <i
+                                            className="fa fa-ellipsis-v"
+                                            style={{
+                                                cursor: "pointer",
+                                                fontSize: "14px",
+                                            }}
+                                            id="dropdown-three-buttons"
+                                            data-bs-toggle="dropdown"
+                                            aria-expanded="false"
+                                        ></i>
+                                        <ul
+                                            className="dropdown-menu"
+                                            aria-labelledby="dropdown-three-buttons"
+                                        >
+                                            <li className="d-flex justify-content-between px-3">
+                                                <ButtonGroup
+                                                    word={word}
+                                                    handleAddFavorite={
+                                                        handleAddFavorite
+                                                    }
+                                                    setIsEdit={setIsEdit}
+                                                    setIsDelete={setIsDelete}
+                                                />
+                                            </li>
+                                        </ul>
+                                    </div>
                                 </div>
-                                <div className="function-buttons word-actions">
-                                    <ButtonGroup
-                                        word={word}
-                                        handleAddFavorite={handleAddFavorite}
-                                        setIsEdit={setIsEdit}
-                                        setIsDelete={setIsDelete}
-                                    />
-                                </div>
-                                <div className="dropdown three-dots">
-                                    <i
-                                        className="fa fa-ellipsis-v"
-                                        style={{
-                                            cursor: "pointer",
-                                            fontSize: "14px",
-                                        }}
-                                        id="dropdown-three-buttons"
-                                        data-bs-toggle="dropdown"
-                                        aria-expanded="false"
-                                    ></i>
-                                    <ul
-                                        className="dropdown-menu"
-                                        aria-labelledby="dropdown-three-buttons"
-                                    >
-                                        <li className="d-flex justify-content-between px-3">
-                                            <ButtonGroup
-                                                word={word}
-                                                handleAddFavorite={
-                                                    handleAddFavorite
-                                                }
-                                                setIsEdit={setIsEdit}
-                                                setIsDelete={setIsDelete}
-                                            />
-                                        </li>
-                                    </ul>
-                                </div>
+
+                                <ul className="list-group list-group-flush">
+                                    {/* Multiple definitions view */}
+                                    {word.definitions &&
+                                        word.definitions.map(
+                                            (definition, index) => (
+                                                <li
+                                                    key={index}
+                                                    className="list-group-item"
+                                                >
+                                                    <p className="mb-2">
+                                                        {definition.definition.trim()}
+                                                    </p>
+                                                    {definition.notes && (
+                                                        <p className="mb-2">
+                                                            <strong>
+                                                                {
+                                                                    translations[
+                                                                    "addWordForm.notes"
+                                                                    ]
+                                                                }
+                                                                :
+                                                            </strong>{" "}
+                                                            <span
+                                                                dangerouslySetInnerHTML={{
+                                                                    __html: formatText(
+                                                                        definition.notes.trim()
+                                                                    ),
+                                                                }}
+                                                            ></span>
+                                                        </p>
+                                                    )}
+                                                </li>
+                                            )
+                                        )}
+                                </ul>
+                                <small
+                                    className="text-muted mb-2"
+                                    style={{ fontSize: "12px" }}
+                                >
+                                    {translations["createdAt"]}{" "}
+                                    {formatDate(
+                                        word.createdAt,
+                                        translations["language"]
+                                    )}
+                                </small>
                             </div>
 
-                            <ul className="list-group list-group-flush">
-                                {/* Multiple definitions view */}
-                                {word.definitions &&
-                                    word.definitions.map(
-                                        (definition, index) => (
-                                            <li
-                                                key={index}
-                                                className="list-group-item"
-                                            >
-                                                <p className="mb-2">
-                                                    {definition.definition.trim()}
-                                                </p>
-                                                {definition.notes && (
-                                                    <p className="mb-2">
-                                                        <strong>
-                                                            {
-                                                                translations[
-                                                                "addWordForm.notes"
-                                                                ]
-                                                            }
-                                                            :
-                                                        </strong>{" "}
-                                                        <span
-                                                            dangerouslySetInnerHTML={{
-                                                                __html: formatText(
-                                                                    definition.notes.trim()
-                                                                ),
-                                                            }}
-                                                        ></span>
-                                                    </p>
-                                                )}
-                                            </li>
-                                        )
-                                    )}
-                            </ul>
-                            <small
-                                className="text-muted mb-2"
-                                style={{ fontSize: "12px" }}
-                            >
-                                {translations["createdAt"]}{" "}
-                                {formatDate(
-                                    word.createdAt,
-                                    translations["language"]
-                                )}
-                            </small>
+                            {/* Overlay Button */}
+                            {isHideDefinition && !isRevealed && (
+                                <div className="word-card-overlay">
+                                    <button
+                                        className="btn btn-show-definition"
+                                        onClick={() => setIsRevealed(true)}
+                                    >
+                                        <i className="fas fa-eye" style={{ color: '#DD5746' }}></i>
+                                        {translations["showDefinition"] || "Show definition"}
+                                    </button>
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>

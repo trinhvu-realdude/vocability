@@ -29,6 +29,7 @@ export const WordPage: React.FC<WordPageProps> = ({
     const [voicesByLanguage, setVoicesByLanguage] = useState<
         SpeechSynthesisVoice[]
     >([]);
+    const [isHideDefinition, setIsHideDefinition] = useState(false);
 
     const { translations } = useLanguage();
 
@@ -112,6 +113,8 @@ export const WordPage: React.FC<WordPageProps> = ({
                 filterSorting={filterSorting}
                 setFilterSorting={setFilterSorting}
                 setFilteredWords={setFilteredWords}
+                isHideDefinition={isHideDefinition}
+                onToggleHideDefinition={() => setIsHideDefinition(prev => !prev)}
             />
 
             <div className="list-group mt-4">
@@ -127,6 +130,7 @@ export const WordPage: React.FC<WordPageProps> = ({
                             setWords={setFilteredWords}
                             voicesByLanguage={voicesByLanguage}
                             onShowToast={onShowToast}
+                            isHideDefinition={isHideDefinition}
                         />
                     ))}
             </div>

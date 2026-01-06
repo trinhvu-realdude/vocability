@@ -12,7 +12,6 @@ interface ExtendedNavBarProps extends NavBarProps {
 
 export const NavBar: React.FC<ExtendedNavBarProps> = ({
     db,
-    collections,
     languageCode,
     onQuickAddWord,
 }) => {
@@ -104,26 +103,6 @@ export const NavBar: React.FC<ExtendedNavBarProps> = ({
                                             </h6>
                                         </a>
                                     </li>
-                                    {collections.map((collection, index) => (
-                                        <li key={index}>
-                                            <a
-                                                className="dropdown-item d-flex align-items-center"
-                                                href={`/${translations["language"]}/collection/${collection.id}`}
-                                            >
-                                                <div
-                                                    className="collection-icon"
-                                                    style={{
-                                                        color: collection.color,
-                                                    }}
-                                                >
-                                                    <i className="fas fa-layer-group"></i>
-                                                </div>
-                                                <span className="ms-2">
-                                                    {collection.name}
-                                                </span>
-                                            </a>
-                                        </li>
-                                    ))}
                                     <li>
                                         <hr className="dropdown-divider" />
                                     </li>
