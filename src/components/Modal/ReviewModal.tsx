@@ -32,6 +32,8 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({
     const [sessionComplete, setSessionComplete] = useState(false);
     const [reviewedCount, setReviewedCount] = useState(0);
 
+    const [sentence, setSentence] = useState("");
+
     // Load words for review when modal opens
     useEffect(() => {
         if (isOpen && db && collectionId) {
@@ -49,11 +51,14 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({
         setIsFlipped(false);
         setSessionComplete(false);
         setReviewedCount(0);
+        setSentence("");
         setIsLoading(false);
     };
 
     const handleFlip = () => {
-        setIsFlipped(!isFlipped);
+        if (!isFlipped) {
+            setIsFlipped(prev => !prev);
+        }
     };
 
     const handleQualityRating = async (quality: number) => {
@@ -65,15 +70,21 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({
         // Update word in database
         await updateWordAfterReview(db, updatedWord);
 
-        setReviewedCount((prev) => prev + 1);
+        // Start flip back animation first
+        setIsFlipped(false);
 
-        // Move to next card or complete session
-        if (currentIndex < wordsToReview.length - 1) {
-            setCurrentIndex((prev) => prev + 1);
-            setIsFlipped(false);
-        } else {
-            setSessionComplete(true);
-        }
+        // Wait for card to be midway flipped (90deg) before changing content
+        setTimeout(() => {
+            setReviewedCount((prev) => prev + 1);
+            setSentence(""); // Reset sentence
+
+            // Move to next card or complete session
+            if (currentIndex < wordsToReview.length - 1) {
+                setCurrentIndex((prev) => prev + 1);
+            } else {
+                setSessionComplete(true);
+            }
+        }, 200);
     };
 
     const handleClose = () => {
@@ -82,6 +93,7 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({
         setIsFlipped(false);
         setSessionComplete(false);
         setReviewedCount(0);
+        setSentence("");
         onClose();
     };
 
@@ -99,7 +111,7 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({
             onClick={handleClose}
         >
             <div
-                className="modal-dialog modal-dialog-centered modal-lg"
+                className="modal-dialog modal-dialog-centered modal-xl"
                 onClick={(e) => e.stopPropagation()}
             >
                 <div className="modal-content review-modal-content">
@@ -175,10 +187,10 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({
                                 </div>
                             </div>
                         ) : (
-                            /* Review Card */
-                            <div className="review-card-container">
-                                {/* Progress */}
-                                <div className="review-progress">
+                            /* Review Session with 2-Column Layout */
+                            <div className="container-fluid p-0">
+                                {/* Progress Bar (Full Width) */}
+                                <div className="review-progress mb-4">
                                     <div className="review-progress-text">
                                         <span>
                                             Card {currentIndex + 1} of {wordsToReview.length}
@@ -196,121 +208,137 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({
                                     </div>
                                 </div>
 
-                                {/* FlashCard */}
-                                <div
-                                    className={`review-flashcard ${isFlipped ? "flipped" : ""}`}
-                                >
-                                    <div className="review-flashcard-inner">
-                                        {/* Front - Word */}
+                                <div className="row g-4">
+                                    {/* Left Column: FlashCard */}
+                                    <div className="col-lg-6 d-flex align-items-center justify-content-center">
                                         <div
-                                            className="review-flashcard-front"
-                                            style={{ borderColor: collectionColor }}
+                                            className={`review-flashcard ${isFlipped ? "flipped" : ""}`}
+                                            onClick={handleFlip}
+                                            style={{ cursor: isFlipped ? "default" : "pointer" }}
                                         >
-                                            <div
-                                                className="card-header"
-                                                style={{ backgroundColor: collectionColor }}
-                                            >
-                                                <i className="fas fa-spell-check me-2"></i>
-                                                Word
-                                            </div>
-                                            <div className="card-body">
-                                                <div className="review-word">
-                                                    {currentWord.phonetic && (
-                                                        <>
-                                                            <small>{currentWord.phonetic}</small>
+                                            <div className="review-flashcard-inner">
+                                                {/* Front - Word */}
+                                                <div
+                                                    className="review-flashcard-front"
+                                                    style={{ borderColor: collectionColor }}
+                                                >
+                                                    <div
+                                                        className="card-header"
+                                                        style={{ backgroundColor: collectionColor }}
+                                                    >
+                                                        <i className="fas fa-spell-check me-2"></i>
+                                                        Word
+                                                    </div>
+                                                    <div className="card-body position-relative">
+                                                        <div className="review-word">
+                                                            {currentWord.phonetic && (
+                                                                <>
+                                                                    <small>{currentWord.phonetic}</small>
+                                                                    <br />
+                                                                </>
+                                                            )}
+                                                            {currentWord.word}
                                                             <br />
-                                                        </>
-                                                    )}
-                                                    {currentWord.word}
-                                                    <br />
-                                                    <small>
-                                                        <i>({currentWord.partOfSpeech})</i>
-                                                    </small>
+                                                            <small>
+                                                                <i>({currentWord.partOfSpeech})</i>
+                                                            </small>
+                                                        </div>
+                                                    </div>
+                                                    <div className="click-hint text-muted pb-3">
+                                                        <small>
+                                                            <i className="fas fa-hand-pointer me-2"></i>
+                                                            Click card to flip
+                                                        </small>
+                                                    </div>
+                                                </div>
+
+                                                {/* Back - Definition */}
+                                                <div
+                                                    className="review-flashcard-back"
+                                                    style={{ borderColor: collectionColor }}
+                                                >
+                                                    <div
+                                                        className="card-header"
+                                                        style={{ backgroundColor: collectionColor }}
+                                                    >
+                                                        <i className="fas fa-book-open me-2"></i>
+                                                        Definition
+                                                    </div>
+                                                    <div className="card-body">
+                                                        <div className="review-definition">
+                                                            {currentWord.definitions[0].definition}
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
+                                    </div>
 
-                                        {/* Back - Definition */}
-                                        <div
-                                            className="review-flashcard-back"
-                                            style={{ borderColor: collectionColor }}
-                                        >
-                                            <div
-                                                className="card-header"
-                                                style={{ backgroundColor: collectionColor }}
-                                            >
-                                                <i className="fas fa-book-open me-2"></i>
-                                                Definition
-                                            </div>
-                                            <div className="card-body">
-                                                <div className="review-definition">
-                                                    {currentWord.definitions[0].definition}
+                                    {/* Right Column: Sentence Input & Controls */}
+                                    <div className="col-lg-6 d-flex flex-column justify-content-center">
+                                        {/* Sentence Input */}
+                                        <div className="mb-4">
+                                            <label className="form-label fw-bold text-muted">
+                                                <i className="fas fa-pen-alt me-2"></i>
+                                                Write a sentence using this word:
+                                            </label>
+                                            <textarea
+                                                className="form-control review-sentence-input"
+                                                rows={4}
+                                                placeholder="Type your sentence here..."
+                                                value={sentence}
+                                                onChange={(e) => setSentence(e.target.value)}
+                                                style={{
+                                                    borderColor: collectionColor,
+                                                    resize: "none"
+                                                }}
+                                            ></textarea>
+                                        </div>
+
+                                        {/* Controls */}
+                                        <div className="review-controls-section" style={{ minHeight: '120px' }}>
+                                            {isFlipped && (
+                                                <div className="review-quality-section mt-0 animation-fade-in">
+                                                    <div className="review-quality-title">
+                                                        How well did you know this word?
+                                                    </div>
+                                                    <div className="review-quality-buttons">
+                                                        <button
+                                                            className="review-quality-btn again"
+                                                            onClick={(e) => { e.stopPropagation(); handleQualityRating(1); }}
+                                                        >
+                                                            <div>😞 Again</div>
+                                                        </button>
+                                                        <button
+                                                            className="review-quality-btn hard"
+                                                            onClick={(e) => { e.stopPropagation(); handleQualityRating(2); }}
+                                                        >
+                                                            <div>😐 Hard</div>
+                                                        </button>
+                                                        <button
+                                                            className="review-quality-btn good"
+                                                            onClick={(e) => { e.stopPropagation(); handleQualityRating(3); }}
+                                                        >
+                                                            <div>🙂 Good</div>
+                                                        </button>
+                                                        <button
+                                                            className="review-quality-btn easy"
+                                                            onClick={(e) => { e.stopPropagation(); handleQualityRating(4); }}
+                                                        >
+                                                            <div>😊 Easy</div>
+                                                        </button>
+                                                        <button
+                                                            className="review-quality-btn perfect"
+                                                            onClick={(e) => { e.stopPropagation(); handleQualityRating(5); }}
+                                                        >
+                                                            <div>😄 Perfect</div>
+                                                        </button>
+                                                    </div>
                                                 </div>
-                                            </div>
+                                            )}
                                         </div>
                                     </div>
                                 </div>
-
-                                {/* Flip Button or Quality Ratings */}
-                                {!isFlipped ? (
-                                    <div className="text-center">
-                                        <button
-                                            className="btn btn-primary review-flip-btn"
-                                            onClick={handleFlip}
-                                            style={{
-                                                backgroundColor: collectionColor,
-                                                borderColor: collectionColor,
-                                                color: '#fff'
-                                            }}
-                                        >
-                                            <i className="fas fa-sync-alt me-2"></i>
-                                            Show Answer
-                                        </button>
-                                    </div>
-                                ) : (
-                                    <div className="review-quality-section">
-                                        <div className="review-quality-title">
-                                            How well did you know this word?
-                                        </div>
-                                        <div className="review-quality-buttons">
-                                            <button
-                                                className="review-quality-btn again"
-                                                onClick={() => handleQualityRating(1)}
-                                            >
-                                                <div>😞 Again</div>
-                                                {/* <small>Didn't know</small> */}
-                                            </button>
-                                            <button
-                                                className="review-quality-btn hard"
-                                                onClick={() => handleQualityRating(2)}
-                                            >
-                                                <div>😐 Hard</div>
-                                                {/* <small>Struggled</small> */}
-                                            </button>
-                                            <button
-                                                className="review-quality-btn good"
-                                                onClick={() => handleQualityRating(3)}
-                                            >
-                                                <div>🙂 Good</div>
-                                                {/* <small>Some effort</small> */}
-                                            </button>
-                                            <button
-                                                className="review-quality-btn easy"
-                                                onClick={() => handleQualityRating(4)}
-                                            >
-                                                <div>😊 Easy</div>
-                                                {/* <small>Quick recall</small> */}
-                                            </button>
-                                            <button
-                                                className="review-quality-btn perfect"
-                                                onClick={() => handleQualityRating(5)}
-                                            >
-                                                <div>😄 Perfect</div>
-                                                {/* <small>Instant</small> */}
-                                            </button>
-                                        </div>
-                                    </div>
-                                )}
                             </div>
                         )}
                     </div>

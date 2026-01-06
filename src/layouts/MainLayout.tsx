@@ -97,6 +97,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({
                             collections={collections}
                             setCollections={setCollections}
                             setWords={setWords}
+                            onShowToast={(message, type) => setToast({ message, type })}
                         />
                     }
                 />

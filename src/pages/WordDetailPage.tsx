@@ -16,6 +16,7 @@ import { APP_NAME } from "../utils/constants";
 import { EditWordForm } from "../components/Form/EditWordForm";
 import { useLanguage } from "../LanguageContext";
 import { TextToSpeechButton } from "../components/TextToSpeechButton";
+import "../styles/WordDetailPage.css";
 
 export const WordDetailPage: React.FC<WordDetailPageProps> = ({ db, onShowToast }) => {
     const { wordId } = useParams();
@@ -102,10 +103,10 @@ export const WordDetailPage: React.FC<WordDetailPageProps> = ({ db, onShowToast 
                 <>
                     <div className="d-flex w-100 justify-content-between mb-2">
                         <div className="row">
-                            <h5 className="mb-1">
+                            <h5 className="mb-1 d-flex align-items-center gap-2">
                                 <strong>{word?.word}</strong>{" "}
                                 <small
-                                    className="text-muted mb-1"
+                                    className="text-muted"
                                     style={{ fontSize: "14px" }}
                                 >
                                     {word?.phonetic}
@@ -116,11 +117,11 @@ export const WordDetailPage: React.FC<WordDetailPageProps> = ({ db, onShowToast 
                                 <i>{word?.partOfSpeech}</i>
                             </small>
                         </div>
-                        <div>
-                            <div className="btn btn-sm">
+                        <div className="word-action">
+                            <div className="btn btn-sm" title="Add Favorite">
                                 <i
                                     className={`${word?.isFavorite ? "fas" : "far"
-                                        } fa-bookmark`}
+                                        } fa-star`}
                                     onClick={() => {
                                         if (word) handleAddFavorite(word);
                                     }}
