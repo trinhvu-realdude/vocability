@@ -157,6 +157,8 @@
     border: none;
     cursor: pointer;
     white-space: nowrap;
+    min-height: 3.125rem;
+    /* 50px approx */
 }
 
 .action-button i {
@@ -203,6 +205,32 @@
 
 .btn-create-collection:active {
     transform: translateY(0);
+}
+
+/* Hide Definition Button */
+.btn-hide-definition {
+    background: #ffffff;
+    color: #495057;
+    border: 2px solid #e9ecef;
+    padding: 0;
+    width: 3.125rem;
+    /* Match min-height for square */
+    justify-content: center;
+}
+
+.btn-hide-definition:hover {
+    border-color: #DD5746;
+    color: #DD5746;
+    background: rgba(221, 87, 70, 0.05);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+}
+
+.btn-hide-definition.active {
+    background: rgba(221, 87, 70, 0.1);
+    color: #DD5746;
+    border-color: #DD5746;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 /* Button Group */

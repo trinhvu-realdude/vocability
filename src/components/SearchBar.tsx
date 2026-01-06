@@ -21,6 +21,8 @@ export const SearchBar: React.FC<{
         React.SetStateAction<FilterSortingOption | undefined>
     >;
     setFilteredCollections?: React.Dispatch<React.SetStateAction<Collection[]>>;
+    isHideDefinition?: boolean;
+    onToggleHideDefinition?: () => void;
 }> = React.memo(
     ({
         isFavorite,
@@ -35,6 +37,8 @@ export const SearchBar: React.FC<{
         setFilteredWords,
         setDisplayWordDtos,
         setFilteredCollections,
+        isHideDefinition,
+        onToggleHideDefinition,
     }) => {
         const [searchValue, setSearchValue] = useState<string>("");
         const [displayWords, setDisplayWords] = useState<Word[]>([]); // for SortFilter component
@@ -149,6 +153,21 @@ export const SearchBar: React.FC<{
                                 >
                                     <i className="fas fa-plus"></i>
                                     {translations["collectionPage.createCollectionBtn"]}
+                                </button>
+                            )}
+
+                            {onToggleHideDefinition && (
+                                <button
+                                    className={`action-button btn-hide-definition ${isHideDefinition ? 'active' : ''}`}
+                                    type="button"
+                                    onClick={onToggleHideDefinition}
+                                    title={isHideDefinition ? translations["showDefinition"] : translations["hideDefinition"]}
+                                    style={{
+                                        color: isHideDefinition ? '#DD5746' : 'inherit',
+                                        // transition: 'all 0.3s ease'
+                                    }}
+                                >
+                                    <i className={`fas ${isHideDefinition ? 'fa-eye' : 'fa-eye-slash'}`}></i>
                                 </button>
                             )}
 

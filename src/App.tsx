@@ -49,7 +49,6 @@ function App() {
                 <React.Fragment>
                     <NavBar
                         db={db}
-                        collections={collections}
                         languageCode={languageCode}
                         onQuickAddWord={handleQuickAddWord}
                     />
