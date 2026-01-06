@@ -36,7 +36,7 @@
 
 .word-actions .btn:hover {
     background: #fff;
-    transform: translateY(-3px) scale(1.1);
+    /* transform: translateY(-3px) scale(1.1); */
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
     color: #DD5746;
 }
