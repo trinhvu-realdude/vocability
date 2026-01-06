@@ -61,14 +61,14 @@ export const OffCanvas: React.FC<{
                             key={index}
                         >
                             <div className="row">
-                                <h5 className="mb-1">
-                                    <strong>{element.word}</strong>{" "}
+                                <h5 className="mb-1 d-flex align-items-center gap-2">
+                                    <strong>{element.word}</strong>
                                     <small
-                                        className="text-muted mb-1"
+                                        className="text-muted"
                                         style={{ fontSize: "14px" }}
                                     >
                                         {element.phonetic}
-                                    </small>{" "}
+                                    </small>
                                     <TextToSpeechButton word={element.word} />
                                 </h5>
                                 {element.meanings &&
@@ -110,7 +110,7 @@ export const OffCanvas: React.FC<{
                                                 </ul>
                                                 {meaning.synonyms.length > 0 &&
                                                     meaning.antonyms.length >
-                                                        0 && (
+                                                    0 && (
                                                         <table
                                                             className="table table-bordered table-sm mt-2"
                                                             style={{

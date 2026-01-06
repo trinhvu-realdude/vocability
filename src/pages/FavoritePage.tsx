@@ -12,7 +12,7 @@ import { useParams } from "react-router-dom";
 import { useLanguage } from "../LanguageContext";
 import { TextToSpeechButton } from "../components/TextToSpeechButton";
 
-export const FavoritePage: React.FC<CommonProps> = ({ db }) => {
+export const FavoritePage: React.FC<CommonProps> = ({ db, onShowToast }) => {
     const { translations } = useLanguage();
     document.title = `${translations["flag"]} ${APP_NAME} | Favorite collection`;
 
@@ -43,7 +43,10 @@ export const FavoritePage: React.FC<CommonProps> = ({ db }) => {
                 setFavoriteWords(words);
                 setFilteredWords(words);
             }
-            alert(translations["alert.removeFavoriteWord"]);
+            onShowToast?.(
+                translations["alert.removeFavoriteWord"],
+                "success"
+            );
         }
     };
 
@@ -126,10 +129,10 @@ export const FavoritePage: React.FC<CommonProps> = ({ db }) => {
                         <div className="list-group-item word-card-hover p-4" key={word.id}>
                             <div className="d-flex w-100 justify-content-between mb-2">
                                 <div className="row">
-                                    <h5 className="mb-1">
+                                    <h5 className="mb-1 d-flex align-items-center gap-2">
                                         <strong>{word.word}</strong>{" "}
                                         <small
-                                            className="text-muted mb-1"
+                                            className="text-muted"
                                             style={{ fontSize: "14px" }}
                                         >
                                             {word.phonetic}
@@ -140,7 +143,7 @@ export const FavoritePage: React.FC<CommonProps> = ({ db }) => {
                                         <i>{word.partOfSpeech}</i>
                                     </small>
                                 </div>
-                                <div>
+                                <div className="word-action">
                                     <div className="btn btn-sm">
                                         <i
                                             className="fas fa-times"
