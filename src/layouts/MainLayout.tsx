@@ -22,6 +22,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({
     setLanguageCode,
 }) => {
     const [words, setWords] = useState<Word[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
     const [currentCollectionId, setCurrentCollectionId] = useState<string>("");
     const [toast, setToast] = useState<{
         message: string;
@@ -32,6 +33,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({
 
     useEffect(() => {
         const fetchData = async () => {
+            setIsLoading(true);
             if (db && language) {
                 setLanguageCode(language);
                 const currentLanguageId = await getCurrentLanguageId(
@@ -44,6 +46,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({
                 );
                 setCollections(storedCollections);
             }
+            setIsLoading(false);
         };
         fetchData();
     }, [language]);
@@ -70,6 +73,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({
                             setCollections={setCollections}
                             setWords={setWords}
                             onShowToast={(message, type) => setToast({ message, type })}
+                            isLoading={isLoading}
                         />
                     }
                 />
@@ -83,6 +87,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({
                             setCollections={setCollections}
                             setCurrentCollectionId={setCurrentCollectionId}
                             onShowToast={(message, type) => setToast({ message, type })}
+                            isLoading={isLoading}
                         />
                     }
                 />
