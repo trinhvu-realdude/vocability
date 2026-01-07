@@ -58,7 +58,7 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    padding: 0.75rem 1.25rem;
+    padding: 0.75rem 1.5rem;
     border: 2px solid #e9ecef;
     border-radius: 10px;
     background: #ffffff;
@@ -68,6 +68,8 @@
     transition: all 0.3s ease;
     cursor: pointer;
     white-space: nowrap;
+    height: 3.125rem;
+    box-sizing: border-box;
 }
 
 .filter-button:hover {
@@ -97,6 +99,65 @@
     border-color: #DD5746;
     background: rgba(221, 87, 70, 0.08);
     color: #DD5746;
+}
+
+/* Premium Utility Buttons */
+.btn-view-mode,
+.btn-search-utility {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    border: 2px solid #e9ecef;
+    border-radius: 10px;
+    background: linear-gradient(to bottom, #ffffff 0%, #f8f9fa 100%);
+    color: #495057;
+    font-weight: 500;
+    font-size: 1rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    white-space: nowrap;
+    height: 3.125rem;
+    box-sizing: border-box;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+}
+
+.btn-search-utility.icon-only {
+    padding: 0;
+    width: 3.125rem;
+}
+
+.btn-view-mode:hover,
+.btn-search-utility:hover {
+    border-color: #DD5746;
+    color: #DD5746;
+    background: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(221, 87, 70, 0.12);
+}
+
+.btn-view-mode.active,
+.btn-search-utility.active {
+    background: rgba(221, 87, 70, 0.08);
+    color: #DD5746;
+    border-color: #DD5746;
+}
+
+.btn-view-mode i,
+.btn-search-utility i {
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.btn-view-mode .fa-chevron-down {
+    font-size: 0.75rem;
+    opacity: 0.5;
+}
+
+.btn-view-mode:hover .fa-chevron-down {
+    transform: rotate(180deg);
+    opacity: 1;
 }
 
 /* Collection Filter Badge */
@@ -157,7 +218,8 @@
     border: none;
     cursor: pointer;
     white-space: nowrap;
-    min-height: 3.125rem;
+    height: 3.125rem;
+    box-sizing: border-box;
     /* 50px approx */
 }
 
@@ -201,36 +263,6 @@
     color: #ffffff;
     transform: translateY(-2px);
     box-shadow: 0 4px 10px rgba(40, 167, 69, 0.3);
-}
-
-.btn-create-collection:active {
-    transform: translateY(0);
-}
-
-/* Hide Definition Button */
-.btn-hide-definition {
-    background: #ffffff;
-    color: #495057;
-    border: 2px solid #e9ecef;
-    padding: 0;
-    width: 3.125rem;
-    /* Match min-height for square */
-    justify-content: center;
-}
-
-.btn-hide-definition:hover {
-    border-color: #DD5746;
-    color: #DD5746;
-    background: rgba(221, 87, 70, 0.05);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
-}
-
-.btn-hide-definition.active {
-    background: rgba(221, 87, 70, 0.1);
-    color: #DD5746;
-    border-color: #DD5746;
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 /* Button Group */

@@ -1,0 +1,160 @@
+.collection-list-item {
+    background: white;
+    border-radius: 12px;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.collection-list-header {
+    padding: 1rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    border-left: 6px solid transparent;
+    /* Defined by inline style */
+    background: white;
+}
+
+.collection-list-header:hover {
+    background: #f8f9fa;
+}
+
+.collection-info-group {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    flex: 1;
+}
+
+.collection-name {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #333;
+    margin: 0;
+}
+
+.collection-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #6c757d;
+    font-size: 0.9rem;
+}
+
+.collection-actions-group {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-right: 1.5rem;
+}
+
+.btn-accordion-toggle {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: 1px solid #e9ecef;
+    color: #adb5bd;
+    transition: all 0.3s ease;
+}
+
+.collection-list-item.expanded .btn-accordion-toggle {
+    transform: rotate(180deg);
+    background: #e9ecef;
+    color: #495057;
+}
+
+/* Body Animation */
+.collection-accordion-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    background: #f8f9fa;
+    opacity: 0;
+}
+
+.collection-accordion-body.expanded {
+    max-height: 1000px;
+    /* Enough for content */
+    transition: max-height 0.5s ease-in-out, opacity 0.3s ease-in;
+    border-top: 1px solid #f1f1f1;
+    padding: 1.5rem;
+    opacity: 1;
+}
+
+/* Mini Word Row */
+.mini-word-row {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    background: white;
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+    border: 1px solid rgba(0, 0, 0, 0.03);
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.mini-word-row:hover {
+    border-color: rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03);
+    color: #DD5746;
+}
+
+.mini-word-text {
+    font-weight: 600;
+    color: #333;
+    font-size: 1rem;
+    margin-right: 0.75rem;
+    flex: 1;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.mini-word-pos {
+    font-size: 0.8rem;
+    color: #888;
+    background: #f1f1f1;
+    padding: 0.1rem 0.4rem;
+    border-radius: 4px;
+    font-style: italic;
+    flex-shrink: 0;
+}
+
+/* Reusing action button styles from CollectionCard but adjusted for list */
+.list-action-btn {
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    /* Subtle border */
+    border-radius: 50%;
+    /* Circular buttons */
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    /* Bouncy transition */
+    color: #495057;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    /* Soft shadow */
+    cursor: pointer;
+}
+
+.list-action-btn:hover {
+    color: #DD5746;
+    background: #fff;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
+}
+
+.list-action-btn:active {
+    transform: translateY(0);
+}

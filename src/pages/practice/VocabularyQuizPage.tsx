@@ -14,7 +14,7 @@ export const VocabularyQuizPage: React.FC<VocabularyQuizPageProps> = ({
 
     return (
         <div className="container-list" id="vocabulary-quiz">
-            <PageHeader href="/practices" content="Vocabulary Quiz" />
+            <PageHeader content="Vocabulary Quiz" />
 
             <div className="text-center my-4">
                 <button

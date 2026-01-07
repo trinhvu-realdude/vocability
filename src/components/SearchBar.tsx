@@ -23,6 +23,8 @@ export const SearchBar: React.FC<{
     setFilteredCollections?: React.Dispatch<React.SetStateAction<Collection[]>>;
     isHideDefinition?: boolean;
     onToggleHideDefinition?: () => void;
+    viewMode?: 'grid' | 'list';
+    setViewMode?: React.Dispatch<React.SetStateAction<'grid' | 'list'>>;
 }> = React.memo(
     ({
         isFavorite,
@@ -39,6 +41,8 @@ export const SearchBar: React.FC<{
         setFilteredCollections,
         isHideDefinition,
         onToggleHideDefinition,
+        viewMode,
+        setViewMode,
     }) => {
         const [searchValue, setSearchValue] = useState<string>("");
         const [displayWords, setDisplayWords] = useState<Word[]>([]); // for SortFilter component
@@ -145,6 +149,34 @@ export const SearchBar: React.FC<{
                                 setFilteredCollections={setFilteredCollections}
                             />
 
+                            {type === "collection" && setViewMode && (
+                                <div className="dropdown">
+                                    <button
+                                        className="btn-view-mode"
+                                        type="button"
+                                        data-bs-toggle="dropdown"
+                                        aria-expanded="false"
+                                    >
+                                        <i className={`fas ${viewMode === 'grid' ? 'fa-th-large' : 'fa-list'}`}></i>
+                                        <i className="fas fa-chevron-down"></i>
+                                    </button>
+                                    <ul className="dropdown-menu filter-dropdown-menu">
+                                        <li onClick={() => setViewMode('grid')}>
+                                            <a className={`dropdown-item ${viewMode === 'grid' ? 'active' : ''}`}>
+                                                <i className="fas fa-th-large me-2"></i>
+                                                {translations["searchBar.gridView"]}
+                                            </a>
+                                        </li>
+                                        <li onClick={() => setViewMode('list')}>
+                                            <a className={`dropdown-item ${viewMode === 'list' ? 'active' : ''}`}>
+                                                <i className="fas fa-list me-2"></i>
+                                                {translations["searchBar.listView"]}
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            )}
+
                             {type === "collection" && (
                                 <button
                                     className="action-button btn-create-collection"
@@ -158,14 +190,10 @@ export const SearchBar: React.FC<{
 
                             {onToggleHideDefinition && (
                                 <button
-                                    className={`action-button btn-hide-definition ${isHideDefinition ? 'active' : ''}`}
+                                    className={`btn-search-utility icon-only ${isHideDefinition ? 'active' : ''}`}
                                     type="button"
                                     onClick={onToggleHideDefinition}
                                     title={isHideDefinition ? translations["showDefinition"] : translations["hideDefinition"]}
-                                    style={{
-                                        color: isHideDefinition ? '#DD5746' : 'inherit',
-                                        // transition: 'all 0.3s ease'
-                                    }}
                                 >
                                     <i className={`fas ${isHideDefinition ? 'fa-eye' : 'fa-eye-slash'}`}></i>
                                 </button>

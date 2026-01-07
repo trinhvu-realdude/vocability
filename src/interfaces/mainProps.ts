@@ -34,15 +34,19 @@ export interface WordDetailPageProps {
 export type CollectionModalProps = {
     db: IDBPDatabase<MyDB> | undefined;
     collection: Collection;
+    setIsEditOrDelete?: React.Dispatch<React.SetStateAction<boolean>>;
     setCollection?: React.Dispatch<
         React.SetStateAction<Collection | undefined>
     >;
     setCollections: React.Dispatch<React.SetStateAction<Collection[]>>;
+    onShowToast?: (message: string, type: ToastType) => void;
 };
 
 export type SearchBarProps = {
     searchValue: string;
     setSearchValue: React.Dispatch<React.SetStateAction<string>>;
+    viewMode?: 'grid' | 'list';
+    setViewMode?: React.Dispatch<React.SetStateAction<'grid' | 'list'>>;
 };
 
 export type NavBarProps = {
@@ -54,7 +58,7 @@ export type CollectionCardProps = {
     db: IDBPDatabase<MyDB> | undefined;
     collection: Collection;
     setCollections: React.Dispatch<React.SetStateAction<Collection[]>>;
-    languageCode: string;
+    onShowToast?: (message: string, type: ToastType) => void;
 };
 
 export type WordCardProps = {

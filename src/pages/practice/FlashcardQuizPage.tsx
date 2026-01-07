@@ -60,7 +60,6 @@ export const FlashcardQuizPage: React.FC<FlashcardQuizPageProps> = ({
     return (
         <div className="container-list" id="flashcard-quiz">
             <PageHeader
-                href="/practices"
                 content={
                     <>
                         <span style={{ color: cardColor && cardColor }}>

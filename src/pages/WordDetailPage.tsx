@@ -92,7 +92,6 @@ export const WordDetailPage: React.FC<WordDetailPageProps> = ({ db, onShowToast 
     return (
         <div className="container-list" id="word-detail">
             <PageHeader
-                href={`/${translations["language"]}/collection/${word?.collectionId}`}
                 content={
                     <>
                         <strong>{word?.word}</strong>

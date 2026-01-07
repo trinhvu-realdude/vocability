@@ -117,17 +117,28 @@ a.word-link:hover {
     position: fixed;
     bottom: 20%;
     right: 40px;
-    background-color: #000;
+
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    /* Subtle border */
+    border-radius: 50%;
+    /* Circular buttons */
     width: 35px;
     height: 35px;
-    border: 0;
-    color: #fff;
-    border-radius: 0.25rem;
-    font-size: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    /* Bouncy transition */
+    color: #495057;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    /* Soft shadow */
 }
 
 .gototop:hover {
-    background-color: rgb(221, 87, 70);
+    color: #DD5746;
+    background: #fff;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
 }
 
 .word-list-btn {
