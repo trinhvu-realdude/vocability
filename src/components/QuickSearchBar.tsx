@@ -84,7 +84,7 @@ export const QuickSearchBar: React.FC<QuickSearchProps> = ({ db, languageCode, o
                 <input
                     type="text"
                     className="quick-search-input"
-                    placeholder="Search or add word..."
+                    placeholder={translations["quickSearchBar.placeholder"]}
                     value={searchTerm}
                     onChange={(e) => {
                         setSearchTerm(e.target.value);

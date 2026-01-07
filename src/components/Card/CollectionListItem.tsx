@@ -167,7 +167,7 @@ export const CollectionListItem: React.FC<CollectionListItemProps> = ({
                                             >
                                                 <strong>{word.word}</strong>{" "}
                                             </a></span>
-                                            <span className="mini-word-pos">{word.partOfSpeech}</span>
+                                            {word.partOfSpeech && <span className="mini-word-pos">{word.partOfSpeech}</span>}
                                         </div>
                                     </div>
                                 ))

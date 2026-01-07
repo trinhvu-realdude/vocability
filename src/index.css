@@ -15,6 +15,7 @@ body {
     color: #212529;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    background-color: #fcfcfc;
 }
 
 /* Chrome, Safari, Edge, Opera */
