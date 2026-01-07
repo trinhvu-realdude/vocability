@@ -261,8 +261,10 @@ export const validateInputs = (word: string, partOfSpeech: string, choice: any, 
     }
 
     if (!partOfSpeech) {
-        newErrors.partOfSpeech = "* Part of speech is required";
-        isValid = false;
+        // newErrors.partOfSpeech = "* Part of speech is required";
+        // isValid = false;
+        console.log("partOfSpeech");
+
     }
 
     if (!choice) {

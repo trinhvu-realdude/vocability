@@ -7,6 +7,7 @@ import {
     updateWordAfterReview,
 } from "../../services/SpacedRepetitionService";
 import "../../styles/ReviewModal.css";
+import { useLanguage } from "../../LanguageContext";
 
 interface ReviewModalProps {
     db: IDBPDatabase<MyDB> | null | undefined;
@@ -33,6 +34,9 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({
     const [reviewedCount, setReviewedCount] = useState(0);
 
     const [sentence, setSentence] = useState("");
+
+    const { translations } = useLanguage();
+
 
     // Load words for review when modal opens
     useEffect(() => {
@@ -239,9 +243,9 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({
                                                             )}
                                                             {currentWord.word}
                                                             <br />
-                                                            <small>
+                                                            {currentWord.partOfSpeech && <small>
                                                                 <i>({currentWord.partOfSpeech})</i>
-                                                            </small>
+                                                            </small>}
                                                         </div>
                                                     </div>
                                                     <div className="click-hint text-muted pb-3">
@@ -300,38 +304,38 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({
                                             {isFlipped && (
                                                 <div className="review-quality-section mt-0 animation-fade-in">
                                                     <div className="review-quality-title">
-                                                        How well did you know this word?
+                                                        {translations["review.title"]}
                                                     </div>
                                                     <div className="review-quality-buttons">
                                                         <button
                                                             className="review-quality-btn again"
                                                             onClick={(e) => { e.stopPropagation(); handleQualityRating(1); }}
                                                         >
-                                                            <div>😞 Again</div>
+                                                            <div>{translations["review.again"]}</div>
                                                         </button>
                                                         <button
                                                             className="review-quality-btn hard"
                                                             onClick={(e) => { e.stopPropagation(); handleQualityRating(2); }}
                                                         >
-                                                            <div>😐 Hard</div>
+                                                            <div>{translations["review.hard"]}</div>
                                                         </button>
                                                         <button
                                                             className="review-quality-btn good"
                                                             onClick={(e) => { e.stopPropagation(); handleQualityRating(3); }}
                                                         >
-                                                            <div>🙂 Good</div>
+                                                            <div>{translations["review.good"]}</div>
                                                         </button>
                                                         <button
                                                             className="review-quality-btn easy"
                                                             onClick={(e) => { e.stopPropagation(); handleQualityRating(4); }}
                                                         >
-                                                            <div>😊 Easy</div>
+                                                            <div>{translations["review.easy"]}</div>
                                                         </button>
                                                         <button
                                                             className="review-quality-btn perfect"
                                                             onClick={(e) => { e.stopPropagation(); handleQualityRating(5); }}
                                                         >
-                                                            <div>😄 Perfect</div>
+                                                            <div>{translations["review.perfect"]}</div>
                                                         </button>
                                                     </div>
                                                 </div>
@@ -350,7 +354,7 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({
                             onClick={handleClose}
                         >
                             <i className="fas fa-times me-2"></i>
-                            Close
+                            {translations["closeBtn"]}
                         </button>
                     </div>
                 </div>

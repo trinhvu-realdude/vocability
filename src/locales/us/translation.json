@@ -61,5 +61,13 @@
     "downloadBtn": "Download",
     "noFoundWord": "😓 No found word",
     "showDefinition": "Show definition",
-    "hideDefinition": "Hide definition"
+    "hideDefinition": "Hide definition",
+    "review.title": "How well did you know this word?",
+    "review.again": "😞 Again",
+    "review.hard": "😐 Hard",
+    "review.good": "🙂 Good",
+    "review.easy": "😊 Easy",
+    "review.perfect": "😄 Perfect",
+    "closeBtn": "Close",
+    "quickSearchBar.placeholder": "Search or add word"
 }

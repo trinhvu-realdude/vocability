@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { languages } from "../utils/constants";
 import { NoDataMessage } from "../components/NoDataMessage";
 import { HomePageProps } from "../interfaces/rootProps";
+import "../styles/HomePage.css";
 
 export const HomePage: React.FC<HomePageProps> = ({ activeLanguages }) => {
     const [remainLanguages, setRemainLanguages] = useState<Array<any>>();
@@ -23,78 +24,95 @@ export const HomePage: React.FC<HomePageProps> = ({ activeLanguages }) => {
     }, [activeLanguages.length]);
 
     return (
-        <div className="container-list">
-            <h4 className="text-center my-2">Languages</h4>
+        <div className="homepage-container">
+            {/* Hero Section */}
+            {/* <div className="hero-section">
+                <h1 className="hero-title">Vocability</h1>
+                <p className="hero-subtitle">
+                    Master your vocabulary with spaced repetition. Organize your learning, practice daily, and expand your horizons across multiple languages.
+                </p>
+            </div> */}
 
-            <div className="text-center">
-                <div className="d-flex justify-content-center">
+            {/* Discover Section */}
+            <div className="discover-container">
+                <div className="discover-header">
+                    <h2 className="section-title justify-content-center">
+                        <i className="fas fa-globe-americas"></i>
+                        Discover New Languages
+                    </h2>
+                    <p className="text-muted">Choose a new language to start building your vocabulary collection.</p>
+                </div>
+
+                <div className="premium-select-wrapper">
                     <select
-                        className="form-select m-4 text-center custom-select"
-                        value={
-                            selectedLanguage ? selectedLanguage.language : ""
-                        }
+                        className="form-select premium-select"
+                        value={selectedLanguage ? selectedLanguage.language : ""}
                         onChange={(event) => {
                             const language = event.target.value;
                             setSelectedLanguage(
-                                languages.find(
-                                    (lang) => lang.language === language
-                                )
+                                languages.find((lang) => lang.language === language)
                             );
                         }}
                     >
                         <option value="">Choose a language</option>
                         {remainLanguages &&
                             remainLanguages.map((language) => (
-                                <option
-                                    key={language.id}
-                                    value={language.language}
-                                >
+                                <option key={language.id} value={language.language}>
                                     {language.language}
                                 </option>
                             ))}
                     </select>
                 </div>
 
-                {selectedLanguage && (
-                    <a href={`/${selectedLanguage.code}/collections`}>
-                        &#8618; Go to{" "}
-                        <span style={{ color: "#dd5746" }}>
-                            <strong>{selectedLanguage.language}</strong>{" "}
-                        </span>
-                    </a>
-                )}
-
-                {activeLanguages && activeLanguages.length > 0 ? (
-                    activeLanguages.map((language) => (
-                        <div
-                            key={language.id}
-                            className="card-body text-center flag"
+                {selectedLanguage ? (
+                    <div className="select-btn-overlay animation-fade-in">
+                        <a
+                            href={`/${selectedLanguage.code}/collections`}
+                            className="btn btn-start-now"
                         >
-                            <a href={`/${language.code}/collections`}>
-                                <span
-                                    style={{
-                                        cursor: "pointer",
-                                        fontSize: "100px",
-                                        borderRadius: "0.25rem",
-                                        boxShadow:
-                                            "rgba(0, 0, 0, 0.16) 0px 1px 4px",
-                                    }}
-                                    className={`fi fi-${language.code} mb-4`}
-                                ></span>
-                                <h5 className="w-50 mx-auto">
-                                    {language.language}
-                                </h5>
-                            </a>
-                        </div>
-                    ))
+                            Start Learning {selectedLanguage.language}
+                            <i className="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
                 ) : (
-                    <>
-                        {!selectedLanguage && (
-                            <NoDataMessage message="🚀 Please choose a language to take note your vocabulary" />
-                        )}
-                    </>
+                    activeLanguages.length === 0 && (
+                        <div className="mt-4">
+                            <NoDataMessage message="🚀 Please choose a language to start your journey" />
+                        </div>
+                    )
                 )}
             </div>
+
+            {/* My Languages Section */}
+            {activeLanguages && activeLanguages.length > 0 && (
+                <div className="mt-5">
+                    <h2 className="section-title">
+                        <i className="fas fa-bookmark"></i>
+                        My Vocabularies
+                    </h2>
+                    <div className="language-grid">
+                        {activeLanguages.map((language) => (
+                            <a
+                                key={language.id}
+                                href={`/${language.code}/collections`}
+                                className="language-card-link"
+                            >
+                                <div className="language-card">
+                                    <div className="flag-wrapper">
+                                        <span className={`fi fi-${language.code}`}></span>
+                                    </div>
+                                    <div className="language-info">
+                                        <span className="language-name">{language.language}</span>
+                                    </div>
+                                    <div className="go-icon">
+                                        <i className="fas fa-chevron-right"></i>
+                                    </div>
+                                </div>
+                            </a>
+                        ))}
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

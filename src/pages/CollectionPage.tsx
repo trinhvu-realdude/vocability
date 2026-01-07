@@ -57,7 +57,6 @@ export const CollectionPage: React.FC<CommonProps> = ({
     return (
         <div className="container-list" id="collection-list">
             <PageHeader
-                showBack={false}
                 content={translations["collectionPage.title"]}
             />
             <SearchBar
