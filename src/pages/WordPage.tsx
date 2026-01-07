@@ -30,6 +30,7 @@ export const WordPage: React.FC<WordPageProps> = ({
         SpeechSynthesisVoice[]
     >([]);
     const [isHideDefinition, setIsHideDefinition] = useState(false);
+    const [isEdit, setIsEdit] = useState(false);
 
     const { translations } = useLanguage();
 
@@ -83,7 +84,6 @@ export const WordPage: React.FC<WordPageProps> = ({
             )}
 
             <PageHeader
-                href={`/${translations["language"]}/collections`}
                 content={
                     <>
                         <span style={{ color: collection?.color }}>
@@ -97,8 +97,7 @@ export const WordPage: React.FC<WordPageProps> = ({
                             style={{
                                 border: "none",
                             }}
-                            data-bs-toggle="modal"
-                            data-bs-target={`#edit-collection-${collection?.id}`}
+                            onClick={() => setIsEdit(true)}
                         >
                             <i className="fas fa-pen"></i>
                         </div>
@@ -140,12 +139,14 @@ export const WordPage: React.FC<WordPageProps> = ({
                     <NoDataMessage message={translations["noFoundWord"]} />
                 ))}
 
-            {collection && (
+            {isEdit && collection && (
                 <EditCollectionModal
                     db={db}
                     collection={collection}
                     setCollection={setCollection}
                     setCollections={setCollections}
+                    setIsEditOrDelete={setIsEdit}
+                    onShowToast={onShowToast}
                 />
             )}
         </div>

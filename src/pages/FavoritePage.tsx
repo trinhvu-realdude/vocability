@@ -95,7 +95,6 @@ export const FavoritePage: React.FC<CommonProps> = ({ db, onShowToast }) => {
     return (
         <div className="container-list" id="favorite-collection">
             <PageHeader
-                href={document.referrer}
                 content={
                     <>
                         <span style={{ color: "#FFC000" }}>

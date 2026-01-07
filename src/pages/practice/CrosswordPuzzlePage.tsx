@@ -26,7 +26,7 @@ export const CrosswordPuzzlePage: React.FC<CrosswordPuzzlePageProps> = ({
 
     return (
         <div className="container-list" id="crossword-puzzles">
-            <PageHeader href="/practices" content="Crossword Puzzles" />
+            <PageHeader content="Crossword Puzzles" />
 
             <div className="text-center my-4">
                 <button

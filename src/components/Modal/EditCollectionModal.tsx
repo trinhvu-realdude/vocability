@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { CollectionModalProps } from "../../interfaces/mainProps";
 import {
     getCollectionById,
@@ -10,13 +10,30 @@ import { useLanguage } from "../../LanguageContext";
 export const EditCollectionModal: React.FC<CollectionModalProps> = ({
     db,
     collection,
+    setIsEditOrDelete,
     setCollection,
     setCollections,
+    onShowToast,
 }) => {
     const [renameValue, setRenameValue] = useState<string>("");
     const [color, setColor] = useState<string>("");
+    const [showModal, setShowModal] = useState(false);
 
     const { translations } = useLanguage();
+
+    useEffect(() => {
+        const timer = setTimeout(() => setShowModal(true), 10);
+        return () => clearTimeout(timer);
+    }, []);
+
+    const handleClose = () => {
+        setShowModal(false);
+        setTimeout(() => {
+            if (setIsEditOrDelete) {
+                setIsEditOrDelete(false);
+            }
+        }, 150);
+    };
 
     const handleEditCollection = async () => {
         try {
@@ -41,21 +58,28 @@ export const EditCollectionModal: React.FC<CollectionModalProps> = ({
                         );
                         setCollection(objCollection);
                     }
+
+                    onShowToast?.(translations["alert.renameCollectionSuccess"], "success");
+                    handleClose();
                 }
             }
         } catch (error) {
             console.log(error);
-            alert(translations["alert.renameCollectionFailed"]);
+            onShowToast?.(translations["alert.renameCollectionFailed"], "error");
         }
     };
 
     return (
         <div
-            className="modal fade"
-            id={`edit-collection-${collection.id}`}
+            className={`modal fade ${showModal ? "show" : ""}`}
+            style={{
+                display: "block",
+                backgroundColor: showModal ? "rgba(0,0,0,0.5)" : "rgba(0,0,0,0)",
+                transition: "background-color 0.15s ease-out",
+            }}
             tabIndex={-1}
-            aria-labelledby={`#edit-collection-${collection.id}`}
-            aria-hidden="true"
+            role="dialog"
+            aria-modal="true"
         >
             <div className="modal-dialog modal-dialog-centered">
                 <div className="modal-content word-modal-content">
@@ -72,7 +96,7 @@ export const EditCollectionModal: React.FC<CollectionModalProps> = ({
                         <button
                             type="button"
                             className="btn btn-sm word-modal-close"
-                            data-bs-dismiss="modal"
+                            onClick={handleClose}
                             aria-label="Close"
                         >
                             <i className="fas fa-times"></i>
@@ -116,7 +140,7 @@ export const EditCollectionModal: React.FC<CollectionModalProps> = ({
                         <button
                             type="button"
                             className="btn btn-outline-secondary"
-                            data-bs-dismiss="modal"
+                            onClick={handleClose}
                         >
                             <i className="fas fa-times me-1"></i>
                             {translations["cancelBtn"]}
@@ -125,7 +149,6 @@ export const EditCollectionModal: React.FC<CollectionModalProps> = ({
                             type="button"
                             className="btn btn-success"
                             onClick={handleEditCollection}
-                            data-bs-dismiss="modal"
                         >
                             <i className="fas fa-save me-1"></i>
                             {translations["editBtn"]}

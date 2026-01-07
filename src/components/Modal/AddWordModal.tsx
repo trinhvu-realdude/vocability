@@ -149,12 +149,10 @@ export const AddWordModal: React.FC<CommonProps> = ({
                 closeBtnRef.current?.click();
 
                 // Show success toast after modal closes
-                setTimeout(() => {
-                    onShowToast?.(
-                        translations["alert.addWordSuccess"],
-                        "success"
-                    );
-                }, 300);
+                onShowToast?.(
+                    translations["alert.addWordSuccess"],
+                    "success"
+                );
             } else {
                 onShowToast?.(
                     translations["alert.validateCollectionEmpty"],
