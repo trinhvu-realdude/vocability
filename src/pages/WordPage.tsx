@@ -31,6 +31,7 @@ export const WordPage: React.FC<WordPageProps> = ({
     >([]);
     const [isHideDefinition, setIsHideDefinition] = useState(false);
     const [isEdit, setIsEdit] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
 
     const { translations } = useLanguage();
 
@@ -40,6 +41,7 @@ export const WordPage: React.FC<WordPageProps> = ({
 
     useEffect(() => {
         const fetchCollection = async () => {
+            setIsLoading(true);
             if (db && collectionId) {
                 setCurrentCollectionId(collectionId);
                 const objCollection = await getCollectionById(
@@ -56,6 +58,7 @@ export const WordPage: React.FC<WordPageProps> = ({
                     await getVoicesByLanguage(translations["languageVoice"])
                 );
             }
+            setIsLoading(false);
         };
         fetchCollection();
     }, [translations["language"], collectionId, db]);
@@ -117,8 +120,10 @@ export const WordPage: React.FC<WordPageProps> = ({
             />
 
             <div className="list-group mt-4">
-                {filteredWords &&
-                    filteredWords.length > 0 &&
+                {isLoading ? (
+                    <div className="mx-auto loader"></div>
+                ) : filteredWords &&
+                    filteredWords.length > 0 ? (
                     filteredWords.map((word) => (
                         <WordCard
                             key={word.id}
@@ -131,13 +136,11 @@ export const WordPage: React.FC<WordPageProps> = ({
                             onShowToast={onShowToast}
                             isHideDefinition={isHideDefinition}
                         />
-                    ))}
-            </div>
-
-            {!filteredWords ||
-                (filteredWords.length <= 0 && (
+                    ))
+                ) : (
                     <NoDataMessage message={translations["noFoundWord"]} />
-                ))}
+                )}
+            </div>
 
             {isEdit && collection && (
                 <EditCollectionModal

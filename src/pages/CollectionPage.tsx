@@ -17,6 +17,7 @@ export const CollectionPage: React.FC<CommonProps> = ({
     collections,
     setCollections,
     onShowToast,
+    isLoading,
 }) => {
     const { translations } = useLanguage();
     const [filteredCollections, setFilteredCollections] =
@@ -71,7 +72,9 @@ export const CollectionPage: React.FC<CommonProps> = ({
             />
 
             <div className="row mt-4 mb-2">
-                {filteredCollections && filteredCollections.length > 0 ? (
+                {isLoading ? (
+                    <div className="mx-auto loader"></div>
+                ) : filteredCollections && filteredCollections.length > 0 ? (
                     viewMode === 'grid' ? (
                         filteredCollections.map((collection) => (
                             <CollectionCard

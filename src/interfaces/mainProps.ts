@@ -11,6 +11,7 @@ export interface CommonProps {
     modalId?: string;
     initialWord?: string;
     onShowToast?: (message: string, type: ToastType) => void;
+    isLoading?: boolean;
 }
 
 export interface MainLayoutProps extends CommonProps {
@@ -24,6 +25,7 @@ export interface WordPageProps {
     setCollections: React.Dispatch<React.SetStateAction<Collection[]>>;
     setCurrentCollectionId: React.Dispatch<React.SetStateAction<string>>;
     onShowToast?: (message: string, type: ToastType) => void;
+    isLoading?: boolean;
 }
 
 export interface WordDetailPageProps {
