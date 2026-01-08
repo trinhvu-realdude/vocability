@@ -14,7 +14,7 @@ import { TextToSpeechButton } from "../components/TextToSpeechButton";
 
 export const FavoritePage: React.FC<CommonProps> = ({ db, onShowToast }) => {
     const { translations } = useLanguage();
-    document.title = `${translations["flag"]} ${APP_NAME} | Favorite collection`;
+    document.title = `${translations["flag"]} Favorite collection | ${APP_NAME}`;
 
     const [favoriteWords, setFavoriteWords] = useState<WordDto[]>([]);
     const [collections, setCollections] = useState<Collection[]>([]);

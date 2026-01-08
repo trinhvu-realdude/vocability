@@ -2,7 +2,7 @@ import { useParams } from "react-router-dom";
 import { APP_NAME, practices } from "../utils/constants";
 
 export const PracticePage = () => {
-    document.title = `${APP_NAME} | Practices`;
+    document.title = `Practices | ${APP_NAME}`;
 
     const { language } = useParams();
 

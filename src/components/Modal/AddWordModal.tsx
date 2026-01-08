@@ -1,7 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { Choice, CommonProps } from "../../interfaces/mainProps";
 import { useLanguage } from "../../LanguageContext";
-import ReactSelectCreatable from "react-select/creatable";
 import {
     getCurrentLanguageId,
     getRandomColor,
@@ -20,6 +19,8 @@ import {
     getActiveLanguages,
     getCollectionsByLanguageId,
 } from "../../services/CollectionService";
+import { AddWordForm } from "../Form/AddWordForm";
+import { ImportSetForm } from "../Form/ImportSetForm";
 import "../../styles/AddWordModal.css";
 
 export const AddWordModal: React.FC<CommonProps> = ({
@@ -41,6 +42,9 @@ export const AddWordModal: React.FC<CommonProps> = ({
     const [partOfSpeech, setPartOfSpeech] = useState<string>("");
     const [choice, setChoice] = useState<SingleValue<Object>>();
     const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [isImportMode, setIsImportMode] = useState<boolean>(false);
+    const [importText, setImportText] = useState<string>("");
+    const [importList, setImportList] = useState<{ word: string, definition: string }[]>([]);
     // Sync choice with collectionId when it changes or when collections change
     useEffect(() => {
         if (typeof collectionId === 'string' && collectionId.trim() !== '') {
@@ -82,7 +86,15 @@ export const AddWordModal: React.FC<CommonProps> = ({
     const closeBtnRef = useRef<HTMLButtonElement>(null);
 
     const handleAddWord = async () => {
-        if (!validateInputs(word, partOfSpeech, choice, definitions, setErrors)) return;
+        if (!isImportMode) {
+            if (!validateInputs(word, partOfSpeech, choice, definitions, setErrors)) return;
+        } else {
+            if (importList.length === 0) {
+                onShowToast?.(translations["importSetForm.enterSomeWords"], "warning");
+                return;
+            }
+        }
+
         setIsLoading(true);
         try {
             const collection = choice as Choice;
@@ -100,57 +112,89 @@ export const AddWordModal: React.FC<CommonProps> = ({
                     languageId: currentLanguageId ? currentLanguageId : -1,
                 };
 
-                let phonetic;
-                if (currentLanguageId === 1) {
-                    phonetic = await getPhonetic(word.toLowerCase().trim());
-                }
-
-                const objWord = {
-                    word: word.toLowerCase().trim(),
-                    phonetic: phonetic && phonetic,
-                    definitions: definitions,
-                    partOfSpeech: partOfSpeech,
-                    isFavorite: false,
-                    createdAt: new Date(),
-                };
-                const addedWord = await addWord(
-                    db,
-                    objWord,
-                    objCollection,
-                    currentLanguageId
-                );
-
-                const storedCollections = await getCollectionsByLanguageId(
-                    db,
-                    currentLanguageId
-                );
-
                 const activeLanguages = await getActiveLanguages(db);
                 const reorderedLanguages = reorderActiveLanguages(
                     activeLanguages,
                     translations["language"]
                 );
-                setActiveLanguages(reorderedLanguages);
-                setCollections(storedCollections);
 
-                if (
-                    addedWord.collectionId &&
-                    collectionId &&
-                    addedWord.collectionId === Number.parseInt(collectionId)
-                ) {
-                    const words = await getWordsByCollectionId(
+                if (!isImportMode) {
+                    let phonetic;
+                    if (currentLanguageId === 1) {
+                        phonetic = await getPhonetic(word.toLowerCase().trim());
+                    }
+
+                    const objWord = {
+                        word: word.toLowerCase().trim(),
+                        phonetic: phonetic && phonetic,
+                        definitions: definitions,
+                        partOfSpeech: partOfSpeech,
+                        isFavorite: false,
+                        createdAt: new Date(),
+                    };
+                    const addedWord = await addWord(
                         db,
-                        addedWord.collectionId
+                        objWord,
+                        objCollection,
+                        currentLanguageId
                     );
-                    setWords(words);
+
+                    if (
+                        addedWord.collectionId &&
+                        collectionId &&
+                        addedWord.collectionId === Number.parseInt(collectionId)
+                    ) {
+                        const words = await getWordsByCollectionId(
+                            db,
+                            addedWord.collectionId
+                        );
+                        setWords(words);
+                    }
+                } else {
+                    // Batch Import
+                    for (const item of importList) {
+                        if (!item.word.trim()) continue;
+
+                        let phonetic;
+                        if (currentLanguageId === 1) {
+                            phonetic = await getPhonetic(item.word.toLowerCase().trim());
+                        }
+
+                        const objWord = {
+                            word: item.word.toLowerCase().trim(),
+                            phonetic: phonetic && phonetic,
+                            definitions: [{ definition: item.definition.trim(), notes: "" }],
+                            partOfSpeech: "", // Default part of speech for batch import
+                            isFavorite: false,
+                            createdAt: new Date(),
+                        };
+                        await addWord(db, objWord, objCollection, currentLanguageId);
+                    }
+
+                    // Refresh collections if we are on collections page
+                    const updatedCollections = await getCollectionsByLanguageId(db, currentLanguageId);
+                    setCollections(updatedCollections);
+
+                    // Refresh words if we are in a collection
+                    if (collectionId) {
+                        const words = await getWordsByCollectionId(db, Number.parseInt(collectionId));
+                        setWords(words);
+                    }
                 }
+
+                setActiveLanguages(reorderedLanguages);
+                const storedCollections = await getCollectionsByLanguageId(
+                    db,
+                    currentLanguageId
+                );
+                setCollections(storedCollections);
 
                 // Close modal first
                 closeBtnRef.current?.click();
 
                 // Show success toast after modal closes
                 onShowToast?.(
-                    translations["alert.addWordSuccess"],
+                    isImportMode ? "Import successful!" : translations["alert.addWordSuccess"],
                     "success"
                 );
             } else {
@@ -168,6 +212,40 @@ export const AddWordModal: React.FC<CommonProps> = ({
         } finally {
             setIsLoading(false);
         }
+    };
+
+    const handleParseImport = () => {
+        const lines = importText.split("\n");
+        const parsed = lines
+            .map((line) => {
+                // Regex to split by multiple spaces, tab, colon, or hyphen
+                const parts = line.split(/[:\-\t]|\s{2,}/);
+                if (parts.length >= 2) {
+                    return {
+                        word: parts[0].trim(),
+                        definition: parts.slice(1).join(" ").trim(),
+                    };
+                } else if (line.trim()) {
+                    return {
+                        word: line.trim(),
+                        definition: "",
+                    };
+                }
+                return null;
+            })
+            .filter((item): item is { word: string; definition: string } => item !== null);
+
+        setImportList(parsed);
+    };
+
+    const handleImportListChange = (index: number, field: "word" | "definition", value: string) => {
+        const newList = [...importList];
+        newList[index][field] = value;
+        setImportList(newList);
+    };
+
+    const handleRemoveImportItem = (index: number) => {
+        setImportList(importList.filter((_, i) => i !== index));
     };
 
     const handleAddDefinitionRow = () => {
@@ -208,6 +286,9 @@ export const AddWordModal: React.FC<CommonProps> = ({
         setDefinitions([{ definition: "", notes: "" }]);
         setErrors({});
         setIsLoading(false);
+        setImportText("");
+        setImportList([]);
+        setIsImportMode(false);
         if (typeof collectionId === 'string' && collectionId.trim() !== '') {
             const currentCollection = collections.find(
                 (c) => c.id === Number.parseInt(collectionId)
@@ -261,184 +342,64 @@ export const AddWordModal: React.FC<CommonProps> = ({
                         </button>
                     </div>
                     <div className="word-modal-body">
-                        <div className="mb-2">
-                            {/* Row 1: inputs */}
-                            <div className="row g-2">
-                                <div className="col">
-                                    <input
-                                        type="text"
-                                        className="form-control"
-                                        placeholder={translations["addWordForm.noteYourWord"]}
-                                        value={word}
-                                        onChange={(event) => {
-                                            setWord(event.target.value);
-                                            if (errors.word) {
-                                                setErrors({ ...errors, word: undefined });
-                                            }
-                                        }}
-                                    />
-                                </div>
-
-                                <div className="col">
-                                    <select
-                                        className="form-select"
-                                        id="part-of-speech"
-                                        value={partOfSpeech}
-                                        onChange={(event) => {
-                                            setPartOfSpeech(event.target.value);
-                                            if (errors.partOfSpeech) {
-                                                setErrors({
-                                                    ...errors,
-                                                    partOfSpeech: undefined,
-                                                });
-                                            }
-                                        }}
-                                    >
-                                        <option value="">
-                                            {translations["addWordForm.partOfSpeech"]}
-                                        </option>
-                                        {selectedPartsOfSpeech &&
-                                            selectedPartsOfSpeech.list.map((pos, index) => (
-                                                <option key={index} value={pos.value}>
-                                                    {pos.label}
-                                                </option>
-                                            ))}
-                                    </select>
-                                </div>
-                            </div>
-
-                            {/* Row 2: error messages */}
-                            <div className="row g-2">
-                                <div className="col">
-                                    {errors.word && (
-                                        <div className="text-danger small">{errors.word}</div>
-                                    )}
-                                </div>
-
-                                <div className="col">
-                                    {errors.partOfSpeech && (
-                                        <div className="text-danger small">
-                                            {errors.partOfSpeech}
-                                        </div>
-                                    )}
-                                </div>
-                            </div>
+                        {/* Tab Toggle */}
+                        <div className="import-mode-toggle mb-4">
+                            <button
+                                className={`btn btn-toggle ${!isImportMode ? "active" : ""}`}
+                                onClick={() => setIsImportMode(false)}
+                            >
+                                <i className="fas fa-plus-circle me-1"></i>
+                                {translations["addWordForm.singleWord"]}
+                            </button>
+                            <button
+                                className={`btn btn-toggle ${isImportMode ? "active" : ""}`}
+                                onClick={() => setIsImportMode(true)}
+                            >
+                                <i className="fas fa-file-import me-1"></i>
+                                {translations["addWordForm.importSet"]}
+                            </button>
                         </div>
 
-                        <div className="row">
-                            <div className="input-group col-12 mb-2">
-                                <ReactSelectCreatable
-                                    className="react-select-creatable"
-                                    placeholder={
-                                        translations["addWordForm.collection"]
-                                    }
-                                    value={choice}
-                                    options={collections.map((collection) => {
-                                        return {
-                                            label: collection.name,
-                                            value: collection.name,
-                                            color: collection.color,
-                                        };
-                                    })}
-                                    noOptionsMessage={() =>
-                                        translations[
-                                        "addWordForm.noOptionsMessage"
-                                        ]
-                                    }
-                                    onChange={(choice: any) => {
-                                        setChoice(choice);
-                                        if (errors.collection) {
-                                            setErrors({
-                                                ...errors,
-                                                collection: undefined,
-                                            });
-                                        }
-                                        // update modal header color instantly
-                                        if (choice?.color) {
-                                            setRandomColor(choice.color);
-                                        } else {
-                                            setRandomColor(getRandomColor());
-                                        }
-                                    }}
-                                    styles={{
-                                        menu: (provided: any) => ({
-                                            ...provided,
-                                            zIndex: 1050, // High z-index to ensure it's on top
-                                        }),
-                                    }}
-                                />
-                                {errors.collection && (
-                                    <div className="text-danger small">
-                                        {errors.collection}
-                                    </div>
-                                )}
-                            </div>
-                            {definitions.map((def, index) => (
-                                <div key={index}>
-                                    <div className="mb-2">
-                                        <div className="input-group col-12">
-                                            <span className="input-group-text">
-                                                {translations["addWordForm.definition"]}
-                                            </span>
-
-                                            <input
-                                                type="text"
-                                                className="form-control"
-                                                value={def.definition}
-                                                onChange={(event) =>
-                                                    handleDefinitionChange(index, event.target.value)
-                                                }
-                                            />
-                                        </div>
-
-                                        {/* Error row */}
-                                        {errors.definitions && errors.definitions[index] && (
-                                            <div className="text-danger small">
-                                                {errors.definitions[index]}
-                                            </div>
-                                        )}
-                                    </div>
-                                    <div className="input-group col-12 mb-2">
-                                        <span className="input-group-text">
-                                            {translations["addWordForm.notes"]}
-                                        </span>
-                                        <textarea
-                                            className="form-control"
-                                            value={def.notes}
-                                            onChange={(event) =>
-                                                handleNotesChange(
-                                                    index,
-                                                    event.target.value
-                                                )
-                                            }
-                                        ></textarea>
-                                    </div>
-                                    {definitions.length > 1 &&
-                                        index < definitions.length - 1 && (
-                                            <hr />
-                                        )}
-                                </div>
-                            ))}
-                            <div className="definition-controls">
-                                <button
-                                    type="button"
-                                    className="btn btn-definition-add"
-                                    onClick={handleAddDefinitionRow}
-                                    title="Add definition"
-                                >
-                                    <i className="fas fa-plus"></i>
-                                </button>
-                                <button
-                                    type="button"
-                                    className="btn btn-definition-remove"
-                                    onClick={handleRemoveDefinitionRow}
-                                    disabled={definitions.length <= 1}
-                                    title="Remove definition"
-                                >
-                                    <i className="fas fa-minus"></i>
-                                </button>
-                            </div>
-                        </div>
+                        {!isImportMode ? (
+                            <AddWordForm
+                                word={word}
+                                setWord={setWord}
+                                partOfSpeech={partOfSpeech}
+                                setPartOfSpeech={setPartOfSpeech}
+                                definitions={definitions}
+                                choice={choice}
+                                setChoice={setChoice}
+                                collections={collections}
+                                translations={translations}
+                                errors={errors}
+                                setErrors={setErrors}
+                                setRandomColor={setRandomColor}
+                                getRandomColor={getRandomColor}
+                                selectedPartsOfSpeech={selectedPartsOfSpeech}
+                                handleDefinitionChange={handleDefinitionChange}
+                                handleNotesChange={handleNotesChange}
+                                handleAddDefinitionRow={handleAddDefinitionRow}
+                                handleRemoveDefinitionRow={handleRemoveDefinitionRow}
+                            />
+                        ) : (
+                            <ImportSetForm
+                                translations={translations}
+                                choice={choice}
+                                setChoice={setChoice}
+                                collections={collections}
+                                errors={errors}
+                                setErrors={setErrors}
+                                setRandomColor={setRandomColor}
+                                getRandomColor={getRandomColor}
+                                importText={importText}
+                                setImportText={setImportText}
+                                handleParseImport={handleParseImport}
+                                importList={importList}
+                                setImportList={setImportList}
+                                handleImportListChange={handleImportListChange}
+                                handleRemoveImportItem={handleRemoveImportItem}
+                            />
+                        )}
                     </div>
                     <div className="word-modal-footer">
                         <button
@@ -464,8 +425,8 @@ export const AddWordModal: React.FC<CommonProps> = ({
                                 </>
                             ) : (
                                 <>
-                                    <i className="fas fa-plus me-1"></i>
-                                    {translations["addWordForm.addWordBtn"]}
+                                    <i className={`${isImportMode ? "fas fa-file-import" : "fas fa-plus"} me-1`}></i>
+                                    {isImportMode ? translations["addWordForm.importSet"] : translations["addWordForm.addWordBtn"]}
                                 </>
                             )}
                         </button>

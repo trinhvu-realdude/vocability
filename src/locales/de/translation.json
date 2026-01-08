@@ -15,6 +15,8 @@
     "addWordForm.definition": "Definition",
     "addWordForm.notes": "Beispiel",
     "addWordForm.addWordBtn": "Wort hinzufügen",
+    "addWordForm.singleWord": "Einzelnes Wort",
+    "addWordForm.importSet": "Set importieren",
     "collectionPage.title": "Sammlungen",
     "collectionPage.noDataMessage": "🗿 Ups...! Sie haben keine Sammlung. Beginnen Sie, Notizen zu machen und Vokabeln zu üben.",
     "collectionPage.createCollectionBtn": "Sammlung erstellen",
@@ -69,5 +71,12 @@
     "review.easy": "😊 Einfach",
     "review.perfect": "😄 Perfekt",
     "closeBtn": "Schließen",
-    "quickSearchBar.placeholder": "Wort suchen oder hinzufügen"
+    "quickSearchBar.placeholder": "Wort suchen oder hinzufügen",
+    "importSetForm.enterSomeWords": "Bitte geben Sie einige Wörter ein und analysieren Sie diese",
+    "importSetForm.clearBtn": "Löschen",
+    "importSetForm.clearAllBtn": "Alles löschen",
+    "importSetForm.parseWordsBtn": "Wörter analysieren",
+    "importSetForm.reviewWords": "Wörter überprüfen",
+    "importSetForm.word": "Wort",
+    "importSetForm.definition": "Definition"
 }

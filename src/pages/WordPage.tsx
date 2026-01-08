@@ -36,7 +36,7 @@ export const WordPage: React.FC<WordPageProps> = ({
     const { translations } = useLanguage();
 
     document.title = collection
-        ? `${translations["flag"]} ${APP_NAME} | ${collection.name} collection`
+        ? `${translations["flag"]} ${collection.name} collection | ${APP_NAME}`
         : APP_NAME;
 
     useEffect(() => {

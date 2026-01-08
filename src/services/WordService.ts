@@ -179,7 +179,7 @@ export const getPhonetic = async (
 ): Promise<string | undefined> => {
     const fetchPhonetic = async (w: string) => {
         const response = await fetch(
-            `https://api.dictionaryapi.dev/api/v2/entries/en/${w}`
+            `https://api.dictionaryapi.dev/api/v2/entries/en/${w.replace(/\//g, "")}`
         );
         const data = await response.json();
 

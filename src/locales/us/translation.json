@@ -15,6 +15,8 @@
     "addWordForm.definition": "Definition",
     "addWordForm.notes": "Example",
     "addWordForm.addWordBtn": "Add word",
+    "addWordForm.singleWord": "Single word",
+    "addWordForm.importSet": "Import set",
     "collectionPage.title": "Collections",
     "collectionPage.noDataMessage": "🗿 Oops...! You have no collection. Let's start to take note and practice vocabulary.",
     "collectionPage.createCollectionBtn": "Create collection",
@@ -69,5 +71,12 @@
     "review.easy": "😊 Easy",
     "review.perfect": "😄 Perfect",
     "closeBtn": "Close",
-    "quickSearchBar.placeholder": "Search or add word"
+    "quickSearchBar.placeholder": "Search or add word",
+    "importSetForm.enterSomeWords": "Please enter some words and parse them",
+    "importSetForm.clearBtn": "Clear",
+    "importSetForm.clearAllBtn": "Clear all",
+    "importSetForm.parseWordsBtn": "Parse words",
+    "importSetForm.reviewWords": "Review words",
+    "importSetForm.word": "Word",
+    "importSetForm.definition": "Definition"
 }
