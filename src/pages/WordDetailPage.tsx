@@ -36,7 +36,7 @@ export const WordDetailPage: React.FC<WordDetailPageProps> = ({ db, onShowToast 
     const { translations } = useLanguage();
 
     if (translations)
-        document.title = `${translations["flag"]} ${APP_NAME} | ${word?.word}`;
+        document.title = `${translations["flag"]} ${word?.word} | ${APP_NAME}`;
 
     const handleAddFavorite = async (word: Word) => {
         setIsFavorite(!isFavorite);

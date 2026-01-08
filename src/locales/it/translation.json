@@ -15,6 +15,8 @@
     "addWordForm.definition": "Definizione",
     "addWordForm.notes": "Esempio",
     "addWordForm.addWordBtn": "Aggiungi parola",
+    "addWordForm.singleWord": "Parola singola",
+    "addWordForm.importSet": "Importa set",
     "collectionPage.title": "Collezioni",
     "collectionPage.noDataMessage": "🗿 Ops...! Non hai alcuna collezione. Inizia a prendere appunti e a esercitare il vocabolario.",
     "collectionPage.createCollectionBtn": "Crea collezione",
@@ -69,5 +71,12 @@
     "review.easy": "😊 Facile",
     "review.perfect": "😄 Perfetto",
     "closeBtn": "Chiudi",
-    "quickSearchBar.placeholder": "Cerca o aggiungi parola"
+    "quickSearchBar.placeholder": "Cerca o aggiungi parola",
+    "importSetForm.enterSomeWords": "Inserisci alcune parole e analizzale",
+    "importSetForm.clearBtn": "Cancella",
+    "importSetForm.clearAllBtn": "Cancella tutto",
+    "importSetForm.parseWordsBtn": "Analizza parole",
+    "importSetForm.reviewWords": "Rivedi parole",
+    "importSetForm.word": "Parola",
+    "importSetForm.definition": "Definizione"
 }

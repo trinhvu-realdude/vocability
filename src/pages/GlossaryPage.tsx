@@ -4,7 +4,7 @@ import { APP_NAME, glossaryItems } from "../utils/constants";
 
 export const GlossaryPage = () => {
     const { translations } = useLanguage();
-    document.title = `${translations["flag"]} ${APP_NAME} | Glossary`;
+    document.title = `${translations["flag"]} Glossary | ${APP_NAME}`;
 
     const selectedGlossaryItems = glossaryItems.find(
         (language) => language.code === translations["language"]

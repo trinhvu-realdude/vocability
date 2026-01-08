@@ -53,7 +53,7 @@ export const CollectionPage: React.FC<CommonProps> = ({
         };
     }, []);
 
-    document.title = `${translations["flag"]} ${APP_NAME} | All collections`;
+    document.title = `${translations["flag"]} All collections | ${APP_NAME}`;
 
     return (
         <div className="container-list" id="collection-list">

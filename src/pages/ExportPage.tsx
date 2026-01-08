@@ -15,7 +15,7 @@ import "../styles/AddWordModal.css";
 
 export const ExportPage: React.FC<CommonProps> = ({ db, collections }) => {
     const { translations } = useLanguage();
-    document.title = `${translations["flag"]} ${APP_NAME} | Export`;
+    document.title = `${translations["flag"]} Export | ${APP_NAME}`;
 
     const [exportCollectionId, setExportCollectionId] = useState<number>();
     const [fileType, setFileType] = useState<string>("");
