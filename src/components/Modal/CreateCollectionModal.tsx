@@ -95,62 +95,68 @@ export const CreateCollectionModal: React.FC<{
                         </button>
                     </div>
 
-                    <div className="word-modal-body">
-                        <div className="text-center mb-3">
-                            <i
-                                className="fas fa-folder"
-                                style={{
-                                    color: color !== "" ? color : randomColor,
-                                    fontSize: "4rem"
-                                }}
-                            ></i>
+                    <form
+                        onSubmit={(e) => {
+                            e.preventDefault();
+                            handleAddCollection();
+                        }}
+                    >
+                        <div className="word-modal-body">
+                            <div className="text-center mb-3">
+                                <i
+                                    className="fas fa-folder"
+                                    style={{
+                                        color: color !== "" ? color : randomColor,
+                                        fontSize: "4rem"
+                                    }}
+                                ></i>
+                            </div>
+
+                            <div className="input-group mb-3">
+                                <span className="input-group-text">
+                                    <i className="fas fa-palette"></i>
+                                </span>
+                                <input
+                                    type="color"
+                                    className="form-control form-control-color"
+                                    id="color-input"
+                                    value={color !== "" ? color : randomColor}
+                                    title="Choose your color"
+                                    onChange={(event) =>
+                                        setColor(event.target.value)
+                                    }
+                                />
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    placeholder={translations["name"]}
+                                    value={name}
+                                    onChange={(event) =>
+                                        setName(event.target.value)
+                                    }
+                                />
+                            </div>
                         </div>
 
-                        <div className="input-group mb-3">
-                            <span className="input-group-text">
-                                <i className="fas fa-palette"></i>
-                            </span>
-                            <input
-                                type="color"
-                                className="form-control form-control-color"
-                                id="color-input"
-                                value={color !== "" ? color : randomColor}
-                                title="Choose your color"
-                                onChange={(event) =>
-                                    setColor(event.target.value)
-                                }
-                            />
-                            <input
-                                type="text"
-                                className="form-control"
-                                placeholder={translations["name"]}
-                                value={name}
-                                onChange={(event) =>
-                                    setName(event.target.value)
-                                }
-                            />
+                        <div className="word-modal-footer">
+                            <button
+                                type="button"
+                                className="btn btn-outline-secondary"
+                                data-bs-dismiss="modal"
+                            >
+                                <i className="fas fa-times me-1"></i>
+                                {translations["cancelBtn"]}
+                            </button>
+                            <button
+                                type="submit"
+                                className="btn btn-success"
+                                data-bs-dismiss="modal"
+                            >
+                                <i className="fas fa-plus me-1"></i>
+                                {translations["createBtn"]}
+                            </button>
                         </div>
-                    </div>
-
-                    <div className="word-modal-footer">
-                        <button
-                            type="button"
-                            className="btn btn-outline-secondary"
-                            data-bs-dismiss="modal"
-                        >
-                            <i className="fas fa-times me-1"></i>
-                            {translations["cancelBtn"]}
-                        </button>
-                        <button
-                            type="button"
-                            className="btn btn-success"
-                            onClick={handleAddCollection}
-                            data-bs-dismiss="modal"
-                        >
-                            <i className="fas fa-plus me-1"></i>
-                            {translations["createBtn"]}
-                        </button>
-                    </div>
+                    </form>
                 </div>
             </div>
         </div>

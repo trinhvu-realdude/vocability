@@ -31,6 +31,7 @@ export const OffCanvas: React.FC<{
                 height: `${data instanceof Array ? "100%" : "20%"}`,
                 visibility: show ? "visible" : "hidden",
                 transition: "visibility 0.3s ease, height 0.3s ease",
+                backgroundColor: "#fcfcfc",
             }}
         >
             <div className="offcanvas-header">
