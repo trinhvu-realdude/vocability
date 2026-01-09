@@ -36,6 +36,8 @@
     transition: all 0.3s ease;
     background: #ffffff;
     color: #495057;
+    height: 3.125rem;
+    box-sizing: border-box;
 }
 
 .search-input-wrapper input.search-input::placeholder {
