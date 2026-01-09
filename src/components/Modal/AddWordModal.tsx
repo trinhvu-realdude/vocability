@@ -341,96 +341,104 @@ export const AddWordModal: React.FC<CommonProps> = ({
                             <i className="fas fa-times"></i>
                         </button>
                     </div>
-                    <div className="word-modal-body">
-                        {/* Tab Toggle */}
-                        <div className="import-mode-toggle mb-4">
+                    <form
+                        onSubmit={(e) => {
+                            e.preventDefault();
+                            handleAddWord();
+                        }}
+                    >
+                        <div className="word-modal-body">
+                            {/* Tab Toggle */}
+                            <div className="import-mode-toggle mb-4">
+                                <button
+                                    type="button"
+                                    className={`btn btn-toggle ${!isImportMode ? "active" : ""}`}
+                                    onClick={() => setIsImportMode(false)}
+                                >
+                                    <i className="fas fa-plus-circle me-1"></i>
+                                    {translations["addWordForm.singleWord"]}
+                                </button>
+                                <button
+                                    type="button"
+                                    className={`btn btn-toggle ${isImportMode ? "active" : ""}`}
+                                    onClick={() => setIsImportMode(true)}
+                                >
+                                    <i className="fas fa-file-import me-1"></i>
+                                    {translations["addWordForm.importSet"]}
+                                </button>
+                            </div>
+
+                            {!isImportMode ? (
+                                <AddWordForm
+                                    word={word}
+                                    setWord={setWord}
+                                    partOfSpeech={partOfSpeech}
+                                    setPartOfSpeech={setPartOfSpeech}
+                                    definitions={definitions}
+                                    choice={choice}
+                                    setChoice={setChoice}
+                                    collections={collections}
+                                    translations={translations}
+                                    errors={errors}
+                                    setErrors={setErrors}
+                                    setRandomColor={setRandomColor}
+                                    getRandomColor={getRandomColor}
+                                    selectedPartsOfSpeech={selectedPartsOfSpeech}
+                                    handleDefinitionChange={handleDefinitionChange}
+                                    handleNotesChange={handleNotesChange}
+                                    handleAddDefinitionRow={handleAddDefinitionRow}
+                                    handleRemoveDefinitionRow={handleRemoveDefinitionRow}
+                                />
+                            ) : (
+                                <ImportSetForm
+                                    translations={translations}
+                                    choice={choice}
+                                    setChoice={setChoice}
+                                    collections={collections}
+                                    errors={errors}
+                                    setErrors={setErrors}
+                                    setRandomColor={setRandomColor}
+                                    getRandomColor={getRandomColor}
+                                    importText={importText}
+                                    setImportText={setImportText}
+                                    handleParseImport={handleParseImport}
+                                    importList={importList}
+                                    setImportList={setImportList}
+                                    handleImportListChange={handleImportListChange}
+                                    handleRemoveImportItem={handleRemoveImportItem}
+                                />
+                            )}
+                        </div>
+                        <div className="word-modal-footer">
                             <button
-                                className={`btn btn-toggle ${!isImportMode ? "active" : ""}`}
-                                onClick={() => setIsImportMode(false)}
+                                type="button"
+                                className="btn btn-outline-secondary"
+                                data-bs-dismiss="modal"
+                                ref={closeBtnRef}
+                                onClick={handleClose}
                             >
-                                <i className="fas fa-plus-circle me-1"></i>
-                                {translations["addWordForm.singleWord"]}
+                                <i className="fas fa-times me-1"></i>
+                                {translations["cancelBtn"]}
                             </button>
                             <button
-                                className={`btn btn-toggle ${isImportMode ? "active" : ""}`}
-                                onClick={() => setIsImportMode(true)}
+                                type="submit"
+                                className="btn btn-success"
+                                disabled={isLoading}
                             >
-                                <i className="fas fa-file-import me-1"></i>
-                                {translations["addWordForm.importSet"]}
+                                {isLoading ? (
+                                    <>
+                                        <i className="fas fa-spinner fa-spin me-1"></i>
+                                        {translations["loading"] || "Loading..."}
+                                    </>
+                                ) : (
+                                    <>
+                                        <i className={`${isImportMode ? "fas fa-file-import" : "fas fa-plus"} me-1`}></i>
+                                        {isImportMode ? translations["addWordForm.importSet"] : translations["addWordForm.addWordBtn"]}
+                                    </>
+                                )}
                             </button>
                         </div>
-
-                        {!isImportMode ? (
-                            <AddWordForm
-                                word={word}
-                                setWord={setWord}
-                                partOfSpeech={partOfSpeech}
-                                setPartOfSpeech={setPartOfSpeech}
-                                definitions={definitions}
-                                choice={choice}
-                                setChoice={setChoice}
-                                collections={collections}
-                                translations={translations}
-                                errors={errors}
-                                setErrors={setErrors}
-                                setRandomColor={setRandomColor}
-                                getRandomColor={getRandomColor}
-                                selectedPartsOfSpeech={selectedPartsOfSpeech}
-                                handleDefinitionChange={handleDefinitionChange}
-                                handleNotesChange={handleNotesChange}
-                                handleAddDefinitionRow={handleAddDefinitionRow}
-                                handleRemoveDefinitionRow={handleRemoveDefinitionRow}
-                            />
-                        ) : (
-                            <ImportSetForm
-                                translations={translations}
-                                choice={choice}
-                                setChoice={setChoice}
-                                collections={collections}
-                                errors={errors}
-                                setErrors={setErrors}
-                                setRandomColor={setRandomColor}
-                                getRandomColor={getRandomColor}
-                                importText={importText}
-                                setImportText={setImportText}
-                                handleParseImport={handleParseImport}
-                                importList={importList}
-                                setImportList={setImportList}
-                                handleImportListChange={handleImportListChange}
-                                handleRemoveImportItem={handleRemoveImportItem}
-                            />
-                        )}
-                    </div>
-                    <div className="word-modal-footer">
-                        <button
-                            type="button"
-                            className="btn btn-outline-secondary"
-                            data-bs-dismiss="modal"
-                            ref={closeBtnRef}
-                            onClick={handleClose}
-                        >
-                            <i className="fas fa-times me-1"></i>
-                            {translations["cancelBtn"]}
-                        </button>
-                        <button
-                            type="button"
-                            className="btn btn-success"
-                            onClick={handleAddWord}
-                            disabled={isLoading}
-                        >
-                            {isLoading ? (
-                                <>
-                                    <i className="fas fa-spinner fa-spin me-1"></i>
-                                    {translations["loading"] || "Loading..."}
-                                </>
-                            ) : (
-                                <>
-                                    <i className={`${isImportMode ? "fas fa-file-import" : "fas fa-plus"} me-1`}></i>
-                                    {isImportMode ? translations["addWordForm.importSet"] : translations["addWordForm.addWordBtn"]}
-                                </>
-                            )}
-                        </button>
-                    </div>
+                    </form>
                 </div>
             </div>
         </div>

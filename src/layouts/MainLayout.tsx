@@ -32,6 +32,31 @@ const MainLayout: React.FC<MainLayoutProps> = ({
     const { language } = useParams();
 
     useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            // Check for Ctrl + Enter or Cmd + Enter
+            if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
+                const modalElement = document.getElementById("add-word");
+                const isModalOpen = modalElement?.classList.contains("show");
+
+                if (!isModalOpen) {
+                    e.preventDefault();
+                    const bootstrap = (window as any).bootstrap;
+                    if (bootstrap) {
+                        const modal = new bootstrap.Modal(modalElement);
+                        modal.show();
+                    } else {
+                        const addWordBtn = document.querySelector('.btn-add-word') as HTMLButtonElement;
+                        addWordBtn?.click();
+                    }
+                }
+            }
+        };
+
+        window.addEventListener("keydown", handleKeyDown);
+        return () => window.removeEventListener("keydown", handleKeyDown);
+    }, []);
+
+    useEffect(() => {
         const fetchData = async () => {
             setIsLoading(true);
             if (db && language) {

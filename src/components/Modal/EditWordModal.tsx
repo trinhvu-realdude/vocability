@@ -166,170 +166,176 @@ export const EditWordModal: React.FC<WordFormProps> = ({
                         </button>
                     </div>
 
-                    <div className="word-modal-body">
-                        <div className="mb-2">
-                            <div className="row g-2">
-                                <div className="col">
-                                    <input
-                                        type="text"
-                                        className="form-control"
-                                        placeholder={translations["addWordForm.noteYourWord"]}
-                                        value={wordValue}
-                                        onChange={(event) => {
-                                            setWordValue(event.target.value);
-                                            if (errors.word) {
-                                                setErrors({ ...errors, word: undefined });
-                                            }
-                                        }}
-                                    />
+                    <form
+                        onSubmit={(e) => {
+                            e.preventDefault();
+                            handleEditWord();
+                        }}
+                    >
+                        <div className="word-modal-body">
+                            <div className="mb-2">
+                                <div className="row g-2">
+                                    <div className="col">
+                                        <input
+                                            type="text"
+                                            className="form-control"
+                                            placeholder={translations["addWordForm.noteYourWord"]}
+                                            value={wordValue}
+                                            onChange={(event) => {
+                                                setWordValue(event.target.value);
+                                                if (errors.word) {
+                                                    setErrors({ ...errors, word: undefined });
+                                                }
+                                            }}
+                                        />
+                                    </div>
+
+                                    <div className="col">
+                                        <select
+                                            className="form-select"
+                                            id="part-of-speech"
+                                            value={partOfSpeechValue}
+                                            onChange={(event) => {
+                                                setPartOfSpeechValue(event.target.value);
+                                                if (errors.partOfSpeech) {
+                                                    setErrors({
+                                                        ...errors,
+                                                        partOfSpeech: undefined,
+                                                    });
+                                                }
+                                            }}
+                                        >
+                                            <option value="">{translations["addWordForm.partOfSpeech"]}</option>
+                                            {selectedPartsOfSpeech &&
+                                                selectedPartsOfSpeech.list.map(
+                                                    (partOfSpeech, index) => (
+                                                        <option
+                                                            key={index}
+                                                            value={partOfSpeech.value}
+                                                        >
+                                                            {partOfSpeech.label}
+                                                        </option>
+                                                    )
+                                                )}
+                                        </select>
+                                    </div>
                                 </div>
 
-                                <div className="col">
-                                    <select
-                                        className="form-select"
-                                        id="part-of-speech"
-                                        value={partOfSpeechValue}
-                                        onChange={(event) => {
-                                            setPartOfSpeechValue(event.target.value);
-                                            if (errors.partOfSpeech) {
-                                                setErrors({
-                                                    ...errors,
-                                                    partOfSpeech: undefined,
-                                                });
-                                            }
-                                        }}
-                                    >
-                                        <option value="">{translations["addWordForm.partOfSpeech"]}</option>
-                                        {selectedPartsOfSpeech &&
-                                            selectedPartsOfSpeech.list.map(
-                                                (partOfSpeech, index) => (
-                                                    <option
-                                                        key={index}
-                                                        value={partOfSpeech.value}
-                                                    >
-                                                        {partOfSpeech.label}
-                                                    </option>
-                                                )
-                                            )}
-                                    </select>
+                                <div className="row g-2">
+                                    <div className="col">
+                                        {errors.word && (
+                                            <div className="text-danger small">{errors.word}</div>
+                                        )}
+                                    </div>
+
+                                    <div className="col">
+                                        {errors.partOfSpeech && (
+                                            <div className="text-danger small">
+                                                {errors.partOfSpeech}
+                                            </div>
+                                        )}
+                                    </div>
                                 </div>
                             </div>
-
-                            <div className="row g-2">
-                                <div className="col">
-                                    {errors.word && (
-                                        <div className="text-danger small">{errors.word}</div>
-                                    )}
-                                </div>
-
-                                <div className="col">
-                                    {errors.partOfSpeech && (
-                                        <div className="text-danger small">
-                                            {errors.partOfSpeech}
-                                        </div>
-                                    )}
-                                </div>
-                            </div>
-                        </div>
-                        <div className="row">
-                            {/* Multiple definitions view */}
-                            {definitions &&
-                                definitions.map((def, index) => (
-                                    <div key={index}>
-                                        <div className="mb-2">
-                                            <div className="input-group col-12">
+                            <div className="row">
+                                {/* Multiple definitions view */}
+                                {definitions &&
+                                    definitions.map((def, index) => (
+                                        <div key={index}>
+                                            <div className="mb-2">
+                                                <div className="input-group col-12">
+                                                    <span className="input-group-text">
+                                                        {translations["addWordForm.definition"]}
+                                                    </span>
+                                                    <input
+                                                        type="text"
+                                                        className="form-control"
+                                                        value={def.definition}
+                                                        onChange={(event) =>
+                                                            handleDefinitionChange(
+                                                                index,
+                                                                event.target.value
+                                                            )
+                                                        }
+                                                    />
+                                                </div>
+                                                {errors.definitions && errors.definitions[index] && (
+                                                    <div className="text-danger small">
+                                                        {errors.definitions[index]}
+                                                    </div>
+                                                )}
+                                            </div>
+                                            <div className="input-group col-12 mb-2">
                                                 <span className="input-group-text">
-                                                    {translations["addWordForm.definition"]}
+                                                    {translations["addWordForm.notes"]}
                                                 </span>
-                                                <input
-                                                    type="text"
+                                                <textarea
                                                     className="form-control"
-                                                    value={def.definition}
+                                                    value={def.notes}
                                                     onChange={(event) =>
-                                                        handleDefinitionChange(
+                                                        handleNotesChange(
                                                             index,
                                                             event.target.value
                                                         )
                                                     }
-                                                />
+                                                ></textarea>
                                             </div>
-                                            {errors.definitions && errors.definitions[index] && (
-                                                <div className="text-danger small">
-                                                    {errors.definitions[index]}
-                                                </div>
-                                            )}
+                                            {definitions.length > 1 &&
+                                                index < definitions.length - 1 && <hr />}
                                         </div>
-                                        <div className="input-group col-12 mb-2">
-                                            <span className="input-group-text">
-                                                {translations["addWordForm.notes"]}
-                                            </span>
-                                            <textarea
-                                                className="form-control"
-                                                value={def.notes}
-                                                onChange={(event) =>
-                                                    handleNotesChange(
-                                                        index,
-                                                        event.target.value
-                                                    )
-                                                }
-                                            ></textarea>
-                                        </div>
-                                        {definitions.length > 1 &&
-                                            index < definitions.length - 1 && <hr />}
-                                    </div>
-                                ))}
+                                    ))}
+                            </div>
+
+                            <div className="definition-controls">
+                                <button
+                                    type="button"
+                                    className="btn btn-definition-add"
+                                    onClick={handleAddDefinitionRow}
+                                    title="Add definition"
+                                >
+                                    <i className="fas fa-plus"></i>
+                                </button>
+                                <button
+                                    type="button"
+                                    className="btn btn-definition-remove"
+                                    onClick={handleRemoveDefinitionRow}
+                                    disabled={definitions.length <= 1}
+                                    title="Remove definition"
+                                >
+                                    <i className="fas fa-minus"></i>
+                                </button>
+                            </div>
                         </div>
 
-                        <div className="definition-controls">
+                        <div className="word-modal-footer">
                             <button
                                 type="button"
-                                className="btn btn-definition-add"
-                                onClick={handleAddDefinitionRow}
-                                title="Add definition"
+                                className="btn btn-outline-secondary"
+                                onClick={handleClose}
+                                disabled={isLoading}
                             >
-                                <i className="fas fa-plus"></i>
+                                <i className="fas fa-times me-1"></i>
+                                {translations["cancelBtn"]}
                             </button>
                             <button
-                                type="button"
-                                className="btn btn-definition-remove"
-                                onClick={handleRemoveDefinitionRow}
-                                disabled={definitions.length <= 1}
-                                title="Remove definition"
+                                type="submit"
+                                className="btn btn-success"
+                                disabled={isLoading}
                             >
-                                <i className="fas fa-minus"></i>
+                                {isLoading ? (
+                                    <>
+                                        <i className="fas fa-spinner fa-spin me-1"></i>
+                                        {translations["loading"] || "Saving..."}
+                                    </>
+                                ) : (
+                                    <>
+                                        <i className="fas fa-save me-1"></i>
+                                        {translations["editBtn"]}
+                                    </>
+                                )}
                             </button>
                         </div>
-                    </div>
-
-                    <div className="word-modal-footer">
-                        <button
-                            type="button"
-                            className="btn btn-outline-secondary"
-                            onClick={handleClose}
-                            disabled={isLoading}
-                        >
-                            <i className="fas fa-times me-1"></i>
-                            {translations["cancelBtn"]}
-                        </button>
-                        <button
-                            type="button"
-                            className="btn btn-success"
-                            onClick={handleEditWord}
-                            disabled={isLoading}
-                        >
-                            {isLoading ? (
-                                <>
-                                    <i className="fas fa-spinner fa-spin me-1"></i>
-                                    {translations["loading"] || "Saving..."}
-                                </>
-                            ) : (
-                                <>
-                                    <i className="fas fa-save me-1"></i>
-                                    {translations["editBtn"]}
-                                </>
-                            )}
-                        </button>
-                    </div>
+                    </form>
                 </div>
             </div>
         </div>

@@ -78,9 +78,16 @@ export const ImportSetForm: React.FC<ImportSetFormProps> = ({
                     placeholder={`Word 1    Definition 1\nWord 2  :  Definition 2\nWord 3  -  Definition 3\nWord 4\tDefinition 4`}
                     value={importText}
                     onChange={(e) => setImportText(e.target.value)}
+                    onKeyDown={(e) => {
+                        if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) {
+                            e.preventDefault();
+                            handleParseImport();
+                        }
+                    }}
                 ></textarea>
                 <div className="d-flex gap-2 mt-2">
                     <button
+                        type="button"
                         className="btn btn-outline-secondary btn-clear-import"
                         onClick={() => setImportText("")}
                         disabled={!importText.trim()}
@@ -89,6 +96,7 @@ export const ImportSetForm: React.FC<ImportSetFormProps> = ({
                         {translations["importSetForm.clearBtn"]}
                     </button>
                     <button
+                        type="button"
                         className="btn btn-primary btn-parse-import flex-grow-1"
                         onClick={handleParseImport}
                         disabled={!importText.trim()}
@@ -107,6 +115,7 @@ export const ImportSetForm: React.FC<ImportSetFormProps> = ({
                             {translations["importSetForm.reviewWords"]} ({importList.length})
                         </h6>
                         <button
+                            type="button"
                             className="btn btn-sm btn-clear-all"
                             onClick={() => setImportList([])}
                         >
@@ -142,6 +151,7 @@ export const ImportSetForm: React.FC<ImportSetFormProps> = ({
                                     </div>
                                     <div className="col-2 col-md-1 text-end mt-md-4">
                                         <button
+                                            type="button"
                                             className="btn btn-sm btn-remove-item"
                                             onClick={() => handleRemoveImportItem(index)}
                                             title="Remove row"
