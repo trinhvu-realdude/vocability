@@ -126,7 +126,7 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({
                     >
                         <h5 className="review-modal-title">
                             <i className="fas fa-brain"></i>
-                            Review: {collectionName}
+                            {translations["review"]}: {collectionName}
                         </h5>
                         <button
                             className="review-modal-close"
@@ -141,9 +141,9 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({
                         {isLoading ? (
                             <div className="text-center py-5">
                                 <div className="spinner-border" style={{ color: collectionColor }}>
-                                    <span className="visually-hidden">Loading...</span>
+                                    <span className="visually-hidden">{translations["loading"]}...</span>
                                 </div>
-                                <p className="mt-3">Loading review session...</p>
+                                <p className="mt-3">{translations["review.loadingSession"]}</p>
                             </div>
                         ) : wordsToReview.length === 0 ? (
                             <div className="text-center py-5">
@@ -151,11 +151,11 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({
                                     className="fas fa-check-circle"
                                     style={{ fontSize: "5rem", color: "#28a745" }}
                                 ></i>
-                                <h4 className="mt-4">No words to review!</h4>
+                                <h4 className="mt-4">{translations["review.noWords"]}</h4>
                                 <p className="text-muted">
-                                    All words in this collection are up to date.
+                                    {translations["review.upToDate"]}
                                     <br />
-                                    Come back later for your next review session.
+                                    {translations["review.comeBackLater"]}
                                 </p>
                             </div>
                         ) : sessionComplete ? (
@@ -165,10 +165,10 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({
                                     <i className="fas fa-trophy"></i>
                                 </div>
                                 <h2 className="review-summary-title">
-                                    Review Complete!
+                                    {translations["review.complete"]}
                                 </h2>
                                 <p className="text-muted">
-                                    Great job! You've reviewed all due words.
+                                    {translations["review.greatJob"]}
                                 </p>
 
                                 <div className="review-summary-stats">
@@ -177,7 +177,7 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({
                                             {reviewedCount}
                                         </span>
                                         <span className="review-summary-stat-label">
-                                            Words Reviewed
+                                            {translations["review.wordsReviewed"]}
                                         </span>
                                     </div>
                                     <div className="review-summary-stat">
@@ -185,7 +185,7 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({
                                             {collectionName}
                                         </span>
                                         <span className="review-summary-stat-label">
-                                            Collection
+                                            {translations["review.collection"]}
                                         </span>
                                     </div>
                                 </div>
@@ -197,7 +197,7 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({
                                 <div className="review-progress mb-4">
                                     <div className="review-progress-text">
                                         <span>
-                                            Card {currentIndex + 1} of {wordsToReview.length}
+                                            {translations["review.card"]} {currentIndex + 1} {translations["review.of"]} {wordsToReview.length}
                                         </span>
                                         <span>{Math.round(progress)}%</span>
                                     </div>
@@ -231,7 +231,7 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({
                                                         style={{ backgroundColor: collectionColor }}
                                                     >
                                                         <i className="fas fa-spell-check me-2"></i>
-                                                        Word
+                                                        {translations["review.word"]}
                                                     </div>
                                                     <div className="card-body position-relative">
                                                         <div className="review-word">
@@ -251,7 +251,7 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({
                                                     <div className="click-hint text-muted pb-3">
                                                         <small>
                                                             <i className="fas fa-hand-pointer me-2"></i>
-                                                            Click card to flip
+                                                            {translations["review.flipCard"]}
                                                         </small>
                                                     </div>
                                                 </div>
@@ -266,7 +266,7 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({
                                                         style={{ backgroundColor: collectionColor }}
                                                     >
                                                         <i className="fas fa-book-open me-2"></i>
-                                                        Definition
+                                                        {translations["review.definition"]}
                                                     </div>
                                                     <div className="card-body">
                                                         <div className="review-definition">
@@ -284,12 +284,12 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({
                                         <div className="mb-4">
                                             <label className="form-label fw-bold text-muted">
                                                 <i className="fas fa-pen-alt me-2"></i>
-                                                Write a sentence using this word:
+                                                {translations["review.writeSentence"]}
                                             </label>
                                             <textarea
                                                 className="form-control review-sentence-input"
                                                 rows={4}
-                                                placeholder="Type your sentence here..."
+                                                placeholder={translations["review.writeSentencePlaceholder"]}
                                                 value={sentence}
                                                 onChange={(e) => setSentence(e.target.value)}
                                                 style={{

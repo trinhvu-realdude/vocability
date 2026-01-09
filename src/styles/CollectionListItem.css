@@ -158,3 +158,15 @@
 .list-action-btn:active {
     transform: translateY(0);
 }
+
+.word-count-badge {
+    font-size: 0.75rem;
+    padding: 0.35em 0.65em;
+    font-weight: 500;
+    border-radius: 6px;
+}
+
+.bg-secondary-soft {
+    background-color: #f1f3f5;
+    color: #6c757d;
+}

@@ -212,18 +212,25 @@
 }
 
 .review-quality-btn {
-    flex: 1;
+    flex: 1 0 0px;
     min-width: 90px;
-    padding: 0.75rem 1rem;
+    min-height: 54px;
+    padding: 0.5rem 0.75rem;
     border: 2px solid;
     border-radius: 10px;
     font-size: 0.95rem;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     text-align: center;
     background: #ffffff;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    white-space: normal;
+    word-break: normal;
+    overflow-wrap: break-word;
 }
 
 .review-quality-btn:hover {
@@ -512,8 +519,10 @@
 
     .review-quality-btn {
         min-width: 60px;
-        padding: 0.5rem 0.25rem;
+        min-height: 48px;
+        padding: 0.25rem 0.5rem;
         font-size: 0.8rem;
+        flex: 1 0 0px;
     }
 
     .review-quality-btn div {
