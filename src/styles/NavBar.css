@@ -69,6 +69,11 @@
     transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
+    height: 2.75rem;
+    /* Explicit height to sync everything */
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
 }
 
 .navbar-nav .nav-link::before {
@@ -190,6 +195,10 @@
     background: #f8f9fa;
     border-radius: 8px;
     transition: all 0.3s ease;
+    height: 2.75rem !important;
+    padding: 0 1rem !important;
+    /* Move vertical padding to height/align-items */
+    box-sizing: border-box;
 }
 
 .language-selector:hover {
