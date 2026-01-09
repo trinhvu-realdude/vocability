@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Collection, Word } from "../../interfaces/model";
 import { IDBPDatabase } from "idb";
 import { MyDB } from "../../interfaces/model";
@@ -26,7 +26,6 @@ export const CollectionListItem: React.FC<CollectionListItemProps> = ({
 }) => {
     const [isExpanded, setIsExpanded] = useState(false);
     const [words, setWords] = useState<Word[]>([]);
-    const [isLoadingWords, setIsLoadingWords] = useState(false);
     const [reviewCount, setReviewCount] = useState<number>(0);
 
     // Action states
@@ -35,31 +34,22 @@ export const CollectionListItem: React.FC<CollectionListItemProps> = ({
 
     const { translations } = useLanguage();
 
-    // Fetch review count on mount
-    React.useEffect(() => {
-        const fetchReviewCount = async () => {
+    // Fetch review count and total words on mount
+    useEffect(() => {
+        const fetchData = async () => {
             if (db && collection.id) {
-                const reviewWords = await getWordsForReview(db, collection.id);
+                const [reviewWords, allWords] = await Promise.all([
+                    getWordsForReview(db, collection.id),
+                    getWordsByCollectionId(db, collection.id)
+                ]);
                 setReviewCount(reviewWords.length);
+                setWords(allWords);
             }
         };
-        fetchReviewCount();
+        fetchData();
     }, [db, collection.id]);
 
-    const handleToggle = async () => {
-        if (!isExpanded && words.length === 0) {
-            setIsLoadingWords(true);
-            try {
-                if (db && collection.id) {
-                    const fetchedWords = await getWordsByCollectionId(db, collection.id);
-                    setWords(fetchedWords);
-                }
-            } catch (error) {
-                console.error("Failed to fetch words", error);
-            } finally {
-                setIsLoadingWords(false);
-            }
-        }
+    const handleToggle = () => {
         setIsExpanded(!isExpanded);
     };
 
@@ -86,7 +76,14 @@ export const CollectionListItem: React.FC<CollectionListItemProps> = ({
                     <div className="collection-info-group">
                         <i className="fas fa-folder fa-lg" style={{ color: collection.color }}></i>
                         <div>
-                            <h5 className="collection-name">{collection.name}</h5>
+                            <div className="d-flex align-items-center">
+                                <h5 className="collection-name me-2">{collection.name}</h5>
+                                <span className={`badge ${words.length > 0 ? 'bg-light text-dark' : 'bg-secondary-soft text-muted'} word-count-badge`}>
+                                    {words.length === 0 ? translations["collection.wordCount.empty"] :
+                                        words.length === 1 ? `1 ${translations["collection.wordCount.singular"]}` :
+                                            `${words.length} ${translations["collection.wordCount.plural"]}`}
+                                </span>
+                            </div>
                             <small className="text-muted">
                                 {formatDate(collection.createdAt, translations["language"])}
                             </small>
@@ -141,41 +138,33 @@ export const CollectionListItem: React.FC<CollectionListItemProps> = ({
                 </div>
 
                 <div className={`collection-accordion-body ${isExpanded ? 'expanded' : ''}`}>
-                    {isLoadingWords ? (
-                        <div className="text-center py-4">
-                            <div className="spinner-border text-secondary" role="status" style={{ width: '2rem', height: '2rem', borderWidth: '3px' }}>
-                                <span className="visually-hidden">Loading...</span>
-                            </div>
-                        </div>
-                    ) : (
-                        <div className="row g-2">
-                            {words.length > 0 ? (
-                                words.map(word => (
-                                    <div key={word.id} className="col-md-4 col-sm-6">
-                                        <div className="mini-word-row">
-                                            <span className="mini-word-text"><a
-                                                href={`/${translations["language"]}/word/${word.id}`}
-                                                className="word-link"
-                                                style={{
-                                                    display: "block",
-                                                    textDecoration: "none",
-                                                    color: "inherit",
-                                                    whiteSpace: "nowrap",
-                                                    overflow: "hidden",
-                                                    textOverflow: "ellipsis",
-                                                }}
-                                            >
-                                                <strong>{word.word}</strong>{" "}
-                                            </a></span>
-                                            {word.partOfSpeech && <span className="mini-word-pos">{word.partOfSpeech}</span>}
-                                        </div>
+                    <div className="row g-2">
+                        {words.length > 0 ? (
+                            words.map(word => (
+                                <div key={word.id} className="col-md-4 col-sm-6">
+                                    <div className="mini-word-row">
+                                        <span className="mini-word-text"><a
+                                            href={`/${translations["language"]}/word/${word.id}`}
+                                            className="word-link"
+                                            style={{
+                                                display: "block",
+                                                textDecoration: "none",
+                                                color: "inherit",
+                                                whiteSpace: "nowrap",
+                                                overflow: "hidden",
+                                                textOverflow: "ellipsis",
+                                            }}
+                                        >
+                                            <strong>{word.word}</strong>{" "}
+                                        </a></span>
+                                        {word.partOfSpeech && <span className="mini-word-pos">{word.partOfSpeech}</span>}
                                     </div>
-                                ))
-                            ) : (
-                                <p className="text-center text-muted my-3">No words in this collection.</p>
-                            )}
-                        </div>
-                    )}
+                                </div>
+                            ))
+                        ) : (
+                            <p className="text-center text-muted my-3">No words in this collection.</p>
+                        )}
+                    </div>
                 </div>
             </div >
 
