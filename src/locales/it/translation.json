@@ -98,5 +98,14 @@
     "importSetForm.reviewWords": "Rivedi parole",
     "importSetForm.word": "Parola",
     "importSetForm.definition": "Definizione",
-    "leftOffCanvas.listOfWords": "Lista di parole"
+    "leftOffCanvas.listOfWords": "Lista di parole",
+    "practice.title": "Pratiche",
+    "practice.startPractice": "Inizia Pratica",
+    "practice.selectCollection": "Seleziona una collezione",
+    "practice.flashcard": "Quiz Flashcard",
+    "practice.crossword": "Parole Crociate",
+    "practice.scramble": "Parole Intrecciate",
+    "practice.quiz": "Quiz di Vocabolario",
+    "practice.matching": "Abbinamento Parole",
+    "practice.memory": "Carta di Memoria"
 }

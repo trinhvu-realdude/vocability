@@ -97,11 +97,11 @@ export const CollectionListItem: React.FC<CollectionListItemProps> = ({
                                 >
                                     <h5 className="collection-name me-2">{collection.name}</h5>
                                 </a>
-                                <span className={`badge ${words.length > 0 ? 'bg-light text-dark' : 'bg-secondary-soft text-muted'} word-count-badge`}>
+                                {words && <span className={`badge ${words.length > 0 ? 'bg-light text-dark' : 'bg-secondary-soft text-muted'} word-count-badge`}>
                                     {words.length === 0 ? translations["collection.wordCount.empty"] :
                                         words.length === 1 ? `1 ${translations["collection.wordCount.singular"]}` :
                                             `${words.length} ${translations["collection.wordCount.plural"]}`}
-                                </span>
+                                </span>}
                             </div>
                             <small className="text-muted">
                                 {formatDate(collection.createdAt, translations["language"])}
@@ -125,7 +125,7 @@ export const CollectionListItem: React.FC<CollectionListItemProps> = ({
                                 title="Start Review"
                             >
                                 <i className="fas fa-brain"></i>
-                                {reviewCount > 0 && (
+                                {reviewCount && reviewCount > 0 && (
                                     <span
                                         className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
                                         style={{ fontSize: '0.6rem', padding: '0.25em 0.4em' }}
@@ -158,7 +158,7 @@ export const CollectionListItem: React.FC<CollectionListItemProps> = ({
 
                 <div className={`collection-accordion-body ${isExpanded ? 'expanded' : ''}`}>
                     <div className="row g-2">
-                        {words.length > 0 ? (
+                        {words && words.length > 0 ? (
                             words.map(word => (
                                 <div key={word.id} className="col-md-4 col-sm-6">
                                     <div className="mini-word-row">

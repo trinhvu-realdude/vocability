@@ -7,10 +7,11 @@ import { WordScramblePage } from "../pages/practice/WordScramblePage";
 import { VocabularyQuizPage } from "../pages/practice/VocabularyQuizPage";
 import { WordMatchingPage } from "../pages/practice/WordMatchingPage";
 import { MemoryCardPage } from "../pages/practice/MemoryCardPage";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { getCurrentLanguageId } from "../utils/helper";
 import { getCollectionsByLanguageId } from "../services/CollectionService";
 import { languages } from "../utils/constants";
+import { Toast, ToastType } from "../components/Toast";
 
 const PracticeLayout: React.FC<PracticeLayoutProps> = ({
     db,
@@ -19,6 +20,10 @@ const PracticeLayout: React.FC<PracticeLayoutProps> = ({
     setLanguageCode,
 }) => {
     const { language } = useParams();
+    const [toast, setToast] = useState<{
+        message: string;
+        type: ToastType;
+    } | null>(null);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -41,7 +46,7 @@ const PracticeLayout: React.FC<PracticeLayoutProps> = ({
     return (
         <div className="container my-4">
             <Routes>
-                <Route path="/" element={<PracticePage />} />
+                <Route path="/" element={<PracticePage collections={collections} onShowToast={(message, type) => setToast({ message, type })} />} />
                 <Route
                     path="/flashcard-quiz"
                     element={
@@ -60,7 +65,17 @@ const PracticeLayout: React.FC<PracticeLayoutProps> = ({
                 <Route path="/word-matching" element={<WordMatchingPage />} />
                 <Route path="/memory-card" element={<MemoryCardPage />} />
             </Routes>
-        </div>
+
+            {
+                toast && (
+                    <Toast
+                        message={toast.message}
+                        type={toast.type}
+                        onClose={() => setToast(null)}
+                    />
+                )
+            }
+        </div >
     );
 };
 

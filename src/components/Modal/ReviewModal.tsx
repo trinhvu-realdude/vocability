@@ -7,7 +7,9 @@ import {
     updateWordAfterReview,
 } from "../../services/SpacedRepetitionService";
 import "../../styles/ReviewModal.css";
+import "../../styles/FlashCard.css";
 import { useLanguage } from "../../LanguageContext";
+import { FlashCard } from "../Card/FlashCard";
 
 interface ReviewModalProps {
     db: IDBPDatabase<MyDB> | null | undefined;
@@ -219,67 +221,12 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({
                                 <div className="row g-4">
                                     {/* Left Column: FlashCard */}
                                     <div className="col-lg-6 d-flex align-items-center justify-content-center">
-                                        <div
-                                            className={`review-flashcard ${isFlipped ? "flipped" : ""}`}
-                                            onClick={handleFlip}
-                                            style={{ cursor: isFlipped ? "default" : "pointer" }}
-                                        >
-                                            <div className="review-flashcard-inner">
-                                                {/* Front - Word */}
-                                                <div
-                                                    className="review-flashcard-front"
-                                                    style={{ borderColor: collectionColor }}
-                                                >
-                                                    <div
-                                                        className="card-header"
-                                                        style={{ backgroundColor: collectionColor }}
-                                                    >
-                                                        <i className="fas fa-spell-check me-2"></i>
-                                                        {translations["review.word"]}
-                                                    </div>
-                                                    <div className="card-body position-relative">
-                                                        <div className="review-word">
-                                                            {currentWord.phonetic && (
-                                                                <>
-                                                                    <small>{currentWord.phonetic}</small>
-                                                                    <br />
-                                                                </>
-                                                            )}
-                                                            {currentWord.word}
-                                                            <br />
-                                                            {currentWord.partOfSpeech && <small>
-                                                                <i>({currentWord.partOfSpeech})</i>
-                                                            </small>}
-                                                        </div>
-                                                    </div>
-                                                    <div className="click-hint text-muted pb-3">
-                                                        <small>
-                                                            <i className="fas fa-hand-pointer me-2"></i>
-                                                            {translations["review.flipCard"]}
-                                                        </small>
-                                                    </div>
-                                                </div>
-
-                                                {/* Back - Definition */}
-                                                <div
-                                                    className="review-flashcard-back"
-                                                    style={{ borderColor: collectionColor }}
-                                                >
-                                                    <div
-                                                        className="card-header"
-                                                        style={{ backgroundColor: collectionColor }}
-                                                    >
-                                                        <i className="fas fa-book-open me-2"></i>
-                                                        {translations["review.definition"]}
-                                                    </div>
-                                                    <div className="card-body">
-                                                        <div className="review-definition">
-                                                            {currentWord.definitions[0].definition}
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        <FlashCard
+                                            word={currentWord}
+                                            isFlipped={isFlipped}
+                                            onFlip={handleFlip}
+                                            cardColor={collectionColor}
+                                        />
                                     </div>
 
                                     {/* Right Column: Sentence Input & Controls */}

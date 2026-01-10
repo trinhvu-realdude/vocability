@@ -98,5 +98,14 @@
     "importSetForm.reviewWords": "Revisar palabras",
     "importSetForm.word": "Palabra",
     "importSetForm.definition": "Definición",
-    "leftOffCanvas.listOfWords": "Lista de palabras"
+    "leftOffCanvas.listOfWords": "Lista de palabras",
+    "practice.title": "Prácticas",
+    "practice.startPractice": "Iniciar Práctica",
+    "practice.selectCollection": "Seleccionar una colección",
+    "practice.flashcard": "Prueba de Tarjetas",
+    "practice.crossword": "Crucigramas",
+    "practice.scramble": "Revolver Palabras",
+    "practice.quiz": "Prueba de Vocabulario",
+    "practice.matching": "Emparejamiento de Palabras",
+    "practice.memory": "Tarjeta de Memoria"
 }
