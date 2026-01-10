@@ -97,5 +97,6 @@
     "importSetForm.parseWordsBtn": "Analisar palavras",
     "importSetForm.reviewWords": "Revisar palavras",
     "importSetForm.word": "Palavra",
-    "importSetForm.definition": "Definição"
+    "importSetForm.definition": "Definição",
+    "leftOffCanvas.listOfWords": "Lista de palavras"
 }

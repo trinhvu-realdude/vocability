@@ -37,6 +37,16 @@
     margin: 0;
 }
 
+.collection-name-link {
+    text-decoration: none;
+    color: inherit;
+}
+
+.collection-name-link:hover .collection-name {
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+}
+
 .collection-meta {
     display: flex;
     align-items: center;
