@@ -90,6 +90,7 @@ export const PracticePage: React.FC<PracticePageProps> = ({ collections, onShowT
                 collections={collections || []}
                 onSelect={handleCollectionSelect}
                 title={selectedPracticeHref ? practicesLanguage?.list.find(p => p.href === selectedPracticeHref)?.name : "Practice Setup"}
+                practiceHref={selectedPracticeHref || ""}
                 onToast={onShowToast}
             />
         </div>
