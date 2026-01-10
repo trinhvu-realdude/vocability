@@ -13,18 +13,18 @@ interface SelectionPracticeModalProps {
     onToast?: (message: string, type: ToastType) => void;
 }
 
-import crosswordVideo from "../../assets/videos/crossword.mp4";
-import scrambleVideo from "../../assets/videos/scramble.mp4";
-import quizVideo from "../../assets/videos/quiz.mp4";
-import matchingVideo from "../../assets/videos/matching.mp4";
-import memoryVideo from "../../assets/videos/memory.mp4";
+// import crosswordVideo from "../../assets/videos/crossword.mp4";
+// import scrambleVideo from "../../assets/videos/scramble.mp4";
+// import quizVideo from "../../assets/videos/quiz.mp4";
+// import matchingVideo from "../../assets/videos/matching.mp4";
+// import memoryVideo from "../../assets/videos/memory.mp4";
 
 const practiceVideos: Record<string, string> = {
-    "/practices/crossword-puzzles": crosswordVideo,
-    "/practices/word-scramble": scrambleVideo,
-    "/practices/vocabulary-quiz": quizVideo,
-    "/practices/word-matching": matchingVideo,
-    "/practices/memory-card": memoryVideo,
+    // "/practices/crossword-puzzles": crosswordVideo,
+    // "/practices/word-scramble": scrambleVideo,
+    // "/practices/vocabulary-quiz": quizVideo,
+    // "/practices/word-matching": matchingVideo,
+    // "/practices/memory-card": memoryVideo,
 };
 
 export const SelectionPracticeModal: React.FC<SelectionPracticeModalProps> = ({

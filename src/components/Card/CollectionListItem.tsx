@@ -125,7 +125,7 @@ export const CollectionListItem: React.FC<CollectionListItemProps> = ({
                                 title="Start Review"
                             >
                                 <i className="fas fa-brain"></i>
-                                {reviewCount && reviewCount > 0 && (
+                                {reviewCount > 0 && (
                                     <span
                                         className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
                                         style={{ fontSize: '0.6rem', padding: '0.25em 0.4em' }}
