@@ -19,15 +19,27 @@ export const CollectionCard: React.FC<CollectionCardProps> = ({
 
     const { translations } = useLanguage();
 
-    useEffect(() => {
-        const fetchReviewCount = async () => {
-            if (db && collection.id) {
-                const words = await getWordsForReview(db, collection.id);
-                setReviewCount(words.length);
-            }
-        };
-        fetchReviewCount();
+    const fetchReviewCount = React.useCallback(async () => {
+        if (db && collection.id) {
+            const words = await getWordsForReview(db, collection.id);
+            setReviewCount(words.length);
+        }
     }, [db, collection.id]);
+
+    useEffect(() => {
+        fetchReviewCount();
+    }, [fetchReviewCount]);
+
+    useEffect(() => {
+        const handleRefresh = () => {
+            fetchReviewCount();
+        };
+
+        window.addEventListener('reviewCountUpdated', handleRefresh);
+        return () => {
+            window.removeEventListener('reviewCountUpdated', handleRefresh);
+        };
+    }, [fetchReviewCount]);
 
     return (
         <div className="col-md-4 mb-4">

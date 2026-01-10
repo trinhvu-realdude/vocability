@@ -34,20 +34,33 @@ export const CollectionListItem: React.FC<CollectionListItemProps> = ({
 
     const { translations } = useLanguage();
 
+    const fetchData = React.useCallback(async () => {
+        if (db && collection.id) {
+            const [reviewWords, allWords] = await Promise.all([
+                getWordsForReview(db, collection.id),
+                getWordsByCollectionId(db, collection.id)
+            ]);
+            setReviewCount(reviewWords.length);
+            setWords(allWords);
+        }
+    }, [db, collection.id]);
+
     // Fetch review count and total words on mount
     useEffect(() => {
-        const fetchData = async () => {
-            if (db && collection.id) {
-                const [reviewWords, allWords] = await Promise.all([
-                    getWordsForReview(db, collection.id),
-                    getWordsByCollectionId(db, collection.id)
-                ]);
-                setReviewCount(reviewWords.length);
-                setWords(allWords);
-            }
-        };
         fetchData();
-    }, [db, collection.id]);
+    }, [fetchData]);
+
+    // Listen for review count updates
+    useEffect(() => {
+        const handleRefresh = () => {
+            fetchData();
+        };
+
+        window.addEventListener('reviewCountUpdated', handleRefresh);
+        return () => {
+            window.removeEventListener('reviewCountUpdated', handleRefresh);
+        };
+    }, [fetchData]);
 
     const handleToggle = () => {
         setIsExpanded(!isExpanded);
@@ -77,7 +90,13 @@ export const CollectionListItem: React.FC<CollectionListItemProps> = ({
                         <i className="fas fa-folder fa-lg" style={{ color: collection.color }}></i>
                         <div>
                             <div className="d-flex align-items-center">
-                                <h5 className="collection-name me-2">{collection.name}</h5>
+                                <a
+                                    href={`/${translations["language"]}/collection/${collection.id}`}
+                                    className="collection-name-link"
+                                    onClick={(e) => e.stopPropagation()}
+                                >
+                                    <h5 className="collection-name me-2">{collection.name}</h5>
+                                </a>
                                 <span className={`badge ${words.length > 0 ? 'bg-light text-dark' : 'bg-secondary-soft text-muted'} word-count-badge`}>
                                     {words.length === 0 ? translations["collection.wordCount.empty"] :
                                         words.length === 1 ? `1 ${translations["collection.wordCount.singular"]}` :

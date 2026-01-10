@@ -24,7 +24,7 @@ export const CollectionPage: React.FC<CommonProps> = ({
         useState<Collection[]>(collections);
     const [filterSorting, setFilterSorting] = useState<FilterSortingOption>();
     const [viewMode, setViewMode] = useState<'grid' | 'list'>(
-        (localStorage.getItem('collection_view_mode') as 'grid' | 'list') || 'grid'
+        (localStorage.getItem('collection_view_mode') as 'grid' | 'list') || 'list'
     );
 
     useEffect(() => {

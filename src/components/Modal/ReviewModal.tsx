@@ -99,6 +99,10 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({
         setReviewedCount(0);
         setSentence("");
         onClose();
+
+        // Notify other components to refresh review counts
+        const event = new CustomEvent('reviewCountUpdated');
+        window.dispatchEvent(event);
     };
 
     if (!isOpen) return null;

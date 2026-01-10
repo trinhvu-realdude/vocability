@@ -12,7 +12,7 @@ export const LeftOffCanvas: React.FC<{
     words: Word[];
     setWords: React.Dispatch<React.SetStateAction<Word[]>>;
 }> = ({ db, collection, words, setWords }) => {
-    const { setSelectedWord } = useLanguage();
+    const { setSelectedWord, translations } = useLanguage();
 
     const { collectionId } = useParams();
 
@@ -36,7 +36,7 @@ export const LeftOffCanvas: React.FC<{
             id="offcanvasWithBackdrop"
             aria-labelledby="offcanvasWithBackdropLabel"
         >
-            <div className="offcanvas-header" style={{backgroundColor: collection?.color, color: "#fff"}}>
+            <div className="offcanvas-header" style={{ backgroundColor: collection?.color, color: "#fff" }}>
                 <h5 className="offcanvas-title" id="offcanvasWithBackdropLabel">
                     <span>
                         <strong>{collection?.name}</strong>
@@ -46,14 +46,14 @@ export const LeftOffCanvas: React.FC<{
                     className="btn btn-sm"
                     data-bs-dismiss="offcanvas"
                     aria-label="Close"
-                    style={{color: "#fff"}}
+                    style={{ color: "#fff" }}
                 >
                     <i className="fas fa-times"></i>
                 </div>
             </div>
             <div className="offcanvas-body">
                 <ul className="list-group">
-                    <p>List of words</p>
+                    <p>{translations["leftOffCanvas.listOfWords"]}</p>
                     {words.length > 0 &&
                         words.map((word, index) => (
                             <li
