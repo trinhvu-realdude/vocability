@@ -98,5 +98,14 @@
     "importSetForm.reviewWords": "Wörter überprüfen",
     "importSetForm.word": "Wort",
     "importSetForm.definition": "Definition",
-    "leftOffCanvas.listOfWords": "Liste von Wörtern"
+    "leftOffCanvas.listOfWords": "Liste von Wörtern",
+    "practice.title": "Übungen",
+    "practice.startPractice": "Übung starten",
+    "practice.selectCollection": "Wählen Sie eine Sammlung",
+    "practice.flashcard": "Karteikarten-Quiz",
+    "practice.crossword": "Kreuzworträtsel",
+    "practice.scramble": "Wortsalat",
+    "practice.quiz": "Vokabelquiz",
+    "practice.matching": "Wortzuordnung",
+    "practice.memory": "Memory-Karte"
 }

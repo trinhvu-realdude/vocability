@@ -1,0 +1,128 @@
+/* Practice Page Styling */
+.practice-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+    padding: 1rem;
+}
+
+.practice-card-wrapper {
+    perspective: 1000px;
+}
+
+.practice-card {
+    background: #ffffff;
+    border: none;
+    border-radius: 20px;
+    height: 100%;
+    min-height: 220px;
+    display: flex;
+    flex-direction: column;
+    padding: 2rem;
+    position: relative;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    cursor: pointer;
+    overflow: hidden;
+    text-decoration: none !important;
+    color: inherit;
+    border: 1px solid rgba(0, 0, 0, 0.03);
+}
+
+.practice-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 6px;
+    height: 100%;
+    background: #DD5746;
+    /* Theme color */
+    opacity: 0.8;
+}
+
+.practice-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+}
+
+.practice-icon-wrapper {
+    width: 60px;
+    height: 60px;
+    background: rgba(221, 87, 70, 0.1);
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.practice-card:hover .practice-icon-wrapper {
+    background: #DD5746;
+    transform: rotate(10deg);
+}
+
+.practice-icon-wrapper i {
+    font-size: 1.8rem;
+    color: #DD5746;
+    transition: all 0.3s ease;
+}
+
+.practice-card:hover .practice-icon-wrapper i {
+    color: #fff;
+}
+
+.practice-info h5 {
+    font-weight: 700;
+    font-size: 1.25rem;
+    margin-bottom: 0.75rem;
+    color: #343a40;
+}
+
+.practice-info p {
+    color: #6c757d;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin: 0;
+}
+
+.practice-card-footer {
+    margin-top: auto;
+    padding-top: 1.5rem;
+    display: flex;
+    align-items: center;
+    color: #DD5746;
+    font-weight: 600;
+    font-size: 0.9rem;
+    opacity: 0;
+    transform: translateX(-10px);
+    transition: all 0.3s ease;
+}
+
+.practice-card:hover .practice-card-footer {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.practice-card-footer i {
+    margin-left: 0.5rem;
+    transition: transform 0.3s ease;
+}
+
+.practice-card:hover .practice-card-footer i {
+    transform: translateX(5px);
+}
+
+/* Responsiveness */
+@media (max-width: 768px) {
+    .practice-grid {
+        grid-template-columns: 1fr;
+        padding: 0.5rem;
+    }
+
+    .practice-card {
+        padding: 1.5rem;
+        min-height: 180px;
+    }
+}

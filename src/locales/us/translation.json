@@ -98,5 +98,14 @@
     "importSetForm.reviewWords": "Review words",
     "importSetForm.word": "Word",
     "importSetForm.definition": "Definition",
-    "leftOffCanvas.listOfWords": "List of words"
+    "leftOffCanvas.listOfWords": "List of words",
+    "practice.title": "Practices",
+    "practice.startPractice": "Start Practice",
+    "practice.selectCollection": "Select a collection",
+    "practice.flashcard": "Flashcard Quiz",
+    "practice.crossword": "Crossword Puzzles",
+    "practice.scramble": "Word Scramble",
+    "practice.quiz": "Vocabulary Quiz",
+    "practice.matching": "Word Matching",
+    "practice.memory": "Memory Card"
 }

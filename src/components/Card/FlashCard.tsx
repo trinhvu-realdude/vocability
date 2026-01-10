@@ -1,122 +1,88 @@
-import { useState } from "react";
+import React from "react";
 import { Word } from "../../interfaces/model";
-import { getHintWord } from "../../utils/helper";
+import { useLanguage } from "../../LanguageContext";
 
-export const FlashCard: React.FC<{
-    index: number;
+interface FlashCardProps {
     word: Word;
     isFlipped: boolean;
-    isGetHint: boolean;
+    onFlip: () => void;
     cardColor: string;
-    setIsFlipped: React.Dispatch<React.SetStateAction<boolean>>;
-    setIsGetHint: React.Dispatch<React.SetStateAction<boolean>>;
-}> = ({
-    index,
+    frontType?: 'word' | 'definition';
+}
+
+export const FlashCard: React.FC<FlashCardProps> = ({
     word,
     isFlipped,
-    isGetHint,
+    onFlip,
     cardColor,
-    setIsFlipped,
-    setIsGetHint,
+    frontType = 'word'
 }) => {
-        const [hint, setHint] = useState<string>("");
+    const { translations } = useLanguage();
 
-        const handleGetHint = async () => {
-            setIsGetHint(true);
-            const hintWord = await getHintWord(word.word);
-            setHint(hintWord);
-        };
-
-        return (
-            <div
-                key={word.id}
-                className={`carousel-item ${index === 0 ? "active" : ""}`}
-            >
-                <div
-                    className={`flashcard ${isFlipped ? "flip" : ""}`}
-                    onClick={() => setIsFlipped(!isFlipped)}
-                >
-                    <div className="flashcard-inner">
-                        <div
-                            className="card flashcard-front"
-                            style={{ borderColor: cardColor }}
-                        >
-                            <div
-                                className="card-header w-100"
-                                style={{
-                                    backgroundColor: cardColor,
-                                    color: "#fff",
-                                }}
-                            >
-                                Definition
-                            </div>
-                            <div
-                                className="card-body w-100 mb-4 d-flex justify-content-center align-items-center"
-                                style={{ backgroundColor: "#fff" }}
-                            >
-                                <div className="definition p-4">
-                                    {word.definitions[0].definition}
-                                </div>
-                            </div>
-                        </div>
-                        <div
-                            className="card flashcard-back"
-                            style={{ borderColor: cardColor }}
-                        >
-                            <div
-                                className="card-header w-100"
-                                style={{
-                                    backgroundColor: cardColor,
-                                    color: "#fff",
-                                }}
-                            >
-                                Word
-                            </div>
-                            <div className="card-body w-100 mb-4 d-flex justify-content-center align-items-center">
-                                <div className="word">
-                                    <small>{word.phonetic}</small>
-                                    <br />
-                                    {word.word}
-                                    <br />
-                                    <small>
-                                        <i>({word.partOfSpeech})</i>
-                                    </small>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+    const renderWordSide = () => (
+        <>
+            <div className="card-header" style={{ backgroundColor: cardColor }}>
+                <i className="fas fa-spell-check me-2"></i>
+                {translations["review.word"]}
+            </div>
+            <div className="card-body">
+                <div className="flashcard-word text-center">
+                    {word.phonetic && (
+                        <small>{word.phonetic}</small>
+                    )}
+                    <div>{word.word}</div>
+                    {word.partOfSpeech && (
+                        <small><i>({word.partOfSpeech})</i></small>
+                    )}
                 </div>
-                {!isFlipped && !isGetHint && (
-                    <div
-                        className="get-hint text-center mt-4"
-                        onClick={handleGetHint}
-                    >
-                        <i className="fa" style={{ color: "yellowgreen" }}>
-                            &#xf0eb;
-                        </i>{" "}
-                        Get a hint
-                    </div>
-                )}
-                {isGetHint && !isFlipped && (
-                    <div className="text-center mt-4">
-                        <strong>{hint}</strong>{" "}
-                        <small>
-                            <i>({word.partOfSpeech})</i>
-                        </small>
-                    </div>
-                )}
-                {isFlipped && (
-                    <div
-                        className="text-center mt-4"
-                        style={{ cursor: "pointer" }}
-                    // onClick={() => handleTextToSpeech(word.word)}
-                    >
-                        <strong>{word.word}</strong>{" "}
-                        <small>
-                            <i>({word.partOfSpeech})</i>
-                        </small>
+                {!isFlipped && (
+                    <div className="click-hint">
+                        <i className="fas fa-hand-pointer me-2"></i>
+                        {translations["review.flipCard"]}
                     </div>
                 )}
             </div>
-        );
-    };
+        </>
+    );
+
+    const renderDefinitionSide = () => (
+        <>
+            <div className="card-header" style={{ backgroundColor: cardColor }}>
+                <i className="fas fa-book-open me-2"></i>
+                {translations["review.definition"]}
+            </div>
+            <div className="card-body">
+                <div className="flashcard-definition">
+                    {word.definitions && word.definitions.length > 0
+                        ? word.definitions[0].definition
+                        : "No definition available"}
+                </div>
+            </div>
+        </>
+    );
+
+    return (
+        <div
+            className={`flashcard-container ${isFlipped ? "flipped" : ""}`}
+            onClick={onFlip}
+        >
+            <div className="flashcard-inner">
+                {/* Front Side */}
+                <div
+                    className="flashcard-front"
+                    style={{ borderColor: cardColor }}
+                >
+                    {frontType === 'word' ? renderWordSide() : renderDefinitionSide()}
+                </div>
+
+                {/* Back Side */}
+                <div
+                    className="flashcard-back"
+                    style={{ borderColor: cardColor }}
+                >
+                    {frontType === 'word' ? renderDefinitionSide() : renderWordSide()}
+                </div>
+            </div>
+        </div>
+    );
+};
