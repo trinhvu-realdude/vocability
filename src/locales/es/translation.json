@@ -107,5 +107,19 @@
     "practice.scramble": "Revolver Palabras",
     "practice.quiz": "Prueba de Vocabulario",
     "practice.matching": "Emparejamiento de Palabras",
-    "practice.memory": "Tarjeta de Memoria"
+    "practice.memory": "Tarjeta de Memoria",
+    "flashcard.question": "Pregunta",
+    "flashcard.titleQuestion": "¿Qué palabra coincide con esta definición?",
+    "flashcard.nextQuestion": "Siguiente",
+    "flashcard.viewResults": "Ver resultados",
+    "flashcard.resultsTitle": "¡Prueba Completada!",
+    "flashcard.resultsText": "Así te fue:",
+    "flashcard.correctLower": "correcta",
+    "flashcard.correctUpper": "Correcta",
+    "flashcard.incorrectUpper": "Incorrecta",
+    "flashcard.total": "Total",
+    "flashcard.tryAgain": "Intentar de nuevo",
+    "backBtn": "Volver",
+    "alert.warningCollectionEmpty": "La colección seleccionada está vacía. Por favor, añade algunas palabras primero.",
+    "alert.warningNotEnoughWords": "La colección seleccionada no tiene suficientes palabras para crear una prueba. Se requieren al menos 4 palabras."
 }

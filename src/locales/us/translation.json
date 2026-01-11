@@ -51,6 +51,8 @@
     "alert.validateExportForm": "Please choose the collection and file format",
     "alert.removeFavoriteWord": "Removed word successfully",
     "alert.warningCollectionNoWord": "Collection has no word",
+    "alert.warningCollectionEmpty": "The selected collection is empty. Please add some words first.",
+    "alert.warningNotEnoughWords": "The selected collection doesn't have enough words to create a quiz. At least 4 words are required.",
     "export": "Export",
     "export.chooseCollection": "Choose a collection",
     "export.fileFormat": "File format",
@@ -107,5 +109,17 @@
     "practice.scramble": "Word Scramble",
     "practice.quiz": "Vocabulary Quiz",
     "practice.matching": "Word Matching",
-    "practice.memory": "Memory Card"
+    "practice.memory": "Memory Card",
+    "flashcard.question": "Question",
+    "flashcard.titleQuestion": "What word matches this definition?",
+    "flashcard.nextQuestion": "Next",
+    "flashcard.viewResults": "View results",
+    "flashcard.resultsTitle": "Quiz Completed!",
+    "flashcard.resultsText": "Here's how you did:",
+    "flashcard.correctLower": "correct",
+    "flashcard.correctUpper": "Correct",
+    "flashcard.incorrectUpper": "Incorrect",
+    "flashcard.total": "Total",
+    "flashcard.tryAgain": "Try again",
+    "backBtn": "Back"
 }

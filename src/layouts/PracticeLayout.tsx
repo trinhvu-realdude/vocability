@@ -46,7 +46,7 @@ const PracticeLayout: React.FC<PracticeLayoutProps> = ({
     return (
         <div className="container my-4">
             <Routes>
-                <Route path="/" element={<PracticePage collections={collections} onShowToast={(message, type) => setToast({ message, type })} />} />
+                <Route path="/" element={<PracticePage collections={collections} onShowToast={(message, type) => setToast({ message, type })} db={db} />} />
                 <Route
                     path="/flashcard-quiz"
                     element={

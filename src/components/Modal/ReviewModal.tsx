@@ -10,6 +10,7 @@ import "../../styles/ReviewModal.css";
 import "../../styles/FlashCard.css";
 import { useLanguage } from "../../LanguageContext";
 import { FlashCard } from "../Card/FlashCard";
+import { handleTextToSpeech } from "../../utils/helper";
 
 interface ReviewModalProps {
     db: IDBPDatabase<MyDB> | null | undefined;
@@ -62,6 +63,7 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({
     };
 
     const handleFlip = () => {
+        handleTextToSpeech(wordsToReview[currentIndex].word, translations["language"]);
         if (!isFlipped) {
             setIsFlipped(prev => !prev);
         }
