@@ -107,5 +107,19 @@
     "practice.scramble": "Embaralhar Palavras",
     "practice.quiz": "Quiz de Vocabulário",
     "practice.matching": "Correspondência de Palavras",
-    "practice.memory": "Cartão de Memória"
+    "practice.memory": "Cartão de Memória",
+    "flashcard.question": "Pergunta",
+    "flashcard.titleQuestion": "Qual palavra corresponde a esta definição?",
+    "flashcard.nextQuestion": "Próximo",
+    "flashcard.viewResults": "Ver resultados",
+    "flashcard.resultsTitle": "Quiz Concluído!",
+    "flashcard.resultsText": "Veja como você se saiu:",
+    "flashcard.correctLower": "correta",
+    "flashcard.correctUpper": "Correta",
+    "flashcard.incorrectUpper": "Incorreta",
+    "flashcard.total": "Total",
+    "flashcard.tryAgain": "Tentar novamente",
+    "backBtn": "Voltar",
+    "alert.warningCollectionEmpty": "A coleção selecionada está vazia. Por favor, adicione algumas palavras primeiro.",
+    "alert.warningNotEnoughWords": "A coleção selecionada não tem palavras suficientes para criar um quiz. São necessárias pelo menos 4 palavras."
 }

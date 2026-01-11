@@ -3,6 +3,9 @@ import { Collection } from "../../interfaces/model";
 import { useLanguage } from "../../LanguageContext";
 import "../../styles/AddWordModal.css";
 import { ToastType } from "../Toast";
+import { IDBPDatabase } from "idb";
+import { MyDB } from "../../interfaces/model";
+import { getWordsByCollectionId } from "../../services/WordService";
 
 interface SelectionPracticeModalProps {
     collections: Collection[];
@@ -11,6 +14,7 @@ interface SelectionPracticeModalProps {
     title?: string;
     practiceHref?: string;
     onToast?: (message: string, type: ToastType) => void;
+    db?: IDBPDatabase<MyDB>;
 }
 
 // import crosswordVideo from "../../assets/videos/crossword.mp4";
@@ -33,7 +37,8 @@ export const SelectionPracticeModal: React.FC<SelectionPracticeModalProps> = ({
     id = "collection-selection-practice-modal",
     title = "Practice Setup",
     practiceHref,
-    onToast
+    onToast,
+    db
 }) => {
     const { translations } = useLanguage();
     const [selectedId, setSelectedId] = useState<number>(0);
@@ -41,8 +46,43 @@ export const SelectionPracticeModal: React.FC<SelectionPracticeModalProps> = ({
     const videoSrc = practiceHref ? practiceVideos[practiceHref] : undefined;
     console.log(videoSrc);
 
-    const handleStart = () => {
+    const handleStart = async () => {
         if (selectedId !== 0) {
+            // Find the selected collection
+            const selectedCollection = collections.find(c => c.id === selectedId);
+
+            if (!selectedCollection || !db) {
+                if (onToast) {
+                    onToast(translations["alert.validateCollectionEmpty"] || "", "warning");
+                }
+                return;
+            }
+
+            // Fetch words from database
+            const words = await getWordsByCollectionId(db, selectedId);
+
+            // Check if collection is empty
+            if (!words || words.length === 0) {
+                if (onToast) {
+                    onToast(translations["alert.warningCollectionEmpty"] || "", "warning");
+                }
+                return;
+            }
+
+            // Filter words that have definitions (required for quiz)
+            const wordsWithDefinitions = words.filter(
+                word => word.definitions && word.definitions.length > 0
+            );
+
+            // Check if there are enough words for a quiz (minimum 4)
+            if (wordsWithDefinitions.length < 4) {
+                if (onToast) {
+                    onToast(translations["alert.warningNotEnoughWords"] || "", "warning");
+                }
+                return;
+            }
+
+            // All validations passed, proceed with selection
             onSelect(selectedId);
         } else {
             if (onToast) {

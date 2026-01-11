@@ -10,6 +10,7 @@ import { PageHeader } from "../../components/PageHeader";
 import { APP_NAME } from "../../utils/constants";
 import { generateWordsForFlashCards } from "../../services/PracticeService";
 import { useLanguage } from "../../LanguageContext";
+import { handleTextToSpeech } from "../../utils/helper";
 
 export const FlashcardQuizPage: React.FC<FlashcardQuizPageProps> = ({
     db,
@@ -105,7 +106,10 @@ export const FlashcardQuizPage: React.FC<FlashcardQuizPageProps> = ({
                             <FlashCard
                                 word={currentWord}
                                 isFlipped={isFlipped}
-                                onFlip={() => setIsFlipped(!isFlipped)}
+                                onFlip={() => {
+                                    handleTextToSpeech(currentWord.word, translations["language"]);
+                                    setIsFlipped(!isFlipped)
+                                }}
                                 cardColor={cardColor}
                             />
 

@@ -107,5 +107,19 @@
     "practice.scramble": "Wortsalat",
     "practice.quiz": "Vokabelquiz",
     "practice.matching": "Wortzuordnung",
-    "practice.memory": "Memory-Karte"
+    "practice.memory": "Memory-Karte",
+    "flashcard.question": "Frage",
+    "flashcard.titleQuestion": "Welches Wort passt zu dieser Definition?",
+    "flashcard.nextQuestion": "Weiter",
+    "flashcard.viewResults": "Ergebnisse anzeigen",
+    "flashcard.resultsTitle": "Quiz Abgeschlossen!",
+    "flashcard.resultsText": "So haben Sie abgeschnitten:",
+    "flashcard.correctLower": "richtig",
+    "flashcard.correctUpper": "Richtig",
+    "flashcard.incorrectUpper": "Falsch",
+    "flashcard.total": "Gesamt",
+    "flashcard.tryAgain": "Erneut versuchen",
+    "backBtn": "Zurück",
+    "alert.warningCollectionEmpty": "Die ausgewählte Sammlung ist leer. Bitte fügen Sie zuerst einige Wörter hinzu.",
+    "alert.warningNotEnoughWords": "Die ausgewählte Sammlung hat nicht genug Wörter, um ein Quiz zu erstellen. Mindestens 4 Wörter sind erforderlich."
 }
