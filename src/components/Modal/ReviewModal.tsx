@@ -63,7 +63,7 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({
     };
 
     const handleFlip = () => {
-        handleTextToSpeech(wordsToReview[currentIndex].word, translations["language"]);
+        handleTextToSpeech(wordsToReview[currentIndex].word, translations["languageVoice"]);
         if (!isFlipped) {
             setIsFlipped(prev => !prev);
         }

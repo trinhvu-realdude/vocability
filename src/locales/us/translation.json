@@ -121,5 +121,6 @@
     "flashcard.incorrectUpper": "Incorrect",
     "flashcard.total": "Total",
     "flashcard.tryAgain": "Try again",
-    "backBtn": "Back"
+    "backBtn": "Back",
+    "exportToExcel": "Export to Excel"
 }

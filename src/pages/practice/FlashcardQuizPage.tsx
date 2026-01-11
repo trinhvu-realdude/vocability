@@ -107,7 +107,7 @@ export const FlashcardQuizPage: React.FC<FlashcardQuizPageProps> = ({
                                 word={currentWord}
                                 isFlipped={isFlipped}
                                 onFlip={() => {
-                                    handleTextToSpeech(currentWord.word, translations["language"]);
+                                    handleTextToSpeech(currentWord.word, translations["languageVoice"]);
                                     setIsFlipped(!isFlipped)
                                 }}
                                 cardColor={cardColor}

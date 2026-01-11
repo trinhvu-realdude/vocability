@@ -168,3 +168,62 @@ export const exportToDocx = async (words: Word[]) => {
     const url = URL.createObjectURL(blob);
     return url;
 };
+
+export const exportToExcel = async (words: Word[], collectionName: string, translations: any) => {
+    // Dynamically import xlsx to avoid bundling issues
+    const XLSX = await import('xlsx');
+
+    // Find the maximum number of definitions across all words
+    const maxDefinitions = Math.max(...words.map(word => word.definitions.length), 0);
+
+    // Create header row
+    const headers = [translations["importSetForm.word"]];
+    for (let i = 1; i <= maxDefinitions; i++) {
+        headers.push(translations["importSetForm.definition"] + ` ${i}`);
+    }
+
+    // Create data rows
+    const data = words.map(word => {
+        const row: any = { [translations["importSetForm.word"]]: word.word };
+
+        // Add each definition to its own column
+        word.definitions.forEach((def, index) => {
+            row[translations["importSetForm.definition"] + ` ${index + 1}`] = def.definition;
+        });
+
+        // Fill empty definition columns with empty strings
+        for (let i = word.definitions.length + 1; i <= maxDefinitions; i++) {
+            row[`Definition ${i}`] = '';
+        }
+
+        return row;
+    });
+
+    // Create worksheet from data
+    const worksheet = XLSX.utils.json_to_sheet(data, { header: headers });
+
+    // Set column widths
+    const columnWidths = [
+        { wch: 20 }, // Word column
+        ...Array(maxDefinitions).fill({ wch: 40 }) // Definition columns
+    ];
+    worksheet['!cols'] = columnWidths;
+
+    // Create workbook and add worksheet
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Vocability');
+
+    // Generate Excel file
+    const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+    const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+
+    // Create download link
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `${collectionName}.xlsx`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+};
