@@ -116,6 +116,7 @@ export const WordPage: React.FC<WordPageProps> = ({
                 setFilterSorting={setFilterSorting}
                 setFilteredWords={setFilteredWords}
                 isHideDefinition={isHideDefinition}
+                selectedCollection={collection}
                 onToggleHideDefinition={() => setIsHideDefinition(prev => !prev)}
             />
 

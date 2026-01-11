@@ -4,6 +4,7 @@ import { FilterSortingOption } from "../interfaces/mainProps";
 import { SortFilter } from "./Filter/SortFilter";
 import { CollectionFilter } from "./Filter/CollectionFilter";
 import { useLanguage } from "../LanguageContext";
+import { exportToExcel } from "../utils/generateDocument";
 import "../styles/SearchBar.css";
 
 export const SearchBar: React.FC<{
@@ -196,6 +197,17 @@ export const SearchBar: React.FC<{
                                     title={isHideDefinition ? translations["showDefinition"] : translations["hideDefinition"]}
                                 >
                                     <i className={`fas ${isHideDefinition ? 'fa-eye' : 'fa-eye-slash'}`}></i>
+                                </button>
+                            )}
+
+                            {type === "word" && (words && words.length > 0) && (
+                                <button
+                                    className="btn-search-utility icon-only"
+                                    type="button"
+                                    onClick={() => exportToExcel(words, selectedCollection?.name || "collection", translations)}
+                                    title={translations["exportToExcel"]}
+                                >
+                                    <i className="fas fa-download"></i>
                                 </button>
                             )}
 

@@ -120,6 +120,7 @@
     "flashcard.total": "Total",
     "flashcard.tryAgain": "Réessayer",
     "backBtn": "Retour",
+    "exportToExcel": "Exporter vers Excel",
     "alert.warningCollectionEmpty": "La collection sélectionnée est vide. Veuillez d'abord ajouter quelques mots.",
     "alert.warningNotEnoughWords": "La collection sélectionnée n'a pas assez de mots pour créer un quiz. Au moins 4 mots sont requis."
 }

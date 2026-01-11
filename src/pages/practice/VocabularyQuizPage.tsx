@@ -108,7 +108,7 @@ export const VocabularyQuizPage: React.FC<VocabularyQuizPageProps> = ({ db, coll
         setIsAnswered(true);
 
         const currentQuestion = questions[currentQuestionIndex];
-        handleTextToSpeech(currentQuestion.correctAnswer, translations["language"]);
+        handleTextToSpeech(currentQuestion.correctAnswer, translations["languageVoice"]);
         const isCorrect = answer === currentQuestion.correctAnswer;
 
         setAnswers([...answers, {
