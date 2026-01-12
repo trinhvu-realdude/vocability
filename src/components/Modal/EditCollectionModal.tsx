@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import EmojiPicker, { EmojiClickData, Theme } from "emoji-picker-react";
+import { useState, useEffect, useRef } from "react";
 import { CollectionModalProps } from "../../interfaces/mainProps";
 import {
     getCollectionById,
@@ -15,9 +16,11 @@ export const EditCollectionModal: React.FC<CollectionModalProps> = ({
     setCollections,
     onShowToast,
 }) => {
-    const [renameValue, setRenameValue] = useState<string>("");
+    const [renameValue, setRenameValue] = useState<string>(collection.name);
     const [color, setColor] = useState<string>("");
     const [showModal, setShowModal] = useState(false);
+    const [showEmojiPicker, setShowEmojiPicker] = useState<boolean>(false);
+    const emojiPickerRef = useRef<HTMLDivElement>(null);
 
     const { translations } = useLanguage();
 
@@ -25,6 +28,24 @@ export const EditCollectionModal: React.FC<CollectionModalProps> = ({
         const timer = setTimeout(() => setShowModal(true), 10);
         return () => clearTimeout(timer);
     }, []);
+
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (emojiPickerRef.current && !emojiPickerRef.current.contains(event.target as Node)) {
+                setShowEmojiPicker(false);
+            }
+        };
+
+        if (showEmojiPicker) {
+            document.addEventListener("mousedown", handleClickOutside);
+        } else {
+            document.removeEventListener("mousedown", handleClickOutside);
+        }
+
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [showEmojiPicker]);
 
     const handleClose = () => {
         setShowModal(false);
@@ -69,6 +90,10 @@ export const EditCollectionModal: React.FC<CollectionModalProps> = ({
         }
     };
 
+    const onEmojiClick = (emojiData: EmojiClickData) => {
+        setRenameValue((prevValue) => prevValue + emojiData.emoji);
+    };
+
     return (
         <div
             className={`modal fade ${showModal ? "show" : ""}`}
@@ -82,7 +107,7 @@ export const EditCollectionModal: React.FC<CollectionModalProps> = ({
             aria-modal="true"
         >
             <div className="modal-dialog modal-dialog-centered">
-                <div className="modal-content word-modal-content">
+                <div className="modal-content word-modal-content emoji-modal">
                     <div
                         className="word-modal-header"
                         style={{
@@ -109,7 +134,7 @@ export const EditCollectionModal: React.FC<CollectionModalProps> = ({
                             handleEditCollection();
                         }}
                     >
-                        <div className="word-modal-body">
+                        <div className="word-modal-body" style={{ overflow: 'visible' }}>
                             <div className="text-center mb-3">
                                 <i
                                     className="fas fa-folder"
@@ -120,7 +145,7 @@ export const EditCollectionModal: React.FC<CollectionModalProps> = ({
                                 ></i>
                             </div>
 
-                            <div className="input-group mb-3">
+                            <div className="input-group mb-3" style={{ position: 'relative' }}>
                                 <span className="input-group-text">
                                     <i className="fas fa-palette"></i>
                                 </span>
@@ -135,10 +160,32 @@ export const EditCollectionModal: React.FC<CollectionModalProps> = ({
                                 <input
                                     type="text"
                                     className="form-control"
-                                    defaultValue={collection.name}
+                                    value={renameValue}
                                     placeholder={translations["name"]}
+                                    style={{ borderRadius: '0' }}
                                     onChange={(event) => setRenameValue(event.target.value)}
                                 />
+                                <button
+                                    type="button"
+                                    className="btn emoji-picker-btn"
+                                    onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+                                >
+                                    <i className="far fa-smile"></i>
+                                </button>
+                                {showEmojiPicker && (
+                                    <div
+                                        ref={emojiPickerRef}
+                                        className="emoji-picker-container"
+                                    >
+                                        <EmojiPicker
+                                            onEmojiClick={onEmojiClick}
+                                            theme={Theme.LIGHT}
+                                            lazyLoadEmojis={true}
+                                            height={350}
+                                            width={400}
+                                        />
+                                    </div>
+                                )}
                             </div>
                         </div>
 

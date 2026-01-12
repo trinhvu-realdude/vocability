@@ -5,8 +5,19 @@
 .word-modal-content {
     border: none;
     border-radius: 16px;
-    overflow: hidden;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+}
+
+.emoji-modal {
+    overflow: visible !important;
+}
+
+.emoji-modal .word-modal-header {
+    border-radius: 16px 16px 0 0;
+}
+
+.emoji-modal .word-modal-footer {
+    border-radius: 0 0 16px 16px;
 }
 
 /* Modal Header */
@@ -132,6 +143,45 @@
     border-color: #DD5746;
     background: rgba(221, 87, 70, 0.05);
     color: #DD5746;
+}
+
+/* Emoji Picker Styling */
+.emoji-picker-btn {
+    border-left: none !important;
+    border-radius: 0 10px 10px 0 !important;
+    background: #f8f9fa !important;
+    border: 2px solid #e9ecef !important;
+    color: #6c757d !important;
+    transition: all 0.3s ease !important;
+}
+
+.emoji-picker-btn:hover {
+    background: #e9ecef !important;
+    color: #DD5746 !important;
+}
+
+.emoji-picker-container {
+    position: absolute;
+    bottom: 100%;
+    right: 0;
+    z-index: 1070;
+    margin-bottom: 10px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    overflow: hidden;
+    animation: fadeInScale 0.2s ease-out;
+}
+
+@keyframes fadeInScale {
+    from {
+        opacity: 0;
+        transform: scale(0.95) translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
 }
 
 /* React Select Creatable */
