@@ -1,3 +1,4 @@
+import EmojiPicker, { EmojiClickData, Theme } from "emoji-picker-react";
 import { IDBPDatabase } from "idb";
 import { Collection, MyDB } from "../../interfaces/model";
 import {
@@ -5,7 +6,7 @@ import {
     getRandomColor,
     reorderActiveLanguages,
 } from "../../utils/helper";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import {
     addCollection,
     getActiveLanguages,
@@ -22,8 +23,28 @@ export const CreateCollectionModal: React.FC<{
     const [randomColor, setRandomColor] = useState<string>(getRandomColor());
     const [color, setColor] = useState<string>("");
     const [name, setName] = useState<string>("");
+    const [showEmojiPicker, setShowEmojiPicker] = useState<boolean>(false);
+    const emojiPickerRef = useRef<HTMLDivElement>(null);
 
     const { translations, setActiveLanguages } = useLanguage();
+
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (emojiPickerRef.current && !emojiPickerRef.current.contains(event.target as Node)) {
+                setShowEmojiPicker(false);
+            }
+        };
+
+        if (showEmojiPicker) {
+            document.addEventListener("mousedown", handleClickOutside);
+        } else {
+            document.removeEventListener("mousedown", handleClickOutside);
+        }
+
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [showEmojiPicker]);
 
     const handleAddCollection = async () => {
         try {
@@ -63,6 +84,11 @@ export const CreateCollectionModal: React.FC<{
         setColor("");
         setName("");
         setRandomColor(getRandomColor());
+        setShowEmojiPicker(false);
+    };
+
+    const onEmojiClick = (emojiData: EmojiClickData) => {
+        setName((prevName) => prevName + emojiData.emoji);
     };
 
     return (
@@ -74,7 +100,7 @@ export const CreateCollectionModal: React.FC<{
             aria-hidden="true"
         >
             <div className="modal-dialog modal-dialog-centered">
-                <div className="modal-content word-modal-content">
+                <div className="modal-content word-modal-content emoji-modal">
                     <div
                         className="word-modal-header"
                         style={{
@@ -101,7 +127,7 @@ export const CreateCollectionModal: React.FC<{
                             handleAddCollection();
                         }}
                     >
-                        <div className="word-modal-body">
+                        <div className="word-modal-body" style={{ overflow: 'visible' }}>
                             <div className="text-center mb-3">
                                 <i
                                     className="fas fa-folder"
@@ -112,7 +138,7 @@ export const CreateCollectionModal: React.FC<{
                                 ></i>
                             </div>
 
-                            <div className="input-group mb-3">
+                            <div className="input-group mb-3" style={{ position: 'relative' }}>
                                 <span className="input-group-text">
                                     <i className="fas fa-palette"></i>
                                 </span>
@@ -131,10 +157,32 @@ export const CreateCollectionModal: React.FC<{
                                     className="form-control"
                                     placeholder={translations["name"]}
                                     value={name}
+                                    style={{ borderRadius: '0' }}
                                     onChange={(event) =>
                                         setName(event.target.value)
                                     }
                                 />
+                                <button
+                                    type="button"
+                                    className="btn emoji-picker-btn"
+                                    onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+                                >
+                                    <i className="far fa-smile"></i>
+                                </button>
+                                {showEmojiPicker && (
+                                    <div
+                                        ref={emojiPickerRef}
+                                        className="emoji-picker-container"
+                                    >
+                                        <EmojiPicker
+                                            onEmojiClick={onEmojiClick}
+                                            theme={Theme.LIGHT}
+                                            lazyLoadEmojis={true}
+                                            height={350}
+                                            width={400}
+                                        />
+                                    </div>
+                                )}
                             </div>
                         </div>
 
