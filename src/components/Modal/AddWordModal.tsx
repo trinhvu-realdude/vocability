@@ -45,6 +45,9 @@ export const AddWordModal: React.FC<CommonProps> = ({
     const [isImportMode, setIsImportMode] = useState<boolean>(false);
     const [importText, setImportText] = useState<string>("");
     const [importList, setImportList] = useState<{ word: string, definition: string }[]>([]);
+    const [importMethod, setImportMethod] = useState<'paste' | 'excel'>('paste');
+    const [excelFile, setExcelFile] = useState<File | null>(null);
+    const [isParsingExcel, setIsParsingExcel] = useState<boolean>(false);
     // Sync choice with collectionId when it changes or when collections change
     useEffect(() => {
         if (typeof collectionId === 'string' && collectionId.trim() !== '') {
@@ -248,6 +251,28 @@ export const AddWordModal: React.FC<CommonProps> = ({
         setImportList(importList.filter((_, i) => i !== index));
     };
 
+    const handleExcelImport = async () => {
+        if (!excelFile) return;
+
+        setIsParsingExcel(true);
+        try {
+            const { parseExcelFile } = await import('../../utils/excelImport');
+            const parsedWords = await parseExcelFile(excelFile);
+            setImportList(parsedWords);
+            onShowToast?.(translations["importSetForm.excelParseSuccess"], "success");
+        } catch (error) {
+            console.error('Error parsing Excel file:', error);
+            onShowToast?.(
+                error instanceof Error && error.message.includes('format')
+                    ? translations["importSetForm.invalidExcelFormat"]
+                    : translations["importSetForm.excelParseFailed"],
+                "error"
+            );
+        } finally {
+            setIsParsingExcel(false);
+        }
+    };
+
     const handleAddDefinitionRow = () => {
         setDefinitions([...definitions, { definition: "", notes: "" }]);
     };
@@ -289,6 +314,9 @@ export const AddWordModal: React.FC<CommonProps> = ({
         setImportText("");
         setImportList([]);
         setIsImportMode(false);
+        setImportMethod('paste');
+        setExcelFile(null);
+        setIsParsingExcel(false);
         if (typeof collectionId === 'string' && collectionId.trim() !== '') {
             const currentCollection = collections.find(
                 (c) => c.id === Number.parseInt(collectionId)
@@ -406,6 +434,12 @@ export const AddWordModal: React.FC<CommonProps> = ({
                                     setImportList={setImportList}
                                     handleImportListChange={handleImportListChange}
                                     handleRemoveImportItem={handleRemoveImportItem}
+                                    importMethod={importMethod}
+                                    setImportMethod={setImportMethod}
+                                    excelFile={excelFile}
+                                    setExcelFile={setExcelFile}
+                                    handleExcelImport={handleExcelImport}
+                                    isParsingExcel={isParsingExcel}
                                 />
                             )}
                         </div>
