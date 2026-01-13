@@ -17,6 +17,12 @@ interface ImportSetFormProps {
     setImportList: (val: any[]) => void;
     handleImportListChange: (index: number, field: "word" | "definition", value: string) => void;
     handleRemoveImportItem: (index: number) => void;
+    importMethod: 'paste' | 'excel';
+    setImportMethod: (method: 'paste' | 'excel') => void;
+    excelFile: File | null;
+    setExcelFile: (file: File | null) => void;
+    handleExcelImport: () => Promise<void>;
+    isParsingExcel: boolean;
 }
 
 export const ImportSetForm: React.FC<ImportSetFormProps> = ({
@@ -35,6 +41,12 @@ export const ImportSetForm: React.FC<ImportSetFormProps> = ({
     setImportList,
     handleImportListChange,
     handleRemoveImportItem,
+    importMethod,
+    setImportMethod,
+    excelFile,
+    setExcelFile,
+    handleExcelImport,
+    isParsingExcel,
 }) => {
     return (
         <div className="import-container mb-4">
@@ -71,42 +83,137 @@ export const ImportSetForm: React.FC<ImportSetFormProps> = ({
                 )}
             </div>
 
-            <div className="import-textarea-wrapper">
-                <textarea
-                    className="form-control import-textarea"
-                    rows={6}
-                    placeholder={`Word 1    Definition 1\nWord 2  :  Definition 2\nWord 3  -  Definition 3\nWord 4\tDefinition 4`}
-                    value={importText}
-                    onChange={(e) => setImportText(e.target.value)}
-                    onKeyDown={(e) => {
-                        if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) {
-                            e.preventDefault();
-                            handleParseImport();
-                        }
-                    }}
-                ></textarea>
-                <div className="d-flex gap-2 mt-2">
-                    <button
-                        type="button"
-                        className="btn btn-outline-secondary btn-clear-import"
-                        onClick={() => setImportText("")}
-                        disabled={!importText.trim()}
-                    >
-                        <i className="fas fa-eraser me-1"></i>
-                        {translations["importSetForm.clearBtn"]}
-                    </button>
-                    <button
-                        type="button"
-                        className="btn btn-primary btn-parse-import flex-grow-1"
-                        onClick={handleParseImport}
-                        disabled={!importText.trim()}
-                    >
-                        <i className="fas fa-magic me-1"></i>
-                        {translations["importSetForm.parseWordsBtn"]}
-                    </button>
+            {/* Import Method Selection */}
+            <div className="import-method-selection mb-3">
+                <div className="row">
+                    <div className="col-6">
+                        <div className="form-check">
+                            <input
+                                className="form-check-input"
+                                type="radio"
+                                name="importMethod"
+                                id="importMethodPaste"
+                                checked={importMethod === "paste"}
+                                onChange={() => setImportMethod("paste")}
+                            />
+                            <label
+                                className="form-check-label"
+                                htmlFor="importMethodPaste"
+                            >
+                                {translations["importSetForm.copyPaste"]}
+                            </label>
+                        </div>
+                    </div>
+
+                    <div className="col-6">
+                        <div className="form-check">
+                            <input
+                                className="form-check-input"
+                                type="radio"
+                                name="importMethod"
+                                id="importMethodExcel"
+                                checked={importMethod === "excel"}
+                                onChange={() => setImportMethod("excel")}
+                            />
+                            <label
+                                className="form-check-label"
+                                htmlFor="importMethodExcel"
+                            >
+                                {translations["importSetForm.excelImport"]}
+                            </label>
+                        </div>
+                    </div>
                 </div>
             </div>
 
+
+            {/* Copy & Paste Method */}
+            {importMethod === 'paste' && (
+
+                <div className="import-textarea-wrapper">
+                    <textarea
+                        className="form-control import-textarea"
+                        rows={6}
+                        placeholder={`Word 1    Definition 1\nWord 2  :  Definition 2\nWord 3  -  Definition 3\nWord 4\tDefinition 4`}
+                        value={importText}
+                        onChange={(e) => setImportText(e.target.value)}
+                        onKeyDown={(e) => {
+                            if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) {
+                                e.preventDefault();
+                                handleParseImport();
+                            }
+                        }}
+                    ></textarea>
+                    <div className="d-flex gap-2 mt-2">
+                        <button
+                            type="button"
+                            className="btn btn-outline-secondary btn-clear-import"
+                            onClick={() => setImportText("")}
+                            disabled={!importText.trim()}
+                        >
+                            <i className="fas fa-eraser me-1"></i>
+                            {translations["importSetForm.clearBtn"]}
+                        </button>
+                        <button
+                            type="button"
+                            className="btn btn-primary btn-parse-import flex-grow-1"
+                            onClick={handleParseImport}
+                            disabled={!importText.trim()}
+                        >
+                            <i className="fas fa-magic me-1"></i>
+                            {translations["importSetForm.parseWordsBtn"]}
+                        </button>
+                    </div>
+                </div>
+            )}
+
+            {/* Excel Import Method */}
+            {importMethod === 'excel' && (
+                <div className="excel-import-wrapper">
+                    <div className="mb-3">
+                        <input
+                            type="file"
+                            className="form-control"
+                            accept=".xlsx,.xls"
+                            onChange={(e) => {
+                                const file = e.target.files?.[0] || null;
+                                setExcelFile(file);
+                            }}
+                        />
+                        {excelFile && (
+                            <small className="text-success d-block mt-1">
+                                <i className="fas fa-check-circle me-1"></i>
+                                {translations["importSetForm.fileSelected"]}: {excelFile.name}
+                            </small>
+                        )}
+                        {!excelFile && (
+                            <small className="text-muted d-block mt-1">
+                                {translations["importSetForm.noFileSelected"]}
+                            </small>
+                        )}
+                    </div>
+                    <button
+                        type="button"
+                        className="btn btn-primary btn-parse-import flex-grow-1 w-100"
+                        onClick={handleExcelImport}
+                        disabled={!excelFile || isParsingExcel}
+                    >
+                        {isParsingExcel ? (
+                            <>
+                                <i className="fas fa-spinner fa-spin me-1"></i>
+                                {translations["importSetForm.parsingExcel"]}
+                            </>
+                        ) : (
+                            <>
+                                <i className="fas fa-upload me-1"></i>
+                                {translations["importSetForm.uploadBtn"]}
+                            </>
+                        )}
+                    </button>
+                </div>
+            )}
+
+            {/* Review Section (shown for both methods) */}
             {importList.length > 0 && (
                 <div className="import-review-list mt-4">
                     <div className="d-flex justify-content-between align-items-center mb-3">
