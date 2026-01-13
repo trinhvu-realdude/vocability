@@ -187,16 +187,24 @@ export const WordScramblePage: React.FC<WordScramblePageProps> = ({
                 return;
             }
 
-            // Letter input
-            if (key.length === 1 && /[a-z]/.test(key)) {
-                e.preventDefault();
-
-                // Find unused letter card with this letter
-                const cardIndex = scrambledLetters.findIndex(
+            // Letter input - allow any character that exists in the scrambled set
+            if (key.length === 1) {
+                // Find unused letter card with this letter (exact match)
+                let cardIndex = scrambledLetters.findIndex(
                     card => card.letter === key && !card.used
                 );
 
+                // If not found, try normalized match (e.g. user types 'e' for 'é')
+                if (cardIndex === -1) {
+                    const normalizedKey = key.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+                    cardIndex = scrambledLetters.findIndex(card => {
+                        const normalizedCard = card.letter.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+                        return normalizedCard === normalizedKey && !card.used;
+                    });
+                }
+
                 if (cardIndex !== -1) {
+                    e.preventDefault();
                     handleLetterClick(cardIndex);
                 }
             }
