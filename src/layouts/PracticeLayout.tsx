@@ -57,7 +57,7 @@ const PracticeLayout: React.FC<PracticeLayoutProps> = ({
                     path="/crossword-puzzles"
                     element={<CrosswordPuzzlePage db={db} />}
                 />
-                <Route path="/word-scramble" element={<WordScramblePage />} />
+                <Route path="/word-scramble" element={<WordScramblePage db={db} collections={collections} />} />
                 <Route
                     path="/vocabulary-quiz"
                     element={<VocabularyQuizPage db={db} />}

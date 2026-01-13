@@ -8,8 +8,10 @@ export interface PracticeLayoutProps {
     setLanguageCode?: React.Dispatch<React.SetStateAction<string>>;
 }
 
-export interface FlashcardQuizPageProps extends PracticeLayoutProps {}
+export interface FlashcardQuizPageProps extends PracticeLayoutProps { }
 
-export interface CrosswordPuzzlePageProps extends PracticeLayoutProps {}
+export interface CrosswordPuzzlePageProps extends PracticeLayoutProps { }
 
-export interface VocabularyQuizPageProps extends PracticeLayoutProps {}
+export interface VocabularyQuizPageProps extends PracticeLayoutProps { }
+
+export interface WordScramblePageProps extends PracticeLayoutProps { }
