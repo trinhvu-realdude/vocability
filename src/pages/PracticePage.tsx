@@ -49,12 +49,12 @@ export const PracticePage: React.FC<PracticePageProps> = ({ collections, onShowT
     };
 
     const getPracticeIcon = (name: string) => {
-        if (name.includes("Flashcard")) return "fa-clone";
-        if (name.includes("Crossword")) return "fa-puzzle-piece";
-        if (name.includes("Scramble")) return "fa-font";
-        if (name.includes("Quiz")) return "fa-vial";
-        if (name.includes("Matching")) return "fa-link";
-        if (name.includes("Memory")) return "fa-th-large";
+        if (name.includes("flashcard")) return "fa-clone";
+        if (name.includes("crossword")) return "fa-puzzle-piece";
+        if (name.includes("scramble")) return "fa-font";
+        if (name.includes("quiz")) return "fa-vial";
+        if (name.includes("matching")) return "fa-link";
+        if (name.includes("memory")) return "fa-th-large";
         return "fa-magic";
     };
 
@@ -74,7 +74,7 @@ export const PracticePage: React.FC<PracticePageProps> = ({ collections, onShowT
                                 onClick={(e) => handlePracticeClick(e, practice.href)}
                             >
                                 <div className="practice-icon-wrapper">
-                                    <i className={`fas ${getPracticeIcon(practice.name)}`}></i>
+                                    <i className={`fas ${getPracticeIcon(practice.href)}`}></i>
                                 </div>
                                 <div className="practice-info">
                                     <h5>{practice.name.replace(/[^a-zA-Z\s]/g, '').trim()}</h5>
