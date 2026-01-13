@@ -1040,9 +1040,9 @@ export const practices = [
                 description: "Test your vocabulary knowledge with flashcards",
             },
             {
-                name: "🧩 Crossword Puzzles",
-                href: "/practices/crossword-puzzles",
-                description: "Solve crossword puzzles with your vocabulary",
+                name: "📝 Vocabulary Quiz",
+                href: "/practices/vocabulary-quiz",
+                description: "Take a quiz to test your vocabulary skills",
             },
             {
                 name: "🔡 Word Scramble",
@@ -1050,9 +1050,9 @@ export const practices = [
                 description: "Unscramble letters to form words",
             },
             {
-                name: "📝 Vocabulary Quiz",
-                href: "/practices/vocabulary-quiz",
-                description: "Take a quiz to test your vocabulary skills",
+                name: "🧩 Crossword Puzzles",
+                href: "/practices/crossword-puzzles",
+                description: "Solve crossword puzzles with your vocabulary",
             },
             {
                 name: "🔗 Word Matching",
@@ -1075,9 +1075,9 @@ export const practices = [
                 description: "Pon a prueba tu vocabulario con tarjetas",
             },
             {
-                name: "🧩 Crucigramas",
-                href: "/practices/crossword-puzzles",
-                description: "Resuelve crucigramas con tu vocabulario",
+                name: "📝 Quiz de Vocabulario",
+                href: "/practices/vocabulary-quiz",
+                description: "Haz un quiz para probar tu vocabulario",
             },
             {
                 name: "🔡 Palabras Desordenadas",
@@ -1085,9 +1085,9 @@ export const practices = [
                 description: "Reordena las letras para formar palabras",
             },
             {
-                name: "📝 Quiz de Vocabulario",
-                href: "/practices/vocabulary-quiz",
-                description: "Haz un quiz para probar tu vocabulario",
+                name: "🧩 Crucigramas",
+                href: "/practices/crossword-puzzles",
+                description: "Resuelve crucigramas con tu vocabulario",
             },
             {
                 name: "🔗 Emparejamiento de Palabras",
@@ -1112,9 +1112,10 @@ export const practices = [
                     "Testez vos connaissances en vocabulaire avec des cartes flash",
             },
             {
-                name: "🧩 Mots Croisés",
-                href: "/practices/crossword-puzzles",
-                description: "Résolvez des mots croisés avec votre vocabulaire",
+                name: "📝 Quiz de Vocabulaire",
+                href: "/practices/vocabulary-quiz",
+                description:
+                    "Faites un quiz pour tester vos compétences en vocabulaire",
             },
             {
                 name: "🔡 Anagramme",
@@ -1122,10 +1123,9 @@ export const practices = [
                 description: "Recomposez les lettres pour former des mots",
             },
             {
-                name: "📝 Quiz de Vocabulaire",
-                href: "/practices/vocabulary-quiz",
-                description:
-                    "Faites un quiz pour tester vos compétences en vocabulaire",
+                name: "🧩 Mots Croisés",
+                href: "/practices/crossword-puzzles",
+                description: "Résolvez des mots croisés avec votre vocabulaire",
             },
             {
                 name: "🔗 Association de Mots",
@@ -1150,9 +1150,9 @@ export const practices = [
                 description: "Teste dein Vokabular mit Karteikarten",
             },
             {
-                name: "🧩 Kreuzworträtsel",
-                href: "/practices/crossword-puzzles",
-                description: "Löse Kreuzworträtsel mit deinem Vokabular",
+                name: "📝 Vokabelquiz",
+                href: "/practices/vocabulary-quiz",
+                description: "Mach ein Quiz, um dein Vokabelwissen zu testen",
             },
             {
                 name: "🔡 Buchstabensalat",
@@ -1160,9 +1160,9 @@ export const practices = [
                 description: "Entwirre die Buchstaben, um Wörter zu bilden",
             },
             {
-                name: "📝 Vokabelquiz",
-                href: "/practices/vocabulary-quiz",
-                description: "Mach ein Quiz, um dein Vokabelwissen zu testen",
+                name: "🧩 Kreuzworträtsel",
+                href: "/practices/crossword-puzzles",
+                description: "Löse Kreuzworträtsel mit deinem Vokabular",
             },
             {
                 name: "🔗 Wortpaare",
@@ -1187,9 +1187,10 @@ export const practices = [
                     "Metti alla prova il tuo vocabolario con flashcard",
             },
             {
-                name: "🧩 Cruciverba",
-                href: "/practices/crossword-puzzles",
-                description: "Risolvi cruciverba con il tuo vocabolario",
+                name: "📝 Quiz di Vocabolario",
+                href: "/practices/vocabulary-quiz",
+                description:
+                    "Fai un quiz per mettere alla prova il tuo vocabolario",
             },
             {
                 name: "🔡 Parole Mischiate",
@@ -1197,10 +1198,9 @@ export const practices = [
                 description: "Riorganizza le lettere per formare parole",
             },
             {
-                name: "📝 Quiz di Vocabolario",
-                href: "/practices/vocabulary-quiz",
-                description:
-                    "Fai un quiz per mettere alla prova il tuo vocabolario",
+                name: "🧩 Cruciverba",
+                href: "/practices/crossword-puzzles",
+                description: "Risolvi cruciverba con il tuo vocabolario",
             },
             {
                 name: "🔗 Abbinamento di Parole",
@@ -1225,9 +1225,10 @@ export const practices = [
                     "Teste seu conhecimento de vocabulário com flashcards",
             },
             {
-                name: "🧩 Palavras Cruzadas",
-                href: "/practices/crossword-puzzles",
-                description: "Resolva palavras cruzadas com seu vocabulário",
+                name: "📝 Quiz de Vocabulário",
+                href: "/practices/vocabulary-quiz",
+                description:
+                    "Faça um quiz para testar suas habilidades de vocabulário",
             },
             {
                 name: "🔡 Jogo de Letras Embaralhadas",
@@ -1235,10 +1236,9 @@ export const practices = [
                 description: "Desembaralhe as letras para formar palavras",
             },
             {
-                name: "📝 Quiz de Vocabulário",
-                href: "/practices/vocabulary-quiz",
-                description:
-                    "Faça um quiz para testar suas habilidades de vocabulário",
+                name: "🧩 Palavras Cruzadas",
+                href: "/practices/crossword-puzzles",
+                description: "Resolva palavras cruzadas com seu vocabulário",
             },
             {
                 name: "🔗 Correspondência de Palavras",
