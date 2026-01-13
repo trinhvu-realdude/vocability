@@ -54,9 +54,9 @@ export const parseExcelFile = async (file: File): Promise<ParsedWord[]> => {
         const definitionColumnIndices: number[] = [];
         for (let i = 1; i < headers.length; i++) {
             const header = String(headers[i]).toLowerCase();
-            if (header.includes('definition') || header.includes('định nghĩa') ||
-                header.includes('definición') || header.includes('définition') ||
-                header.includes('definizione')) {
+            if (header.includes('definition') || header.includes('definición') ||
+                header.includes('définition') || header.includes('definizione') ||
+                header.includes('definição')) {
                 definitionColumnIndices.push(i);
             }
         }

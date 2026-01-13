@@ -1,0 +1,435 @@
+/* Word Scramble Game Styling */
+
+/* Game Container */
+#word-scramble {
+    min-height: calc(100vh - 200px);
+}
+
+.word-scramble-container {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+/* Game Header */
+.scramble-game-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding: 0 1rem;
+    gap: 2rem;
+}
+
+.scramble-hearts {
+    display: flex;
+    gap: 0.5rem;
+    font-size: 1.8rem;
+    min-width: 120px;
+}
+
+.scramble-heart {
+    transition: all 0.3s ease;
+}
+
+.scramble-heart.lost {
+    opacity: 0.2;
+    filter: grayscale(100%);
+    animation: none;
+}
+
+.scramble-timer-container {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    max-width: 500px;
+}
+
+.timer-progress-bar {
+    width: 100%;
+    height: 12px;
+    background: #e9ecef;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.timer-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #DD5746 0%, #ff6b59 100%);
+    border-radius: 10px;
+    transition: width 1s linear, background-color 0.3s ease;
+}
+
+.timer-progress-fill.warning {
+    background: linear-gradient(90deg, #dc3545 0%, #ff4757 100%);
+    animation: dangerPulse 1s infinite alternate;
+}
+
+@keyframes dangerPulse {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0.7;
+    }
+}
+
+.scramble-score {
+    text-align: center;
+    min-width: 120px;
+}
+
+.scramble-score-label {
+    font-size: 0.8rem;
+    color: #6c757d;
+    margin-bottom: 0.25rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.scramble-score-value {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #343a40;
+}
+
+/* Definition Card */
+.scramble-definition-card {
+    background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+    border-radius: 20px;
+    padding: 2.5rem;
+    margin-bottom: 3rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    border-left: 6px solid #DD5746;
+}
+
+.scramble-definition-label {
+    font-size: 0.9rem;
+    color: #6c757d;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+.scramble-definition-text {
+    font-size: 1.3rem;
+    color: #343a40;
+    line-height: 1.8;
+    font-weight: 500;
+}
+
+/* Scrambled Letters Area */
+.scrambled-letters-container {
+    margin-bottom: 3rem;
+}
+
+.scrambled-letters-label {
+    text-align: center;
+    font-size: 0.9rem;
+    color: #6c757d;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+}
+
+.scrambled-letters {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.75rem;
+    padding: 1.5rem;
+}
+
+.letter-card {
+    width: 60px;
+    height: 70px;
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    border: 2px solid #dee2e6;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #343a40;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    user-select: none;
+}
+
+.letter-card:hover:not(.used) {
+    transform: translateY(-5px);
+    border-color: #DD5746;
+    box-shadow: 0 8px 20px rgba(221, 87, 70, 0.2);
+    background: linear-gradient(135deg, #fff5f4 0%, #ffffff 100%);
+}
+
+.letter-card:active:not(.used) {
+    transform: translateY(-2px);
+}
+
+.letter-card.used {
+    opacity: 0.3;
+    cursor: not-allowed;
+    background: #e9ecef;
+    border-color: #dee2e6;
+}
+
+/* Answer Area */
+.answer-area {
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 2.5rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+.answer-label {
+    text-align: center;
+    font-size: 0.9rem;
+    color: #6c757d;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+}
+
+.answer-slots {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 1rem;
+    min-height: 90px;
+}
+
+.answer-slot {
+    width: 60px;
+    height: 70px;
+    background: #f8f9fa;
+    border: 2px dashed #dee2e6;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #343a40;
+    transition: all 0.3s ease;
+}
+
+.answer-slot.filled {
+    background: linear-gradient(135deg, #DD5746 0%, #ff6b59 100%);
+    border: 2px solid #DD5746;
+    color: white;
+    box-shadow: 0 4px 15px rgba(221, 87, 70, 0.3);
+}
+
+.answer-slot.space {
+    width: 20px;
+    background: transparent;
+    border: none;
+}
+
+.answer-slot.correct {
+    background: linear-gradient(135deg, #28a745 0%, #34ce57 100%);
+    border-color: #28a745;
+    animation: correctBounce 0.5s ease;
+}
+
+.answer-slot.incorrect {
+    background: linear-gradient(135deg, #dc3545 0%, #ff4757 100%);
+    border-color: #dc3545;
+    animation: shake 0.5s ease;
+}
+
+@keyframes correctBounce {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.1);
+    }
+}
+
+@keyframes shake {
+
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    25% {
+        transform: translateX(-10px);
+    }
+
+    75% {
+        transform: translateX(10px);
+    }
+}
+
+/* Action Buttons */
+.scramble-actions {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.scramble-btn {
+    padding: 0.75rem 2rem;
+    border: none;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.scramble-btn-clear {
+    background: #6c757d;
+    color: white;
+}
+
+.scramble-btn-clear:hover {
+    background: #5a6268;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.scramble-btn-submit {
+    background: linear-gradient(135deg, #DD5746 0%, #ff6b59 100%);
+    color: white;
+}
+
+.scramble-btn-submit:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(221, 87, 70, 0.3);
+}
+
+.scramble-btn-submit:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Results Screen */
+.scramble-results {
+    text-align: center;
+    padding: 3rem 2rem;
+}
+
+.results-icon {
+    font-size: 5rem;
+    margin-bottom: 1.5rem;
+}
+
+.results-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: #343a40;
+}
+
+.results-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1.5rem;
+    margin: 2rem 0;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.stat-card {
+    background: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.stat-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #DD5746;
+    margin-bottom: 0.5rem;
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    color: #6c757d;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .scramble-game-header {
+        flex-direction: column;
+        gap: 1.5rem;
+        padding: 1.5rem;
+    }
+
+    .scramble-definition-card {
+        padding: 1.5rem;
+    }
+
+    .scramble-definition-text {
+        font-size: 1.1rem;
+    }
+
+    .letter-card {
+        width: 50px;
+        height: 60px;
+        font-size: 1.5rem;
+    }
+
+    .answer-slot {
+        width: 50px;
+        height: 60px;
+        font-size: 1.5rem;
+    }
+
+    .scrambled-letters {
+        gap: 0.5rem;
+        padding: 1rem;
+    }
+
+    .answer-area {
+        padding: 1.5rem;
+    }
+
+    .results-title {
+        font-size: 2rem;
+    }
+
+    .results-stats {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .letter-card {
+        width: 45px;
+        height: 55px;
+        font-size: 1.3rem;
+    }
+
+    .answer-slot {
+        width: 45px;
+        height: 55px;
+        font-size: 1.3rem;
+    }
+
+    .scramble-btn {
+        padding: 0.6rem 1.5rem;
+        font-size: 0.9rem;
+    }
+}
