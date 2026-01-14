@@ -214,6 +214,31 @@ export const WordScramblePage: React.FC<WordScramblePageProps> = ({
         return () => window.removeEventListener('keydown', handleKeyPress);
     }, [gameState, answerStatus, scrambledLetters, userAnswer]);
 
+    // Handle answer slot click
+    const handleAnswerSlotClick = (index: number) => {
+        if (gameState !== 'playing' || answerStatus !== 'idle') return;
+
+        const letterToRemove = userAnswer[index];
+        // If empty or space, ignore
+        if (!letterToRemove || letterToRemove === ' ') return;
+
+        // Clear specific slot
+        const newAnswer = [...userAnswer];
+        newAnswer[index] = '';
+        setUserAnswer(newAnswer);
+
+        // Mark one instance of this letter as unused
+        const newScrambled = [...scrambledLetters];
+        const cardIndex = newScrambled.findIndex(
+            card => card.letter === letterToRemove && card.used
+        );
+
+        if (cardIndex !== -1) {
+            newScrambled[cardIndex].used = false;
+        }
+        setScrambledLetters(newScrambled);
+    };
+
     const handleClearLast = () => {
         // Find last filled slot
         let lastFilledIndex = -1;
@@ -354,6 +379,7 @@ export const WordScramblePage: React.FC<WordScramblePageProps> = ({
                                     letter !== '' ? 'filled' : ''
                                     } ${answerStatus === 'correct' && letter !== ' ' ? 'correct' : ''} ${answerStatus === 'incorrect' && letter !== ' ' ? 'incorrect' : ''
                                     }`}
+                                onClick={() => handleAnswerSlotClick(index)}
                             >
                                 {letter !== ' ' && letter.toUpperCase()}
                             </div>
