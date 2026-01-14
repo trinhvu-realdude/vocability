@@ -227,6 +227,7 @@
     border: 2px solid #DD5746;
     color: white;
     box-shadow: 0 4px 15px rgba(221, 87, 70, 0.3);
+    cursor: pointer;
 }
 
 .answer-slot.space {
