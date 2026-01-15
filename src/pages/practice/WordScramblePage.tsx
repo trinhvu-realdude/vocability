@@ -8,6 +8,7 @@ import { Word } from "../../interfaces/model";
 import { generateWordsForFlashCards } from "../../services/PracticeService";
 import { APP_NAME } from "../../utils/constants";
 import "../../styles/WordScramblePage.css";
+import { handleTextToSpeech } from "../../utils/helper";
 
 type GameState = 'selection' | 'playing' | 'gameOver' | 'complete';
 
@@ -127,6 +128,7 @@ export const WordScramblePage: React.FC<WordScramblePageProps> = ({
         const letters = correctAnswer.split('');
         const answerSlots = letters.map(letter => letter === ' ' ? ' ' : letter);
         setUserAnswer(answerSlots);
+        handleTextToSpeech(correctAnswer, translations["languageVoice"]);
 
         // Mark all letters as used
         const newScrambled = scrambledLetters.map(card => ({
@@ -282,6 +284,7 @@ export const WordScramblePage: React.FC<WordScramblePageProps> = ({
         const correctAnswer = currentWord.word.toLowerCase();
 
         if (userAnswerText === correctAnswer) {
+            handleTextToSpeech(correctAnswer, translations["languageVoice"]);
             setAnswerStatus('correct');
             setScore(score + 1);
             setCorrectCount(correctCount + 1);
