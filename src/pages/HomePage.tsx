@@ -2,9 +2,10 @@ import { useEffect, useState } from "react";
 import { languages } from "../utils/constants";
 import { NoDataMessage } from "../components/NoDataMessage";
 import { HomePageProps } from "../interfaces/rootProps";
+import { ActivityBoard } from "../components/ActivityBoard";
 import "../styles/HomePage.css";
 
-export const HomePage: React.FC<HomePageProps> = ({ activeLanguages }) => {
+export const HomePage: React.FC<HomePageProps> = ({ activeLanguages, db }) => {
     const [remainLanguages, setRemainLanguages] = useState<Array<any>>();
     const [selectedLanguage, setSelectedLanguage] = useState<any>();
 
@@ -113,6 +114,12 @@ export const HomePage: React.FC<HomePageProps> = ({ activeLanguages }) => {
                     </div>
                 </div>
             )}
+
+
+            {/* Activity Log Section */}
+            {
+                activeLanguages && activeLanguages.length > 0 && <ActivityBoard db={db} />
+            }
         </div>
     );
 };

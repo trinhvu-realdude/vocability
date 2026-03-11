@@ -20,7 +20,7 @@ const RootLayout: React.FC<RootLayoutProps> = ({ db }) => {
     return (
         <div className="container my-4">
             <StorageBar />
-            <HomePage activeLanguages={activeLanguages} />
+            <HomePage activeLanguages={activeLanguages} db={db} />
         </div>
     );
 };
