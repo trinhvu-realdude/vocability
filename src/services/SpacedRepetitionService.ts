@@ -1,5 +1,6 @@
 import { supabase } from "../configs/supabase";
 import { Word } from "../interfaces/model";
+import { attachDefinitions } from "./WordService";
 
 // ─── SM-2 Algorithm ─────────────────────────────────────────────────────────
 
@@ -72,7 +73,7 @@ export const getWordsForReview = async (
         [due[i], due[j]] = [due[j], due[i]];
     }
 
-    return due;
+    return await attachDefinitions(due);
 };
 
 export const updateWordAfterReview = async (word: Word): Promise<void> => {

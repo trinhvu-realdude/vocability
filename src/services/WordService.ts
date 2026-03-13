@@ -18,7 +18,7 @@ const getActiveUserId = async (): Promise<string> => {
 };
 
 /** Fetch definitions for a list of word ids and attach them */
-const attachDefinitions = async (words: Word[]): Promise<Word[]> => {
+export const attachDefinitions = async (words: Word[]): Promise<Word[]> => {
     if (words.length === 0) return [];
     const ids = words.map((w) => w.id!);
     const { data: defs, error } = await supabase
@@ -67,6 +67,21 @@ export const getWordsByCollectionId = async (
         .select("*")
         .eq("collection_id", collectionId)
         .order("created_at", { ascending: false });
+    if (error) throw error;
+    return attachDefinitions(data ?? []);
+};
+
+export const getWordsByCollectionIdPaginated = async (
+    collectionId: string,
+    from: number,
+    to: number
+): Promise<Word[]> => {
+    const { data, error } = await supabase
+        .from("words")
+        .select("*")
+        .eq("collection_id", collectionId)
+        .order("created_at", { ascending: false })
+        .range(from, to);
     if (error) throw error;
     return attachDefinitions(data ?? []);
 };

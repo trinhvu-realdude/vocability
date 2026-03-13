@@ -5,11 +5,14 @@ import { getActiveLanguages } from "../services/CollectionService";
 
 const RootLayout: React.FC = () => {
     const [activeLanguages, setActiveLanguages] = useState<Array<any>>([]);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
 
     useEffect(() => {
         const fetchLanguages = async () => {
+            setIsLoading(true);
             const languages = await getActiveLanguages();
             setActiveLanguages(languages);
+            setIsLoading(false);
         };
         fetchLanguages();
     }, []);
@@ -17,7 +20,7 @@ const RootLayout: React.FC = () => {
     return (
         <div className="container my-4">
             <StorageBar />
-            <HomePage activeLanguages={activeLanguages} />
+            <HomePage activeLanguages={activeLanguages} isLoading={isLoading} />
         </div>
     );
 };

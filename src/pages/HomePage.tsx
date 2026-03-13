@@ -1,17 +1,16 @@
 import { useEffect, useState } from "react";
 import { languages } from "../utils/constants";
-import { NoDataMessage } from "../components/NoDataMessage";
 import { HomePageProps } from "../interfaces/rootProps";
 import { ActivityBoard } from "../components/ActivityBoard";
 import "../styles/HomePage.css";
 
-export const HomePage: React.FC<HomePageProps> = ({ activeLanguages }) => {
+export const HomePage: React.FC<HomePageProps> = ({ activeLanguages, isLoading }) => {
     const [remainLanguages, setRemainLanguages] = useState<Array<any>>();
     const [selectedLanguage, setSelectedLanguage] = useState<any>();
 
     useEffect(() => {
         let list = new Array();
-        if (activeLanguages.length > 0) {
+        if (activeLanguages && activeLanguages.length > 0) {
             const activeLanguageIds = new Set(
                 activeLanguages.map((language) => language.id)
             );
@@ -22,13 +21,23 @@ export const HomePage: React.FC<HomePageProps> = ({ activeLanguages }) => {
         }
         if (list.length > 0) setRemainLanguages(list);
         else setRemainLanguages(languages);
-    }, [activeLanguages.length]);
+    }, [activeLanguages?.length]);
+
+    if (isLoading) {
+        return (
+            <div className="homepage-container d-flex justify-content-center align-items-center" style={{ minHeight: '400px' }}>
+                <div className="loader"></div>
+            </div>
+        );
+    }
+
+    const hasActiveLanguages = activeLanguages && activeLanguages.length > 0;
 
     return (
         <div className="homepage-container">
 
             {/* Discover Section */}
-            <div className="discover-container">
+            <div className={`discover-container ${!hasActiveLanguages ? 'mt-5' : ''}`}>
                 <div className="discover-header">
                     <h2 className="section-title justify-content-center">
                         <i className="fas fa-globe-americas"></i>
@@ -58,7 +67,7 @@ export const HomePage: React.FC<HomePageProps> = ({ activeLanguages }) => {
                     </select>
                 </div>
 
-                {selectedLanguage ? (
+                {selectedLanguage && (
                     <div className="select-btn-overlay animation-fade-in">
                         <a
                             href={`/${selectedLanguage.code}/collections`}
@@ -68,21 +77,15 @@ export const HomePage: React.FC<HomePageProps> = ({ activeLanguages }) => {
                             <i className="fas fa-arrow-right"></i>
                         </a>
                     </div>
-                ) : (
-                    activeLanguages.length === 0 && (
-                        <div className="mt-4">
-                            <NoDataMessage message="🚀 Please choose a language to start your journey" />
-                        </div>
-                    )
                 )}
             </div>
 
             {/* My Languages Section */}
-            {activeLanguages && activeLanguages.length > 0 && (
+            {hasActiveLanguages && (
                 <div className="mt-5">
                     <h2 className="section-title">
                         <i className="fas fa-bookmark"></i>
-                        My Vocabularies
+                        My Languages
                     </h2>
                     <div className="language-grid">
                         {activeLanguages.map((language) => (
@@ -111,7 +114,7 @@ export const HomePage: React.FC<HomePageProps> = ({ activeLanguages }) => {
 
             {/* Activity Log Section */}
             {
-                activeLanguages && activeLanguages.length > 0 && <ActivityBoard />
+                hasActiveLanguages && <ActivityBoard />
             }
         </div>
     );

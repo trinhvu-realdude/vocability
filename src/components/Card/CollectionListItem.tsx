@@ -23,6 +23,7 @@ export const CollectionListItem: React.FC<CollectionListItemProps> = ({
     const [isExpanded, setIsExpanded] = useState(false);
     const [words, setWords] = useState<Word[]>([]);
     const [reviewCount, setReviewCount] = useState<number>(0);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
 
     // Action states
     const [isEdit, setIsEdit] = useState(false);
@@ -38,6 +39,7 @@ export const CollectionListItem: React.FC<CollectionListItemProps> = ({
             ]);
             setReviewCount(reviewWords?.length || 0);
             setWords(allWords);
+            setIsLoading(false);
         }
     }, [collection.id]);
 
@@ -93,7 +95,7 @@ export const CollectionListItem: React.FC<CollectionListItemProps> = ({
                                 >
                                     <h5 className="collection-name me-2">{collection.name}</h5>
                                 </a>
-                                {words && <span className={`badge ${words.length > 0 ? 'bg-light text-dark' : 'bg-secondary-soft text-muted'} word-count-badge`}>
+                                {!isLoading && words && <span className={`badge ${words.length > 0 ? 'bg-light text-dark' : 'bg-secondary-soft text-muted'} word-count-badge`}>
                                     {words.length === 0 ? translations["collection.wordCount.empty"] :
                                         words.length === 1 ? `1 ${translations["collection.wordCount.singular"]}` :
                                             `${words.length} ${translations["collection.wordCount.plural"]}`}

@@ -92,7 +92,7 @@ export const WordDetailPage: React.FC<WordDetailPageProps> = ({ onShowToast }) =
                     </>
                 }
             />
-            {!isEdit && (
+            {!isEdit && !isLoading && (
                 <>
                     <div className="d-flex w-100 justify-content-between mb-2">
                         <div className="row">

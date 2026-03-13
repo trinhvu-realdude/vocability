@@ -1,31 +1,14 @@
-import { useEffect } from "react";
 import { Collection, Word } from "../interfaces/model";
 import { useLanguage } from "../LanguageContext";
-
-import { useParams } from "react-router-dom";
-import { getWordsByCollectionId } from "../services/WordService";
 import { TextToSpeechButton } from "./TextToSpeechButton";
 
 export const LeftOffCanvas: React.FC<{
     collection: Collection | undefined;
     words: Word[];
-    setWords: React.Dispatch<React.SetStateAction<Word[]>>;
-}> = ({ collection, words, setWords }) => {
+}> = ({ collection, words }) => {
     const { setSelectedWord, translations } = useLanguage();
 
-    const { collectionId } = useParams();
 
-    useEffect(() => {
-        const fetchData = async () => {
-            if (collectionId) {
-                const updatedWords = await getWordsByCollectionId(
-                    collectionId
-                );
-                setWords(updatedWords);
-            }
-        };
-        fetchData();
-    }, [words.length]);
 
     return (
         <div

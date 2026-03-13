@@ -127,14 +127,17 @@ export const CollectionCard: React.FC<CollectionCardProps> = ({
                         </div>
                         <div className="folder-info">
                             <p className="folder-word-count">
-                                <i className="fas fa-book" />{" "}
+                                {/* <i className="fas fa-book" />{" "}
                                 {
                                     translations[
                                     "collectionPage.collectionCard.numberOfWords"
                                     ]
                                 }
                                 :
-                                <strong>{collection.num_of_words}</strong>
+                                <strong>{collection.num_of_words}</strong> */}
+                                <small className="text-muted">
+                                    {collection.created_at && formatDate(new Date(collection.created_at), translations["language"])}
+                                </small>
                             </p>
                         </div>
                     </a>
