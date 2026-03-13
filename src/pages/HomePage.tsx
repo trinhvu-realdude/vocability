@@ -5,7 +5,7 @@ import { HomePageProps } from "../interfaces/rootProps";
 import { ActivityBoard } from "../components/ActivityBoard";
 import "../styles/HomePage.css";
 
-export const HomePage: React.FC<HomePageProps> = ({ activeLanguages, db }) => {
+export const HomePage: React.FC<HomePageProps> = ({ activeLanguages }) => {
     const [remainLanguages, setRemainLanguages] = useState<Array<any>>();
     const [selectedLanguage, setSelectedLanguage] = useState<any>();
 
@@ -26,13 +26,6 @@ export const HomePage: React.FC<HomePageProps> = ({ activeLanguages, db }) => {
 
     return (
         <div className="homepage-container">
-            {/* Hero Section */}
-            {/* <div className="hero-section">
-                <h1 className="hero-title">Vocability</h1>
-                <p className="hero-subtitle">
-                    Master your vocabulary with spaced repetition. Organize your learning, practice daily, and expand your horizons across multiple languages.
-                </p>
-            </div> */}
 
             {/* Discover Section */}
             <div className="discover-container">
@@ -118,7 +111,7 @@ export const HomePage: React.FC<HomePageProps> = ({ activeLanguages, db }) => {
 
             {/* Activity Log Section */}
             {
-                activeLanguages && activeLanguages.length > 0 && <ActivityBoard db={db} />
+                activeLanguages && activeLanguages.length > 0 && <ActivityBoard />
             }
         </div>
     );

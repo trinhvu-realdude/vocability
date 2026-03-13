@@ -16,7 +16,6 @@ import { AddWordModal } from "../components/Modal/AddWordModal";
 import { Toast, ToastType } from "../components/Toast";
 
 const MainLayout: React.FC<MainLayoutProps> = ({
-    db,
     collections,
     setCollections,
     setLanguageCode,
@@ -33,11 +32,9 @@ const MainLayout: React.FC<MainLayoutProps> = ({
 
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
-            // Check for Ctrl + Enter or Cmd + Enter
             if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
                 const modalElement = document.getElementById("add-word");
                 const isModalOpen = modalElement?.classList.contains("show");
-
                 if (!isModalOpen) {
                     e.preventDefault();
                     const bootstrap = (window as any).bootstrap;
@@ -51,7 +48,6 @@ const MainLayout: React.FC<MainLayoutProps> = ({
                 }
             }
         };
-
         window.addEventListener("keydown", handleKeyDown);
         return () => window.removeEventListener("keydown", handleKeyDown);
     }, []);
@@ -59,16 +55,10 @@ const MainLayout: React.FC<MainLayoutProps> = ({
     useEffect(() => {
         const fetchData = async () => {
             setIsLoading(true);
-            if (db && language) {
+            if (language) {
                 setLanguageCode(language);
-                const currentLanguageId = await getCurrentLanguageId(
-                    languages,
-                    language
-                );
-                const storedCollections = await getCollectionsByLanguageId(
-                    db,
-                    currentLanguageId
-                );
+                const currentLanguageId = await getCurrentLanguageId(languages, language);
+                const storedCollections = await getCollectionsByLanguageId(currentLanguageId);
                 setCollections(storedCollections);
             }
             setIsLoading(false);
@@ -80,7 +70,6 @@ const MainLayout: React.FC<MainLayoutProps> = ({
         <div className="container my-4">
             <StorageBar />
             <AddWordModal
-                db={db}
                 collections={collections}
                 setCollections={setCollections}
                 setWords={setWords}
@@ -93,7 +82,6 @@ const MainLayout: React.FC<MainLayoutProps> = ({
                     path="/collections"
                     element={
                         <CollectionPage
-                            db={db}
                             collections={collections}
                             setCollections={setCollections}
                             setWords={setWords}
@@ -106,7 +94,6 @@ const MainLayout: React.FC<MainLayoutProps> = ({
                     path="/collection/:collectionId"
                     element={
                         <WordPage
-                            db={db}
                             words={words}
                             setWords={setWords}
                             setCollections={setCollections}
@@ -118,13 +105,12 @@ const MainLayout: React.FC<MainLayoutProps> = ({
                 />
                 <Route
                     path="/word/:wordId"
-                    element={<WordDetailPage db={db} onShowToast={(message, type) => setToast({ message, type })} />}
+                    element={<WordDetailPage onShowToast={(message, type) => setToast({ message, type })} />}
                 />
                 <Route
                     path="/favorite"
                     element={
                         <FavoritePage
-                            db={db}
                             collections={collections}
                             setCollections={setCollections}
                             setWords={setWords}
@@ -136,7 +122,6 @@ const MainLayout: React.FC<MainLayoutProps> = ({
                     path="/export"
                     element={
                         <ExportPage
-                            db={db}
                             collections={collections}
                             setCollections={setCollections}
                             setWords={setWords}

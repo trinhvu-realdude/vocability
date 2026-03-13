@@ -1,11 +1,5 @@
-import { IDBPDatabase } from "idb";
-import { MyDB } from "./model";
-
-export interface RootLayoutProps {
-    db: IDBPDatabase<MyDB>;
-}
+export interface RootLayoutProps { }
 
 export interface HomePageProps {
     activeLanguages: Array<any>;
-    db: IDBPDatabase<MyDB>;
 }

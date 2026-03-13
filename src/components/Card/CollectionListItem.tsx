@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Collection, Word } from "../../interfaces/model";
-import { IDBPDatabase } from "idb";
-import { MyDB } from "../../interfaces/model";
 import { getWordsByCollectionId } from "../../services/WordService";
 import { useLanguage } from "../../LanguageContext";
 import { formatDate } from "../../utils/formatDateString";
@@ -12,14 +10,12 @@ import { getWordsForReview } from "../../services/SpacedRepetitionService";
 import { ToastType } from "../../components/Toast";
 
 interface CollectionListItemProps {
-    db: IDBPDatabase<MyDB> | undefined;
     collection: Collection;
     setCollections: React.Dispatch<React.SetStateAction<Collection[]>>;
     onShowToast?: (message: string, type: ToastType) => void;
 }
 
 export const CollectionListItem: React.FC<CollectionListItemProps> = ({
-    db,
     collection,
     setCollections,
     onShowToast,
@@ -35,15 +31,15 @@ export const CollectionListItem: React.FC<CollectionListItemProps> = ({
     const { translations } = useLanguage();
 
     const fetchData = React.useCallback(async () => {
-        if (db && collection.id) {
+        if (collection.id) {
             const [reviewWords, allWords] = await Promise.all([
-                getWordsForReview(db, collection.id),
-                getWordsByCollectionId(db, collection.id)
+                getWordsForReview(collection.id),
+                getWordsByCollectionId(collection.id)
             ]);
-            setReviewCount(reviewWords.length);
+            setReviewCount(reviewWords?.length || 0);
             setWords(allWords);
         }
-    }, [db, collection.id]);
+    }, [collection.id]);
 
     // Fetch review count and total words on mount
     useEffect(() => {
@@ -104,7 +100,7 @@ export const CollectionListItem: React.FC<CollectionListItemProps> = ({
                                 </span>}
                             </div>
                             <small className="text-muted">
-                                {formatDate(collection.createdAt, translations["language"])}
+                                {collection.created_at && formatDate(new Date(collection.created_at), translations["language"])}
                             </small>
                         </div>
                     </div>
@@ -176,7 +172,7 @@ export const CollectionListItem: React.FC<CollectionListItemProps> = ({
                                         >
                                             <strong>{word.word}</strong>{" "}
                                         </a></span>
-                                        {word.partOfSpeech && <span className="mini-word-pos">{word.partOfSpeech}</span>}
+                                        {word.part_of_speech && <span className="mini-word-pos">{word.part_of_speech}</span>}
                                     </div>
                                 </div>
                             ))
@@ -189,7 +185,6 @@ export const CollectionListItem: React.FC<CollectionListItemProps> = ({
 
             {isEdit && (
                 <EditCollectionModal
-                    db={db}
                     collection={collection}
                     setCollections={setCollections}
                     setIsEditOrDelete={setIsEdit}
@@ -201,7 +196,6 @@ export const CollectionListItem: React.FC<CollectionListItemProps> = ({
             {
                 isDelete && (
                     <DeleteCollectionModal
-                        db={db}
                         collection={collection}
                         setIsEditOrDelete={setIsDelete}
                         setCollections={setCollections}

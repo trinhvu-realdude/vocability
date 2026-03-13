@@ -13,11 +13,11 @@ import { PageHeader } from "../components/PageHeader";
 import { useLanguage } from "../LanguageContext";
 import "../styles/AddWordModal.css";
 
-export const ExportPage: React.FC<CommonProps> = ({ db, collections }) => {
+export const ExportPage: React.FC<CommonProps> = ({ collections }) => {
     const { translations } = useLanguage();
     document.title = `${translations["flag"]} Export | ${APP_NAME}`;
 
-    const [exportCollectionId, setExportCollectionId] = useState<number>();
+    const [exportCollectionId, setExportCollectionId] = useState<string>("");
     const [fileType, setFileType] = useState<string>("");
     const [filename, setFileName] = useState<string>("");
     const [collectionColor, setCollectionColor] = useState<string>("");
@@ -26,18 +26,20 @@ export const ExportPage: React.FC<CommonProps> = ({ db, collections }) => {
     const [toDate, setToDate] = useState<Date>();
 
     const handleGenerateDocument = async () => {
-        if (db && exportCollectionId && fileType) {
-            let words = await getWordsByCollectionId(db, exportCollectionId);
+        if (exportCollectionId && fileType) {
+            let words = await getWordsByCollectionId(exportCollectionId);
             if (fromDate && toDate) {
                 words = words.filter(
-                    (word) =>
-                        word.createdAt >= fromDate && word.createdAt <= toDate
+                    (word) => {
+                        const wordDate = word.created_at ? new Date(word.created_at) : new Date();
+                        return wordDate >= fromDate && wordDate <= toDate;
+                    }
                 );
             }
 
-            const color = await getColorByCollectionId(db, exportCollectionId);
+            const color = await getColorByCollectionId(exportCollectionId);
             setCollectionColor(color);
-            const collection = await getCollectionById(db, exportCollectionId);
+            const collection = await getCollectionById(exportCollectionId);
 
             if (collection) {
                 setFileName(formatFileName(collection.name, fileType));
@@ -75,7 +77,7 @@ export const ExportPage: React.FC<CommonProps> = ({ db, collections }) => {
                         id="export-collection"
                         onChange={(event) =>
                             setExportCollectionId(
-                                Number.parseInt(event.target.value)
+                                event.target.value
                             )
                         }
                     >

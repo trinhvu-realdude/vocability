@@ -8,16 +8,13 @@ import { useLanguage } from "../LanguageContext";
 import "../styles/PracticePage.css";
 
 import { ToastType } from "../components/Toast";
-import { IDBPDatabase } from "idb";
-import { MyDB } from "../interfaces/model";
 
 interface PracticePageProps {
     collections: Collection[] | undefined;
     onShowToast?: (message: string, type: ToastType) => void;
-    db?: IDBPDatabase<MyDB>;
 }
 
-export const PracticePage: React.FC<PracticePageProps> = ({ collections, onShowToast, db }) => {
+export const PracticePage: React.FC<PracticePageProps> = ({ collections, onShowToast }) => {
     const { translations } = useLanguage();
     const { language } = useParams();
     const navigate = useNavigate();
@@ -42,7 +39,7 @@ export const PracticePage: React.FC<PracticePageProps> = ({ collections, onShowT
         }
     };
 
-    const handleCollectionSelect = (collectionId: number) => {
+    const handleCollectionSelect = (collectionId: string) => {
         if (selectedPracticeHref && language) {
             navigate(`/${language}${selectedPracticeHref}?collectionId=${collectionId}`);
         }
@@ -95,7 +92,6 @@ export const PracticePage: React.FC<PracticePageProps> = ({ collections, onShowT
                 title={selectedPracticeHref ? practicesLanguage?.list.find(p => p.href === selectedPracticeHref)?.name : "Practice Setup"}
                 practiceHref={selectedPracticeHref || ""}
                 onToast={onShowToast}
-                db={db}
             />
         </div>
     );

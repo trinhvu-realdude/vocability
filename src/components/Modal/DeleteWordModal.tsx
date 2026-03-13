@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Word } from "../../interfaces/model";
 import { WordFormProps } from "../../interfaces/mainProps";
 import { deleteWord, getWordsByCollectionId } from "../../services/WordService";
@@ -6,7 +6,6 @@ import { useLanguage } from "../../LanguageContext";
 import "../../styles/AddWordModal.css";
 
 export const DeleteWordModal: React.FC<WordFormProps> = ({
-    db,
     word,
     setIsEditOrDelete,
     setWords,
@@ -14,30 +13,32 @@ export const DeleteWordModal: React.FC<WordFormProps> = ({
 }) => {
     const { translations } = useLanguage();
     const [isLoading, setIsLoading] = useState(false);
+    const [showModal, setShowModal] = useState(false);
+
+    // Trigger animation on mount
+    useEffect(() => {
+        const timer = setTimeout(() => setShowModal(true), 10);
+        return () => clearTimeout(timer);
+    }, []);
 
     const handleDeleteWord = async (wordData: Word) => {
         setIsLoading(true);
         try {
-            if (db) {
-                await deleteWord(db, wordData);
-                if (wordData.collectionId) {
-                    const objWord = await getWordsByCollectionId(
-                        db,
-                        wordData.collectionId
-                    );
-                    setWords(objWord);
-                }
-
-                // Close form first
-                setShowModal(false);
-                setTimeout(() => setIsEditOrDelete(false), 150);
-
-                // Show success toast after form closes
-                onShowToast?.(
-                    translations["alert.deleteWordSuccess"],
-                    "success"
-                );
+            await deleteWord(wordData);
+            if (wordData.collection_id) {
+                const words = await getWordsByCollectionId(wordData.collection_id);
+                setWords(words);
             }
+
+            // Close form first
+            setShowModal(false);
+            setTimeout(() => setIsEditOrDelete(false), 150);
+
+            // Show success toast after form closes
+            onShowToast?.(
+                translations["alert.deleteWordSuccess"],
+                "success"
+            );
         } catch (error) {
             console.log(error);
             onShowToast?.(
@@ -48,13 +49,6 @@ export const DeleteWordModal: React.FC<WordFormProps> = ({
             setIsLoading(false);
         }
     };
-
-    const [showModal, setShowModal] = useState(false);
-
-    // Trigger animation on mount
-    useState(() => {
-        setTimeout(() => setShowModal(true), 10);
-    });
 
     const handleClose = () => {
         setShowModal(false);

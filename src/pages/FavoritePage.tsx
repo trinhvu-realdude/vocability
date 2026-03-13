@@ -1,4 +1,4 @@
-import initDB from "../configs/database";
+
 import { useEffect, useState } from "react";
 import { Collection, WordDto } from "../interfaces/model";
 import { addWordToFavorite, getFavoriteWords } from "../services/WordService";
@@ -12,7 +12,7 @@ import { useParams } from "react-router-dom";
 import { useLanguage } from "../LanguageContext";
 import { TextToSpeechButton } from "../components/TextToSpeechButton";
 
-export const FavoritePage: React.FC<CommonProps> = ({ db, onShowToast }) => {
+export const FavoritePage: React.FC<CommonProps> = ({ onShowToast }) => {
     const { translations } = useLanguage();
     document.title = `${translations["flag"]} Favorite collection | ${APP_NAME}`;
 
@@ -26,28 +26,26 @@ export const FavoritePage: React.FC<CommonProps> = ({ db, onShowToast }) => {
 
     const handleRemoveFavorite = async (word: WordDto) => {
         const isFavorite = false;
-        if (db) {
-            await addWordToFavorite(db, word, isFavorite);
-            const currentLanguageId = await getCurrentLanguageId(
-                languages,
-                language ? language : ""
+        await addWordToFavorite(word as any, isFavorite);
+        const currentLanguageId = await getCurrentLanguageId(
+            languages,
+            language ? language : ""
+        );
+        const words = await getFavoriteWords(currentLanguageId);
+        if (selectedCollection) {
+            const filtered = words.filter(
+                (w) => w.collection.name === selectedCollection.name
             );
-            const words = await getFavoriteWords(db, currentLanguageId);
-            if (selectedCollection) {
-                const filtered = words.filter(
-                    (w) => w.collection.name === selectedCollection.name
-                );
-                setFavoriteWords(filtered);
-                setFilteredWords(filtered);
-            } else {
-                setFavoriteWords(words);
-                setFilteredWords(words);
-            }
-            onShowToast?.(
-                translations["alert.removeFavoriteWord"],
-                "success"
-            );
+            setFavoriteWords(filtered);
+            setFilteredWords(filtered);
+        } else {
+            setFavoriteWords(words);
+            setFilteredWords(words);
         }
+        onShowToast?.(
+            translations["alert.removeFavoriteWord"],
+            "success"
+        );
     };
 
     const handleFilter = (collection: Collection | null) => {
@@ -63,12 +61,11 @@ export const FavoritePage: React.FC<CommonProps> = ({ db, onShowToast }) => {
 
     useEffect(() => {
         const fetchFavorite = async () => {
-            const dbInstance = await initDB();
             const currentLanguageId = await getCurrentLanguageId(
                 languages,
                 language ? language : ""
             );
-            const words = await getFavoriteWords(dbInstance, currentLanguageId);
+            const words = await getFavoriteWords(currentLanguageId);
             setFavoriteWords(words);
             setFilteredWords(words);
             const collectionsInFavorite = words.map((word) => word.collection);
@@ -83,9 +80,9 @@ export const FavoritePage: React.FC<CommonProps> = ({ db, onShowToast }) => {
                     )
                 )
                 .sort((a, b) => {
-                    const idA = a?.id !== undefined ? a.id : Infinity;
-                    const idB = b?.id !== undefined ? b.id : Infinity;
-                    return idA - idB;
+                    const idA = a?.id !== undefined ? a.id : "";
+                    const idB = b?.id !== undefined ? b.id : "";
+                    return String(idA).localeCompare(String(idB));
                 });
             setCollections(uniqueCollections.filter(Boolean) as Collection[]);
         };
@@ -139,7 +136,7 @@ export const FavoritePage: React.FC<CommonProps> = ({ db, onShowToast }) => {
                                         <TextToSpeechButton word={word.word} />
                                     </h5>
                                     <small>
-                                        <i>{word.partOfSpeech}</i>
+                                        <i>{word.part_of_speech}</i>
                                     </small>
                                 </div>
                                 <div className="word-action">

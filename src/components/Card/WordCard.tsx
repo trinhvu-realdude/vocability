@@ -23,10 +23,10 @@ const ButtonGroup: React.FC<{
         <>
             <div className="btn btn-sm" title="Add Favorite">
                 <i
-                    className={`${word.isFavorite ? "fas" : "far"} fa-star`}
+                    className={`${word.is_favorite ? "fas" : "far"} fa-star`}
                     onClick={() => handleAddFavorite(word)}
                     style={{
-                        color: `${word.isFavorite ? "#FFC000" : ""}`,
+                        color: `${word.is_favorite ? "#FFC000" : ""}`,
                     }}
                 ></i>
             </div>
@@ -41,7 +41,6 @@ const ButtonGroup: React.FC<{
 };
 
 export const WordCard: React.FC<WordCardProps> = ({
-    db,
     word,
     collection,
     filterSorting,
@@ -64,17 +63,14 @@ export const WordCard: React.FC<WordCardProps> = ({
 
     const handleAddFavorite = async (word: Word) => {
         setIsFavorite(!isFavorite);
-        if (db) {
-            await addWordToFavorite(db, word, isFavorite);
-            if (word.collectionId) {
-                const words = await getWordsByCollectionId(
-                    db,
-                    word.collectionId
-                );
-                if (filterSorting)
-                    setWords(sortWordsByFilter(words, filterSorting.value));
-                else setWords(words);
-            }
+        await addWordToFavorite(word, isFavorite);
+        if (word.collection_id) {
+            const words = await getWordsByCollectionId(
+                word.collection_id
+            );
+            if (filterSorting)
+                setWords(sortWordsByFilter(words, filterSorting.value));
+            else setWords(words);
         }
     };
 
@@ -122,7 +118,7 @@ export const WordCard: React.FC<WordCardProps> = ({
                                 href={`/${translations["language"]}/word/${word.id}`}
                                 className="word-link"
                                 style={{
-                                    backgroundColor: word.isFavorite
+                                    backgroundColor: word.is_favorite
                                         ? "#FFC000"
                                         : "",
                                 }}
@@ -131,7 +127,7 @@ export const WordCard: React.FC<WordCardProps> = ({
                             </a>
                         </h5>
                         <small>
-                            <i>{word.partOfSpeech}</i>
+                            <i>{word.part_of_speech}</i>
                         </small>
                     </div>
                     <div className="right px-4" style={{ position: 'relative' }}>
@@ -223,8 +219,8 @@ export const WordCard: React.FC<WordCardProps> = ({
                                 style={{ fontSize: "12px" }}
                             >
                                 {translations["createdAt"]}{" "}
-                                {formatDate(
-                                    word.createdAt,
+                                {word.created_at && formatDate(
+                                    new Date(word.created_at),
                                     translations["language"]
                                 )}
                             </small>
@@ -249,7 +245,6 @@ export const WordCard: React.FC<WordCardProps> = ({
             {isEdit && (
                 <EditWordModal
                     key={`edit-${word.id}-${isEdit}`}
-                    db={db}
                     word={word}
                     collection={collection}
                     setIsEditOrDelete={setIsEdit}
@@ -260,7 +255,6 @@ export const WordCard: React.FC<WordCardProps> = ({
 
             {isDelete && (
                 <DeleteWordModal
-                    db={db}
                     word={word}
                     collection={collection}
                     setIsEditOrDelete={setIsDelete}

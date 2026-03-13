@@ -9,7 +9,6 @@ import {
 import { useLanguage } from "../../LanguageContext";
 
 export const EditCollectionModal: React.FC<CollectionModalProps> = ({
-    db,
     collection,
     setIsEditOrDelete,
     setCollection,
@@ -58,31 +57,24 @@ export const EditCollectionModal: React.FC<CollectionModalProps> = ({
 
     const handleEditCollection = async () => {
         try {
-            if (db) {
-                const updatedCollection = await updateCollection(
-                    db,
-                    collection,
-                    renameValue !== "" ? renameValue.trim() : collection.name,
-                    color !== "" ? color : collection.color
+            const updatedCollection = await updateCollection(
+                collection,
+                renameValue !== "" ? renameValue.trim() : collection.name,
+                color !== "" ? color : collection.color
+            );
+            if (updatedCollection) {
+                const storedCollections = await getCollectionsByLanguageId(
+                    updatedCollection.language_id
                 );
-                if (updatedCollection) {
-                    const storedCollections = await getCollectionsByLanguageId(
-                        db,
-                        updatedCollection.languageId
-                    );
-                    setCollections(storedCollections);
+                setCollections(storedCollections);
 
-                    if (collection.id && setCollection) {
-                        const objCollection = await getCollectionById(
-                            db,
-                            collection.id
-                        );
-                        setCollection(objCollection);
-                    }
-
-                    onShowToast?.(translations["alert.renameCollectionSuccess"], "success");
-                    handleClose();
+                if (collection.id && setCollection) {
+                    const objCollection = await getCollectionById(collection.id);
+                    if (objCollection) setCollection(objCollection);
                 }
+
+                onShowToast?.(translations["alert.renameCollectionSuccess"], "success");
+                handleClose();
             }
         } catch (error) {
             console.log(error);

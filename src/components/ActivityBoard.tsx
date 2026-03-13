@@ -1,21 +1,19 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import { IDBPDatabase } from "idb";
-import { MyDB, Word, Collection } from "../interfaces/model";
+import { Word, Collection } from "../interfaces/model";
 import { getWords } from "../services/WordService";
 import { getCollections } from "../services/CollectionService";
 import { languages } from "../utils/constants";
 import "../styles/ActivityBoard.css";
 
 interface ActivityBoardProps {
-    db: IDBPDatabase<MyDB>;
 }
 
 interface ActivityData {
     [date: string]: Word[];
 }
 
-export const ActivityBoard: React.FC<ActivityBoardProps> = ({ db }) => {
+export const ActivityBoard: React.FC<ActivityBoardProps> = () => {
     const navigate = useNavigate();
     const [words, setWords] = useState<Word[]>([]);
     const [collections, setCollections] = useState<Collection[]>([]);
@@ -39,26 +37,26 @@ export const ActivityBoard: React.FC<ActivityBoardProps> = ({ db }) => {
 
     useEffect(() => {
         const fetchData = async () => {
-            if (db) {
-                const [allWords, allCollections] = await Promise.all([
-                    getWords(db),
-                    getCollections(db),
-                ]);
-                setWords(allWords);
-                setCollections(allCollections);
-            }
+            const [allWords, allCollections] = await Promise.all([
+                getWords(),
+                getCollections(),
+            ]);
+            setWords(allWords);
+            setCollections(allCollections);
         };
         fetchData();
-    }, [db]);
+    }, []);
 
     const activityData = useMemo(() => {
         const data: ActivityData = {};
         words.forEach((word) => {
-            const dateStr = formatDate(word.createdAt);
-            if (!data[dateStr]) {
-                data[dateStr] = [];
+            if (word.created_at) {
+                const dateStr = formatDate(new Date(word.created_at));
+                if (!data[dateStr]) {
+                    data[dateStr] = [];
+                }
+                data[dateStr].push(word);
             }
-            data[dateStr].push(word);
         });
         return data;
     }, [words]);
@@ -67,10 +65,12 @@ export const ActivityBoard: React.FC<ActivityBoardProps> = ({ db }) => {
         const years = new Set<string>();
         const currentYear = new Date().getFullYear().toString();
         words.forEach(w => {
-            const year = w.createdAt.getFullYear().toString();
-            // Exclude current year because "Last year" rolling option already represents current activity well
-            if (year !== currentYear) {
-                years.add(year);
+            if (w.created_at) {
+                const year = new Date(w.created_at).getFullYear().toString();
+                // Exclude current year because "Last year" rolling option already represents current activity well
+                if (year !== currentYear) {
+                    years.add(year);
+                }
             }
         });
         return Array.from(years).sort((a, b) => b.localeCompare(a));
@@ -129,9 +129,12 @@ export const ActivityBoard: React.FC<ActivityBoardProps> = ({ db }) => {
         }
 
         words.forEach(w => {
-            if (filterFn(w.createdAt)) {
-                totalWordsInRange++;
-                activeDaysSet.add(formatDate(w.createdAt));
+            if (w.created_at) {
+                const d = new Date(w.created_at);
+                if (filterFn(d)) {
+                    totalWordsInRange++;
+                    activeDaysSet.add(formatDate(d));
+                }
             }
         });
 
@@ -175,27 +178,27 @@ export const ActivityBoard: React.FC<ActivityBoardProps> = ({ db }) => {
     };
 
 
-    const getLanguageInfo = (collectionId?: number) => {
-        if (!collectionId) return { language: "Unknown", code: "un" };
-        const collection = collections.find((c) => c.id === collectionId);
+    const getLanguageInfo = (collection_id?: string) => {
+        if (!collection_id) return { language: "Unknown", code: "un" };
+        const collection = collections.find((c) => c.id === collection_id);
         if (!collection) return { language: "Unknown", code: "un" };
-        const lang = languages.find((l) => l.id === collection.languageId);
+        const lang = languages.find((l) => l.id === collection.language_id);
         return lang ? lang : { language: "Unknown", code: "un" };
     };
 
-    const getCollectionInfo = (collectionId?: number) => {
-        if (!collectionId) return { name: "Unknown", color: "#6a737d" };
-        const collection = collections.find((c) => c.id === collectionId);
+    const getCollectionInfo = (collection_id?: string) => {
+        if (!collection_id) return { name: "Unknown", color: "#6a737d" };
+        const collection = collections.find((c) => c.id === collection_id);
         return collection ? { name: collection.name, color: collection.color } : { name: "Unknown", color: "#6a737d" };
     };
 
     const selectedWords = selectedDate ? activityData[selectedDate] || [] : [];
 
     const handleWordClick = (word: Word) => {
-        if (!word.id || !word.collectionId) return;
-        const collection = collections.find(c => c.id === word.collectionId);
+        if (!word.id || !word.collection_id) return;
+        const collection = collections.find(c => c.id === word.collection_id);
         if (collection) {
-            const lang = languages.find(l => l.id === collection.languageId);
+            const lang = languages.find(l => l.id === collection.language_id);
             if (lang) {
                 navigate(`/${lang.code}/word/${word.id}`);
             }
@@ -301,8 +304,8 @@ export const ActivityBoard: React.FC<ActivityBoardProps> = ({ db }) => {
                     {selectedWords.length > 0 ? (
                         <div className="daily-word-list">
                             {selectedWords.map((word, index) => {
-                                const langInfo = getLanguageInfo(word.collectionId);
-                                const collectionInfo = getCollectionInfo(word.collectionId);
+                                const langInfo = getLanguageInfo(word.collection_id);
+                                const collectionInfo = getCollectionInfo(word.collection_id);
                                 return (
                                     <div
                                         key={index}

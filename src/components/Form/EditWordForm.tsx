@@ -12,7 +12,6 @@ import { validateInputs } from "../../utils/helper";
 import "../../styles/AddWordModal.css";
 
 export const EditWordForm: React.FC<WordFormProps> = ({
-    db,
     word,
     collection,
     setIsEditOrDelete,
@@ -20,7 +19,7 @@ export const EditWordForm: React.FC<WordFormProps> = ({
     setWord,
     onShowToast,
 }) => {
-    const [partOfSpeechValue, setPartOfSpeechValue] = useState<string>(word.partOfSpeech || "");
+    const [partOfSpeechValue, setPartOfSpeechValue] = useState<string>(word.part_of_speech || "");
     const [wordValue, setWordValue] = useState<string>(word.word || "");
     // Create a deep copy of definitions to avoid mutating the original word object
     const [definitions, setDefinitions] = useState<Definition[]>(
@@ -57,36 +56,33 @@ export const EditWordForm: React.FC<WordFormProps> = ({
             phonetic = await getPhonetic(wordEdit);
         }
         try {
-            if (db) {
-                const editValue: EditWordObj = {
-                    word: wordEdit,
-                    phonetic: phonetic,
-                    partOfSpeech: partOfSpeechEdit,
-                    definitions: definitionsEdit,
-                };
-                const updatedWord = await updateWord(db, word, editValue);
+            const editValue: EditWordObj = {
+                word: wordEdit,
+                phonetic: phonetic,
+                partOfSpeech: partOfSpeechEdit,
+                definitions: definitionsEdit,
+            };
+            const updatedWord = await updateWord(word, editValue);
 
-                if (updatedWord && collection?.id) {
-                    const words = await getWordsByCollectionId(
-                        db,
-                        collection.id
-                    );
-                    setWords(words);
-                }
-                if (setWord) setWord(updatedWord);
-
-                // Close form first
-                setIsEditOrDelete(false);
-                closeBtnRef.current?.click();
-
-                // Show success toast after form closes
-                setTimeout(() => {
-                    onShowToast?.(
-                        translations["alert.editWordSuccess"] || "Word updated successfully!",
-                        "success"
-                    );
-                }, 300);
+            if (updatedWord && collection?.id) {
+                const words = await getWordsByCollectionId(
+                    collection.id
+                );
+                setWords(words);
             }
+            if (setWord) setWord(updatedWord);
+
+            // Close form first
+            setIsEditOrDelete(false);
+            closeBtnRef.current?.click();
+
+            // Show success toast after form closes
+            setTimeout(() => {
+                onShowToast?.(
+                    translations["alert.editWordSuccess"] || "Word updated successfully!",
+                    "success"
+                );
+            }, 300);
         } catch (error) {
             console.log(error);
             onShowToast?.(

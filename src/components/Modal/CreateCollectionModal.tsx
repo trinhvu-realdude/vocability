@@ -1,6 +1,5 @@
 import EmojiPicker, { EmojiClickData, Theme } from "emoji-picker-react";
-import { IDBPDatabase } from "idb";
-import { Collection, MyDB } from "../../interfaces/model";
+import { Collection } from "../../interfaces/model";
 import {
     getCurrentLanguageId,
     getRandomColor,
@@ -17,9 +16,8 @@ import { useLanguage } from "../../LanguageContext";
 import "../../styles/AddWordModal.css";
 
 export const CreateCollectionModal: React.FC<{
-    db: IDBPDatabase<MyDB> | undefined;
     setCollections: React.Dispatch<React.SetStateAction<Collection[]>>;
-}> = ({ db, setCollections }) => {
+}> = ({ setCollections }) => {
     const [randomColor, setRandomColor] = useState<string>(getRandomColor());
     const [color, setColor] = useState<string>("");
     const [name, setName] = useState<string>("");
@@ -48,32 +46,28 @@ export const CreateCollectionModal: React.FC<{
 
     const handleAddCollection = async () => {
         try {
-            if (db) {
-                const currentLanguageId = await getCurrentLanguageId(
-                    languages,
-                    translations["language"]
-                );
-                const objCollection = {
-                    name: name || "Default",
-                    color: color || randomColor,
-                    createdAt: new Date(),
-                    languageId: currentLanguageId,
-                } as Collection;
-                await addCollection(db, objCollection);
+            const currentLanguageId = await getCurrentLanguageId(
+                languages,
+                translations["language"]
+            );
+            const objCollection = {
+                name: name || "Default",
+                color: color || randomColor,
+                language_id: currentLanguageId,
+            } as Collection;
+            await addCollection(objCollection);
 
-                const storedCollections = await getCollectionsByLanguageId(
-                    db,
-                    currentLanguageId
-                );
-                const activeLanguages = await getActiveLanguages(db);
-                const reorderedLanguages = reorderActiveLanguages(
-                    activeLanguages,
-                    translations["language"]
-                );
-                setActiveLanguages(reorderedLanguages);
-                setCollections(storedCollections);
-                reset();
-            }
+            const storedCollections = await getCollectionsByLanguageId(
+                currentLanguageId
+            );
+            const activeLanguages = await getActiveLanguages();
+            const reorderedLanguages = reorderActiveLanguages(
+                activeLanguages,
+                translations["language"]
+            );
+            setActiveLanguages(reorderedLanguages);
+            setCollections(storedCollections);
+            reset();
         } catch (error) {
             console.log(error);
             alert(translations["alert.addCollectionFailed"]);

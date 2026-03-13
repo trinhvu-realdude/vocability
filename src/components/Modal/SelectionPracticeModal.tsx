@@ -3,18 +3,15 @@ import { Collection } from "../../interfaces/model";
 import { useLanguage } from "../../LanguageContext";
 import "../../styles/AddWordModal.css";
 import { ToastType } from "../Toast";
-import { IDBPDatabase } from "idb";
-import { MyDB } from "../../interfaces/model";
 import { getWordsByCollectionId } from "../../services/WordService";
 
 interface SelectionPracticeModalProps {
     collections: Collection[];
-    onSelect: (collectionId: number) => void;
+    onSelect: (collectionId: string) => void;
     id?: string;
     title?: string;
     practiceHref?: string;
     onToast?: (message: string, type: ToastType) => void;
-    db?: IDBPDatabase<MyDB>;
 }
 
 // import crosswordVideo from "../../assets/videos/crossword.mp4";
@@ -38,20 +35,19 @@ export const SelectionPracticeModal: React.FC<SelectionPracticeModalProps> = ({
     title = "Practice Setup",
     practiceHref,
     onToast,
-    db
 }) => {
     const { translations } = useLanguage();
-    const [selectedId, setSelectedId] = useState<number>(0);
+    const [selectedId, setSelectedId] = useState<string>("");
 
     const videoSrc = practiceHref ? practiceVideos[practiceHref] : undefined;
     console.log(videoSrc);
 
     const handleStart = async () => {
-        if (selectedId !== 0) {
+        if (selectedId !== "") {
             // Find the selected collection
             const selectedCollection = collections.find(c => c.id === selectedId);
 
-            if (!selectedCollection || !db) {
+            if (!selectedCollection) {
                 if (onToast) {
                     onToast(translations["alert.validateCollectionEmpty"] || "", "warning");
                 }
@@ -59,7 +55,7 @@ export const SelectionPracticeModal: React.FC<SelectionPracticeModalProps> = ({
             }
 
             // Fetch words from database
-            const words = await getWordsByCollectionId(db, selectedId);
+            const words = await getWordsByCollectionId(selectedId);
 
             // Check if collection is empty
             if (!words || words.length === 0) {
@@ -136,7 +132,7 @@ export const SelectionPracticeModal: React.FC<SelectionPracticeModalProps> = ({
                             <select
                                 className="form-select form-select-lg"
                                 value={selectedId}
-                                onChange={(e) => setSelectedId(Number(e.target.value))}
+                                onChange={(e) => setSelectedId(e.target.value)}
                                 style={{ borderRadius: '12px' }}
                             >
                                 <option value="">{translations["practice.selectCollection"] || ""}</option>
@@ -163,7 +159,7 @@ export const SelectionPracticeModal: React.FC<SelectionPracticeModalProps> = ({
                             type="button"
                             className="action-button btn-add-word"
                             onClick={handleStart}
-                            data-bs-dismiss={selectedId !== 0 ? "modal" : ""}
+                            data-bs-dismiss={selectedId !== "" ? "modal" : ""}
                         >
                             <i className="fas fa-play me-2"></i>
                             {translations["practice.startPractice"]}

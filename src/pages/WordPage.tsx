@@ -15,7 +15,6 @@ import { getVoicesByLanguage } from "../utils/helper";
 import { LeftOffCanvas } from "../components/LeftOffCanvas";
 
 export const WordPage: React.FC<WordPageProps> = ({
-    db,
     words,
     setWords,
     setCollections,
@@ -42,16 +41,14 @@ export const WordPage: React.FC<WordPageProps> = ({
     useEffect(() => {
         const fetchCollection = async () => {
             setIsLoading(true);
-            if (db && collectionId) {
+            if (collectionId) {
                 setCurrentCollectionId(collectionId);
                 const objCollection = await getCollectionById(
-                    db,
-                    Number.parseInt(collectionId)
+                    collectionId
                 );
-                setCollection(objCollection);
+                setCollection(objCollection || undefined);
                 const objWord = await getWordsByCollectionId(
-                    db,
-                    Number.parseInt(collectionId)
+                    collectionId
                 );
                 setWords(objWord);
                 setVoicesByLanguage(
@@ -61,7 +58,7 @@ export const WordPage: React.FC<WordPageProps> = ({
             setIsLoading(false);
         };
         fetchCollection();
-    }, [translations["language"], collectionId, db]);
+    }, [translations["language"], collectionId]);
 
     return (
         <div className="container-list" id="word-list">
@@ -77,9 +74,8 @@ export const WordPage: React.FC<WordPageProps> = ({
                 <i className="fa fa-angle-right"></i>
             </button>
 
-            {db && collection && words.length > 0 && (
+            {collection && words.length > 0 && (
                 <LeftOffCanvas
-                    db={db}
                     collection={collection}
                     words={words}
                     setWords={setWords}
@@ -128,7 +124,6 @@ export const WordPage: React.FC<WordPageProps> = ({
                     filteredWords.map((word) => (
                         <WordCard
                             key={word.id}
-                            db={db}
                             word={word}
                             collection={collection}
                             filterSorting={filterSorting}
@@ -145,7 +140,6 @@ export const WordPage: React.FC<WordPageProps> = ({
 
             {isEdit && collection && (
                 <EditCollectionModal
-                    db={db}
                     collection={collection}
                     setCollection={setCollection}
                     setCollections={setCollections}

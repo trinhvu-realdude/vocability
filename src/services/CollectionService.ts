@@ -1,136 +1,128 @@
-import { IDBPDatabase } from "idb";
-import { Collection, MyDB } from "../interfaces/model";
-import { deleteWordsByCollectionId, getWords } from "./WordService";
+import { supabase } from "../configs/supabase";
+import { Collection } from "../interfaces/model";
 import { languages } from "../utils/constants";
 
-const storeName = "collections";
+// ─── Helpers ────────────────────────────────────────────────────────────────
 
-export const getActiveLanguages = async (db: IDBPDatabase<MyDB>) => {
-    const collections = await getCollections(db);
-    const activeLanguageIds = new Set(
-        collections.map((collection) => collection.languageId)
-    );
-    return languages.filter((language) => activeLanguageIds.has(language.id));
+const getActiveUserId = async (): Promise<string> => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) throw new Error("Not authenticated");
+    return user.id;
+};
+
+// ─── Read ────────────────────────────────────────────────────────────────────
+
+export const getCollections = async (): Promise<Collection[]> => {
+    const { data, error } = await supabase
+        .from("collections")
+        .select("*, words(count)")
+        .order("created_at", { ascending: false });
+
+    if (error) throw error;
+
+    return (data ?? []).map((c: any) => ({
+        ...c,
+        numOfWords: c.words?.[0]?.count ?? 0,
+    }));
 };
 
 export const getCollectionsByLanguageId = async (
-    db: IDBPDatabase<MyDB>,
-    currentLanguageId: number
+    languageId: number
 ): Promise<Collection[]> => {
-    const tx = db.transaction(storeName, "readonly");
-    const store = tx.objectStore(storeName);
+    const { data, error } = await supabase
+        .from("collections")
+        .select("*, words(count)")
+        .eq("language_id", languageId)
+        .order("created_at", { ascending: false });
 
-    const collections = (await store.getAll()).filter(
-        (collection) => collection.languageId === currentLanguageId
-    ).sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+    if (error) throw error;
 
-    const words = await getWords(db);
-
-    await tx.done;
-
-    collections.forEach((collection) => {
-        collection.numOfWords = words.filter(
-            (word) => word.collectionId === collection.id
-        ).length;
-    });
-
-    return collections;
-};
-
-export const getCollections = async (
-    db: IDBPDatabase<MyDB>
-): Promise<Collection[]> => {
-    const tx = db.transaction(storeName, "readonly");
-    const store = tx.objectStore(storeName);
-
-    const collections = await store.getAll();
-    const words = await getWords(db);
-
-    await tx.done;
-
-    collections.forEach((collection) => {
-        collection.numOfWords = words.filter(
-            (word) => word.collectionId === collection.id
-        ).length;
-    });
-
-    return collections;
-};
-
-export const addCollection = async (
-    db: IDBPDatabase<MyDB>,
-    collection: Collection
-): Promise<number> => {
-    const tx = db.transaction(storeName, "readwrite");
-    const store = tx.objectStore(storeName);
-    const collectionId = await store.add(collection);
-    await tx.done;
-    return collectionId;
-};
-
-export const getCollectionByNameAndLanguageId = async (
-    db: IDBPDatabase<MyDB>,
-    name: string,
-    currentLanguageId: number
-): Promise<Collection | undefined> => {
-    const collections: Collection[] = await getCollections(db);
-    return collections.find(
-        (collection) =>
-            collection.name === name &&
-            collection.languageId === currentLanguageId
-    );
+    return (data ?? []).map((c: any) => ({
+        ...c,
+        numOfWords: c.words?.[0]?.count ?? 0,
+    }));
 };
 
 export const getCollectionById = async (
-    db: IDBPDatabase<MyDB>,
-    id: number
+    id: string
 ): Promise<Collection | undefined> => {
-    const tx = db.transaction(storeName, "readonly");
-    const store = tx.objectStore(storeName);
-    const collection = await store.get(id);
-    return collection;
+    const { data, error } = await supabase
+        .from("collections")
+        .select("*")
+        .eq("id", id)
+        .single();
+
+    if (error) return undefined;
+    return data;
 };
 
-export const deleteCollection = async (
-    db: IDBPDatabase<MyDB>,
-    collection: Collection
-): Promise<void> => {
-    const tx = db.transaction(storeName, "readwrite");
-    const store = tx.objectStore(storeName);
-    if (collection.id) {
-        await store.delete(collection.id);
-        await deleteWordsByCollectionId(db, collection.id);
-    }
-    await tx.done;
+export const getCollectionByNameAndLanguageId = async (
+    name: string,
+    languageId: number
+): Promise<Collection | undefined> => {
+    const { data, error } = await supabase
+        .from("collections")
+        .select("*")
+        .eq("name", name)
+        .eq("language_id", languageId)
+        .maybeSingle();
+
+    if (error) return undefined;
+    return data ?? undefined;
+};
+
+export const getActiveLanguages = async () => {
+    const collections = await getCollections();
+    const activeLanguageIds = new Set(collections.map((c) => c.language_id));
+    return languages.filter((lang) => activeLanguageIds.has(lang.id));
+};
+
+export const getColorByCollectionId = async (
+    collectionId: string
+): Promise<string> => {
+    const collection = await getCollectionById(collectionId);
+    return collection?.color ?? "";
+};
+
+// ─── Write ───────────────────────────────────────────────────────────────────
+
+export const addCollection = async (
+    collection: Omit<Collection, "id" | "user_id" | "created_at" | "updated_at">
+): Promise<string> => {
+    const userId = await getActiveUserId();
+
+    const { data, error } = await supabase
+        .from("collections")
+        .insert({ ...collection, user_id: userId })
+        .select("id")
+        .single();
+
+    if (error) throw error;
+    return data.id;
 };
 
 export const updateCollection = async (
-    db: IDBPDatabase<MyDB>,
     collection: Collection,
     renameValue: string,
     color: string
 ): Promise<Collection> => {
-    const tx = db.transaction(storeName, "readwrite");
-    const store = tx.objectStore(storeName);
-    if (collection.id) {
-        let objCollection = await store.get(collection.id);
-        if (objCollection) {
-            objCollection.name = renameValue;
-            objCollection.color = color;
-            await store.put(objCollection);
-            await tx.done;
-            return objCollection;
-        }
-    }
-    return collection;
+    const { data, error } = await supabase
+        .from("collections")
+        .update({ name: renameValue, color })
+        .eq("id", collection.id!)
+        .select()
+        .single();
+
+    if (error) throw error;
+    return data;
 };
 
-export const getColorByCollectionId = async (
-    db: IDBPDatabase<MyDB>,
-    collectionId: number
-): Promise<string> => {
-    const tx = db.transaction(storeName, "readonly");
-    const store = tx.objectStore(storeName);
-    const collection = await store.get(collectionId);
-    return collection ? collection?.color : "";
+export const deleteCollection = async (collection: Collection): Promise<void> => {
+    // Words and definitions are cascade-deleted by the DB foreign key
+    const { error } = await supabase
+        .from("collections")
+        .delete()
+        .eq("id", collection.id!);
+
+    if (error) throw error;
 };
