@@ -30,7 +30,7 @@ export const exportToPdf = async (words: Word[]) => {
     const tableRows = words.map((word) => {
         // Format definitions and notes
         const formattedDefinitions = word.definitions
-            .map((def, index) => `${index + 1}. (${word.partOfSpeech}) ${def.definition}`)
+            .map((def, index) => `${index + 1}. (${word.part_of_speech}) ${def.definition}`)
             .join("\n");
 
         const formattedNotes = word.definitions
@@ -114,7 +114,7 @@ export const exportToDocx = async (words: Word[]) => {
                             new Paragraph({
                                 children: [
                                     new TextRun({
-                                        text: `${index + 1}. (${word.partOfSpeech}): `,
+                                        text: `${index + 1}. (${word.part_of_speech}): `,
                                         italics: true,
                                         bold: true
                                     }),

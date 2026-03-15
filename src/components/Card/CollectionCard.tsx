@@ -8,7 +8,6 @@ import "../../styles/CollectionCard.css"
 import { getWordsForReview } from "../../services/SpacedRepetitionService";
 
 export const CollectionCard: React.FC<CollectionCardProps> = ({
-    db,
     collection,
     setCollections,
     onShowToast,
@@ -20,11 +19,11 @@ export const CollectionCard: React.FC<CollectionCardProps> = ({
     const { translations } = useLanguage();
 
     const fetchReviewCount = React.useCallback(async () => {
-        if (db && collection.id) {
-            const words = await getWordsForReview(db, collection.id);
-            setReviewCount(words.length);
+        if (collection.id) {
+            const words = await getWordsForReview(collection.id);
+            setReviewCount(words?.length || 0);
         }
-    }, [db, collection.id]);
+    }, [collection.id]);
 
     useEffect(() => {
         fetchReviewCount();
@@ -114,8 +113,8 @@ export const CollectionCard: React.FC<CollectionCardProps> = ({
                         className="folder-content"
                         data-bs-toggle="tooltip"
                         data-bs-placement="top"
-                        title={`${translations["createdAt"]} ${formatDate(
-                            collection.createdAt,
+                        title={`${translations["createdAt"]} ${collection.created_at && formatDate(
+                            new Date(collection.created_at),
                             translations["language"]
                         )}`}
                         href={`/${translations["language"]}/collection/${collection.id}`}
@@ -128,14 +127,17 @@ export const CollectionCard: React.FC<CollectionCardProps> = ({
                         </div>
                         <div className="folder-info">
                             <p className="folder-word-count">
-                                <i className="fas fa-book" />{" "}
+                                {/* <i className="fas fa-book" />{" "}
                                 {
                                     translations[
                                     "collectionPage.collectionCard.numberOfWords"
                                     ]
                                 }
                                 :
-                                <strong>{collection.numOfWords}</strong>
+                                <strong>{collection.num_of_words}</strong> */}
+                                <small className="text-muted">
+                                    {collection.created_at && formatDate(new Date(collection.created_at), translations["language"])}
+                                </small>
                             </p>
                         </div>
                     </a>
@@ -144,7 +146,6 @@ export const CollectionCard: React.FC<CollectionCardProps> = ({
 
             {isEdit && (
                 <EditCollectionModal
-                    db={db}
                     collection={collection}
                     setCollections={setCollections}
                     setIsEditOrDelete={setIsEdit}
@@ -154,7 +155,6 @@ export const CollectionCard: React.FC<CollectionCardProps> = ({
 
             {isDelete && (
                 <DeleteCollectionModal
-                    db={db}
                     collection={collection}
                     setIsEditOrDelete={setIsDelete}
                     setCollections={setCollections}

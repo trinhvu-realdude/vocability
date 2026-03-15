@@ -14,7 +14,6 @@ import { languages } from "../utils/constants";
 import { Toast, ToastType } from "../components/Toast";
 
 const PracticeLayout: React.FC<PracticeLayoutProps> = ({
-    db,
     collections,
     setCollections,
     setLanguageCode,
@@ -27,16 +26,10 @@ const PracticeLayout: React.FC<PracticeLayoutProps> = ({
 
     useEffect(() => {
         const fetchData = async () => {
-            if (db && language && setLanguageCode) {
+            if (language && setLanguageCode) {
                 setLanguageCode(language);
-                const currentLanguageId = await getCurrentLanguageId(
-                    languages,
-                    language
-                );
-                const collectionsByLanguage = await getCollectionsByLanguageId(
-                    db,
-                    currentLanguageId
-                );
+                const currentLanguageId = await getCurrentLanguageId(languages, language);
+                const collectionsByLanguage = await getCollectionsByLanguageId(currentLanguageId);
                 if (setCollections) setCollections(collectionsByLanguage);
             }
         };
@@ -46,36 +39,32 @@ const PracticeLayout: React.FC<PracticeLayoutProps> = ({
     return (
         <div className="container my-4">
             <Routes>
-                <Route path="/" element={<PracticePage collections={collections} onShowToast={(message, type) => setToast({ message, type })} db={db} />} />
+                <Route path="/" element={<PracticePage collections={collections} onShowToast={(message, type) => setToast({ message, type })} />} />
                 <Route
                     path="/flashcard-quiz"
-                    element={
-                        <FlashcardQuizPage db={db} collections={collections} />
-                    }
+                    element={<FlashcardQuizPage collections={collections} />}
                 />
                 <Route
                     path="/crossword-puzzles"
-                    element={<CrosswordPuzzlePage db={db} collections={collections} />}
+                    element={<CrosswordPuzzlePage collections={collections} />}
                 />
-                <Route path="/word-scramble" element={<WordScramblePage db={db} collections={collections} />} />
+                <Route path="/word-scramble" element={<WordScramblePage collections={collections} />} />
                 <Route
                     path="/vocabulary-quiz"
-                    element={<VocabularyQuizPage db={db} />}
+                    element={<VocabularyQuizPage collections={collections} />}
                 />
                 <Route path="/word-matching" element={<WordMatchingPage />} />
                 <Route path="/memory-card" element={<MemoryCardPage />} />
             </Routes>
 
-            {
-                toast && (
-                    <Toast
-                        message={toast.message}
-                        type={toast.type}
-                        onClose={() => setToast(null)}
-                    />
-                )
-            }
-        </div >
+            {toast && (
+                <Toast
+                    message={toast.message}
+                    type={toast.type}
+                    onClose={() => setToast(null)}
+                />
+            )}
+        </div>
     );
 };
 

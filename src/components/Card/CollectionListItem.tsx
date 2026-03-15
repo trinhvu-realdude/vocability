@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Collection, Word } from "../../interfaces/model";
-import { IDBPDatabase } from "idb";
-import { MyDB } from "../../interfaces/model";
 import { getWordsByCollectionId } from "../../services/WordService";
 import { useLanguage } from "../../LanguageContext";
 import { formatDate } from "../../utils/formatDateString";
@@ -12,14 +10,12 @@ import { getWordsForReview } from "../../services/SpacedRepetitionService";
 import { ToastType } from "../../components/Toast";
 
 interface CollectionListItemProps {
-    db: IDBPDatabase<MyDB> | undefined;
     collection: Collection;
     setCollections: React.Dispatch<React.SetStateAction<Collection[]>>;
     onShowToast?: (message: string, type: ToastType) => void;
 }
 
 export const CollectionListItem: React.FC<CollectionListItemProps> = ({
-    db,
     collection,
     setCollections,
     onShowToast,
@@ -27,6 +23,7 @@ export const CollectionListItem: React.FC<CollectionListItemProps> = ({
     const [isExpanded, setIsExpanded] = useState(false);
     const [words, setWords] = useState<Word[]>([]);
     const [reviewCount, setReviewCount] = useState<number>(0);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
 
     // Action states
     const [isEdit, setIsEdit] = useState(false);
@@ -35,15 +32,16 @@ export const CollectionListItem: React.FC<CollectionListItemProps> = ({
     const { translations } = useLanguage();
 
     const fetchData = React.useCallback(async () => {
-        if (db && collection.id) {
+        if (collection.id) {
             const [reviewWords, allWords] = await Promise.all([
-                getWordsForReview(db, collection.id),
-                getWordsByCollectionId(db, collection.id)
+                getWordsForReview(collection.id),
+                getWordsByCollectionId(collection.id)
             ]);
-            setReviewCount(reviewWords.length);
+            setReviewCount(reviewWords?.length || 0);
             setWords(allWords);
+            setIsLoading(false);
         }
-    }, [db, collection.id]);
+    }, [collection.id]);
 
     // Fetch review count and total words on mount
     useEffect(() => {
@@ -97,14 +95,14 @@ export const CollectionListItem: React.FC<CollectionListItemProps> = ({
                                 >
                                     <h5 className="collection-name me-2">{collection.name}</h5>
                                 </a>
-                                {words && <span className={`badge ${words.length > 0 ? 'bg-light text-dark' : 'bg-secondary-soft text-muted'} word-count-badge`}>
+                                {!isLoading && words && <span className={`badge ${words.length > 0 ? 'bg-light text-dark' : 'bg-secondary-soft text-muted'} word-count-badge`}>
                                     {words.length === 0 ? translations["collection.wordCount.empty"] :
                                         words.length === 1 ? `1 ${translations["collection.wordCount.singular"]}` :
                                             `${words.length} ${translations["collection.wordCount.plural"]}`}
                                 </span>}
                             </div>
                             <small className="text-muted">
-                                {formatDate(collection.createdAt, translations["language"])}
+                                {collection.created_at && formatDate(new Date(collection.created_at), translations["language"])}
                             </small>
                         </div>
                     </div>
@@ -176,12 +174,12 @@ export const CollectionListItem: React.FC<CollectionListItemProps> = ({
                                         >
                                             <strong>{word.word}</strong>{" "}
                                         </a></span>
-                                        {word.partOfSpeech && <span className="mini-word-pos">{word.partOfSpeech}</span>}
+                                        {word.part_of_speech && <span className="mini-word-pos">{word.part_of_speech}</span>}
                                     </div>
                                 </div>
                             ))
                         ) : (
-                            <p className="text-center text-muted my-3">No words in this collection.</p>
+                            <p className="text-center text-muted my-3">{translations["collection.noWords"]}</p>
                         )}
                     </div>
                 </div>
@@ -189,7 +187,6 @@ export const CollectionListItem: React.FC<CollectionListItemProps> = ({
 
             {isEdit && (
                 <EditCollectionModal
-                    db={db}
                     collection={collection}
                     setCollections={setCollections}
                     setIsEditOrDelete={setIsEdit}
@@ -201,7 +198,6 @@ export const CollectionListItem: React.FC<CollectionListItemProps> = ({
             {
                 isDelete && (
                     <DeleteCollectionModal
-                        db={db}
                         collection={collection}
                         setIsEditOrDelete={setIsDelete}
                         setCollections={setCollections}

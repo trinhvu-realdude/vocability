@@ -37,12 +37,12 @@ export const sortWordsByFilter = (words: Word[], filterValue: string) => {
             break;
         case "newest-first":
             sortedWords = [...words].sort(
-                (a, b) => b.createdAt.getTime() - a.createdAt.getTime()
+                (a, b) => new Date(b.created_at || 0).getTime() - new Date(a.created_at || 0).getTime()
             );
             break;
         case "oldest-first":
             sortedWords = [...words].sort(
-                (a, b) => a.createdAt.getTime() - b.createdAt.getTime()
+                (a, b) => new Date(a.created_at || 0).getTime() - new Date(b.created_at || 0).getTime()
             );
             break;
         default:
@@ -83,12 +83,12 @@ export const sortCollectionsByFilter = (
             break;
         case "newest-first":
             sortedCollections = [...collections].sort(
-                (a, b) => b.createdAt.getTime() - a.createdAt.getTime()
+                (a, b) => new Date(b.created_at || 0).getTime() - new Date(a.created_at || 0).getTime()
             );
             break;
         case "oldest-first":
             sortedCollections = [...collections].sort(
-                (a, b) => a.createdAt.getTime() - b.createdAt.getTime()
+                (a, b) => new Date(a.created_at || 0).getTime() - new Date(b.created_at || 0).getTime()
             );
             break;
         default:

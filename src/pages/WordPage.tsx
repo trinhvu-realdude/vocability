@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { Collection, Word } from "../interfaces/model";
-import { getWordsByCollectionId } from "../services/WordService";
+import { getWordsByCollectionIdPaginated } from "../services/WordService";
 import { getCollectionById } from "../services/CollectionService";
 import { FilterSortingOption, WordPageProps } from "../interfaces/mainProps";
 import { WordCard } from "../components/Card/WordCard";
@@ -15,7 +15,6 @@ import { getVoicesByLanguage } from "../utils/helper";
 import { LeftOffCanvas } from "../components/LeftOffCanvas";
 
 export const WordPage: React.FC<WordPageProps> = ({
-    db,
     words,
     setWords,
     setCollections,
@@ -32,6 +31,11 @@ export const WordPage: React.FC<WordPageProps> = ({
     const [isHideDefinition, setIsHideDefinition] = useState(false);
     const [isEdit, setIsEdit] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
+    const [isFetchingMore, setIsFetchingMore] = useState(false);
+    const [hasMore, setHasMore] = useState(true);
+    const [offset, setOffset] = useState(0);
+    const loaderRef = useRef<HTMLDivElement>(null);
+    const ITEMS_PER_PAGE = 5;
 
     const { translations } = useLanguage();
 
@@ -39,29 +43,65 @@ export const WordPage: React.FC<WordPageProps> = ({
         ? `${translations["flag"]} ${collection.name} collection | ${APP_NAME}`
         : APP_NAME;
 
+    const fetchCollection = useCallback(async () => {
+        setIsLoading(true);
+        if (collectionId) {
+            setCurrentCollectionId(collectionId);
+            const objCollection = await getCollectionById(collectionId);
+            setCollection(objCollection || undefined);
+            const objWord = await getWordsByCollectionIdPaginated(collectionId, 0, ITEMS_PER_PAGE - 1);
+            setWords(objWord);
+            setOffset(ITEMS_PER_PAGE);
+            setHasMore(objWord.length === ITEMS_PER_PAGE);
+            setVoicesByLanguage(await getVoicesByLanguage(translations["languageVoice"]));
+        }
+        setIsLoading(false);
+    }, [translations["language"], collectionId, setCurrentCollectionId, setWords, translations["languageVoice"]]);
+
     useEffect(() => {
-        const fetchCollection = async () => {
-            setIsLoading(true);
-            if (db && collectionId) {
-                setCurrentCollectionId(collectionId);
-                const objCollection = await getCollectionById(
-                    db,
-                    Number.parseInt(collectionId)
-                );
-                setCollection(objCollection);
-                const objWord = await getWordsByCollectionId(
-                    db,
-                    Number.parseInt(collectionId)
-                );
-                setWords(objWord);
-                setVoicesByLanguage(
-                    await getVoicesByLanguage(translations["languageVoice"])
-                );
-            }
-            setIsLoading(false);
-        };
         fetchCollection();
-    }, [translations["language"], collectionId, db]);
+    }, [fetchCollection]);
+
+    const loadMoreWords = useCallback(async () => {
+        if (isFetchingMore || !hasMore || !collectionId) return;
+
+        setIsFetchingMore(true);
+        try {
+            const nextWords = await getWordsByCollectionIdPaginated(
+                collectionId,
+                offset,
+                offset + ITEMS_PER_PAGE - 1
+            );
+
+            if (nextWords.length < ITEMS_PER_PAGE) {
+                setHasMore(false);
+            }
+
+            setWords((prev) => [...prev, ...nextWords]);
+            setOffset((prev) => prev + ITEMS_PER_PAGE);
+        } catch (error) {
+            console.error("Error loading more words:", error);
+        } finally {
+            setIsFetchingMore(false);
+        }
+    }, [isFetchingMore, hasMore, collectionId, offset, setWords]);
+
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            (entries) => {
+                if (entries[0].isIntersecting && hasMore && !isLoading && !isFetchingMore) {
+                    loadMoreWords();
+                }
+            },
+            { threshold: 1.0 }
+        );
+
+        if (loaderRef.current) {
+            observer.observe(loaderRef.current);
+        }
+
+        return () => observer.disconnect();
+    }, [loadMoreWords, hasMore, isLoading, isFetchingMore]);
 
     return (
         <div className="container-list" id="word-list">
@@ -77,12 +117,10 @@ export const WordPage: React.FC<WordPageProps> = ({
                 <i className="fa fa-angle-right"></i>
             </button>
 
-            {db && collection && words.length > 0 && (
+            {collection && words.length > 0 && (
                 <LeftOffCanvas
-                    db={db}
                     collection={collection}
                     words={words}
-                    setWords={setWords}
                 />
             )}
 
@@ -128,7 +166,6 @@ export const WordPage: React.FC<WordPageProps> = ({
                     filteredWords.map((word) => (
                         <WordCard
                             key={word.id}
-                            db={db}
                             word={word}
                             collection={collection}
                             filterSorting={filterSorting}
@@ -141,11 +178,18 @@ export const WordPage: React.FC<WordPageProps> = ({
                 ) : (
                     <NoDataMessage message={translations["noFoundWord"]} />
                 )}
+
+                {hasMore && !isLoading && (
+                    <div ref={loaderRef} className="d-flex justify-content-center p-4">
+                        {isFetchingMore && (
+                            <div className="mx-auto loader"></div>
+                        )}
+                    </div>
+                )}
             </div>
 
             {isEdit && collection && (
                 <EditCollectionModal
-                    db={db}
                     collection={collection}
                     setCollection={setCollection}
                     setCollections={setCollections}

@@ -13,7 +13,6 @@ import { useLanguage } from "../../LanguageContext";
 import { handleTextToSpeech } from "../../utils/helper";
 
 export const FlashcardQuizPage: React.FC<FlashcardQuizPageProps> = ({
-    db,
     collections,
 }) => {
     const { translations } = useLanguage();
@@ -29,21 +28,19 @@ export const FlashcardQuizPage: React.FC<FlashcardQuizPageProps> = ({
     const [isQuizStarted, setIsQuizStarted] = useState(false);
 
     useEffect(() => {
-        if (collectionIdParam && db) {
-            handleStartQuiz(Number(collectionIdParam));
+        if (collectionIdParam) {
+            handleStartQuiz(collectionIdParam);
         }
-    }, [collectionIdParam, db]);
+    }, [collectionIdParam]);
 
-    const handleStartQuiz = async (collectionId: number) => {
+    const handleStartQuiz = async (collectionId: string) => {
         const count = 1000; // Default to all as requested (removed number input)
 
-        if (db) {
-            const wordsForFlashCards = await generateWordsForFlashCards(
-                db,
-                collectionId,
-                count,
-                setCardColor
-            );
+        const wordsForFlashCards = await generateWordsForFlashCards(
+            collectionId,
+            count,
+            setCardColor
+        );
             if (wordsForFlashCards.length > 0) {
                 setGeneratedWords(wordsForFlashCards);
                 setIsQuizStarted(true);
@@ -53,7 +50,6 @@ export const FlashcardQuizPage: React.FC<FlashcardQuizPageProps> = ({
                 // alert("Collection has no words to practice");
                 setIsQuizStarted(false);
             }
-        }
     };
 
     const handleNext = () => {

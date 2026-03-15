@@ -13,7 +13,6 @@ import { useState, useEffect } from "react";
 import { ReviewModal } from "../components/Modal/ReviewModal";
 
 export const CollectionPage: React.FC<CommonProps> = ({
-    db,
     collections,
     setCollections,
     onShowToast,
@@ -79,7 +78,6 @@ export const CollectionPage: React.FC<CommonProps> = ({
                         filteredCollections.map((collection) => (
                             <CollectionCard
                                 key={collection.id}
-                                db={db}
                                 collection={collection}
                                 setCollections={setCollections}
                                 onShowToast={onShowToast}
@@ -90,7 +88,6 @@ export const CollectionPage: React.FC<CommonProps> = ({
                             {filteredCollections.map((collection) => (
                                 <CollectionListItem
                                     key={collection.id}
-                                    db={db}
                                     collection={collection}
                                     setCollections={setCollections}
                                     onShowToast={onShowToast}
@@ -104,12 +101,11 @@ export const CollectionPage: React.FC<CommonProps> = ({
                     />
                 )}
             </div>
-            <CreateCollectionModal db={db} setCollections={setCollections} />
+            <CreateCollectionModal setCollections={setCollections} />
 
             {/* Review Modal */}
             <ReviewModal
-                db={db}
-                collectionId={reviewCollectionId}
+                collectionId={reviewCollectionId ? String(reviewCollectionId) : null}
                 collectionName={reviewCollectionName}
                 collectionColor={reviewCollectionColor}
                 isOpen={isReviewModalOpen}

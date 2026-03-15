@@ -72,20 +72,7 @@ a.word-link:hover {
     border-radius: 2px;
 }
 
-/* CSS for hoverable dropdown */
-.nav-item.dropdown:hover .dropdown-menu {
-    display: block;
-    opacity: 1;
-    visibility: visible;
-}
 
-/* Ensure the dropdown menu does not disappear when hovering */
-.nav-item.dropdown .dropdown-menu {
-    margin-top: 0;
-    visibility: hidden;
-    opacity: 0;
-    transition: visibility 0.2s, opacity 0.2s;
-}
 
 .synonyms-antonyms:hover {
     text-decoration: underline;

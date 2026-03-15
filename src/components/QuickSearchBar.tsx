@@ -1,18 +1,16 @@
 import { useState, useEffect, useRef } from "react";
-import { IDBPDatabase } from "idb";
-import { MyDB, Word } from "../interfaces/model";
+import { Word } from "../interfaces/model";
 import { getWordsByLanguageCode } from "../services/WordService";
 import { useLanguage } from "../LanguageContext";
 import "../styles/QuickSearchBar.css";
 import { useNavigate } from "react-router-dom";
 
 interface QuickSearchProps {
-    db: IDBPDatabase<MyDB> | undefined;
     languageCode: string;
     onAddWord: (word: string) => void;
 }
 
-export const QuickSearchBar: React.FC<QuickSearchProps> = ({ db, languageCode, onAddWord }) => {
+export const QuickSearchBar: React.FC<QuickSearchProps> = ({ languageCode, onAddWord }) => {
     const { translations, setSelectedWord } = useLanguage();
     const [searchTerm, setSearchTerm] = useState("");
     const [searchResults, setSearchResults] = useState<Word[]>([]);
@@ -26,13 +24,11 @@ export const QuickSearchBar: React.FC<QuickSearchProps> = ({ db, languageCode, o
     // Fetch all words on mount
     useEffect(() => {
         const fetchWords = async () => {
-            if (db) {
-                const words = await getWordsByLanguageCode(db, languageCode);
-                setAllWords(words);
-            }
+            const words = await getWordsByLanguageCode(languageCode);
+            setAllWords(words || []);
         };
         fetchWords();
-    }, [db, translations["language"]]); // Refresh when db or language changes
+    }, [translations["language"]]); // Refresh when language changes
 
     useEffect(() => {
         if (searchTerm.trim() === "") {
@@ -67,7 +63,7 @@ export const QuickSearchBar: React.FC<QuickSearchProps> = ({ db, languageCode, o
         setSelectedWord(word);
         setShowResults(false);
         setSearchTerm("");
-        navigate(`/${translations["language"]}/collection/${word.collectionId}#${word.id}`);
+        navigate(`/${translations["language"]}/collection/${word.collection_id}#${word.id}`);
 
         // Also try to scroll element into view if we are already on the page or after nav
         // The hash in URL usually handles it, but sometimes React Router needs help if component mounts late.
@@ -100,7 +96,7 @@ export const QuickSearchBar: React.FC<QuickSearchProps> = ({ db, languageCode, o
                         {searchResults.map((word) => (
                             <li key={word.id} className="quick-search-item">
                                 <a
-                                    href={`/${translations["language"]}/collection/${word.collectionId}#${word.id}`}
+                                    href={`/${translations["language"]}/collection/${word.collection_id}#${word.id}`}
                                     className="quick-search-link"
                                     onClick={(e) => handleWordClick(word, e)}
                                 >

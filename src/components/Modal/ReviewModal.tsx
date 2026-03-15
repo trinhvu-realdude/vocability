@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { IDBPDatabase } from "idb";
-import { MyDB, Word } from "../../interfaces/model";
+import { Word } from "../../interfaces/model";
 import {
     calculateNextReview,
     getWordsForReview,
@@ -13,8 +12,7 @@ import { FlashCard } from "../Card/FlashCard";
 import { handleTextToSpeech } from "../../utils/helper";
 
 interface ReviewModalProps {
-    db: IDBPDatabase<MyDB> | null | undefined;
-    collectionId: number | null;
+    collectionId: string | null;
     collectionName: string;
     collectionColor: string;
     isOpen: boolean;
@@ -22,7 +20,6 @@ interface ReviewModalProps {
 }
 
 export const ReviewModal: React.FC<ReviewModalProps> = ({
-    db,
     collectionId,
     collectionName,
     collectionColor,
@@ -43,16 +40,16 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({
 
     // Load words for review when modal opens
     useEffect(() => {
-        if (isOpen && db && collectionId) {
+        if (isOpen && collectionId) {
             loadWordsForReview();
         }
-    }, [isOpen, db, collectionId]);
+    }, [isOpen, collectionId]);
 
     const loadWordsForReview = async () => {
-        if (!db || !collectionId) return;
+        if (!collectionId) return;
 
         setIsLoading(true);
-        const words = await getWordsForReview(db, collectionId);
+        const words = await getWordsForReview(collectionId);
         setWordsToReview(words);
         setCurrentIndex(0);
         setIsFlipped(false);
@@ -70,13 +67,13 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({
     };
 
     const handleQualityRating = async (quality: number) => {
-        if (!db || wordsToReview.length === 0) return;
+        if (wordsToReview.length === 0) return;
 
         const currentWord = wordsToReview[currentIndex];
         const updatedWord = calculateNextReview(currentWord, quality);
 
         // Update word in database
-        await updateWordAfterReview(db, updatedWord);
+        await updateWordAfterReview(updatedWord);
 
         // Start flip back animation first
         setIsFlipped(false);

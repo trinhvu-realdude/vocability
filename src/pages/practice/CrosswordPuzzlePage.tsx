@@ -206,7 +206,7 @@ function generateCrossword(words: Word[]): CrosswordGrid {
 
 // ─── Component ───────────────────────────────────────────────────────────────
 
-export const CrosswordPuzzlePage: React.FC<CrosswordPuzzlePageProps> = ({ db, collections }) => {
+export const CrosswordPuzzlePage: React.FC<CrosswordPuzzlePageProps> = ({ collections }) => {
     document.title = `Crossword Puzzles | ${APP_NAME}`;
     const { translations } = useLanguage();
     const [searchParams] = useSearchParams();
@@ -226,16 +226,15 @@ export const CrosswordPuzzlePage: React.FC<CrosswordPuzzlePageProps> = ({ db, co
 
     // Auto-start if collectionId is in URL
     useEffect(() => {
-        if (collectionIdParam && db) {
-            handleStartGame(Number(collectionIdParam));
+        if (collectionIdParam) {
+            handleStartGame(collectionIdParam);
         }
-    }, [collectionIdParam, db]);
+    }, [collectionIdParam]);
 
-    const handleStartGame = async (collectionId: number) => {
-        if (!db) return;
+    const handleStartGame = async (collectionId: string) => {
         setIsLoading(true);
         try {
-            const words = await getWordsByCollectionId(db, collectionId);
+            const words = await getWordsByCollectionId(collectionId);
             const usable = words.filter(w => w.definitions?.length > 0);
             if (usable.length < 4) {
                 alert("Need at least 4 words with definitions to generate a puzzle!");
@@ -416,7 +415,7 @@ export const CrosswordPuzzlePage: React.FC<CrosswordPuzzlePageProps> = ({ db, co
     };
 
     const handlePlayAgain = () => {
-        if (collectionIdParam && db) handleStartGame(Number(collectionIdParam));
+        if (collectionIdParam) handleStartGame(collectionIdParam);
     };
 
     // ─── Render helpers ─────────────────────────────────────────────────────

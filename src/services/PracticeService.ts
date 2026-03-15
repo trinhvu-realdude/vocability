@@ -1,17 +1,15 @@
-import { IDBPDatabase } from "idb";
-import { MyDB, QuestionVocabularyQuiz, Word } from "../interfaces/model";
+import { Word } from "../interfaces/model";
 import { getCollectionById } from "./CollectionService";
-import { getWords, getWordsByCollectionId } from "./WordService";
+import { getWordsByCollectionId } from "./WordService";
 
 export const generateWordsForFlashCards = async (
-    db: IDBPDatabase<MyDB>,
-    selectedCollectionId: number,
+    selectedCollectionId: string,
     numberOfCards: number,
     setCardColor: React.Dispatch<React.SetStateAction<string>>
 ): Promise<Word[]> => {
-    const collection = await getCollectionById(db, selectedCollectionId);
+    const collection = await getCollectionById(selectedCollectionId);
     setCardColor(collection ? collection.color : "");
-    let words = await getWordsByCollectionId(db, selectedCollectionId);
+    let words = await getWordsByCollectionId(selectedCollectionId);
     // Shuffle the words array
     words = words.sort(() => Math.random() - 0.5);
 
@@ -25,11 +23,6 @@ export const generateWordsForFlashCards = async (
     return selectedWords;
 };
 
-export const generateQuestionsForVocabularyQuiz = async (
-    db: IDBPDatabase<MyDB>
-): Promise<QuestionVocabularyQuiz | undefined> => {
-    const words = await getWords(db);
-    console.log(words);
-
-    return undefined;
+export const generateQuestionsForVocabularyQuiz = async (): Promise<void> => {
+    // This is currently a stub and not used by the VocabularyQuizPage
 };

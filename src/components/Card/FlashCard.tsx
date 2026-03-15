@@ -31,8 +31,8 @@ export const FlashCard: React.FC<FlashCardProps> = ({
                         <small>{word.phonetic}</small>
                     )}
                     <div>{word.word}</div>
-                    {word.partOfSpeech && (
-                        <small><i>({word.partOfSpeech})</i></small>
+                    {word.part_of_speech && (
+                        <small><i>({word.part_of_speech})</i></small>
                     )}
                 </div>
                 {!isFlipped && (

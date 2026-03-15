@@ -1,18 +1,18 @@
 import { useEffect, useState } from "react";
 import { StorageBar } from "../components/StorageBar";
-import { RootLayoutProps } from "../interfaces/rootProps";
 import { HomePage } from "../pages/HomePage";
 import { getActiveLanguages } from "../services/CollectionService";
 
-const RootLayout: React.FC<RootLayoutProps> = ({ db }) => {
+const RootLayout: React.FC = () => {
     const [activeLanguages, setActiveLanguages] = useState<Array<any>>([]);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
 
     useEffect(() => {
         const fetchLanguages = async () => {
-            if (db) {
-                const languages = await getActiveLanguages(db);
-                setActiveLanguages(languages);
-            }
+            setIsLoading(true);
+            const languages = await getActiveLanguages();
+            setActiveLanguages(languages);
+            setIsLoading(false);
         };
         fetchLanguages();
     }, []);
@@ -20,7 +20,7 @@ const RootLayout: React.FC<RootLayoutProps> = ({ db }) => {
     return (
         <div className="container my-4">
             <StorageBar />
-            <HomePage activeLanguages={activeLanguages} db={db} />
+            <HomePage activeLanguages={activeLanguages} isLoading={isLoading} />
         </div>
     );
 };

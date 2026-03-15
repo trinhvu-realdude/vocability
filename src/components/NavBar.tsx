@@ -5,30 +5,28 @@ import { getActiveLanguages } from "../services/CollectionService";
 import { reorderActiveLanguages } from "../utils/helper";
 import "../styles/NavBar.css";
 import { QuickSearchBar } from "./QuickSearchBar";
+import { useAuth } from "../contexts/AuthContext";
 
-interface ExtendedNavBarProps extends NavBarProps {
-    onQuickAddWord: (word: string) => void;
-}
-
-export const NavBar: React.FC<ExtendedNavBarProps> = ({
-    db,
+export const NavBar: React.FC<NavBarProps> = ({
     languageCode,
     onQuickAddWord,
 }) => {
+    const { user, signOut } = useAuth();
     const { translations } = useLanguage();
     const { activeLanguages, setActiveLanguages } = useLanguage();
     const [scrolled, setScrolled] = useState(false);
 
+    const displayName = user?.user_metadata?.full_name || user?.email?.split('@')[0] || "there";
+    const avatarUrl = user?.user_metadata?.avatar_url;
+
     useEffect(() => {
         const fetchLanguages = async () => {
-            if (db) {
-                const languages = await getActiveLanguages(db);
-                const reorderedLanguages = reorderActiveLanguages(
-                    languages,
-                    translations["language"]
-                );
-                setActiveLanguages(reorderedLanguages);
-            }
+            const languages = await getActiveLanguages();
+            const reorderedLanguages = reorderActiveLanguages(
+                languages,
+                translations["language"]
+            );
+            setActiveLanguages(reorderedLanguages);
         };
         fetchLanguages();
     }, [translations["language"]]);
@@ -63,9 +61,9 @@ export const NavBar: React.FC<ExtendedNavBarProps> = ({
                 </a>
 
                 {/* Search Bar on Mobile/Desktop */}
-                {db && languageCode && (
+                {languageCode && onQuickAddWord && (
                     <div className="d-none d-lg-block ms-4" style={{ width: "300px" }}>
-                        <QuickSearchBar db={db} onAddWord={onQuickAddWord} languageCode={languageCode} />
+                        <QuickSearchBar onAddWord={onQuickAddWord} languageCode={languageCode} />
                     </div>
                 )}
 
@@ -149,24 +147,7 @@ export const NavBar: React.FC<ExtendedNavBarProps> = ({
                                 </a>
                             </li>
 
-                            {/* <li className="nav-item mx-2">
-                                <a
-                                    className="nav-link active"
-                                    href={`/${translations["language"]}/export`}
-                                >
-                                    {translations["navbar.export"]}
-                                </a>
-                            </li> */}
-
-                            <li className="nav-item mx-2">
-                                <a
-                                    className="nav-link active glossary-link"
-                                    href={`/${translations["language"]}/glossary`}
-                                >
-                                    {translations["navbar.glossary"]}
-                                </a>
-                            </li>
-
+                            {/* Language Selector */}
                             {languageCode && (
                                 <li
                                     className={`nav-item mx-2 ${activeLanguages.length > 0
@@ -227,6 +208,52 @@ export const NavBar: React.FC<ExtendedNavBarProps> = ({
                                         )}
                                 </li>
                             )}
+
+                            {/* User Avatar Dropdown */}
+                            <li className="nav-item dropdown ms-2">
+                                <a
+                                    className="nav-link p-0 d-flex align-items-center"
+                                    href="#"
+                                    id="userDropdown"
+                                    role="button"
+                                    data-bs-toggle="dropdown"
+                                    aria-expanded="false"
+                                >
+                                    <div className="avatar-wrapper">
+                                        {avatarUrl ? (
+                                            <img
+                                                src={avatarUrl}
+                                                alt="User Avatar"
+                                                className="user-avatar"
+                                            />
+                                        ) : (
+                                            <div className="user-avatar-placeholder">
+                                                <i className="fas fa-user"></i>
+                                            </div>
+                                        )}
+                                    </div>
+                                </a>
+                                <ul
+                                    className="dropdown-menu dropdown-menu-end shadow-sm border-0 mt-2"
+                                    aria-labelledby="userDropdown"
+                                >
+                                    <li className="px-3 py-2 border-bottom mb-1">
+                                        <div className="small text-muted">{translations["navbar.signedInAs"]}</div>
+                                        <div className="fw-bold text-truncate" style={{ maxWidth: '150px' }}>
+                                            {displayName}
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <button
+                                            className="dropdown-item text-danger d-flex align-items-center py-2"
+                                            onClick={() => signOut()}
+                                        >
+                                            <i className="fas fa-sign-out-alt me-2"></i>
+                                            {translations["navbar.signOut"]}
+                                        </button>
+                                    </li>
+                                </ul>
+                            </li>
                         </ul>
                     </div>
                 ) : (
@@ -234,9 +261,58 @@ export const NavBar: React.FC<ExtendedNavBarProps> = ({
                         className="collapse navbar-collapse justify-content-end"
                         id="navbar-toggle"
                     >
-                        <div className="navbar-greeting">
-                            Hi, what's good! 👋
-                        </div>
+                        <ul className="navbar-nav mb-2 mb-lg-0 align-items-center">
+                            <li className="nav-item ms-lg-3">
+                                <div className="navbar-greeting">
+                                    Hi {displayName}! 👋
+                                </div>
+                            </li>
+                            {/* User Avatar Dropdown for Root view */}
+                            <li className="nav-item dropdown ms-2">
+                                <a
+                                    className="nav-link p-0 d-flex align-items-center"
+                                    href="#"
+                                    id="userDropdownRoot"
+                                    role="button"
+                                    data-bs-toggle="dropdown"
+                                    aria-expanded="false"
+                                >
+                                    <div className="avatar-wrapper">
+                                        {avatarUrl ? (
+                                            <img
+                                                src={avatarUrl}
+                                                alt="User Avatar"
+                                                className="user-avatar"
+                                            />
+                                        ) : (
+                                            <div className="user-avatar-placeholder">
+                                                <i className="fas fa-user"></i>
+                                            </div>
+                                        )}
+                                    </div>
+                                </a>
+                                <ul
+                                    className="dropdown-menu dropdown-menu-end shadow-sm border-0 mt-2"
+                                    aria-labelledby="userDropdownRoot"
+                                >
+                                    <li className="px-3 py-2 border-bottom mb-1">
+                                        <div className="small text-muted">Signed in as</div>
+                                        <div className="fw-bold text-truncate" style={{ maxWidth: '150px' }}>
+                                            {displayName}
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <button
+                                            className="dropdown-item text-danger d-flex align-items-center py-2"
+                                            onClick={() => signOut()}
+                                        >
+                                            <i className="fas fa-sign-out-alt me-2"></i>
+                                            Sign out
+                                        </button>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
                     </div>
                 )}
             </div>

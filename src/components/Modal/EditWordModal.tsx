@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { EditWordObj, WordFormProps } from "../../interfaces/mainProps";
 import { partsOfSpeech } from "../../utils/constants";
 import {
@@ -12,7 +12,6 @@ import { validateInputs } from "../../utils/helper";
 import "../../styles/AddWordModal.css";
 
 export const EditWordModal: React.FC<WordFormProps> = ({
-    db,
     word,
     collection,
     setIsEditOrDelete,
@@ -20,7 +19,7 @@ export const EditWordModal: React.FC<WordFormProps> = ({
     setWord,
     onShowToast,
 }) => {
-    const [partOfSpeechValue, setPartOfSpeechValue] = useState<string>(word.partOfSpeech || "");
+    const [partOfSpeechValue, setPartOfSpeechValue] = useState<string>(word.part_of_speech || "");
     const [wordValue, setWordValue] = useState<string>(word.word || "");
     // Create a deep copy of definitions to avoid mutating the original word object
     const [definitions, setDefinitions] = useState<Definition[]>(
@@ -55,34 +54,29 @@ export const EditWordModal: React.FC<WordFormProps> = ({
             phonetic = await getPhonetic(wordEdit);
         }
         try {
-            if (db) {
-                const editValue: EditWordObj = {
-                    word: wordEdit,
-                    phonetic: phonetic,
-                    partOfSpeech: partOfSpeechEdit,
-                    definitions: definitionsEdit,
-                };
-                const updatedWord = await updateWord(db, word, editValue);
+            const editValue: EditWordObj = {
+                word: wordEdit,
+                phonetic: phonetic,
+                partOfSpeech: partOfSpeechEdit,
+                definitions: definitionsEdit,
+            };
+            const updatedWord = await updateWord(word, editValue);
 
-                if (updatedWord && collection?.id) {
-                    const words = await getWordsByCollectionId(
-                        db,
-                        collection.id
-                    );
-                    setWords(words);
-                }
-                if (setWord) setWord(updatedWord);
-
-                // Close form first
-                setShowModal(false);
-                setTimeout(() => setIsEditOrDelete(false), 150);
-
-                // Show success toast after form closes
-                onShowToast?.(
-                    translations["alert.editWordSuccess"] || "Word updated successfully!",
-                    "success"
-                );
+            if (updatedWord && collection?.id) {
+                const words = await getWordsByCollectionId(collection.id);
+                setWords(words);
             }
+            if (setWord) setWord(updatedWord);
+
+            // Close form first
+            setShowModal(false);
+            setTimeout(() => setIsEditOrDelete(false), 150);
+
+            // Show success toast after form closes
+            onShowToast?.(
+                translations["alert.editWordSuccess"] || "Word updated successfully!",
+                "success"
+            );
         } catch (error) {
             console.log(error);
             onShowToast?.(
@@ -129,10 +123,10 @@ export const EditWordModal: React.FC<WordFormProps> = ({
     const [showModal, setShowModal] = useState(false);
 
     // Trigger animation on mount
-    useState(() => {
-        // Use a small timeout to ensure the browser registers the state change for transition
-        setTimeout(() => setShowModal(true), 10);
-    });
+    useEffect(() => {
+        const timer = setTimeout(() => setShowModal(true), 10);
+        return () => clearTimeout(timer);
+    }, []);
 
     const handleClose = () => {
         setShowModal(false);

@@ -12,7 +12,6 @@ import { useLanguage } from "../../LanguageContext";
 import "../../styles/AddWordModal.css";
 
 export const DeleteCollectionModal: React.FC<CollectionModalProps> = ({
-    db,
     collection,
     setIsEditOrDelete,
     setCollections,
@@ -37,26 +36,30 @@ export const DeleteCollectionModal: React.FC<CollectionModalProps> = ({
     };
 
     const handleDeleteCollection = async (collection: Collection) => {
-        if (db) {
-            await deleteCollection(db, collection);
+        try {
+            await deleteCollection(collection);
             const currentLanguageId = await getCurrentLanguageId(
                 languages,
                 translations["language"]
             );
             const storedCollections = await getCollectionsByLanguageId(
-                db,
                 currentLanguageId
             );
-            const activeLanguages = await getActiveLanguages(db);
+            const activeLanguages = await getActiveLanguages();
             setCollections(storedCollections);
             setActiveLanguages(activeLanguages);
-            console.log(onShowToast);
 
             onShowToast?.(
                 translations["alert.deleteCollectionSuccess"],
                 "success"
             );
             handleClose();
+        } catch (error) {
+            console.error(error);
+            onShowToast?.(
+                "Failed to delete collection",
+                "error"
+            );
         }
     };
 

@@ -18,7 +18,7 @@ import { useLanguage } from "../LanguageContext";
 import { TextToSpeechButton } from "../components/TextToSpeechButton";
 import "../styles/WordDetailPage.css";
 
-export const WordDetailPage: React.FC<WordDetailPageProps> = ({ db, onShowToast }) => {
+export const WordDetailPage: React.FC<WordDetailPageProps> = ({ onShowToast }) => {
     const { wordId } = useParams();
 
     const [word, setWord] = useState<Word>();
@@ -40,27 +40,21 @@ export const WordDetailPage: React.FC<WordDetailPageProps> = ({ db, onShowToast 
 
     const handleAddFavorite = async (word: Word) => {
         setIsFavorite(!isFavorite);
-        if (db) {
-            await addWordToFavorite(db, word, isFavorite);
-            if (word.id) {
-                const updatedWord = await getWordById(db, word.id);
-                setWord(updatedWord);
-            }
+        await addWordToFavorite(word, isFavorite);
+        if (word.id) {
+            const updatedWord = await getWordById(word.id);
+            setWord(updatedWord);
         }
     };
 
     useEffect(() => {
         const fetchWord = async () => {
             try {
-                if (db && wordId) {
-                    const objWord = await getWordById(
-                        db,
-                        Number.parseInt(wordId)
-                    );
-                    if (objWord?.collectionId) {
+                if (wordId) {
+                    const objWord = await getWordById(wordId);
+                    if (objWord?.collection_id) {
                         const objCollection = await getCollectionById(
-                            db,
-                            objWord?.collectionId
+                            objWord.collection_id
                         );
                         setCollection(objCollection);
                     }
@@ -98,7 +92,7 @@ export const WordDetailPage: React.FC<WordDetailPageProps> = ({ db, onShowToast 
                     </>
                 }
             />
-            {!isEdit && (
+            {!isEdit && !isLoading && (
                 <>
                     <div className="d-flex w-100 justify-content-between mb-2">
                         <div className="row">
@@ -113,19 +107,19 @@ export const WordDetailPage: React.FC<WordDetailPageProps> = ({ db, onShowToast 
                                 <TextToSpeechButton word={word?.word || ""} />
                             </h5>
                             <small>
-                                <i>{word?.partOfSpeech}</i>
+                                <i>{word?.part_of_speech}</i>
                             </small>
                         </div>
                         <div className="word-action">
                             <div className="btn btn-sm" title="Add Favorite">
                                 <i
-                                    className={`${word?.isFavorite ? "fas" : "far"
+                                    className={`${word?.is_favorite ? "fas" : "far"
                                         } fa-star`}
                                     onClick={() => {
                                         if (word) handleAddFavorite(word);
                                     }}
                                     style={{
-                                        color: `${word?.isFavorite ? "#FFC000" : ""
+                                        color: `${word?.is_favorite ? "#FFC000" : ""
                                             }`,
                                     }}
                                 ></i>
@@ -171,7 +165,7 @@ export const WordDetailPage: React.FC<WordDetailPageProps> = ({ db, onShowToast 
                     </ul>
 
                     <a
-                        href={`/${translations["language"]}/collection/${word?.collectionId}`}
+                        href={`/${translations["language"]}/collection/${word?.collection_id}`}
                     >
                         <small className="text-muted">
                             &#8618; {translations["goTo"]}{" "}
@@ -184,14 +178,14 @@ export const WordDetailPage: React.FC<WordDetailPageProps> = ({ db, onShowToast 
                         </small>
                     </a>
                     <br />
-                    {word?.createdAt && (
+                    {word?.created_at && (
                         <small
                             className="text-muted"
                             style={{ fontSize: "12px" }}
                         >
                             {translations["createdAt"]}{" "}
                             {formatDate(
-                                word?.createdAt,
+                                new Date(word.created_at),
                                 translations["language"]
                             )}
                         </small>
@@ -201,7 +195,6 @@ export const WordDetailPage: React.FC<WordDetailPageProps> = ({ db, onShowToast 
 
             {isEdit && word && (
                 <EditWordForm
-                    db={db}
                     word={word}
                     collection={collection}
                     setIsEditOrDelete={setIsEdit}

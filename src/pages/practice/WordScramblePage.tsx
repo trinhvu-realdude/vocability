@@ -19,7 +19,6 @@ interface LetterCard {
 }
 
 export const WordScramblePage: React.FC<WordScramblePageProps> = ({
-    db,
     collections,
 }) => {
     const { translations } = useLanguage();
@@ -46,19 +45,17 @@ export const WordScramblePage: React.FC<WordScramblePageProps> = ({
 
     // Initialize game when collection is selected
     useEffect(() => {
-        if (collectionIdParam && db) {
-            handleStartGame(Number(collectionIdParam));
+        if (collectionIdParam) {
+            handleStartGame(collectionIdParam);
         }
-    }, [collectionIdParam, db]);
+    }, [collectionIdParam]);
 
-    const handleStartGame = async (collectionId: number) => {
-        if (db) {
-            const wordsForGame = await generateWordsForFlashCards(
-                db,
-                collectionId,
-                1000,
-                () => { } // No color needed
-            );
+    const handleStartGame = async (collectionId: string) => {
+        const wordsForGame = await generateWordsForFlashCards(
+            collectionId,
+            1000,
+            () => { } // No color needed
+        );
 
             if (wordsForGame.length > 0) {
                 setWords(wordsForGame);
@@ -70,7 +67,6 @@ export const WordScramblePage: React.FC<WordScramblePageProps> = ({
                 setTimeLeft(20);
                 prepareWord(wordsForGame[0]);
             }
-        }
     };
 
     // Scramble word and prepare letter cards
@@ -313,8 +309,8 @@ export const WordScramblePage: React.FC<WordScramblePageProps> = ({
     };
 
     const handlePlayAgain = () => {
-        if (collectionIdParam && db) {
-            handleStartGame(Number(collectionIdParam));
+        if (collectionIdParam) {
+            handleStartGame(collectionIdParam);
         }
     };
 

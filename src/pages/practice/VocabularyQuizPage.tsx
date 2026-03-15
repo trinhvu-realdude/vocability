@@ -13,20 +13,20 @@ import { handleTextToSpeech } from "../../utils/helper";
 
 
 interface QuizQuestion {
-    id: number;
+    id: string;
     definition: string;
     correctAnswer: string;
     options: string[];
-    correctWordId?: number;
+    correctWordId?: string;
 }
 
 interface QuizAnswer {
-    questionId: number;
+    questionId: string;
     selectedAnswer: string;
     isCorrect: boolean;
 }
 
-export const VocabularyQuizPage: React.FC<VocabularyQuizPageProps> = ({ db, collections }) => {
+export const VocabularyQuizPage: React.FC<VocabularyQuizPageProps> = ({ collections }) => {
     const { translations } = useLanguage();
     document.title = `Vocabulary Quiz | ${APP_NAME}`;
 
@@ -44,18 +44,16 @@ export const VocabularyQuizPage: React.FC<VocabularyQuizPageProps> = ({ db, coll
     const bottomRef = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
-        if (collectionIdParam && db) {
-            handleStartQuiz(Number(collectionIdParam));
+        if (collectionIdParam) {
+            handleStartQuiz(collectionIdParam);
         }
-    }, [collectionIdParam, db]);
+    }, [collectionIdParam]);
 
-    const handleStartQuiz = async (collectionId: number) => {
-        if (!db) return;
-
-        const collection = await getCollectionById(db, collectionId);
+    const handleStartQuiz = async (collectionId: string) => {
+        const collection = await getCollectionById(collectionId);
         setCardColor(collection ? collection.color : "#6c757d");
 
-        let words = await getWordsByCollectionId(db, collectionId);
+        let words = await getWordsByCollectionId(collectionId);
 
         // Filter words that have definitions
         words = words.filter(word => word.definitions && word.definitions.length > 0);
@@ -84,7 +82,7 @@ export const VocabularyQuizPage: React.FC<VocabularyQuizPageProps> = ({ db, coll
             const options = [correctAnswer, ...wrongAnswers].sort(() => Math.random() - 0.5);
 
             return {
-                id: index,
+                id: index.toString(),
                 definition,
                 correctAnswer,
                 options,
@@ -137,8 +135,8 @@ export const VocabularyQuizPage: React.FC<VocabularyQuizPageProps> = ({ db, coll
     };
 
     const handleRestartQuiz = () => {
-        if (collectionIdParam && db) {
-            handleStartQuiz(Number(collectionIdParam));
+        if (collectionIdParam) {
+            handleStartQuiz(collectionIdParam);
         }
     };
 

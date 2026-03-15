@@ -24,7 +24,6 @@ import { ImportSetForm } from "../Form/ImportSetForm";
 import "../../styles/AddWordModal.css";
 
 export const AddWordModal: React.FC<CommonProps> = ({
-    db,
     collections,
     collectionId,
     setCollections,
@@ -48,11 +47,12 @@ export const AddWordModal: React.FC<CommonProps> = ({
     const [importMethod, setImportMethod] = useState<'paste' | 'excel'>('paste');
     const [excelFile, setExcelFile] = useState<File | null>(null);
     const [isParsingExcel, setIsParsingExcel] = useState<boolean>(false);
+
     // Sync choice with collectionId when it changes or when collections change
     useEffect(() => {
         if (typeof collectionId === 'string' && collectionId.trim() !== '') {
             const currentCollection = collections.find(
-                (c) => c.id === Number.parseInt(collectionId)
+                (c) => c.id === collectionId
             );
             if (currentCollection) {
                 setChoice({
@@ -102,7 +102,7 @@ export const AddWordModal: React.FC<CommonProps> = ({
         try {
             const collection = choice as Choice;
 
-            if (db && collection) {
+            if (collection) {
                 const currentLanguageId = await getCurrentLanguageId(
                     languages,
                     translations["language"]
@@ -111,11 +111,10 @@ export const AddWordModal: React.FC<CommonProps> = ({
                 const objCollection = {
                     name: collection.value,
                     color: randomColor,
-                    createdAt: new Date(),
-                    languageId: currentLanguageId ? currentLanguageId : -1,
+                    language_id: currentLanguageId ? currentLanguageId : -1,
                 };
 
-                const activeLanguages = await getActiveLanguages(db);
+                const activeLanguages = await getActiveLanguages();
                 const reorderedLanguages = reorderActiveLanguages(
                     activeLanguages,
                     translations["language"]
@@ -131,25 +130,22 @@ export const AddWordModal: React.FC<CommonProps> = ({
                         word: word.toLowerCase().trim(),
                         phonetic: phonetic && phonetic,
                         definitions: definitions,
-                        partOfSpeech: partOfSpeech,
-                        isFavorite: false,
-                        createdAt: new Date(),
+                        part_of_speech: partOfSpeech,
+                        is_favorite: false,
                     };
                     const addedWord = await addWord(
-                        db,
-                        objWord,
-                        objCollection,
+                        objWord as any,
+                        objCollection as any,
                         currentLanguageId
                     );
 
                     if (
-                        addedWord.collectionId &&
+                        addedWord.collection_id &&
                         collectionId &&
-                        addedWord.collectionId === Number.parseInt(collectionId)
+                        addedWord.collection_id === collectionId
                     ) {
                         const words = await getWordsByCollectionId(
-                            db,
-                            addedWord.collectionId
+                            addedWord.collection_id
                         );
                         setWords(words);
                     }
@@ -167,27 +163,25 @@ export const AddWordModal: React.FC<CommonProps> = ({
                             word: item.word.toLowerCase().trim(),
                             phonetic: phonetic && phonetic,
                             definitions: [{ definition: item.definition.trim(), notes: "" }],
-                            partOfSpeech: "", // Default part of speech for batch import
-                            isFavorite: false,
-                            createdAt: new Date(),
+                            part_of_speech: "", // Default part of speech for batch import
+                            is_favorite: false,
                         };
-                        await addWord(db, objWord, objCollection, currentLanguageId);
+                        await addWord(objWord as any, objCollection as any, currentLanguageId);
                     }
 
                     // Refresh collections if we are on collections page
-                    const updatedCollections = await getCollectionsByLanguageId(db, currentLanguageId);
+                    const updatedCollections = await getCollectionsByLanguageId(currentLanguageId);
                     setCollections(updatedCollections);
 
                     // Refresh words if we are in a collection
                     if (collectionId) {
-                        const words = await getWordsByCollectionId(db, Number.parseInt(collectionId));
+                        const words = await getWordsByCollectionId(collectionId);
                         setWords(words);
                     }
                 }
 
                 setActiveLanguages(reorderedLanguages);
                 const storedCollections = await getCollectionsByLanguageId(
-                    db,
                     currentLanguageId
                 );
                 setCollections(storedCollections);
@@ -221,7 +215,6 @@ export const AddWordModal: React.FC<CommonProps> = ({
         const lines = importText.split("\n");
         const parsed = lines
             .map((line) => {
-                // Regex to split by multiple spaces, tab, colon, or hyphen
                 const parts = line.split(/[:\-\t]|\s{2,}/);
                 if (parts.length >= 2) {
                     return {
@@ -319,7 +312,7 @@ export const AddWordModal: React.FC<CommonProps> = ({
         setIsParsingExcel(false);
         if (typeof collectionId === 'string' && collectionId.trim() !== '') {
             const currentCollection = collections.find(
-                (c) => c.id === Number.parseInt(collectionId)
+                (c) => c.id === collectionId
             );
             if (currentCollection) {
                 setChoice({
@@ -376,7 +369,6 @@ export const AddWordModal: React.FC<CommonProps> = ({
                         }}
                     >
                         <div className="word-modal-body">
-                            {/* Tab Toggle */}
                             <div className="import-mode-toggle mb-4">
                                 <button
                                     type="button"
