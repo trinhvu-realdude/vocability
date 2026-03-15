@@ -238,7 +238,7 @@ export const NavBar: React.FC<NavBarProps> = ({
                                     aria-labelledby="userDropdown"
                                 >
                                     <li className="px-3 py-2 border-bottom mb-1">
-                                        <div className="small text-muted">Signed in as</div>
+                                        <div className="small text-muted">{translations["navbar.signedInAs"]}</div>
                                         <div className="fw-bold text-truncate" style={{ maxWidth: '150px' }}>
                                             {displayName}
                                         </div>
@@ -249,7 +249,7 @@ export const NavBar: React.FC<NavBarProps> = ({
                                             onClick={() => signOut()}
                                         >
                                             <i className="fas fa-sign-out-alt me-2"></i>
-                                            Sign Out
+                                            {translations["navbar.signOut"]}
                                         </button>
                                     </li>
                                 </ul>
@@ -307,7 +307,7 @@ export const NavBar: React.FC<NavBarProps> = ({
                                             onClick={() => signOut()}
                                         >
                                             <i className="fas fa-sign-out-alt me-2"></i>
-                                            Sign Out
+                                            Sign out
                                         </button>
                                     </li>
                                 </ul>

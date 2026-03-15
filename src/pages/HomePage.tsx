@@ -73,7 +73,7 @@ export const HomePage: React.FC<HomePageProps> = ({ activeLanguages, isLoading }
                             href={`/${selectedLanguage.code}/collections`}
                             className="btn btn-start-now"
                         >
-                            Start Learning {selectedLanguage.language}
+                            Start learning {selectedLanguage.language}
                             <i className="fas fa-arrow-right"></i>
                         </a>
                     </div>

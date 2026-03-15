@@ -3,9 +3,8 @@ import { WordCardProps } from "../../interfaces/mainProps";
 import { Word } from "../../interfaces/model";
 import {
     addWordToFavorite,
-    getWordsByCollectionId,
 } from "../../services/WordService";
-import { formatText, sortWordsByFilter } from "../../utils/helper";
+import { formatText } from "../../utils/helper";
 import { EditWordModal } from "../Modal/EditWordModal";
 import { DeleteWordModal } from "../Modal/DeleteWordModal";
 import { formatDate } from "../../utils/formatDateString";
@@ -43,12 +42,10 @@ const ButtonGroup: React.FC<{
 export const WordCard: React.FC<WordCardProps> = ({
     word,
     collection,
-    filterSorting,
     setWords,
     onShowToast,
     isHideDefinition,
 }) => {
-    const [isFavorite, setIsFavorite] = useState<boolean>(false);
     const [isEdit, setIsEdit] = useState<boolean>(false);
     const [isDelete, setIsDelete] = useState<boolean>(false);
     const [isRevealed, setIsRevealed] = useState<boolean>(false);
@@ -62,15 +59,27 @@ export const WordCard: React.FC<WordCardProps> = ({
     const { translations, selectedWord, setSelectedWord } = useLanguage();
 
     const handleAddFavorite = async (word: Word) => {
-        setIsFavorite(!isFavorite);
-        await addWordToFavorite(word, isFavorite);
-        if (word.collection_id) {
-            const words = await getWordsByCollectionId(
-                word.collection_id
-            );
-            if (filterSorting)
-                setWords(sortWordsByFilter(words, filterSorting.value));
-            else setWords(words);
+        const newFavoriteStatus = !word.is_favorite;
+        
+        // Optimistic UI update
+        if (setWords) {
+            setWords((prevWords: Word[]) => {
+                if (!prevWords) return prevWords;
+                return prevWords.map(w => w.id === word.id ? { ...w, is_favorite: newFavoriteStatus } : w);
+            });
+        }
+        
+        try {
+            await addWordToFavorite(word, newFavoriteStatus);
+        } catch (error) {
+            // Revert on failure
+            if (setWords) {
+                setWords((prevWords: Word[]) => {
+                    if (!prevWords) return prevWords;
+                    return prevWords.map(w => w.id === word.id ? { ...w, is_favorite: !newFavoriteStatus } : w);
+                });
+            }
+            onShowToast?.("Failed to update favorite status", "error");
         }
     };
 

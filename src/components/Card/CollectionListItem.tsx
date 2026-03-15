@@ -179,7 +179,7 @@ export const CollectionListItem: React.FC<CollectionListItemProps> = ({
                                 </div>
                             ))
                         ) : (
-                            <p className="text-center text-muted my-3">No words in this collection.</p>
+                            <p className="text-center text-muted my-3">{translations["collection.noWords"]}</p>
                         )}
                     </div>
                 </div>
