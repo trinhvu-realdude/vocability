@@ -12,6 +12,7 @@ import { AddWordModal } from "./components/Modal/AddWordModal";
 import { AuthProvider } from "./contexts/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 import LoginPage from "./pages/LoginPage";
+import { ProfilePage } from "./pages/ProfilePage";
 
 function App() {
     const [collections, setCollections] = useState<Collection[]>([]);
@@ -62,6 +63,7 @@ function App() {
 
                                             <Routes>
                                                 <Route path="/" element={<RootLayout />} />
+                                                <Route path="/profile" element={<ProfilePage />} />
                                                 <Route
                                                     path="/:language/*"
                                                     element={
