@@ -246,7 +246,7 @@ export const NavBar: React.FC<NavBarProps> = ({
                                     <li>
                                         <a className="dropdown-item d-flex align-items-center py-2" href="/profile">
                                             <i className="fas fa-user-circle me-2"></i>
-                                            Profile
+                                            {translations["navbar.profile"]}
                                         </a>
                                     </li>
                                     <li><hr className="dropdown-divider-custom my-1" style={{ borderTopColor: 'rgba(255,255,255,0.1)' }} /></li>
