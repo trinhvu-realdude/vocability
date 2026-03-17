@@ -40,6 +40,16 @@ export interface WordDto extends Word {
     collection: Collection;
 }
 
+export interface Profile {
+    id: string; // uuid from auth.users
+    email: string;
+    username: string;
+    display_name: string;
+    avatar_url: string;
+    created_at?: string;
+    updated_at?: string;
+}
+
 export type QuestionVocabularyQuiz = {
     id: string;
     question: string;

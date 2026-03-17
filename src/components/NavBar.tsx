@@ -244,6 +244,13 @@ export const NavBar: React.FC<NavBarProps> = ({
                                         </div>
                                     </li>
                                     <li>
+                                        <a className="dropdown-item d-flex align-items-center py-2" href="/profile">
+                                            <i className="fas fa-user-circle me-2"></i>
+                                            {translations["navbar.profile"]}
+                                        </a>
+                                    </li>
+                                    <li><hr className="dropdown-divider-custom my-1" style={{ borderTopColor: 'rgba(255,255,255,0.1)' }} /></li>
+                                    <li>
                                         <button
                                             className="dropdown-item text-danger d-flex align-items-center py-2"
                                             onClick={() => signOut()}
@@ -301,6 +308,13 @@ export const NavBar: React.FC<NavBarProps> = ({
                                             {displayName}
                                         </div>
                                     </li>
+                                    <li>
+                                        <a className="dropdown-item d-flex align-items-center py-2" href="/profile">
+                                            <i className="fas fa-user-circle me-2"></i>
+                                            Profile
+                                        </a>
+                                    </li>
+                                    <li><hr className="dropdown-divider-custom my-1" style={{ borderTopColor: 'rgba(255,255,255,0.1)' }} /></li>
                                     <li>
                                         <button
                                             className="dropdown-item text-danger d-flex align-items-center py-2"
