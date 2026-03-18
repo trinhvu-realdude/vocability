@@ -59,10 +59,29 @@ export const ProfilePage: React.FC = () => {
         e.preventDefault();
         if (!profile) return;
 
+        const trimmedUsername = username.trim();
+
+        // Instagram-style username validation
+        const isValidUsername = (u: string) => {
+            if (u.length < 1 || u.length > 30) return false;
+            if (!/^[a-zA-Z0-9_.]+$/.test(u)) return false;
+            if (u.startsWith('.') || u.endsWith('.')) return false;
+            if (u.includes('..')) return false;
+            return true;
+        };
+
+        if (!isValidUsername(trimmedUsername)) {
+            setToast({
+                message: "Username must be 1-30 characters: letters, numbers, periods, underscores",
+                type: "error"
+            });
+            return;
+        }
+
         setIsSaving(true);
         try {
             const updatedProfile = await updateProfile({
-                username: username.trim(),
+                username: trimmedUsername,
                 display_name: displayName.trim(),
             });
             setProfile(updatedProfile);
