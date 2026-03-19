@@ -3,7 +3,6 @@ import { Collection, Word, WordDto, Definition } from "../interfaces/model";
 import {
     addCollection,
     getCollectionByNameAndLanguageId,
-    getCollectionsByLanguageId,
 } from "./CollectionService";
 import { EditWordObj, ExternalWord } from "../interfaces/mainProps";
 import { getCurrentLanguageId } from "../utils/helper";
@@ -42,21 +41,22 @@ export const attachDefinitions = async (words: Word[]): Promise<Word[]> => {
 export const getWords = async (): Promise<Word[]> => {
     const { data, error } = await supabase
         .from("words")
-        .select("*")
-        .order("created_at", { ascending: false });
+        .select("*, definitions(*)")
+        .order("created_at", { ascending: false })
+        .order("sort_order", { foreignTable: "definitions", ascending: true });
     if (error) throw error;
-    return attachDefinitions(data ?? []);
+    return data ?? [];
 };
 
 export const getWordById = async (wordId: string): Promise<Word | undefined> => {
     const { data, error } = await supabase
         .from("words")
-        .select("*")
+        .select("*, definitions(*)")
         .eq("id", wordId)
+        .order("sort_order", { foreignTable: "definitions", ascending: true })
         .single();
     if (error) return undefined;
-    const [withDefs] = await attachDefinitions([data]);
-    return withDefs;
+    return data;
 };
 
 export const getWordsByCollectionId = async (
@@ -64,11 +64,12 @@ export const getWordsByCollectionId = async (
 ): Promise<Word[]> => {
     const { data, error } = await supabase
         .from("words")
-        .select("*")
+        .select("*, definitions(*)")
         .eq("collection_id", collectionId)
-        .order("created_at", { ascending: false });
+        .order("created_at", { ascending: false })
+        .order("sort_order", { foreignTable: "definitions", ascending: true });
     if (error) throw error;
-    return attachDefinitions(data ?? []);
+    return data ?? [];
 };
 
 export const getWordsByCollectionIdPaginated = async (
@@ -78,12 +79,13 @@ export const getWordsByCollectionIdPaginated = async (
 ): Promise<Word[]> => {
     const { data, error } = await supabase
         .from("words")
-        .select("*")
+        .select("*, definitions(*)")
         .eq("collection_id", collectionId)
         .order("created_at", { ascending: false })
+        .order("sort_order", { foreignTable: "definitions", ascending: true })
         .range(from, to);
     if (error) throw error;
-    return attachDefinitions(data ?? []);
+    return data ?? [];
 };
 
 export const getFavoriteWords = async (
@@ -91,21 +93,16 @@ export const getFavoriteWords = async (
 ): Promise<WordDto[]> => {
     const { data, error } = await supabase
         .from("words")
-        .select("*, collections(*)")
+        .select("*, collections!inner(*), definitions(*)")
         .eq("is_favorite", true)
-        .order("created_at", { ascending: false });
+        .eq("collections.language_id", currentLanguageId)
+        .order("created_at", { ascending: false })
+        .order("sort_order", { foreignTable: "definitions", ascending: true });
     if (error) throw error;
 
-    const filtered = (data ?? []).filter(
-        (w: any) => w.collections?.language_id === currentLanguageId
-    );
-
-    const words: Word[] = filtered.map((w: any) => ({ ...w, collection_id: w.collection_id }));
-    const withDefs = await attachDefinitions(words);
-
-    return withDefs.map((w, i) => ({
+    return (data ?? []).map((w: any) => ({
         ...w,
-        collection: filtered[i].collections as Collection,
+        collection: w.collections as Collection,
     }));
 };
 
@@ -113,16 +110,15 @@ export const getWordsByLanguageCode = async (
     languageCode: string
 ): Promise<Word[]> => {
     const currentLanguageId = await getCurrentLanguageId(languages, languageCode);
-    const collections = await getCollectionsByLanguageId(currentLanguageId);
-    const collectionIds = collections.map((c) => c.id!);
-    if (collectionIds.length === 0) return [];
-
+    
     const { data, error } = await supabase
         .from("words")
-        .select("*")
-        .in("collection_id", collectionIds);
+        .select("*, collections!inner(*), definitions(*)")
+        .eq("collections.language_id", currentLanguageId)
+        .order("sort_order", { foreignTable: "definitions", ascending: true });
+
     if (error) throw error;
-    return attachDefinitions(data ?? []);
+    return data ?? [];
 };
 
 // ─── Write ───────────────────────────────────────────────────────────────────

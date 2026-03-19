@@ -1,6 +1,5 @@
 import { supabase } from "../configs/supabase";
 import { Word } from "../interfaces/model";
-import { attachDefinitions } from "./WordService";
 
 // ─── SM-2 Algorithm ─────────────────────────────────────────────────────────
 
@@ -55,8 +54,9 @@ export const getWordsForReview = async (
     // Words with no next_review_date OR next_review_date <= today
     const { data, error } = await supabase
         .from("words")
-        .select("*")
-        .eq("collection_id", collectionId);
+        .select("*, definitions(*)")
+        .eq("collection_id", collectionId)
+        .order("sort_order", { foreignTable: "definitions", ascending: true });
 
     if (error) throw error;
 
@@ -73,7 +73,7 @@ export const getWordsForReview = async (
         [due[i], due[j]] = [due[j], due[i]];
     }
 
-    return await attachDefinitions(due);
+    return due;
 };
 
 export const updateWordAfterReview = async (word: Word): Promise<void> => {
