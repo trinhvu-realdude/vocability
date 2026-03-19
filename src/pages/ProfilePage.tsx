@@ -61,7 +61,6 @@ export const ProfilePage: React.FC = () => {
 
         const trimmedUsername = username.trim();
 
-        // Instagram-style username validation
         const isValidUsername = (u: string) => {
             if (u.length < 1 || u.length > 30) return false;
             if (!/^[a-zA-Z0-9_.]+$/.test(u)) return false;

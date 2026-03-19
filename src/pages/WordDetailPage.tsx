@@ -30,7 +30,6 @@ export const WordDetailPage: React.FC<WordDetailPageProps> = ({ onShowToast }) =
         null
     );
     const [isLoading, setIsLoading] = useState<boolean>(true);
-    const [isFavorite, setIsFavorite] = useState<boolean>(false);
     const [isEdit, setIsEdit] = useState<boolean>(false);
 
     const { translations } = useLanguage();
@@ -38,12 +37,18 @@ export const WordDetailPage: React.FC<WordDetailPageProps> = ({ onShowToast }) =
     if (translations)
         document.title = `${translations["flag"]} ${word?.word} | ${APP_NAME}`;
 
-    const handleAddFavorite = async (word: Word) => {
-        setIsFavorite(!isFavorite);
-        await addWordToFavorite(word, isFavorite);
-        if (word.id) {
-            const updatedWord = await getWordById(word.id);
-            setWord(updatedWord);
+    const handleAddFavorite = async (wordToUpdate: Word) => {
+        const newFavoriteStatus = !wordToUpdate.is_favorite;
+
+        // Optimistic UI update for instant feedback
+        setWord({ ...wordToUpdate, is_favorite: newFavoriteStatus });
+
+        try {
+            await addWordToFavorite(wordToUpdate, newFavoriteStatus);
+        } catch (error) {
+            console.error("Failed to favorite word:", error);
+            // Revert on error
+            setWord({ ...wordToUpdate, is_favorite: !newFavoriteStatus });
         }
     };
 
@@ -211,94 +216,73 @@ export const WordDetailPage: React.FC<WordDetailPageProps> = ({ onShowToast }) =
             ) : synonyms &&
                 antonyms &&
                 (synonyms.length > 0 || antonyms.length > 0) ? (
-                <table
-                    className="table table-bordered table-sm mt-2"
-                    style={{ borderRadius: "0.25rem" }}
-                >
-                    <thead>
-                        <tr className="text-center">
-                            <th scope="col">Synonyms</th>
-                            <th scope="col">Antonyms</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr className="text-center">
-                            <td>
-                                {synonyms.length > 0 &&
-                                    synonyms.map((synonym, index) => (
-                                        <div key={index}>
-                                            <span
-                                                className="synonyms-antonyms"
-                                                style={{
-                                                    cursor: "pointer",
-                                                }}
-                                                onClick={() =>
-                                                    handleShowOffCanvas(
-                                                        `offcanvas-bottom-synonym-${index}`
-                                                    )
-                                                }
-                                            >
-                                                {synonym}
-                                            </span>
-
-                                            {visibleOffCanvas ===
-                                                `offcanvas-bottom-synonym-${index}` && (
-                                                    <OffCanvas
-                                                        id={`offcanvas-bottom-synonym-${index}`}
-                                                        word={synonym}
-                                                        show={true}
-                                                        onClose={() =>
-                                                            setVisibleOffCanvas(
-                                                                null
-                                                            )
-                                                        }
-                                                    />
-                                                )}
-                                        </div>
-                                    ))}
-                            </td>
-                            <td>
-                                {antonyms.length > 0 &&
-                                    antonyms.map((antonym, index) => (
-                                        <div
-                                            key={index}
-                                            style={{
-                                                cursor: "pointer",
-                                            }}
+                <div className="synonyms-antonyms-container mt-4">
+                    {synonyms.length > 0 && (
+                        <div className="sa-section">
+                            <h6 className="sa-title synonyms-title">
+                                Synonyms
+                            </h6>
+                            <div className="sa-badges">
+                                {synonyms.map((synonym, index) => (
+                                    <div key={`synonym-${index}`}>
+                                        <span
+                                            className="sa-badge sa-synonym"
+                                            onClick={() =>
+                                                handleShowOffCanvas(
+                                                    `offcanvas-bottom-synonym-${index}`
+                                                )
+                                            }
                                         >
-                                            <span
-                                                className="synonyms-antonyms"
-                                                style={{
-                                                    cursor: "pointer",
-                                                }}
-                                                onClick={() =>
-                                                    handleShowOffCanvas(
-                                                        `offcanvas-bottom-antonym-${index}`
-                                                    )
-                                                }
-                                            >
-                                                {antonym}
-                                            </span>
+                                            {synonym}
+                                        </span>
+                                        {visibleOffCanvas ===
+                                            `offcanvas-bottom-synonym-${index}` && (
+                                                <OffCanvas
+                                                    id={`offcanvas-bottom-synonym-${index}`}
+                                                    word={synonym}
+                                                    show={true}
+                                                    onClose={() => setVisibleOffCanvas(null)}
+                                                />
+                                            )}
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
 
-                                            {visibleOffCanvas ===
-                                                `offcanvas-bottom-antonym-${index}` && (
-                                                    <OffCanvas
-                                                        id={`offcanvas-bottom-antonym-${index}`}
-                                                        word={antonym}
-                                                        show={true}
-                                                        onClose={() =>
-                                                            setVisibleOffCanvas(
-                                                                null
-                                                            )
-                                                        }
-                                                    />
-                                                )}
-                                        </div>
-                                    ))}
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                    {antonyms.length > 0 && (
+                        <div className="sa-section mt-3">
+                            <h6 className="sa-title antonyms-title">
+                                Antonyms
+                            </h6>
+                            <div className="sa-badges">
+                                {antonyms.map((antonym, index) => (
+                                    <div key={`antonym-${index}`}>
+                                        <span
+                                            className="sa-badge sa-antonym"
+                                            onClick={() =>
+                                                handleShowOffCanvas(
+                                                    `offcanvas-bottom-antonym-${index}`
+                                                )
+                                            }
+                                        >
+                                            {antonym}
+                                        </span>
+                                        {visibleOffCanvas ===
+                                            `offcanvas-bottom-antonym-${index}` && (
+                                                <OffCanvas
+                                                    id={`offcanvas-bottom-antonym-${index}`}
+                                                    word={antonym}
+                                                    show={true}
+                                                    onClose={() => setVisibleOffCanvas(null)}
+                                                />
+                                            )}
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+                </div>
             ) : null}
         </div>
     );
