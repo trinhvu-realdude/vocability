@@ -24,3 +24,81 @@
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
     color: #DD5746;
 }
+
+/* Synonyms and Antonyms Beautiful Layout */
+.synonyms-antonyms-container {
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+    margin-bottom: 24px;
+}
+
+.sa-section {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.sa-title {
+    margin: 0;
+    font-size: 0.95rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.synonyms-title {
+    color: #059669;
+    /* Emerald Green */
+}
+
+.antonyms-title {
+    color: #dc2626;
+    /* Rose Red */
+}
+
+.sa-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.sa-badge {
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 500;
+    padding: 6px 14px;
+    border-radius: 20px;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.04);
+}
+
+.sa-badge:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.sa-synonym {
+    background: #ecfdf5;
+    color: #047857;
+    border: 1px solid #d1fae5;
+}
+
+.sa-synonym:hover {
+    background: #d1fae5;
+}
+
+.sa-antonym {
+    background: #fef2f2;
+    color: #b91c1c;
+    border: 1px solid #fee2e2;
+}
+
+.sa-antonym:hover {
+    background: #fee2e2;
+}

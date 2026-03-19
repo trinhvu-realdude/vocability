@@ -240,16 +240,20 @@ export const getPhonetic = async (
     word: string
 ): Promise<string | undefined> => {
     const fetchPhonetic = async (w: string) => {
-        const response = await fetch(
-            `https://api.dictionaryapi.dev/api/v2/entries/en/${w.replace(/\//g, "")}`
-        );
-        const data = await response.json();
-        if (data instanceof Array) {
-            for (const element of data[0].phonetics) {
-                if (element.text) return element.text as string;
+        try {
+            const response = await fetch(
+                `${import.meta.env.VITE_API_DICTIONARY_URL}${w.replace(/\//g, "")}`
+            );
+            const data = await response.json();
+            if (data instanceof Array) {
+                for (const element of data[0].phonetics) {
+                    if (element.text) return element.text as string;
+                }
             }
+            return undefined;
+        } catch (error) {
+            return undefined;
         }
-        return undefined;
     };
 
     const phonetic = await fetchPhonetic(word);
@@ -269,7 +273,7 @@ export const getSynonymsAntonyms = async (
     word: Word
 ): Promise<{ synonyms: string[]; antonyms: string[] } | undefined> => {
     const response = await fetch(
-        `https://api.dictionaryapi.dev/api/v2/entries/en/${word.word}`
+        `${import.meta.env.VITE_API_DICTIONARY_URL}${word.word}`
     );
     const data = await response.json();
     const meanings = data[0].meanings as Array<any>;
@@ -285,7 +289,7 @@ export const getExternalWord = async (
     word: string
 ): Promise<ExternalWord[] | { message: string }> => {
     const response = await fetch(
-        `https://api.dictionaryapi.dev/api/v2/entries/en/${word}`
+        `${import.meta.env.VITE_API_DICTIONARY_URL}${word}`
     );
     const data = await response.json();
     return data as ExternalWord[];
