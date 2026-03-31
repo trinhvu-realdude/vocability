@@ -4,18 +4,16 @@ import { languages } from "../utils/constants";
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
-const getActiveUserId = async (): Promise<string> => {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) throw new Error("Not authenticated");
-    return user.id;
-};
+import { getActiveUserId } from "./AuthService";
 
 // ─── Read ────────────────────────────────────────────────────────────────────
 
-export const getCollections = async (): Promise<Collection[]> => {
+export const getCollections = async (userId?: string): Promise<Collection[]> => {
+    const uid = userId ?? await getActiveUserId();
     const { data, error } = await supabase
         .from("collections")
         .select("*, words(count)")
+        .eq("user_id", uid)
         .order("created_at", { ascending: false });
 
     if (error) throw error;
@@ -27,12 +25,15 @@ export const getCollections = async (): Promise<Collection[]> => {
 };
 
 export const getCollectionsByLanguageId = async (
-    languageId: number
+    languageId: number,
+    userId?: string
 ): Promise<Collection[]> => {
+    const uid = userId ?? await getActiveUserId();
     const { data, error } = await supabase
         .from("collections")
         .select("*, words(count)")
         .eq("language_id", languageId)
+        .eq("user_id", uid)
         .order("created_at", { ascending: false });
 
     if (error) throw error;
@@ -71,8 +72,8 @@ export const getCollectionByNameAndLanguageId = async (
     return data ?? undefined;
 };
 
-export const getActiveLanguages = async () => {
-    const collections = await getCollections();
+export const getActiveLanguages = async (userId?: string) => {
+    const collections = await getCollections(userId);
     const activeLanguageIds = new Set(collections.map((c) => c.language_id));
     return languages.filter((lang) => activeLanguageIds.has(lang.id));
 };
@@ -87,13 +88,14 @@ export const getColorByCollectionId = async (
 // ─── Write ───────────────────────────────────────────────────────────────────
 
 export const addCollection = async (
-    collection: Omit<Collection, "id" | "user_id" | "created_at" | "updated_at">
+    collection: Omit<Collection, "id" | "user_id" | "created_at" | "updated_at">,
+    userId?: string
 ): Promise<string> => {
-    const userId = await getActiveUserId();
+    const uid = userId ?? await getActiveUserId();
 
     const { data, error } = await supabase
         .from("collections")
-        .insert({ ...collection, user_id: userId })
+        .insert({ ...collection, user_id: uid })
         .select("id")
         .single();
 

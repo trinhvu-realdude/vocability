@@ -7,12 +7,14 @@ import { FavoritePage } from "../pages/FavoritePage";
 import { ExportPage } from "../pages/ExportPage";
 import { CollectionPage } from "../pages/CollectionPage";
 import { GlossaryPage } from "../pages/GlossaryPage";
-import { Word } from "../interfaces/model";
+import { Word, Collection } from "../interfaces/model";
 import { WordDetailPage } from "../pages/WordDetailPage";
 import { getCurrentLanguageId } from "../utils/helper";
 import { languages } from "../utils/constants";
 import { getCollectionsByLanguageId } from "../services/CollectionService";
+import { getSharedCollections } from "../services/ShareService";
 import { AddWordModal } from "../components/Modal/AddWordModal";
+import { getActiveUserId } from "../services/AuthService";
 import { Toast, ToastType } from "../components/Toast";
 
 const MainLayout: React.FC<MainLayoutProps> = ({
@@ -23,6 +25,8 @@ const MainLayout: React.FC<MainLayoutProps> = ({
     const [words, setWords] = useState<Word[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [currentCollectionId, setCurrentCollectionId] = useState<string>("");
+    const [sharedCollections, setSharedCollections] = useState<Collection[]>([]);
+    const [userId, setUserId] = useState<string | undefined>();
     const [toast, setToast] = useState<{
         message: string;
         type: ToastType;
@@ -57,9 +61,20 @@ const MainLayout: React.FC<MainLayoutProps> = ({
             setIsLoading(true);
             if (language) {
                 setLanguageCode(language);
-                const currentLanguageId = await getCurrentLanguageId(languages, language);
-                const storedCollections = await getCollectionsByLanguageId(currentLanguageId);
-                setCollections(storedCollections);
+                const [currentLanguageId, uid] = await Promise.all([
+                    getCurrentLanguageId(languages, language),
+                    getActiveUserId()
+                ]);
+                setUserId(uid);
+                
+                // Fetch both owned and shared collections for this language
+                const [owned, shared] = await Promise.all([
+                    getCollectionsByLanguageId(currentLanguageId, uid),
+                    getSharedCollections(currentLanguageId, uid)
+                ]);
+                
+                setCollections(owned);
+                setSharedCollections(shared);
             }
             setIsLoading(false);
         };
@@ -70,7 +85,8 @@ const MainLayout: React.FC<MainLayoutProps> = ({
         <div className="container my-4">
             <StorageBar />
             <AddWordModal
-                collections={collections}
+                userId={userId}
+                collections={[...collections, ...sharedCollections]}
                 setCollections={setCollections}
                 setWords={setWords}
                 collectionId={currentCollectionId}
@@ -94,6 +110,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({
                     path="/collection/:collectionId"
                     element={
                         <WordPage
+                            userId={userId}
                             words={words}
                             setWords={setWords}
                             setCollections={setCollections}
@@ -111,6 +128,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({
                     path="/favorite"
                     element={
                         <FavoritePage
+                            userId={userId}
                             collections={collections}
                             setCollections={setCollections}
                             setWords={setWords}
@@ -122,6 +140,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({
                     path="/export"
                     element={
                         <ExportPage
+                            userId={userId}
                             collections={collections}
                             setCollections={setCollections}
                             setWords={setWords}

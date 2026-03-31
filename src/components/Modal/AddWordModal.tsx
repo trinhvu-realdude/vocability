@@ -31,6 +31,7 @@ export const AddWordModal: React.FC<CommonProps> = ({
     modalId = "add-word",
     initialWord = "",
     onShowToast,
+    userId,
 }) => {
     const { translations, setActiveLanguages } = useLanguage();
     const [randomColor, setRandomColor] = useState<string>(getRandomColor());
@@ -114,7 +115,7 @@ export const AddWordModal: React.FC<CommonProps> = ({
                     language_id: currentLanguageId ? currentLanguageId : -1,
                 };
 
-                const activeLanguages = await getActiveLanguages();
+                const activeLanguages = await getActiveLanguages(userId);
                 const reorderedLanguages = reorderActiveLanguages(
                     activeLanguages,
                     translations["language"]
@@ -136,7 +137,8 @@ export const AddWordModal: React.FC<CommonProps> = ({
                     const addedWord = await addWord(
                         objWord as any,
                         objCollection as any,
-                        currentLanguageId
+                        currentLanguageId,
+                        userId
                     );
 
                     if (
@@ -166,11 +168,11 @@ export const AddWordModal: React.FC<CommonProps> = ({
                             part_of_speech: "", // Default part of speech for batch import
                             is_favorite: false,
                         };
-                        await addWord(objWord as any, objCollection as any, currentLanguageId);
+                        await addWord(objWord as any, objCollection as any, currentLanguageId, userId);
                     }
 
                     // Refresh collections if we are on collections page
-                    const updatedCollections = await getCollectionsByLanguageId(currentLanguageId);
+                    const updatedCollections = await getCollectionsByLanguageId(currentLanguageId, userId);
                     setCollections(updatedCollections);
 
                     // Refresh words if we are in a collection
@@ -182,7 +184,8 @@ export const AddWordModal: React.FC<CommonProps> = ({
 
                 setActiveLanguages(reorderedLanguages);
                 const storedCollections = await getCollectionsByLanguageId(
-                    currentLanguageId
+                    currentLanguageId,
+                    userId
                 );
                 setCollections(storedCollections);
 

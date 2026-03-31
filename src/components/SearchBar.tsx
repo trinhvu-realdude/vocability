@@ -5,6 +5,7 @@ import { SortFilter } from "./Filter/SortFilter";
 import { CollectionFilter } from "./Filter/CollectionFilter";
 import { useLanguage } from "../LanguageContext";
 import { exportToExcel } from "../utils/generateDocument";
+import { usePermissions } from "../utils/usePermissions";
 import "../styles/SearchBar.css";
 
 export const SearchBar: React.FC<{
@@ -52,6 +53,8 @@ export const SearchBar: React.FC<{
         >([]); // for SortFilter component
 
         const { translations } = useLanguage();
+        const { role } = usePermissions(selectedCollection?.id || null);
+        const isViewer = role === "viewer";
 
         {
             isFavorite
@@ -211,15 +214,17 @@ export const SearchBar: React.FC<{
                                 </button>
                             )}
 
-                            <button
-                                className="action-button btn-add-word"
-                                type="button"
-                                data-bs-toggle="modal"
-                                data-bs-target="#add-word"
-                            >
-                                <i className="fas fa-plus-circle"></i>
-                                {translations["addWordForm.addWordBtn"]}
-                            </button>
+                            {!(type === "word" && isViewer) && (
+                                <button
+                                    className="action-button btn-add-word"
+                                    type="button"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#add-word"
+                                >
+                                    <i className="fas fa-plus-circle"></i>
+                                    {translations["addWordForm.addWordBtn"]}
+                                </button>
+                            )}
                         </>
                     )}
                 </div>

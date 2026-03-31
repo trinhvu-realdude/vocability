@@ -10,11 +10,7 @@ import { languages } from "../utils/constants";
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
-const getActiveUserId = async (): Promise<string> => {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) throw new Error("Not authenticated");
-    return user.id;
-};
+import { getActiveUserId } from "./AuthService";
 
 /** Fetch definitions for a list of word ids and attach them */
 export const attachDefinitions = async (words: Word[]): Promise<Word[]> => {
@@ -38,10 +34,12 @@ export const attachDefinitions = async (words: Word[]): Promise<Word[]> => {
 
 // ─── Read ────────────────────────────────────────────────────────────────────
 
-export const getWords = async (): Promise<Word[]> => {
+export const getWords = async (userId?: string): Promise<Word[]> => {
+    const uid = userId ?? await getActiveUserId();
     const { data, error } = await supabase
         .from("words")
         .select("*, definitions(*)")
+        .eq("user_id", uid)
         .order("created_at", { ascending: false })
         .order("sort_order", { foreignTable: "definitions", ascending: true });
     if (error) throw error;
@@ -89,12 +87,15 @@ export const getWordsByCollectionIdPaginated = async (
 };
 
 export const getFavoriteWords = async (
-    currentLanguageId: number
+    currentLanguageId: number,
+    userId?: string
 ): Promise<WordDto[]> => {
+    const uid = userId ?? await getActiveUserId();
     const { data, error } = await supabase
         .from("words")
         .select("*, collections!inner(*), definitions(*)")
         .eq("is_favorite", true)
+        .eq("user_id", uid)
         .eq("collections.language_id", currentLanguageId)
         .order("created_at", { ascending: false })
         .order("sort_order", { foreignTable: "definitions", ascending: true });
@@ -110,7 +111,7 @@ export const getWordsByLanguageCode = async (
     languageCode: string
 ): Promise<Word[]> => {
     const currentLanguageId = await getCurrentLanguageId(languages, languageCode);
-    
+
     const { data, error } = await supabase
         .from("words")
         .select("*, collections!inner(*), definitions(*)")
@@ -143,9 +144,10 @@ const upsertDefinitions = async (
 export const addWord = async (
     objWord: Word,
     objCollection: Collection,
-    currentLanguageId: number
+    currentLanguageId: number,
+    userId?: string
 ): Promise<Word> => {
-    const userId = await getActiveUserId();
+    const uid = userId ?? await getActiveUserId();
 
     // Resolve or create collection
     let collectionId: string;
@@ -158,7 +160,7 @@ export const addWord = async (
             name: objCollection.name,
             color: objCollection.color,
             language_id: currentLanguageId,
-        });
+        }, uid);
     } else {
         collectionId = existing.id!;
     }
@@ -168,7 +170,7 @@ export const addWord = async (
         .from("words")
         .insert({
             ...wordFields,
-            user_id: userId,
+            user_id: uid,
             collection_id: collectionId,
         })
         .select("*")

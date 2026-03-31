@@ -35,3 +35,20 @@ export const signOut = async () => {
     const { error } = await supabase.auth.signOut();
     if (error) throw error;
 };
+ 
+/**
+ * Get current authenticated user object
+ */
+export const getActiveUser = async () => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) throw new Error("Not authenticated");
+    return user;
+};
+ 
+/**
+ * Get current authenticated user ID
+ */
+export const getActiveUserId = async (): Promise<string> => {
+    const user = await getActiveUser();
+    return user.id;
+};
