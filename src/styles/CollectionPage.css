@@ -45,6 +45,39 @@
     margin-left: 4px;
 }
 
+/* ─── Collection Separator ───────────────────────────────── */
+
+.collection-separator {
+    position: relative;
+    text-align: center;
+    padding: 10px 0;
+}
+
+.collection-separator hr {
+    border: none;
+    border-top: 2px dashed rgba(0, 0, 0, 0.1);
+    margin: 1.5rem 0;
+}
+
+.collection-separator .separator-label {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #fcfcfc;
+    padding: 0 15px;
+    color: #6c757d;
+    font-size: 0.82rem;
+    font-weight: 600;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+}
+
+.collection-separator .separator-label i {
+    color: #DD5746;
+}
+
 /* ─── Role Badges ────────────────────────────────────────────────────────── */
 
 .folder-role-badge {
