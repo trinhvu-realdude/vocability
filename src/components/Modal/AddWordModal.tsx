@@ -49,10 +49,13 @@ export const AddWordModal: React.FC<CommonProps> = ({
     const [excelFile, setExcelFile] = useState<File | null>(null);
     const [isParsingExcel, setIsParsingExcel] = useState<boolean>(false);
 
+    // Filter collections to exclude those where the user is only a viewer
+    const filterableCollections = collections.filter(c => c.myRole !== 'viewer');
+
     // Sync choice with collectionId when it changes or when collections change
     useEffect(() => {
         if (typeof collectionId === 'string' && collectionId.trim() !== '') {
-            const currentCollection = collections.find(
+            const currentCollection = filterableCollections.find(
                 (c) => c.id === collectionId
             );
             if (currentCollection) {
@@ -314,7 +317,7 @@ export const AddWordModal: React.FC<CommonProps> = ({
         setExcelFile(null);
         setIsParsingExcel(false);
         if (typeof collectionId === 'string' && collectionId.trim() !== '') {
-            const currentCollection = collections.find(
+            const currentCollection = filterableCollections.find(
                 (c) => c.id === collectionId
             );
             if (currentCollection) {
@@ -400,7 +403,7 @@ export const AddWordModal: React.FC<CommonProps> = ({
                                     definitions={definitions}
                                     choice={choice}
                                     setChoice={setChoice}
-                                    collections={collections}
+                                    collections={filterableCollections}
                                     translations={translations}
                                     errors={errors}
                                     setErrors={setErrors}
@@ -417,7 +420,7 @@ export const AddWordModal: React.FC<CommonProps> = ({
                                     translations={translations}
                                     choice={choice}
                                     setChoice={setChoice}
-                                    collections={collections}
+                                    collections={filterableCollections}
                                     errors={errors}
                                     setErrors={setErrors}
                                     setRandomColor={setRandomColor}

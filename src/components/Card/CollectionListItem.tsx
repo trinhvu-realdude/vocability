@@ -140,25 +140,14 @@ export const CollectionListItem: React.FC<CollectionListItemProps> = ({
                     <div className="d-flex align-items-center">
                         <div className="collection-actions-group">
                             {/* Open */}
-                            <a
+                            {/* <a
                                 href={`/${translations["language"]}/collection/${collection.id}`}
                                 className="btn list-action-btn"
                                 onClick={(e) => e.stopPropagation()}
                                 title="Open Collection"
                             >
                                 <i className="fas fa-external-link-alt" />
-                            </a>
-
-                            {/* Share */}
-                            {canShare && (
-                                <button
-                                    className="btn list-action-btn"
-                                    onClick={(e) => { e.stopPropagation(); setIsShare(true); }}
-                                    title="Share Collection"
-                                >
-                                    <i className="fas fa-user-plus" />
-                                </button>
-                            )}
+                            </a> */}
 
                             {/* Review */}
                             {canPractice && (
@@ -176,6 +165,17 @@ export const CollectionListItem: React.FC<CollectionListItemProps> = ({
                                             {reviewCount}
                                         </span>
                                     )}
+                                </button>
+                            )}
+
+                            {/* Share */}
+                            {canShare && (
+                                <button
+                                    className="btn list-action-btn"
+                                    onClick={(e) => { e.stopPropagation(); setIsShare(true); }}
+                                    title="Share Collection"
+                                >
+                                    <i className="fas fa-user-plus" />
                                 </button>
                             )}
 

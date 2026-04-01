@@ -70,17 +70,6 @@ export const CollectionCard: React.FC<CollectionCardProps> = ({
                 >
                     {/* Action Buttons */}
                     <div className="folder-actions">
-                        {/* Share */}
-                        {canShare && (
-                            <div
-                                className="btn btn-sm folder-action-btn"
-                                onClick={(e) => { e.preventDefault(); e.stopPropagation(); setIsShare(true); }}
-                                title="Share Collection"
-                            >
-                                <i className="fas fa-user-plus" />
-                            </div>
-                        )}
-
                         {/* Review */}
                         {canPractice && (
                             <div
@@ -109,6 +98,17 @@ export const CollectionCard: React.FC<CollectionCardProps> = ({
                                         <span className="visually-hidden">words due</span>
                                     </span>
                                 )}
+                            </div>
+                        )}
+
+                        {/* Share */}
+                        {canShare && (
+                            <div
+                                className="btn btn-sm folder-action-btn"
+                                onClick={(e) => { e.preventDefault(); e.stopPropagation(); setIsShare(true); }}
+                                title="Share Collection"
+                            >
+                                <i className="fas fa-user-plus" />
                             </div>
                         )}
 

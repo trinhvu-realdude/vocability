@@ -3,6 +3,7 @@ import { ToastType } from "../components/Toast";
 
 export interface CommonProps {
     collections: Collection[];
+    sharedCollections?: Collection[];
     collectionId?: string;
     setCollections: React.Dispatch<React.SetStateAction<Collection[]>>;
     setWords: React.Dispatch<React.SetStateAction<Word[]>>;

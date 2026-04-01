@@ -11,15 +11,13 @@ import { Collection } from "../interfaces/model";
 import { PageHeader } from "../components/PageHeader";
 import { useState, useEffect } from "react";
 import { ReviewModal } from "../components/Modal/ReviewModal";
-import { getSharedCollections } from "../services/ShareService";
-import { getCurrentLanguageId } from "../utils/helper";
-import { languages } from "../utils/constants";
 import "../styles/CollectionPage.css";
 
 type TabKey = "mine" | "shared";
 
 export const CollectionPage: React.FC<CommonProps> = ({
     collections,
+    sharedCollections = [],
     setCollections,
     onShowToast,
     isLoading,
@@ -35,10 +33,14 @@ export const CollectionPage: React.FC<CommonProps> = ({
     );
 
     // Shared with Me state
-    const [sharedCollections, setSharedCollections] = useState<Collection[]>([]);
-    const [filteredSharedCollections, setFilteredSharedCollections] = useState<Collection[]>([]);
+    const [filteredSharedCollections, setFilteredSharedCollections] = useState<Collection[]>(sharedCollections);
     const [filterSortingShared, setFilterSortingShared] = useState<FilterSortingOption>();
-    const [isLoadingShared, setIsLoadingShared] = useState(false);
+
+    // Combined My Collections (Owned + Editor)
+    const myTabCollections = [
+        ...collections,
+        ...sharedCollections.filter(c => c.myRole === 'editor')
+    ];
 
     // Review Modal State
     const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
@@ -49,26 +51,6 @@ export const CollectionPage: React.FC<CommonProps> = ({
     useEffect(() => {
         localStorage.setItem('collection_view_mode', viewMode);
     }, [viewMode]);
-
-    // Fetch shared collections when tab switches to "shared"
-    useEffect(() => {
-        if (activeTab !== "shared") return;
-        setIsLoadingShared(true);
-
-        const fetchShared = async () => {
-            try {
-                const langId = await getCurrentLanguageId(languages, translations["language"]);
-                const data = await getSharedCollections(langId);
-                setSharedCollections(data);
-            } catch {
-                onShowToast?.("Failed to load shared collections", "error");
-            } finally {
-                setIsLoadingShared(false);
-            }
-        };
-
-        fetchShared();
-    }, [activeTab, translations["language"]]);
 
     // Listen for review modal open event
     useEffect(() => {
@@ -92,7 +74,7 @@ export const CollectionPage: React.FC<CommonProps> = ({
             <SearchBar
                 isFavorite={false}
                 type="collection"
-                collections={activeTab === "mine" ? collections : sharedCollections}
+                collections={activeTab === "mine" ? myTabCollections : sharedCollections}
                 filterSorting={activeTab === "mine" ? filterSorting : filterSortingShared}
                 setFilterSorting={activeTab === "mine" ? setFilterSorting : setFilterSortingShared}
                 setFilteredCollections={activeTab === "mine" ? setFilteredCollections : setFilteredSharedCollections}
@@ -160,7 +142,7 @@ export const CollectionPage: React.FC<CommonProps> = ({
             {/* ── Shared with Me ──────────────────────────────────── */}
             {activeTab === "shared" && (
                 <div className="row mt-4 mb-2">
-                    {isLoadingShared ? (
+                    {isLoading ? (
                         <div className="mx-auto loader" />
                     ) : filteredSharedCollections.length > 0 ? (
                         viewMode === 'grid' ? (
