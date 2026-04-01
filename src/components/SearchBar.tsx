@@ -6,6 +6,7 @@ import { CollectionFilter } from "./Filter/CollectionFilter";
 import { useLanguage } from "../LanguageContext";
 import { exportToExcel } from "../utils/generateDocument";
 import { usePermissions } from "../utils/usePermissions";
+import { sortCollectionsByFilter, sortWordsByFilter } from "../utils/helper";
 import "../styles/SearchBar.css";
 
 export const SearchBar: React.FC<{
@@ -76,41 +77,35 @@ export const SearchBar: React.FC<{
                 }, [searchValue, filteredWords])
                 : type === "word"
                     ? useEffect(() => {
-                        // Search for main collections
-                        const lowerCaseSearchValue = searchValue
-                            .toLowerCase()
-                            .trim();
-                        const filtered =
-                            words &&
-                            words.filter((word) =>
-                                word.word
-                                    .toLowerCase()
-                                    .includes(lowerCaseSearchValue)
-                            );
-                        setDisplayWords && filtered && setDisplayWords(filtered);
-                        setFilteredWords &&
-                            filtered &&
-                            setFilteredWords(filtered);
-                    }, [searchValue, words])
+                    // Search for main collections
+                    const lowerCaseSearchValue = searchValue.toLowerCase().trim();
+                    let filtered = (words || []).filter((word) =>
+                        word.word.toLowerCase().includes(lowerCaseSearchValue)
+                    );
+
+                    // Re-apply sorting if applicable
+                    if (filterSorting) {
+                        filtered = sortWordsByFilter(filtered, filterSorting.value);
+                    }
+
+                    setDisplayWords && setDisplayWords(filtered);
+                    setFilteredWords && setFilteredWords(filtered);
+                }, [searchValue, words, filterSorting])
                     : useEffect(() => {
                         // Search for collections
-                        const lowerCaseSearchValue = searchValue
-                            .toLowerCase()
-                            .trim();
-                        const filtered =
-                            collections &&
-                            collections.filter((collection) =>
-                                collection.name
-                                    .toLowerCase()
-                                    .includes(lowerCaseSearchValue)
-                            );
-                        setDisplayCollections &&
-                            filtered &&
-                            setDisplayCollections(filtered);
-                        setFilteredCollections &&
-                            filtered &&
-                            setFilteredCollections(filtered);
-                    }, [searchValue, collections]);
+                        const lowerCaseSearchValue = searchValue.toLowerCase().trim();
+                        let filtered = (collections || []).filter((collection) =>
+                            collection.name.toLowerCase().includes(lowerCaseSearchValue)
+                        );
+
+                        // Re-apply sorting if applicable
+                        if (filterSorting) {
+                            filtered = sortCollectionsByFilter(filtered, filterSorting.value);
+                        }
+
+                        setDisplayCollections && setDisplayCollections(filtered);
+                        setFilteredCollections && setFilteredCollections(filtered);
+                    }, [searchValue, collections, filterSorting]);
         }
 
         return (

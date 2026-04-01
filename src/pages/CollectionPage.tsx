@@ -9,7 +9,7 @@ import { useLanguage } from "../LanguageContext";
 import { SearchBar } from "../components/SearchBar";
 import { Collection } from "../interfaces/model";
 import { PageHeader } from "../components/PageHeader";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { ReviewModal } from "../components/Modal/ReviewModal";
 import "../styles/CollectionPage.css";
 
@@ -37,10 +37,10 @@ export const CollectionPage: React.FC<CommonProps> = ({
     const [filterSortingShared, setFilterSortingShared] = useState<FilterSortingOption>();
 
     // Combined My Collections (Owned + Editor)
-    const myTabCollections = [
+    const myTabCollections = useMemo(() => [
         ...collections,
         ...sharedCollections.filter(c => c.myRole === 'editor')
-    ];
+    ], [collections, sharedCollections]);
 
     // Review Modal State
     const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
@@ -51,6 +51,32 @@ export const CollectionPage: React.FC<CommonProps> = ({
     useEffect(() => {
         localStorage.setItem('collection_view_mode', viewMode);
     }, [viewMode]);
+
+    const renderCollectionList = (list: Collection[]) => {
+        if (viewMode === 'grid') {
+            return list.map((collection) => (
+                <CollectionCard
+                    key={collection.id}
+                    collection={collection}
+                    setCollections={setCollections}
+                    onShowToast={onShowToast}
+                />
+            ));
+        } else {
+            return (
+                <div className="col-12">
+                    {list.map((collection) => (
+                        <CollectionListItem
+                            key={collection.id}
+                            collection={collection}
+                            setCollections={setCollections}
+                            onShowToast={onShowToast}
+                        />
+                    ))}
+                </div>
+            );
+        }
+    };
 
     // Listen for review modal open event
     useEffect(() => {
@@ -110,27 +136,24 @@ export const CollectionPage: React.FC<CommonProps> = ({
                         {isLoading ? (
                             <div className="mx-auto loader" />
                         ) : filteredCollections && filteredCollections.length > 0 ? (
-                            viewMode === 'grid' ? (
-                                filteredCollections.map((collection) => (
-                                    <CollectionCard
-                                        key={collection.id}
-                                        collection={collection}
-                                        setCollections={setCollections}
-                                        onShowToast={onShowToast}
-                                    />
-                                ))
-                            ) : (
-                                <div className="col-12">
-                                    {filteredCollections.map((collection) => (
-                                        <CollectionListItem
-                                            key={collection.id}
-                                            collection={collection}
-                                            setCollections={setCollections}
-                                            onShowToast={onShowToast}
-                                        />
-                                    ))}
-                                </div>
-                            )
+                            <>
+                                {renderCollectionList(filteredCollections.filter(c => !c.myRole || c.myRole === 'owner'))}
+
+                                {filteredCollections.some(c => !c.myRole || c.myRole === 'owner') &&
+                                    filteredCollections.some(c => c.myRole === 'editor') && (
+                                        <div className="col-12 my-4">
+                                            <div className="collection-separator">
+                                                <hr />
+                                                <span className="separator-label">
+                                                    <i className="fas fa-users me-2" />
+                                                    {translations["collectionPage.shared.editorLabel"] || "Shared as Editor"}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    )}
+
+                                {renderCollectionList(filteredCollections.filter(c => c.myRole === 'editor'))}
+                            </>
                         ) : (
                             <NoDataMessage message={`${translations["collectionPage.noDataMessage"]}`} />
                         )}
@@ -145,27 +168,7 @@ export const CollectionPage: React.FC<CommonProps> = ({
                     {isLoading ? (
                         <div className="mx-auto loader" />
                     ) : filteredSharedCollections.length > 0 ? (
-                        viewMode === 'grid' ? (
-                            filteredSharedCollections.map((collection) => (
-                                <CollectionCard
-                                    key={collection.id}
-                                    collection={collection}
-                                    setCollections={setCollections}
-                                    onShowToast={onShowToast}
-                                />
-                            ))
-                        ) : (
-                            <div className="col-12">
-                                {filteredSharedCollections.map((collection) => (
-                                    <CollectionListItem
-                                        key={collection.id}
-                                        collection={collection}
-                                        setCollections={setCollections}
-                                        onShowToast={onShowToast}
-                                    />
-                                ))}
-                            </div>
-                        )
+                        renderCollectionList(filteredSharedCollections)
                     ) : (
                         <NoDataMessage message={sharedCollections.length === 0 ? translations["collectionPage.shared.noData"] || "No collections have been shared with you yet." : translations["collectionPage.shared.noMatch"] || "No matching shared collections found."} />
                     )}
