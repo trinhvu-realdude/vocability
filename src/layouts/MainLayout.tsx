@@ -99,6 +99,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({
                     element={
                         <CollectionPage
                             collections={collections}
+                            sharedCollections={sharedCollections}
                             setCollections={setCollections}
                             setWords={setWords}
                             onShowToast={(message, type) => setToast({ message, type })}
