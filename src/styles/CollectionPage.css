@@ -31,12 +31,12 @@
 }
 
 .collection-tab-btn.active {
-    color: #667eea;
-    border-bottom-color: #667eea;
+    color: #DD5746;
+    border-bottom-color: #DD5746;
 }
 
 .collection-tab-badge {
-    background: #667eea;
+    background: #DD5746;
     color: #fff;
     font-size: 0.68rem;
     font-weight: 700;

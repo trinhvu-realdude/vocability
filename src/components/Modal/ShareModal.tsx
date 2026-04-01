@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
+import { useLanguage } from "../../LanguageContext";
 import { Collection, CollectionShare, Profile, ShareRole } from "../../interfaces/model";
 import {
     searchUsers,
@@ -16,12 +17,22 @@ interface ShareModalProps {
     onShowToast?: (message: string, type: ToastType) => void;
 }
 
-const ROLE_OPTIONS: { value: ShareRole; label: string; description: string }[] = [
-    { value: 'viewer', label: 'Viewer', description: 'Can only view' },
-    { value: 'editor', label: 'Editor', description: 'Can view & edit words' },
-];
-
 export const ShareModal: React.FC<ShareModalProps> = ({ collection, onClose, onShowToast }) => {
+    const { translations } = useLanguage();
+
+    const ROLE_OPTIONS: { value: ShareRole; label: string; description: string }[] = [
+        { 
+            value: 'viewer', 
+            label: translations["shareModal.role.viewer"] || 'Viewer', 
+            description: translations["shareModal.role.viewerDesc"] || 'Can only view' 
+        },
+        { 
+            value: 'editor', 
+            label: translations["shareModal.role.editor"] || 'Editor', 
+            description: translations["shareModal.role.editorDesc"] || 'Can view & edit words' 
+        },
+    ];
+
     const [query, setQuery] = useState("");
     const [suggestions, setSuggestions] = useState<Profile[]>([]);
     const [isSearching, setIsSearching] = useState(false);
@@ -43,9 +54,9 @@ export const ShareModal: React.FC<ShareModalProps> = ({ collection, onClose, onS
         setIsLoadingShares(true);
         getSharesForCollection(collection.id)
             .then(setShares)
-            .catch(() => onShowToast?.("Failed to load shares", "error"))
+            .catch(() => onShowToast?.(translations["shareModal.loadError"] || "Failed to load shares", "error"))
             .finally(() => setIsLoadingShares(false));
-    }, [collection.id]);
+    }, [collection.id, translations]);
 
     // Debounced search
     const handleQueryChange = useCallback((value: string) => {
@@ -128,10 +139,10 @@ export const ShareModal: React.FC<ShareModalProps> = ({ collection, onClose, onS
             for (const { userId, role } of Object.values(pendingChanges)) {
                 await upsertShare(collection.id, userId, role);
             }
-            onShowToast?.("Sharing settings saved!", "success");
+            onShowToast?.(translations["shareModal.saveSuccess"] || "Sharing settings saved!", "success");
             onClose();
         } catch (err: any) {
-            onShowToast?.(err.message || "Failed to save sharing settings", "error");
+            onShowToast?.(translations["shareModal.saveError"] || err.message || "Failed to save sharing settings", "error");
         } finally {
             setIsSaving(false);
         }
@@ -147,7 +158,7 @@ export const ShareModal: React.FC<ShareModalProps> = ({ collection, onClose, onS
                     <div className="word-modal-header" style={{ backgroundColor: collection.color }}>
                         <h5 className="word-modal-title">
                             <i className="fas fa-user-plus me-2" />
-                            Share Collection
+                            {translations["shareModal.title"] || "Share Collection"}
                         </h5>
                         <button className="btn btn-sm word-modal-close" onClick={onClose}>
                             <i className="fas fa-times" />
@@ -173,7 +184,7 @@ export const ShareModal: React.FC<ShareModalProps> = ({ collection, onClose, onS
                                     ref={inputRef}
                                     type="text"
                                     className="form-control"
-                                    placeholder="Search by username…"
+                                    placeholder={translations["shareModal.searchPlaceholder"] || "Search by username…"}
                                     value={query}
                                     onChange={e => handleQueryChange(e.target.value)}
                                     onFocus={() => query && setShowDropdown(true)}
@@ -208,7 +219,7 @@ export const ShareModal: React.FC<ShareModalProps> = ({ collection, onClose, onS
                             )}
                             {showDropdown && !isSearching && suggestions.length === 0 && query && (
                                 <div className="share-suggestions-dropdown">
-                                    <div className="share-no-results">No users found for "{query}"</div>
+                                    <div className="share-no-results">{translations["shareModal.noResults"]?.replace("{{query}}", query) || `No users found for "${query}"`}</div>
                                 </div>
                             )}
                         </div>
@@ -222,7 +233,7 @@ export const ShareModal: React.FC<ShareModalProps> = ({ collection, onClose, onS
                             ) : shares.length === 0 ? (
                                 <div className="share-list-empty">
                                     <i className="fas fa-users fa-2x mb-2 text-muted" />
-                                    <p className="text-muted mb-0">Not shared with anyone yet</p>
+                                    <p className="text-muted mb-0">{translations["shareModal.noShares"] || "Not shared with anyone yet"}</p>
                                 </div>
                             ) : (
                                 shares.map(share => {
@@ -260,7 +271,7 @@ export const ShareModal: React.FC<ShareModalProps> = ({ collection, onClose, onS
                                                 <button
                                                     className="share-remove-btn"
                                                     onClick={() => handleRemove(share.user_id)}
-                                                    title="Remove access"
+                                                    title={translations["shareModal.removeTooltip"] || "Remove access"}
                                                 >
                                                     <i className="fas fa-user-minus" />
                                                 </button>
@@ -277,7 +288,7 @@ export const ShareModal: React.FC<ShareModalProps> = ({ collection, onClose, onS
                     <div className="word-modal-footer">
                         <button className="btn btn-outline-secondary" onClick={onClose}>
                             <i className="fas fa-times me-1" />
-                            Cancel
+                            {translations["cancelBtn"] || "Cancel"}
                         </button>
                         <button
                             className="btn btn-success"
@@ -287,12 +298,12 @@ export const ShareModal: React.FC<ShareModalProps> = ({ collection, onClose, onS
                             {isSaving ? (
                                 <>
                                     <i className="fas fa-spinner fa-spin me-1" />
-                                    Saving…
+                                    {translations["shareModal.saving"] || "Saving…"}
                                 </>
                             ) : (
                                 <>
                                     <i className="fas fa-check me-1" />
-                                    Save Changes
+                                    {translations["shareModal.saveChanges"] || "Save Changes"}
                                 </>
                             )}
                         </button>

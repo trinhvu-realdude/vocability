@@ -107,14 +107,14 @@ export const CollectionPage: React.FC<CommonProps> = ({
                     onClick={() => setActiveTab("mine")}
                 >
                     <i className="fas fa-folder me-2" />
-                    My Collections
+                    {translations["collectionPage.tabs.myCollections"] || "My Collections"}
                 </button>
                 <button
                     className={`collection-tab-btn ${activeTab === "shared" ? "active" : ""}`}
                     onClick={() => setActiveTab("shared")}
                 >
                     <i className="fas fa-share-alt me-2" />
-                    Shared with Me
+                    {translations["collectionPage.tabs.sharedWithMe"] || "Shared with Me"}
                     {sharedCollections.length > 0 && (
                         <span className="collection-tab-badge">{sharedCollections.length}</span>
                     )}
@@ -185,7 +185,7 @@ export const CollectionPage: React.FC<CommonProps> = ({
                             </div>
                         )
                     ) : (
-                        <NoDataMessage message={sharedCollections.length === 0 ? "No collections have been shared with you yet." : "No matching shared collections found."} />
+                        <NoDataMessage message={sharedCollections.length === 0 ? translations["collectionPage.shared.noData"] || "No collections have been shared with you yet." : translations["collectionPage.shared.noMatch"] || "No matching shared collections found."} />
                     )}
                 </div>
             )}
