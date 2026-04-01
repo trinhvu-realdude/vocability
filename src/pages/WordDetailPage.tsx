@@ -16,6 +16,7 @@ import { APP_NAME } from "../utils/constants";
 import { EditWordForm } from "../components/Form/EditWordForm";
 import { useLanguage } from "../LanguageContext";
 import { TextToSpeechButton } from "../components/TextToSpeechButton";
+import { usePermissions } from "../utils/usePermissions";
 import "../styles/WordDetailPage.css";
 
 export const WordDetailPage: React.FC<WordDetailPageProps> = ({ onShowToast }) => {
@@ -33,6 +34,7 @@ export const WordDetailPage: React.FC<WordDetailPageProps> = ({ onShowToast }) =
     const [isEdit, setIsEdit] = useState<boolean>(false);
 
     const { translations } = useLanguage();
+    const { canEdit } = usePermissions(collection?.id);
 
     if (translations)
         document.title = `${translations["flag"]} ${word?.word} | ${APP_NAME}`;
@@ -116,25 +118,21 @@ export const WordDetailPage: React.FC<WordDetailPageProps> = ({ onShowToast }) =
                             </small>
                         </div>
                         <div className="word-action">
-                            <div className="btn btn-sm" title="Add Favorite">
-                                <i
-                                    className={`${word?.is_favorite ? "fas" : "far"
-                                        } fa-star`}
-                                    onClick={() => {
-                                        if (word) handleAddFavorite(word);
-                                    }}
-                                    style={{
-                                        color: `${word?.is_favorite ? "#FFC000" : ""
-                                            }`,
-                                    }}
-                                ></i>
-                            </div>
-                            {/* <div
-                                className="btn btn-sm"
-                                onClick={() => setIsEdit(true)}
-                            >
-                                <i className="fas fa-pen"></i>
-                            </div> */}
+                            {canEdit && (
+                                <div className="btn btn-sm" title="Add Favorite">
+                                    <i
+                                        className={`${word?.is_favorite ? "fas" : "far"
+                                            } fa-star`}
+                                        onClick={() => {
+                                            if (word) handleAddFavorite(word);
+                                        }}
+                                        style={{
+                                            color: `${word?.is_favorite ? "#FFC000" : ""
+                                                }`,
+                                        }}
+                                    ></i>
+                                </div>
+                            )}
                         </div>
                     </div>
 

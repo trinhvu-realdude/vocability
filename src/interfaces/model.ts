@@ -1,5 +1,18 @@
 // ─── Domain Models (Supabase-backed) ───────────────────────────────────────
 
+export type ShareRole = 'viewer' | 'editor' | 'owner';
+
+export interface CollectionShare {
+    id?: string;
+    collection_id: string;
+    user_id: string;
+    role: ShareRole;
+    created_at?: string;
+    updated_at?: string;
+    // Joined from profiles
+    profile?: Pick<Profile, 'id' | 'username' | 'display_name' | 'avatar_url'>;
+}
+
 export interface Collection {
     id?: string;          // uuid
     user_id?: string;     // uuid — set by service from auth.uid()
@@ -9,6 +22,9 @@ export interface Collection {
     language_id: number;
     created_at?: string;
     updated_at?: string;
+    shares?: CollectionShare[]; // populated when fetching with shares
+    myRole?: ShareRole | 'owner'; // effective role for the current user
+    owner_profile?: Pick<Profile, 'id' | 'username' | 'display_name' | 'avatar_url'>; // profile of the owner
 }
 
 export interface Word {

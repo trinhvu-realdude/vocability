@@ -1,0 +1,96 @@
+/* ─── Collection Page Tabs ───────────────────────────────────────────────── */
+
+.collection-tabs {
+    display: flex;
+    gap: 4px;
+    margin-top: 16px;
+    border-bottom: 2px solid rgba(0, 0, 0, 0.08);
+    padding-bottom: 0;
+}
+
+.collection-tab-btn {
+    background: none;
+    border: none;
+    padding: 10px 18px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--text-muted, #6c757d);
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
+    transition: color 0.18s, border-color 0.18s;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    border-radius: 6px 6px 0 0;
+}
+
+.collection-tab-btn:hover {
+    color: var(--text-primary, #212529);
+    background: rgba(0, 0, 0, 0.03);
+}
+
+.collection-tab-btn.active {
+    color: #DD5746;
+    border-bottom-color: #DD5746;
+}
+
+.collection-tab-badge {
+    background: #DD5746;
+    color: #fff;
+    font-size: 0.68rem;
+    font-weight: 700;
+    padding: 1px 6px;
+    border-radius: 12px;
+    margin-left: 4px;
+}
+
+/* ─── Role Badges ────────────────────────────────────────────────────────── */
+
+.folder-role-badge {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.folder-avatar-stack {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+}
+
+.role-badge-inline {
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 2px 7px;
+    border-radius: 10px;
+}
+
+.role-viewer,
+.role-badge-inline.role-viewer {
+    background: rgba(59, 130, 246, 0.12);
+    color: #2563eb;
+    border: 1px solid rgba(59, 130, 246, 0.2);
+}
+
+.role-editor,
+.role-badge-inline.role-editor {
+    background: rgba(16, 185, 129, 0.12);
+    color: #059669;
+    border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.role-owner,
+.role-badge-inline.role-owner {
+    background: rgba(245, 158, 11, 0.12);
+    color: #d97706;
+    border: 1px solid rgba(245, 158, 11, 0.2);
+}

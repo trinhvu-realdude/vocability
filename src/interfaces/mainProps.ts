@@ -10,6 +10,7 @@ export interface CommonProps {
     initialWord?: string;
     onShowToast?: (message: string, type: ToastType) => void;
     isLoading?: boolean;
+    userId?: string;
 }
 
 export interface MainLayoutProps extends CommonProps {
@@ -23,6 +24,7 @@ export interface WordPageProps {
     setCurrentCollectionId: React.Dispatch<React.SetStateAction<string>>;
     onShowToast?: (message: string, type: ToastType) => void;
     isLoading?: boolean;
+    userId?: string;
 }
 
 export interface WordDetailPageProps {

@@ -12,7 +12,7 @@ import { useParams } from "react-router-dom";
 import { useLanguage } from "../LanguageContext";
 import { TextToSpeechButton } from "../components/TextToSpeechButton";
 
-export const FavoritePage: React.FC<CommonProps> = ({ onShowToast }) => {
+export const FavoritePage: React.FC<CommonProps> = ({ onShowToast, userId }) => {
     const { translations } = useLanguage();
     document.title = `${translations["flag"]} Favorite collection | ${APP_NAME}`;
 
@@ -63,7 +63,7 @@ export const FavoritePage: React.FC<CommonProps> = ({ onShowToast }) => {
                 languages,
                 language ? language : ""
             );
-            const words = await getFavoriteWords(currentLanguageId);
+            const words = await getFavoriteWords(currentLanguageId, userId);
             setFavoriteWords(words);
             setFilteredWords(words);
             const collectionsInFavorite = words.map((word) => word.collection);

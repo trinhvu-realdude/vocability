@@ -10,6 +10,7 @@ import { DeleteWordModal } from "../Modal/DeleteWordModal";
 import { formatDate } from "../../utils/formatDateString";
 import { useLanguage } from "../../LanguageContext";
 import { TextToSpeechButton } from "../TextToSpeechButton";
+import { usePermissions } from "../../utils/usePermissions";
 import "../../styles/WordCard.css";
 
 const ButtonGroup: React.FC<{
@@ -17,24 +18,33 @@ const ButtonGroup: React.FC<{
     handleAddFavorite: (word: Word) => Promise<void>;
     setIsEdit: React.Dispatch<React.SetStateAction<boolean>>;
     setIsDelete: React.Dispatch<React.SetStateAction<boolean>>;
-}> = ({ word, handleAddFavorite, setIsEdit, setIsDelete }) => {
+    canEdit: boolean;
+    canDelete: boolean;
+    canFavorite: boolean;
+}> = ({ word, handleAddFavorite, setIsEdit, setIsDelete, canEdit, canDelete, canFavorite }) => {
     return (
         <>
-            <div className="btn btn-sm" title="Add Favorite">
-                <i
-                    className={`${word.is_favorite ? "fas" : "far"} fa-star`}
-                    onClick={() => handleAddFavorite(word)}
-                    style={{
-                        color: `${word.is_favorite ? "#FFC000" : ""}`,
-                    }}
-                ></i>
-            </div>
-            <div className="btn btn-sm" title="Edit Word" onClick={() => setIsEdit(true)}>
-                <i className="fas fa-pen"></i>
-            </div>
-            <div className="btn btn-sm" title="Delete Word" onClick={() => setIsDelete(true)}>
-                <i className="fas fa-times"></i>
-            </div>
+            {canFavorite && (
+                <div className="btn btn-sm" title="Add Favorite">
+                    <i
+                        className={`${word.is_favorite ? "fas" : "far"} fa-star`}
+                        onClick={() => handleAddFavorite(word)}
+                        style={{
+                            color: `${word.is_favorite ? "#FFC000" : ""}`,
+                        }}
+                    ></i>
+                </div>
+            )}
+            {canEdit && (
+                <div className="btn btn-sm" title="Edit Word" onClick={() => setIsEdit(true)}>
+                    <i className="fas fa-pen"></i>
+                </div>
+            )}
+            {canDelete && (
+                <div className="btn btn-sm" title="Delete Word" onClick={() => setIsDelete(true)}>
+                    <i className="fas fa-times"></i>
+                </div>
+            )}
         </>
     );
 };
@@ -57,10 +67,11 @@ export const WordCard: React.FC<WordCardProps> = ({
     }, [isHideDefinition]);
 
     const { translations, selectedWord, setSelectedWord } = useLanguage();
+    const { canEdit, canDelete, canFavorite } = usePermissions(collection?.id);
 
     const handleAddFavorite = async (word: Word) => {
         const newFavoriteStatus = !word.is_favorite;
-        
+
         // Optimistic UI update
         if (setWords) {
             setWords((prevWords: Word[]) => {
@@ -68,7 +79,7 @@ export const WordCard: React.FC<WordCardProps> = ({
                 return prevWords.map(w => w.id === word.id ? { ...w, is_favorite: newFavoriteStatus } : w);
             });
         }
-        
+
         try {
             await addWordToFavorite(word, newFavoriteStatus);
         } catch (error) {
@@ -157,6 +168,9 @@ export const WordCard: React.FC<WordCardProps> = ({
                                         handleAddFavorite={handleAddFavorite}
                                         setIsEdit={setIsEdit}
                                         setIsDelete={setIsDelete}
+                                        canEdit={canEdit}
+                                        canDelete={canDelete}
+                                        canFavorite={canFavorite}
                                     />
                                 </div>
                                 <div className="dropdown three-dots">
@@ -182,6 +196,9 @@ export const WordCard: React.FC<WordCardProps> = ({
                                                 }
                                                 setIsEdit={setIsEdit}
                                                 setIsDelete={setIsDelete}
+                                                canEdit={canEdit}
+                                                canDelete={canDelete}
+                                                canFavorite={canFavorite}
                                             />
                                         </li>
                                     </ul>

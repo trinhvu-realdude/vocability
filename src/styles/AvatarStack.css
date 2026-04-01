@@ -1,0 +1,48 @@
+/* ─── Avatar Stack ────────────────────────────────────────────────────────── */
+
+.avatar-stack {
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: center;
+}
+
+.avatar-item {
+    width: var(--avatar-size, 28px);
+    height: var(--avatar-size, 28px);
+    border-radius: 50%;
+    border: 2px solid var(--bg-card, #fff);
+    object-fit: cover;
+    margin-left: -8px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.65rem;
+    font-weight: 700;
+    cursor: default;
+    flex-shrink: 0;
+    transition: transform 0.15s ease;
+}
+
+.avatar-item:last-child {
+    margin-left: 0;
+}
+
+.avatar-item:hover {
+    transform: translateY(-2px);
+    z-index: 20 !important;
+}
+
+.avatar-initials {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #fff;
+    user-select: none;
+}
+
+.avatar-overflow {
+    background: rgba(255, 255, 255, 0.12);
+    color: var(--text-muted, #aaa);
+    border: 2px dashed rgba(255,255,255,0.25);
+    font-size: 0.6rem;
+    backdrop-filter: blur(4px);
+}

@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { Word, Collection } from "../interfaces/model";
 import { getWords } from "../services/WordService";
 import { getCollections } from "../services/CollectionService";
+import { getActiveUserId } from "../services/AuthService";
+import { getSharedCollections } from "../services/ShareService";
 import { languages } from "../utils/constants";
 import "../styles/ActivityBoard.css";
 
@@ -37,12 +39,14 @@ export const ActivityBoard: React.FC<ActivityBoardProps> = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            const [allWords, allCollections] = await Promise.all([
-                getWords(),
-                getCollections(),
+            const uid = await getActiveUserId();
+            const [allWords, owned, shared] = await Promise.all([
+                getWords(uid),
+                getCollections(uid),
+                getSharedCollections(undefined, uid),
             ]);
             setWords(allWords);
-            setCollections(allCollections);
+            setCollections([...owned, ...shared]);
         };
         fetchData();
     }, []);

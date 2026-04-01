@@ -1,0 +1,325 @@
+/* ─── Overlay & Container ────────────────────────────────────────────────── */
+
+.share-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(4px);
+    z-index: 1060;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: share-fade-in 0.18s ease;
+}
+
+@keyframes share-fade-in {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+.share-modal {
+    background: var(--bg-card, #fff);
+    border-radius: 16px;
+    width: 100%;
+    max-width: 480px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    animation: share-slide-up 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+    max-height: 90vh;
+}
+
+@keyframes share-slide-up {
+    from { transform: translateY(24px); opacity: 0; }
+    to   { transform: translateY(0);    opacity: 1; }
+}
+
+/* ─── Header ─────────────────────────────────────────────────────────────── */
+
+.share-modal-header {
+    padding: 20px 22px 16px;
+    border-top: 4px solid #667eea;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    border-bottom: 1px solid rgba(0,0,0,0.08);
+}
+
+.share-modal-title {
+    font-size: 1rem;
+    font-weight: 700;
+    margin: 0 0 2px;
+    color: var(--text-primary, #212529);
+}
+
+.share-modal-subtitle {
+    font-size: 0.8rem;
+    color: var(--text-muted, #6c757d);
+}
+
+.share-modal-close {
+    background: none;
+    border: none;
+    color: var(--text-muted, #6c757d);
+    font-size: 1rem;
+    cursor: pointer;
+    padding: 4px 6px;
+    border-radius: 6px;
+    transition: background 0.15s, color 0.15s;
+}
+.share-modal-close:hover {
+    background: rgba(0,0,0,0.06);
+    color: var(--text-primary, #212529);
+}
+
+/* ─── Search ─────────────────────────────────────────────────────────────── */
+
+.share-search-wrapper {
+    padding: 14px 22px 0;
+    position: relative;
+}
+
+.share-search-input-group {
+    display: flex;
+    align-items: center;
+    background: var(--bg-input, #f5f7fa);
+    border: 1.5px solid rgba(0,0,0,0.1);
+    border-radius: 10px;
+    padding: 0 12px;
+    transition: border-color 0.2s;
+}
+.share-search-input-group:focus-within {
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102,126,234,0.15);
+}
+
+.share-search-icon {
+    color: #aaa;
+    font-size: 0.85rem;
+    margin-right: 8px;
+}
+
+.share-search-input {
+    border: none;
+    background: transparent;
+    outline: none;
+    flex: 1;
+    padding: 10px 0;
+    font-size: 0.9rem;
+    color: var(--text-primary, #212529);
+}
+
+.share-search-spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid #ddd;
+    border-top-color: #667eea;
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+    flex-shrink: 0;
+}
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* ─── Dropdown ───────────────────────────────────────────────────────────── */
+
+.share-suggestions-dropdown {
+    position: absolute;
+    left: 22px;
+    right: 22px;
+    top: calc(100% + 4px);
+    background: var(--bg-card, #fff);
+    border: 1.5px solid rgba(0,0,0,0.1);
+    border-radius: 10px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+    z-index: 100;
+    overflow: hidden;
+    animation: share-fade-in 0.12s ease;
+}
+
+.share-suggestion-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    cursor: pointer;
+    transition: background 0.12s;
+}
+.share-suggestion-item:hover {
+    background: rgba(102,126,234,0.08);
+}
+
+.suggestion-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+.suggestion-avatar-initials {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.85rem;
+}
+
+.suggestion-name {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--text-primary, #212529);
+}
+.suggestion-username {
+    font-size: 0.76rem;
+    color: var(--text-muted, #6c757d);
+}
+
+.share-no-results {
+    padding: 12px 16px;
+    font-size: 0.85rem;
+    color: var(--text-muted, #6c757d);
+    text-align: center;
+}
+
+/* ─── Shared Users List ──────────────────────────────────────────────────── */
+
+.share-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 14px 22px;
+    min-height: 80px;
+    max-height: 300px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.share-list-loading,
+.share-list-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 28px 0;
+    color: var(--text-muted, #6c757d);
+    text-align: center;
+    font-size: 0.85rem;
+}
+
+.share-user-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 10px 12px;
+    background: var(--bg-input, #f5f7fa);
+    border-radius: 10px;
+    border: 1px solid rgba(0,0,0,0.05);
+    animation: share-fade-in 0.15s ease;
+}
+
+.share-user-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+}
+
+.share-user-avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+.share-user-avatar-initials {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.9rem;
+}
+
+.share-user-name {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--text-primary, #212529);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.share-user-handle {
+    font-size: 0.75rem;
+    color: var(--text-muted, #6c757d);
+}
+
+.share-user-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.share-role-select {
+    border: 1.5px solid rgba(0,0,0,0.12);
+    border-radius: 7px;
+    padding: 4px 8px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    background: #fff;
+    color: var(--text-primary, #212529);
+    outline: none;
+    transition: border-color 0.15s;
+}
+.share-role-select:focus {
+    border-color: #667eea;
+}
+.share-role-select.role-owner {
+    border-color: #f59e0b;
+    color: #b45309;
+    background: #fffbeb;
+}
+
+.share-remove-btn {
+    background: none;
+    border: none;
+    color: #dc3545;
+    cursor: pointer;
+    padding: 5px 7px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    transition: background 0.15s;
+}
+.share-remove-btn:hover {
+    background: rgba(220, 53, 69, 0.1);
+}
+
+/* ─── Footer ─────────────────────────────────────────────────────────────── */
+
+.share-modal-footer {
+    padding: 14px 22px 18px;
+    border-top: 1px solid rgba(0,0,0,0.08);
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+.share-modal-footer .btn-primary {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    border: none;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+}
+.share-modal-footer .btn-primary:not(:disabled):hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
+.share-modal-footer .btn-primary:disabled {
+    opacity: 0.5;
+}

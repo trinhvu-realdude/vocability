@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { CollectionCardProps } from "../../interfaces/mainProps";
+import { CollectionShare } from "../../interfaces/model";
 import { EditCollectionModal } from "../Modal/EditCollectionModal";
 import { DeleteCollectionModal } from "../Modal/DeleteCollectionModal";
+import { ShareModal } from "../Modal/ShareModal";
+import { AvatarStack } from "../AvatarStack";
 import { formatDate } from "../../utils/formatDateString";
 import { useLanguage } from "../../LanguageContext";
-import "../../styles/CollectionCard.css"
+import { usePermissions } from "../../utils/usePermissions";
+import { getSharesForCollection } from "../../services/ShareService";
+import "../../styles/CollectionCard.css";
 import { getWordsForReview } from "../../services/SpacedRepetitionService";
 
 export const CollectionCard: React.FC<CollectionCardProps> = ({
@@ -14,9 +19,12 @@ export const CollectionCard: React.FC<CollectionCardProps> = ({
 }) => {
     const [isEdit, setIsEdit] = useState<boolean>(false);
     const [isDelete, setIsDelete] = useState<boolean>(false);
+    const [isShare, setIsShare] = useState<boolean>(false);
     const [reviewCount, setReviewCount] = useState<number>(0);
+    const [shares, setShares] = useState<CollectionShare[]>([]);
 
     const { translations } = useLanguage();
+    const { canEdit, canShare, canDelete, canPractice } = usePermissions(collection.id);
 
     const fetchReviewCount = React.useCallback(async () => {
         if (collection.id) {
@@ -30,10 +38,14 @@ export const CollectionCard: React.FC<CollectionCardProps> = ({
     }, [fetchReviewCount]);
 
     useEffect(() => {
+        if (!collection.id) return;
+        getSharesForCollection(collection.id).then(setShares).catch(() => { });
+    }, [collection.id]);
+
+    useEffect(() => {
         const handleRefresh = () => {
             fetchReviewCount();
         };
-
         window.addEventListener('reviewCountUpdated', handleRefresh);
         return () => {
             window.removeEventListener('reviewCountUpdated', handleRefresh);
@@ -46,66 +58,81 @@ export const CollectionCard: React.FC<CollectionCardProps> = ({
                 {/* Folder Tab */}
                 <div
                     className="folder-tab"
-                    style={{
-                        backgroundColor: collection.color,
-                    }}
+                    style={{ backgroundColor: collection.color }}
                 >
-                    <span className="folder-tab-name">
-                        {collection.name}
-                    </span>
+                    <span className="folder-tab-name">{collection.name}</span>
                 </div>
 
                 {/* Folder Body */}
                 <div
                     className="folder-body"
-                    style={{
-                        borderColor: collection.color,
-                    }}
+                    style={{ borderColor: collection.color }}
                 >
                     {/* Action Buttons */}
                     <div className="folder-actions">
-                        <div
-                            className="btn btn-sm folder-action-btn position-relative"
-                            onClick={(e) => {
-                                e.preventDefault();
-                                e.stopPropagation();
-                                // Trigger review modal
-                                const event = new CustomEvent('openReviewModal', {
-                                    detail: {
-                                        collectionId: collection.id,
-                                        collectionName: collection.name,
-                                        collectionColor: collection.color,
-                                    }
-                                });
-                                window.dispatchEvent(event);
-                            }}
-                            title="Start Review"
-                        >
-                            <i className="fas fa-brain"></i>
-                            {reviewCount > 0 && (
-                                <span
-                                    className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
-                                    style={{ fontSize: '0.6rem', padding: '0.25em 0.4em' }}
-                                >
-                                    {reviewCount}
-                                    <span className="visually-hidden">words due</span>
-                                </span>
-                            )}
-                        </div>
-                        <div
-                            className="btn btn-sm folder-action-btn"
-                            onClick={() => setIsEdit(true)}
-                            title="Edit Collection"
-                        >
-                            <i className="fas fa-pen"></i>
-                        </div>
-                        <div
-                            className="btn btn-sm folder-action-btn"
-                            onClick={() => setIsDelete(true)}
-                            title="Delete Collection"
-                        >
-                            <i className="fas fa-times"></i>
-                        </div>
+                        {/* Share */}
+                        {canShare && (
+                            <div
+                                className="btn btn-sm folder-action-btn"
+                                onClick={(e) => { e.preventDefault(); e.stopPropagation(); setIsShare(true); }}
+                                title="Share Collection"
+                            >
+                                <i className="fas fa-user-plus" />
+                            </div>
+                        )}
+
+                        {/* Review */}
+                        {canPractice && (
+                            <div
+                                className="btn btn-sm folder-action-btn position-relative"
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    const event = new CustomEvent('openReviewModal', {
+                                        detail: {
+                                            collectionId: collection.id,
+                                            collectionName: collection.name,
+                                            collectionColor: collection.color,
+                                        }
+                                    });
+                                    window.dispatchEvent(event);
+                                }}
+                                title="Start Review"
+                            >
+                                <i className="fas fa-brain" />
+                                {reviewCount > 0 && (
+                                    <span
+                                        className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                                        style={{ fontSize: '0.6rem', padding: '0.25em 0.4em' }}
+                                    >
+                                        {reviewCount}
+                                        <span className="visually-hidden">words due</span>
+                                    </span>
+                                )}
+                            </div>
+                        )}
+
+                        {/* Edit */}
+                        {canEdit && (
+                            <div
+                                className="btn btn-sm folder-action-btn"
+                                onClick={() => setIsEdit(true)}
+                                title="Edit Collection"
+                            >
+                                <i className="fas fa-pen" />
+                            </div>
+                        )}
+
+                        {/* Delete */}
+                        {canDelete && (
+                            <div
+                                className="btn btn-sm folder-action-btn"
+                                onClick={() => setIsDelete(true)}
+                                title="Delete Collection"
+                            >
+                                <i className="fas fa-times" />
+                            </div>
+                        )}
                     </div>
 
                     {/* Folder Content */}
@@ -123,28 +150,51 @@ export const CollectionCard: React.FC<CollectionCardProps> = ({
                             <i
                                 className="fas fa-folder"
                                 style={{ color: collection.color }}
-                            ></i>
+                            />
                         </div>
                         <div className="folder-info">
                             <p className="folder-word-count">
-                                {/* <i className="fas fa-book" />{" "}
-                                {
-                                    translations[
-                                    "collectionPage.collectionCard.numberOfWords"
-                                    ]
-                                }
-                                :
-                                <strong>{collection.num_of_words}</strong> */}
                                 <small className="text-muted">
                                     {collection.created_at && formatDate(new Date(collection.created_at), translations["language"])}
                                 </small>
                             </p>
                         </div>
                     </a>
+
+                    {/* Avatar Stack & Owner info */}
+                    <div className="folder-user-meta mt-2 d-flex align-items-center justify-content-between">
+                        <div className="folder-avatar-stack">
+                            {collection.myRole && collection.myRole !== 'owner' ? (
+                                collection.owner_profile && (
+                                    <AvatarStack
+                                        shares={[{
+                                            collection_id: collection.id || '',
+                                            user_id: collection.owner_profile.id,
+                                            role: 'owner',
+                                            profile: collection.owner_profile
+                                        }]}
+                                        maxVisible={1}
+                                        size={22}
+                                    />
+                                )
+                            ) : (
+                                shares.length > 0 && (
+                                    <AvatarStack shares={shares} maxVisible={3} size={22} />
+                                )
+                            )}
+                        </div>
+                    </div>
+
+                    {/* Shared-with-me role badge */}
+                    {collection.myRole && collection.myRole !== 'owner' && (
+                        <span className={`folder-role-badge role-${collection.myRole}`}>
+                            {collection.myRole}
+                        </span>
+                    )}
                 </div>
             </div>
 
-            {isEdit && (
+            {isEdit && canEdit && (
                 <EditCollectionModal
                     collection={collection}
                     setCollections={setCollections}
@@ -153,11 +203,19 @@ export const CollectionCard: React.FC<CollectionCardProps> = ({
                 />
             )}
 
-            {isDelete && (
+            {isDelete && canDelete && (
                 <DeleteCollectionModal
                     collection={collection}
                     setIsEditOrDelete={setIsDelete}
                     setCollections={setCollections}
+                    onShowToast={onShowToast}
+                />
+            )}
+
+            {isShare && canShare && (
+                <ShareModal
+                    collection={collection}
+                    onClose={() => setIsShare(false)}
                     onShowToast={onShowToast}
                 />
             )}

@@ -5,22 +5,19 @@ import { getWords } from "./WordService";
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
-const getActiveUser = async () => {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) throw new Error("Not authenticated");
-    return user;
-};
+import { getActiveUser, getActiveUserId } from "./AuthService";
 
 // ─── Read ────────────────────────────────────────────────────────────────────
 
-export const getProfile = async (): Promise<Profile> => {
-    const user = await getActiveUser();
+export const getProfile = async (userId?: string): Promise<Profile> => {
+    const user = await getActiveUser(); // Always fetch user to ensure we have email etc. if profile needs creation
+    const uid = userId ?? user.id;
 
     // Check if profile exists
     const { data, error } = await supabase
         .from("profiles")
         .select("*")
-        .eq("id", user.id)
+        .eq("id", uid)
         .maybeSingle();
 
     if (error && error.code !== 'PGRST116') throw error; // Ignore not found error if maybeSingle isn't used correctly, but maybeSingle returns null/undefined if not found without throwing error.
@@ -51,11 +48,12 @@ export const getProfile = async (): Promise<Profile> => {
     return insertedData as Profile;
 };
 
-export const getProfileStats = async () => {
+export const getProfileStats = async (userId?: string) => {
     try {
-        const collections = await getCollections();
+        const uid = userId ?? await getActiveUserId();
+        const collections = await getCollections(uid);
         const activeLanguages = await getActiveLanguages();
-        const words = await getWords(); // Or calculate from collections numOfWords
+        const words = await getWords(uid); // Or calculate from collections numOfWords
         
         let totalWords = 0;
         collections.forEach(c => {
@@ -85,9 +83,10 @@ export const getProfileStats = async () => {
 // ─── Write ───────────────────────────────────────────────────────────────────
 
 export const updateProfile = async (
-    updates: Partial<Omit<Profile, "id" | "email" | "created_at" | "updated_at">>
+    updates: Partial<Omit<Profile, "id" | "email" | "created_at" | "updated_at">>,
+    userId?: string
 ): Promise<Profile> => {
-    const user = await getActiveUser();
+    const uid = userId ?? await getActiveUserId();
 
     const { data, error } = await supabase
         .from("profiles")
@@ -95,7 +94,7 @@ export const updateProfile = async (
             ...updates,
             updated_at: new Date().toISOString()
         })
-        .eq("id", user.id)
+        .eq("id", uid)
         .select()
         .single();
 
