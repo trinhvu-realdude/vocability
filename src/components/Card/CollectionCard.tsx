@@ -163,11 +163,26 @@ export const CollectionCard: React.FC<CollectionCardProps> = ({
 
                     {/* Avatar Stack & Owner info */}
                     <div className="folder-user-meta mt-2 d-flex align-items-center justify-content-between">
-                        {shares.length > 0 && (
-                            <div className="folder-avatar-stack">
-                                <AvatarStack shares={shares} maxVisible={3} size={24} />
-                            </div>
-                        )}
+                        <div className="folder-avatar-stack">
+                            {collection.myRole && collection.myRole !== 'owner' ? (
+                                collection.owner_profile && (
+                                    <AvatarStack
+                                        shares={[{
+                                            collection_id: collection.id || '',
+                                            user_id: collection.owner_profile.id,
+                                            role: 'owner',
+                                            profile: collection.owner_profile
+                                        }]}
+                                        maxVisible={1}
+                                        size={22}
+                                    />
+                                )
+                            ) : (
+                                shares.length > 0 && (
+                                    <AvatarStack shares={shares} maxVisible={3} size={22} />
+                                )
+                            )}
+                        </div>
                     </div>
 
                     {/* Shared-with-me role badge */}

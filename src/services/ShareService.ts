@@ -11,24 +11,24 @@ import { getActiveUserId } from "./AuthService";
  * Search profiles by partial username match.
  * Excludes the current user and returns at most 10 results.
  */
-export const searchUsers = async (query: string, languageId?: number, userId?: string): Promise<Profile[]> => {
+export const searchUsers = async (query: string, userId?: string): Promise<Profile[]> => {
     if (!query.trim()) return [];
 
     const selfId = userId ?? await getActiveUserId();
 
     let queryBuilder = supabase
         .from("profiles")
-        .select("id, username, display_name, avatar_url, collections!inner(language_id)")
+        .select("id, username, display_name, avatar_url")
         .ilike("username", `%${query}%`)
         .neq("id", selfId);
 
-    if (languageId) {
-        queryBuilder = queryBuilder.eq("collections.language_id", languageId);
+    // Filter duplicates handled implicitly since we removed the 1:N join
+    const { data, error } = await queryBuilder.limit(20);
+
+    if (error) {
+        console.error("[searchUsers] Supabase Error:", error);
+        throw error;
     }
-
-    const { data, error } = await queryBuilder.limit(20); // Fetch more to account for duplicates
-
-    if (error) throw error;
 
     // Filter duplicates because of the inner join
     const uniqueProfilesMap = new Map<string, Profile>();
@@ -190,7 +190,7 @@ export const getSharedCollections = async (languageId?: number, userId?: string)
     // Fetch the collections themselves
     let query = supabase
         .from("collections")
-        .select("*, words(count)")
+        .select("*, words(count), owner_profile:profiles!user_id(id, username, display_name, avatar_url)")
         .in("id", collectionIds)
         .order("created_at", { ascending: false });
 

@@ -24,6 +24,7 @@ export interface Collection {
     updated_at?: string;
     shares?: CollectionShare[]; // populated when fetching with shares
     myRole?: ShareRole | 'owner'; // effective role for the current user
+    owner_profile?: Pick<Profile, 'id' | 'username' | 'display_name' | 'avatar_url'>; // profile of the owner
 }
 
 export interface Word {

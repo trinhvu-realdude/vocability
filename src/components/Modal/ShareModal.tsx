@@ -59,7 +59,7 @@ export const ShareModal: React.FC<ShareModalProps> = ({ collection, onClose, onS
         debounceRef.current = setTimeout(async () => {
             setIsSearching(true);
             try {
-                const results = await searchUsers(value, collection.language_id);
+                const results = await searchUsers(value);
                 // Exclude already-shared users
                 const alreadyAdded = new Set([
                     ...shares.map(s => s.user_id),
@@ -67,7 +67,8 @@ export const ShareModal: React.FC<ShareModalProps> = ({ collection, onClose, onS
                 ]);
                 setSuggestions(results.filter(u => !alreadyAdded.has(u.id)));
                 setShowDropdown(true);
-            } catch {
+            } catch (err) {
+                console.error("SEARCH ERROR:", err);
                 setSuggestions([]);
             } finally {
                 setIsSearching(false);

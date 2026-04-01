@@ -112,8 +112,23 @@ export const CollectionListItem: React.FC<CollectionListItemProps> = ({
                                     </span>
                                 )}
                                 {/* Avatar stack */}
-                                {shares.length > 0 && (
-                                    <AvatarStack shares={shares} maxVisible={3} size={22} />
+                                {collection.myRole && collection.myRole !== 'owner' ? (
+                                    collection.owner_profile && (
+                                        <AvatarStack
+                                            shares={[{
+                                                collection_id: collection.id || '',
+                                                user_id: collection.owner_profile.id,
+                                                role: 'owner',
+                                                profile: collection.owner_profile
+                                            }]}
+                                            maxVisible={1}
+                                            size={22}
+                                        />
+                                    )
+                                ) : (
+                                    shares.length > 0 && (
+                                        <AvatarStack shares={shares} maxVisible={3} size={22} />
+                                    )
                                 )}
                             </div>
                             <small className="text-muted">
