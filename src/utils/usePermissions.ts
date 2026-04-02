@@ -20,11 +20,16 @@ export interface Permissions {
  * Returns the current user's permissions for a given collection.
  * Pass `undefined` or `null` to get a fully-restricted set while loading.
  */
-export const usePermissions = (collectionId: string | undefined | null): Permissions => {
-    const [role, setRole] = useState<EffectiveRole>(null);
-    const [isLoading, setIsLoading] = useState(true);
+export const usePermissions = (collectionId: string | undefined | null, providedRole?: EffectiveRole | string): Permissions => {
+    const [role, setRole] = useState<EffectiveRole>(providedRole as EffectiveRole || null);
+    const [isLoading, setIsLoading] = useState(providedRole === undefined);
 
     useEffect(() => {
+        if (providedRole !== undefined) {
+             setRole(providedRole as EffectiveRole);
+             setIsLoading(false);
+             return;
+        }
         if (!collectionId) {
             setIsLoading(false);
             return;
@@ -42,7 +47,7 @@ export const usePermissions = (collectionId: string | undefined | null): Permiss
         });
 
         return () => { cancelled = true; };
-    }, [collectionId]);
+    }, [collectionId, providedRole]);
 
     const isOwner = role === 'owner';
     const canEdit = role === 'owner' || role === 'editor';

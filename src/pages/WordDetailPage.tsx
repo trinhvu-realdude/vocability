@@ -38,7 +38,7 @@ export const WordDetailPage: React.FC<WordDetailPageProps> = ({
     const [isEdit, setIsEdit] = useState<boolean>(false);
 
     const { translations } = useLanguage();
-    const { canEdit } = usePermissions(collection?.id);
+    const { canEdit } = usePermissions(collection?.id, collection?.myRole);
 
     if (translations)
         document.title = `${translations["flag"]} ${word?.word} | ${APP_NAME}`;
