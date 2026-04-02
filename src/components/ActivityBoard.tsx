@@ -9,16 +9,17 @@ import { languages } from "../utils/constants";
 import "../styles/ActivityBoard.css";
 
 interface ActivityBoardProps {
+    collections?: Collection[];
 }
 
 interface ActivityData {
     [date: string]: Word[];
 }
 
-export const ActivityBoard: React.FC<ActivityBoardProps> = () => {
+export const ActivityBoard: React.FC<ActivityBoardProps> = ({ collections: propCollections }) => {
     const navigate = useNavigate();
     const [words, setWords] = useState<Word[]>([]);
-    const [collections, setCollections] = useState<Collection[]>([]);
+    const [collections, setCollections] = useState<Collection[]>(propCollections ?? []);
     const [selectedDate, setSelectedDate] = useState<string | null>(null);
     const [selectedYear, setSelectedYear] = useState<string>("rolling"); // "rolling" or "YYYY"
 
@@ -40,13 +41,18 @@ export const ActivityBoard: React.FC<ActivityBoardProps> = () => {
     useEffect(() => {
         const fetchData = async () => {
             const uid = await getActiveUserId();
-            const [allWords, owned, shared] = await Promise.all([
-                getWords(uid),
-                getCollections(uid),
-                getSharedCollections(undefined, uid),
-            ]);
+            // Only fetch words — collections are passed in as a prop (already fetched by AuthContext)
+            const allWords = await getWords(uid);
             setWords(allWords);
-            setCollections([...owned, ...shared]);
+
+            // Fallback: fetch collections ourselves if not passed as prop
+            if (!propCollections) {
+                const [owned, shared] = await Promise.all([
+                    getCollections(uid),
+                    getSharedCollections(undefined, uid),
+                ]);
+                setCollections([...owned, ...shared]);
+            }
         };
         fetchData();
     }, []);

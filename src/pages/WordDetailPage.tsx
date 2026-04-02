@@ -19,7 +19,11 @@ import { TextToSpeechButton } from "../components/TextToSpeechButton";
 import { usePermissions } from "../utils/usePermissions";
 import "../styles/WordDetailPage.css";
 
-export const WordDetailPage: React.FC<WordDetailPageProps> = ({ onShowToast }) => {
+export const WordDetailPage: React.FC<WordDetailPageProps> = ({ 
+    onShowToast,
+    collections = [],
+    sharedCollections = [] 
+}) => {
     const { wordId } = useParams();
 
     const [word, setWord] = useState<Word>();
@@ -34,7 +38,7 @@ export const WordDetailPage: React.FC<WordDetailPageProps> = ({ onShowToast }) =
     const [isEdit, setIsEdit] = useState<boolean>(false);
 
     const { translations } = useLanguage();
-    const { canEdit } = usePermissions(collection?.id);
+    const { canEdit } = usePermissions(collection?.id, collection?.myRole);
 
     if (translations)
         document.title = `${translations["flag"]} ${word?.word} | ${APP_NAME}`;
@@ -54,26 +58,17 @@ export const WordDetailPage: React.FC<WordDetailPageProps> = ({ onShowToast }) =
         }
     };
 
+    // 1. Fetch word data (runs strictly once per wordId)
     useEffect(() => {
         const fetchWord = async () => {
+            if (!wordId) return;
             try {
-                if (wordId) {
-                    const objWord = await getWordById(wordId);
-                    if (objWord?.collection_id) {
-                        const objCollection = await getCollectionById(
-                            objWord.collection_id
-                        );
-                        setCollection(objCollection);
-                    }
-                    if (objWord) {
-                        setWord(objWord);
-                        const objSynonymsAntonyms = await getSynonymsAntonyms(
-                            objWord
-                        );
-
-                        setSynonyms(objSynonymsAntonyms?.synonyms);
-                        setAntonyms(objSynonymsAntonyms?.antonyms);
-                    }
+                const objWord = await getWordById(wordId);
+                if (objWord) {
+                    setWord(objWord);
+                    const objSynonymsAntonyms = await getSynonymsAntonyms(objWord);
+                    setSynonyms(objSynonymsAntonyms?.synonyms);
+                    setAntonyms(objSynonymsAntonyms?.antonyms);
                 }
             } catch (error) {
                 console.log(error);
@@ -84,7 +79,23 @@ export const WordDetailPage: React.FC<WordDetailPageProps> = ({ onShowToast }) =
             }
         };
         fetchWord();
-    }, [isEdit ? word?.word : null, translations["language"]]);
+    }, [wordId]);
+
+    // 2. Resolve collection when word is loaded
+    useEffect(() => {
+        if (!word?.collection_id) return;
+        
+        const allCols = [...collections, ...sharedCollections];
+        const foundCol = allCols.find(c => String(c.id) === String(word.collection_id));
+        
+        if (foundCol) {
+            setCollection(foundCol);
+        } else {
+            getCollectionById(word.collection_id).then(c => {
+                setCollection(c || undefined);
+            });
+        }
+    }, [word?.collection_id, collections, sharedCollections]);
 
     const handleShowOffCanvas = async (id: string) => {
         setVisibleOffCanvas(id);

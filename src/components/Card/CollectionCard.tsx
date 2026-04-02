@@ -24,7 +24,7 @@ export const CollectionCard: React.FC<CollectionCardProps> = ({
     const [shares, setShares] = useState<CollectionShare[]>([]);
 
     const { translations } = useLanguage();
-    const { canEdit, canShare, canDelete, canPractice } = usePermissions(collection.id);
+    const { canEdit, canShare, canDelete, canPractice } = usePermissions(collection.id, collection.myRole);
 
     const fetchReviewCount = React.useCallback(async () => {
         if (collection.id) {

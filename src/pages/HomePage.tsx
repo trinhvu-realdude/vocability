@@ -4,7 +4,7 @@ import { HomePageProps } from "../interfaces/rootProps";
 import { ActivityBoard } from "../components/ActivityBoard";
 import "../styles/HomePage.css";
 
-export const HomePage: React.FC<HomePageProps> = ({ activeLanguages, isLoading }) => {
+export const HomePage: React.FC<HomePageProps> = ({ activeLanguages, isLoading, collections }) => {
     const [remainLanguages, setRemainLanguages] = useState<Array<any>>();
     const [selectedLanguage, setSelectedLanguage] = useState<any>();
 
@@ -111,11 +111,8 @@ export const HomePage: React.FC<HomePageProps> = ({ activeLanguages, isLoading }
                 </div>
             )}
 
-
             {/* Activity Log Section */}
-            {
-                hasActiveLanguages && <ActivityBoard />
-            }
+            {hasActiveLanguages && <ActivityBoard collections={collections} />}
         </div>
     );
 };

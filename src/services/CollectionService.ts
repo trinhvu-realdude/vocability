@@ -21,6 +21,7 @@ export const getCollections = async (userId?: string): Promise<Collection[]> => 
     return (data ?? []).map((c: any) => ({
         ...c,
         numOfWords: c.words?.[0]?.count ?? 0,
+        myRole: 'owner',
     }));
 };
 
@@ -41,6 +42,7 @@ export const getCollectionsByLanguageId = async (
     return (data ?? []).map((c: any) => ({
         ...c,
         numOfWords: c.words?.[0]?.count ?? 0,
+        myRole: 'owner',
     }));
 };
 

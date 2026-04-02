@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import { Profile } from "../interfaces/model";
-import { getProfile, getProfileStats, updateProfile, deleteAccount } from "../services/ProfileService";
+import { getProfileStats, updateProfile, deleteAccount } from "../services/ProfileService";
 import { Toast, ToastType } from "../components/Toast";
 import "../styles/ProfilePage.css";
 import { useNavigate } from "react-router-dom";
@@ -13,10 +13,11 @@ interface Stats {
 }
 
 export const ProfilePage: React.FC = () => {
-    const { user, refreshProfile } = useAuth();
+    const { user, profile: authProfile, refreshProfile } = useAuth();
     const navigate = useNavigate();
 
-    const [profile, setProfile] = useState<Profile | null>(null);
+    // Mirror AuthContext profile into local state so the form can track edits independently
+    const [profile, setProfile] = useState<Profile | null>(authProfile);
     const [stats, setStats] = useState<Stats>({
         languagesLearning: 0,
         numberOfCollections: 0,
@@ -32,27 +33,31 @@ export const ProfilePage: React.FC = () => {
 
     const [toast, setToast] = useState<{ message: string; type: ToastType } | null>(null);
 
+    // Sync form fields whenever AuthContext profile arrives/changes
     useEffect(() => {
-        const fetchProfileData = async () => {
+        if (authProfile) {
+            setProfile(authProfile);
+            setUsername(authProfile.username || "");
+            setDisplayName(authProfile.display_name || "");
+        }
+    }, [authProfile]);
+
+    // Fetch stats once (single DB call via getProfileStats)
+    useEffect(() => {
+        const fetchStats = async () => {
             if (!user) return;
             setIsLoading(true);
             try {
-                const fetchedProfile = await getProfile();
-                setProfile(fetchedProfile);
-                setUsername(fetchedProfile.username || "");
-                setDisplayName(fetchedProfile.display_name || "");
-
                 const fetchedStats = await getProfileStats();
                 setStats(fetchedStats);
             } catch (error) {
-                console.error("Error fetching profile:", error);
+                console.error("Error fetching stats:", error);
                 setToast({ message: "Failed to load profile data", type: "error" });
             } finally {
                 setIsLoading(false);
             }
         };
-
-        fetchProfileData();
+        fetchStats();
     }, [user?.id]);
 
     const handleSaveProfile = async (e: React.FormEvent) => {

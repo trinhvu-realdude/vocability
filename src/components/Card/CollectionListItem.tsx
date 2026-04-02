@@ -36,7 +36,7 @@ export const CollectionListItem: React.FC<CollectionListItemProps> = ({
     const [isShare, setIsShare] = useState(false);
 
     const { translations } = useLanguage();
-    const { canEdit, canShare, canDelete, canPractice } = usePermissions(collection.id);
+    const { canEdit, canShare, canDelete, canPractice } = usePermissions(collection.id, collection.myRole);
 
     const fetchData = React.useCallback(async () => {
         if (collection.id) {
