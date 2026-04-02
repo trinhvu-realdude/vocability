@@ -25,9 +25,9 @@ export const CollectionListItem: React.FC<CollectionListItemProps> = ({
     onShowToast,
 }) => {
     const [isExpanded, setIsExpanded] = useState(false);
-    const [words, setWords] = useState<Word[]>([]);
+    const [words, setWords] = useState<Word[] | null>(null);
     const [reviewCount, setReviewCount] = useState<number>(0);
-    const [isLoading, setIsLoading] = useState<boolean>(true);
+    const [isLoadingWords, setIsLoadingWords] = useState<boolean>(false);
     const [shares, setShares] = useState<CollectionShare[]>([]);
 
     // Action states
@@ -38,32 +38,42 @@ export const CollectionListItem: React.FC<CollectionListItemProps> = ({
     const { translations } = useLanguage();
     const { canEdit, canShare, canDelete, canPractice } = usePermissions(collection.id, collection.myRole);
 
-    const fetchData = React.useCallback(async () => {
-        if (collection.id) {
-            const [reviewWords, allWords] = await Promise.all([
-                getWordsForReview(collection.id),
-                getWordsByCollectionId(collection.id)
-            ]);
-            setReviewCount(reviewWords?.length || 0);
-            setWords(allWords);
-            setIsLoading(false);
+    const fetchInitialData = React.useCallback(async () => {
+        if (collection.id && canPractice) {
+            try {
+                const reviewWords = await getWordsForReview(collection.id);
+                setReviewCount(reviewWords?.length || 0);
+            } catch (e) {
+                console.error(e);
+            }
         }
-    }, [collection.id]);
+    }, [collection.id, canPractice]);
 
     useEffect(() => {
-        fetchData();
-    }, [fetchData]);
+        fetchInitialData();
+    }, [fetchInitialData]);
 
     useEffect(() => {
         if (!collection.id) return;
+        if (collection.myRole && collection.myRole !== 'owner') return; // Non-owners only display the owner avatar, no share table fetch needed
         getSharesForCollection(collection.id).then(setShares).catch(() => { });
-    }, [collection.id]);
+    }, [collection.id, collection.myRole]);
 
     useEffect(() => {
-        const handleRefresh = () => { fetchData(); };
+        if (isExpanded && words === null && collection.id) {
+            setIsLoadingWords(true);
+            getWordsByCollectionId(collection.id).then(fetchedWords => {
+                setWords(fetchedWords);
+                setIsLoadingWords(false);
+            }).catch(() => setIsLoadingWords(false));
+        }
+    }, [isExpanded, words, collection.id]);
+
+    useEffect(() => {
+        const handleRefresh = () => { fetchInitialData(); };
         window.addEventListener('reviewCountUpdated', handleRefresh);
         return () => { window.removeEventListener('reviewCountUpdated', handleRefresh); };
-    }, [fetchData]);
+    }, [fetchInitialData]);
 
     const handleToggle = () => { setIsExpanded(!isExpanded); };
 
@@ -98,11 +108,11 @@ export const CollectionListItem: React.FC<CollectionListItemProps> = ({
                                 >
                                     <h5 className="collection-name me-2">{collection.name}</h5>
                                 </a>
-                                {!isLoading && words && (
-                                    <span className={`badge ${words.length > 0 ? 'bg-light text-dark' : 'bg-secondary-soft text-muted'} word-count-badge`}>
-                                        {words.length === 0 ? translations["collection.wordCount.empty"] :
-                                            words.length === 1 ? `1 ${translations["collection.wordCount.singular"]}` :
-                                                `${words.length} ${translations["collection.wordCount.plural"]}`}
+                                {collection.num_of_words !== undefined && (
+                                    <span className={`badge ${collection.num_of_words > 0 ? 'bg-light text-dark' : 'bg-secondary-soft text-muted'} word-count-badge`}>
+                                        {collection.num_of_words === 0 ? translations["collection.wordCount.empty"] :
+                                            collection.num_of_words === 1 ? `1 ${translations["collection.wordCount.singular"]}` :
+                                                `${collection.num_of_words} ${translations["collection.wordCount.plural"]}`}
                                     </span>
                                 )}
                                 {/* Role badge for shared-with-me */}
@@ -209,8 +219,10 @@ export const CollectionListItem: React.FC<CollectionListItemProps> = ({
                 </div>
 
                 <div className={`collection-accordion-body ${isExpanded ? 'expanded' : ''}`}>
-                    <div className="row g-2">
-                        {words && words.length > 0 ? (
+                    <div className="row g-2 p-2">
+                        {isLoadingWords ? (
+                            <div className="text-center w-100 py-3"><span className="loader spinner-border spinner-border-sm" /></div>
+                        ) : words && words.length > 0 ? (
                             words.map(word => (
                                 <div key={word.id} className="col-md-4 col-sm-6">
                                     <div className="mini-word-row">
