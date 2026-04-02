@@ -1,7 +1,6 @@
 import { supabase } from "../configs/supabase";
 import { Profile } from "../interfaces/model";
-import { getCollections, getActiveLanguages } from "./CollectionService";
-import { getWords } from "./WordService";
+import { getCollections } from "./CollectionService";
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
@@ -51,22 +50,19 @@ export const getProfile = async (userId?: string): Promise<Profile> => {
 export const getProfileStats = async (userId?: string) => {
     try {
         const uid = userId ?? await getActiveUserId();
+        // Single query — collections already carry word counts via words(count) join
         const collections = await getCollections(uid);
-        const activeLanguages = await getActiveLanguages();
-        const words = await getWords(uid); // Or calculate from collections numOfWords
-        
-        let totalWords = 0;
-        collections.forEach(c => {
-            totalWords += (c.num_of_words || (c as any).numOfWords || 0); // Handle mapped numOfWords
-        });
-        
-        // If the collection mapping doesn't have it accurately, just use word length
-        if (totalWords === 0 && words.length > 0) {
-            totalWords = words.length;
-        }
+
+        const totalWords = collections.reduce(
+            (sum, c) => sum + ((c as any).numOfWords ?? c.num_of_words ?? 0),
+            0
+        );
+
+        // Derive active languages from collection language_ids (no extra DB call)
+        const activeLanguageIds = new Set(collections.map(c => c.language_id));
 
         return {
-            languagesLearning: activeLanguages.length,
+            languagesLearning: activeLanguageIds.size,
             numberOfCollections: collections.length,
             numberOfWords: totalWords,
         };

@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import { useEffect, useState, useRef, useCallback } from "react";
+import { useEffect, useState, useRef, useCallback, useMemo } from "react";
 import { Collection, Word } from "../interfaces/model";
 import { getWordsByCollectionIdPaginated } from "../services/WordService";
 import { getCollectionById } from "../services/CollectionService";
@@ -20,6 +20,9 @@ export const WordPage: React.FC<WordPageProps> = ({
     setCollections,
     setCurrentCollectionId,
     onShowToast,
+    collections = [],
+    sharedCollections = [],
+    isLoading: isMainLoading = false,
 }) => {
     const { collectionId } = useParams();
     const [collection, setCollection] = useState<Collection>();
@@ -43,24 +46,51 @@ export const WordPage: React.FC<WordPageProps> = ({
         ? `${translations["flag"]} ${collection.name} collection | ${APP_NAME}`
         : APP_NAME;
 
-    const fetchCollection = useCallback(async () => {
-        setIsLoading(true);
-        if (collectionId) {
-            setCurrentCollectionId(collectionId);
-            const objCollection = await getCollectionById(collectionId);
-            setCollection(objCollection || undefined);
-            const objWord = await getWordsByCollectionIdPaginated(collectionId, 0, ITEMS_PER_PAGE - 1);
-            setWords(objWord);
-            setOffset(ITEMS_PER_PAGE);
-            setHasMore(objWord.length === ITEMS_PER_PAGE);
-            setVoicesByLanguage(await getVoicesByLanguage(translations["languageVoice"]));
-        }
-        setIsLoading(false);
-    }, [translations["language"], collectionId, setCurrentCollectionId, setWords, translations["languageVoice"]]);
+    const allCollections = useMemo(() => [
+        ...collections,
+        ...sharedCollections
+    ], [collections, sharedCollections]);
 
+    // 1. Fetch Words (Runs exactly once per collectionId)
     useEffect(() => {
-        fetchCollection();
-    }, [fetchCollection]);
+        const fetchWords = async () => {
+            if (!collectionId) return;
+            setIsLoading(true);
+            setCurrentCollectionId(collectionId);
+            try {
+                const objWord = await getWordsByCollectionIdPaginated(collectionId, 0, ITEMS_PER_PAGE - 1);
+                setWords(objWord);
+                setOffset(ITEMS_PER_PAGE);
+                setHasMore(objWord.length === ITEMS_PER_PAGE);
+            } catch (err) {
+                console.error("Error fetching words:", err);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        fetchWords();
+    }, [collectionId, setCurrentCollectionId, setWords]);
+
+    // 2. Resolve Collection (No DB call if already passed in props)
+    useEffect(() => {
+        if (!collectionId) return;
+        const found = allCollections.find((c: Collection) => String(c.id) === collectionId);
+        if (found) {
+            setCollection(found);
+        } else if (!isMainLoading) {
+            // Fallback for direct URL hits without route state
+            getCollectionById(collectionId).then(c => {
+                setCollection(c || undefined);
+            });
+        }
+    }, [collectionId, allCollections, isMainLoading]);
+
+    // 3. Load TTS voices securely only when language specifies
+    useEffect(() => {
+        if (translations["languageVoice"]) {
+            getVoicesByLanguage(translations["languageVoice"]).then(setVoicesByLanguage);
+        }
+    }, [translations["languageVoice"]]);
 
     const loadMoreWords = useCallback(async () => {
         if (isFetchingMore || !hasMore || !collectionId) return;

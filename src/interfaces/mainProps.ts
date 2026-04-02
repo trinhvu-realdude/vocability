@@ -26,10 +26,14 @@ export interface WordPageProps {
     onShowToast?: (message: string, type: ToastType) => void;
     isLoading?: boolean;
     userId?: string;
+    collections?: Collection[];
+    sharedCollections?: Collection[];
 }
 
 export interface WordDetailPageProps {
     onShowToast?: (message: string, type: ToastType) => void;
+    collections?: Collection[];
+    sharedCollections?: Collection[];
 }
 
 export type CollectionModalProps = {

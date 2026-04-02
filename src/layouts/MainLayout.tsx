@@ -118,12 +118,20 @@ const MainLayout: React.FC<MainLayoutProps> = ({
                             setCurrentCollectionId={setCurrentCollectionId}
                             onShowToast={(message, type) => setToast({ message, type })}
                             isLoading={isLoading}
+                            collections={collections}
+                            sharedCollections={sharedCollections}
                         />
                     }
                 />
                 <Route
                     path="/word/:wordId"
-                    element={<WordDetailPage onShowToast={(message, type) => setToast({ message, type })} />}
+                    element={
+                        <WordDetailPage 
+                            onShowToast={(message, type) => setToast({ message, type })} 
+                            collections={collections}
+                            sharedCollections={sharedCollections}
+                        />
+                    }
                 />
                 <Route
                     path="/favorite"

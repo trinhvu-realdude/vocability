@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { NavBarProps } from "../interfaces/mainProps";
 import { useLanguage } from "../LanguageContext";
-import { getActiveLanguages } from "../services/CollectionService";
 import { reorderActiveLanguages } from "../utils/helper";
 import "../styles/NavBar.css";
 import { QuickSearchBar } from "./QuickSearchBar";
@@ -11,7 +10,7 @@ export const NavBar: React.FC<NavBarProps> = ({
     languageCode,
     onQuickAddWord,
 }) => {
-    const { user, signOut } = useAuth();
+    const { user, signOut, activeLanguages: authLanguages } = useAuth();
     const { translations } = useLanguage();
     const { activeLanguages, setActiveLanguages } = useLanguage();
     const [scrolled, setScrolled] = useState(false);
@@ -19,17 +18,14 @@ export const NavBar: React.FC<NavBarProps> = ({
     const displayName = user?.user_metadata?.full_name || user?.email?.split('@')[0] || "there";
     const avatarUrl = user?.user_metadata?.avatar_url;
 
+    // Reorder whenever the auth-fetched list or the current language changes.
+    // No extra DB call — authLanguages come from AuthContext (fetched once on login).
     useEffect(() => {
-        const fetchLanguages = async () => {
-            const languages = await getActiveLanguages();
-            const reorderedLanguages = reorderActiveLanguages(
-                languages,
-                translations["language"]
-            );
-            setActiveLanguages(reorderedLanguages);
-        };
-        fetchLanguages();
-    }, [translations["language"]]);
+        if (authLanguages.length > 0) {
+            const reordered = reorderActiveLanguages(authLanguages, translations["language"]);
+            setActiveLanguages(reordered);
+        }
+    }, [authLanguages, translations["language"]]);
 
     useEffect(() => {
         let ticking = false;
