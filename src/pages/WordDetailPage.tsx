@@ -17,6 +17,7 @@ import { EditWordForm } from "../components/Form/EditWordForm";
 import { useLanguage } from "../LanguageContext";
 import { TextToSpeechButton } from "../components/TextToSpeechButton";
 import { usePermissions } from "../utils/usePermissions";
+import { WordCarousel } from "../components/WordCarousel";
 import "../styles/WordDetailPage.css";
 
 export const WordDetailPage: React.FC<WordDetailPageProps> = ({ 
@@ -293,6 +294,13 @@ export const WordDetailPage: React.FC<WordDetailPageProps> = ({
                     )}
                 </div>
             ) : null}
+
+            {word?.collection_id && (
+                <WordCarousel 
+                    collectionId={String(word.collection_id)} 
+                    collectionColor={collection?.color}
+                />
+            )}
         </div>
     );
 };
