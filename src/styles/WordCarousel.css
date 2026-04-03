@@ -1,0 +1,116 @@
+.word-carousel-container {
+    margin-top: 40px;
+    margin-bottom: 40px;
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+    padding-top: 30px;
+}
+
+.carousel-header {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #495057;
+    margin-bottom: 20px;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.word-carousel {
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+    padding: 10px 0;
+    display: flex;
+}
+
+/* Gradient fade at edges */
+.word-carousel::before,
+.word-carousel::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    width: 80px;
+    height: 100%;
+    z-index: 2;
+    pointer-events: none;
+}
+
+.word-carousel::before {
+    left: 0;
+    background: linear-gradient(to right, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0));
+}
+
+.word-carousel::after {
+    right: 0;
+    background: linear-gradient(to left, rgba(255, 255, 255, 1), transparent);
+}
+
+.carousel-track {
+    display: flex;
+    width: max-content;
+}
+
+.carousel-group {
+    display: flex;
+    gap: 20px;
+    padding-right: 20px;
+    animation: slide 80s linear infinite;
+}
+
+.word-carousel:hover .carousel-group {
+    animation-play-state: paused;
+}
+
+@keyframes slide {
+    0% {
+        transform: translateX(0);
+    }
+
+    100% {
+        transform: translateX(-100%);
+    }
+}
+
+/* Flashcard Wrapper using the global FlashCard component */
+.carousel-card-wrapper {
+    width: 250px;
+    flex-shrink: 0;
+}
+
+.carousel-card-wrapper .flashcard-container {
+    height: 350px !important;
+    /* ensure it stays small enough for the carousel */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.carousel-card-wrapper .flashcard-container:hover {
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    transform: translateY(-5px);
+}
+
+/* Override font sizes for FlashCard when in the carousel */
+.carousel-card-wrapper .flashcard-word {
+    font-size: 1.25rem !important;
+}
+
+.carousel-card-wrapper .flashcard-word small {
+    font-size: 0.85rem !important;
+}
+
+.carousel-card-wrapper .flashcard-definition {
+    font-size: 1.05rem !important;
+    line-height: 1.4 !important;
+}
+
+.carousel-card-wrapper .card-header {
+    font-size: 0.9rem !important;
+    padding: 0.75rem 1rem !important;
+}
+
+.carousel-card-wrapper .click-hint {
+    font-size: 0.75rem !important;
+    bottom: 0.5rem !important;
+}
