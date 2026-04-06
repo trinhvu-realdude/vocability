@@ -63,7 +63,7 @@ export const QuickSearchBar: React.FC<QuickSearchProps> = ({ languageCode, onAdd
         setSelectedWord(word);
         setShowResults(false);
         setSearchTerm("");
-        navigate(`/${translations["language"]}/collection/${word.collection_id}#${word.id}`);
+        navigate(`/${translations["language"]}/word/${word.id}`);
 
         // Also try to scroll element into view if we are already on the page or after nav
         // The hash in URL usually handles it, but sometimes React Router needs help if component mounts late.
@@ -96,7 +96,7 @@ export const QuickSearchBar: React.FC<QuickSearchProps> = ({ languageCode, onAdd
                         {searchResults.map((word) => (
                             <li key={word.id} className="quick-search-item">
                                 <a
-                                    href={`/${translations["language"]}/collection/${word.collection_id}#${word.id}`}
+                                    href={`/${translations["language"]}/word/${word.id}`}
                                     className="quick-search-link"
                                     onClick={(e) => handleWordClick(word, e)}
                                 >
