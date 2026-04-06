@@ -50,7 +50,8 @@ export const NavBar: React.FC<NavBarProps> = ({
                 <a className="navbar-brand d-flex align-items-center" href="/">
                     <div>
                         <strong>
-                            Voc
+                            <img src="/vocability.svg" alt="Vocability" style={{ width: "80px", height: "auto" }} />
+                            <span style={{ color: "#0E21A0" }}>Voc</span>
                             <span className="brand-highlight">ability</span>
                         </strong>
                     </div>
