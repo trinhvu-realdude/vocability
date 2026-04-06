@@ -34,8 +34,13 @@ const LoginPage = () => {
             <div className="login-card">
                 {/* Logo / Title */}
                 <div className="login-logo">
-                    <span className="login-logo-icon">📚</span>
-                    <h1 className="login-title">Vocability</h1>
+                    <span className="login-logo-icon">
+                        <img src="/vocability.svg" alt="Vocability" style={{ width: "100px", height: "auto" }} />
+                    </span>
+                    <h1 className="login-title">
+                        <span style={{ color: "#0E21A0" }}>Voc</span>
+                        <span className="brand-highlight">ability</span>
+                    </h1>
                     <p className="login-subtitle">Your personal vocabulary builder</p>
                 </div>
 

@@ -8,8 +8,8 @@
     align-items: center;
     justify-content: center;
     background: radial-gradient(circle at top left, rgba(221, 87, 70, 0.05) 0%, transparent 40%),
-                radial-gradient(circle at bottom right, rgba(221, 87, 70, 0.08) 0%, transparent 40%),
-                #fcfcfc;
+        radial-gradient(circle at bottom right, rgba(221, 87, 70, 0.08) 0%, transparent 40%),
+        #fcfcfc;
     padding: 1.5rem;
     position: relative;
     overflow: hidden;
@@ -44,13 +44,14 @@
 }
 
 @keyframes cardEntrance {
-    from { 
-        opacity: 0; 
-        transform: translateY(30px) scale(0.98); 
+    from {
+        opacity: 0;
+        transform: translateY(30px) scale(0.98);
     }
-    to { 
-        opacity: 1; 
-        transform: translateY(0) scale(1); 
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
     }
 }
 
@@ -70,13 +71,29 @@
 .login-title {
     font-size: 2.5rem;
     font-weight: 850;
-    color: #212529;
     margin: 0;
     letter-spacing: -1.5px;
-    background: linear-gradient(45deg, #212529, #DD5746);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
+}
+
+.login-title .brand-highlight {
+    color: #DD5746;
+    position: relative;
+    display: inline-block;
+}
+
+.login-title .brand-highlight::after {
+    content: '';
+    position: absolute;
+    bottom: 2px;
+    left: 0;
+    width: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #DD5746, #ff7e67);
+    transition: width 0.3s ease;
+}
+
+.login-logo:hover {
+    width: 100%;
 }
 
 .login-subtitle {
@@ -139,9 +156,19 @@
 }
 
 @keyframes shake {
-    0%, 100% { transform: translateX(0); }
-    25% { transform: translateX(-5px); }
-    75% { transform: translateX(5px); }
+
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    25% {
+        transform: translateX(-5px);
+    }
+
+    75% {
+        transform: translateX(5px);
+    }
 }
 
 /* Sent state */
