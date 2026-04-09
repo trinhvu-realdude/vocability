@@ -13,3 +13,5 @@ export interface CrosswordPuzzlePageProps extends PracticeLayoutProps {}
 export interface VocabularyQuizPageProps extends PracticeLayoutProps {}
 
 export interface WordScramblePageProps extends PracticeLayoutProps {}
+
+export interface WordMatchingPageProps extends PracticeLayoutProps {}

@@ -7,6 +7,7 @@ import "../styles/WordCarousel.css";
 interface WordCarouselProps {
     collectionId: string;
     collectionColor?: string;
+    word: Word;
 }
 
 const CarouselFlashCard: React.FC<{ word: Word, color: string }> = ({ word, color }) => {
@@ -24,7 +25,7 @@ const CarouselFlashCard: React.FC<{ word: Word, color: string }> = ({ word, colo
     );
 };
 
-export const WordCarousel: React.FC<WordCarouselProps> = ({ collectionId, collectionColor }) => {
+export const WordCarousel: React.FC<WordCarouselProps> = ({ collectionId, collectionColor, word }) => {
     const [words, setWords] = useState<Word[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -32,7 +33,7 @@ export const WordCarousel: React.FC<WordCarouselProps> = ({ collectionId, collec
         const fetchWords = async () => {
             try {
                 if (collectionId) {
-                    const fetchedWords = await getWordsByCollectionId(collectionId);
+                    const fetchedWords = (await getWordsByCollectionId(collectionId)).filter(w => w.id !== word.id);
                     setWords(fetchedWords);
                 }
             } catch (error) {

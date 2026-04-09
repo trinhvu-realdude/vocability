@@ -166,5 +166,16 @@
     "shareModal.role.viewer": "Betrachter",
     "shareModal.role.editor": "Editor",
     "shareModal.role.viewerDesc": "Kann nur ansehen",
-    "shareModal.role.editorDesc": "Kann Wörter ansehen & bearbeiten"
+    "shareModal.role.editorDesc": "Kann Wörter ansehen & bearbeiten",
+    "wordMatching.round": "Runde",
+    "wordMatching.attempts": "Versuche",
+    "wordMatching.words": "Wörter",
+    "wordMatching.definitions": "Definitionen",
+    "wordMatching.completeTitle": "Zuordnung abgeschlossen!",
+    "wordMatching.completeSubtitle": "Sie haben alle Wörter und Definitionen zugeordnet.",
+    "wordMatching.time": "Zeit",
+    "wordMatching.accuracy": "Genauigkeit",
+    "wordMatching.totalWords": "Gesamtwörter",
+    "wordMatching.playAgain": "Nochmal spielen",
+    "wordMatching.selectCollection": "Wählen Sie eine Sammlung auf der Übungsseite aus, um mit dem Zuordnen zu beginnen."
 }

@@ -166,5 +166,16 @@
     "shareModal.role.viewer": "Visualizador",
     "shareModal.role.editor": "Editor",
     "shareModal.role.viewerDesc": "Pode apenas visualizar",
-    "shareModal.role.editorDesc": "Pode visualizar e editar palavras"
+    "shareModal.role.editorDesc": "Pode visualizar e editar palavras",
+    "wordMatching.round": "Rodada",
+    "wordMatching.attempts": "tentativas",
+    "wordMatching.words": "Palavras",
+    "wordMatching.definitions": "Definições",
+    "wordMatching.completeTitle": "Correspondência concluída!",
+    "wordMatching.completeSubtitle": "Você combinou todas as palavras e definições.",
+    "wordMatching.time": "Tempo",
+    "wordMatching.accuracy": "Precisão",
+    "wordMatching.totalWords": "Total de palavras",
+    "wordMatching.playAgain": "Jogar novamente",
+    "wordMatching.selectCollection": "Selecione uma coleção na página de Práticas para começar a combinar."
 }
