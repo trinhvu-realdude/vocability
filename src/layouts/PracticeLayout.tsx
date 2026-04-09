@@ -10,6 +10,7 @@ import { MemoryCardPage } from "../pages/practice/MemoryCardPage";
 import { useEffect, useState } from "react";
 import { getCurrentLanguageId } from "../utils/helper";
 import { getCollectionsByLanguageId } from "../services/CollectionService";
+import { getSharedCollections } from "../services/ShareService";
 import { languages } from "../utils/constants";
 import { Toast, ToastType } from "../components/Toast";
 
@@ -29,8 +30,19 @@ const PracticeLayout: React.FC<PracticeLayoutProps> = ({
             if (language && setLanguageCode) {
                 setLanguageCode(language);
                 const currentLanguageId = await getCurrentLanguageId(languages, language);
-                const collectionsByLanguage = await getCollectionsByLanguageId(currentLanguageId);
-                if (setCollections) setCollections(collectionsByLanguage);
+
+                const [ownedCollections, sharedCollections] = await Promise.all([
+                    getCollectionsByLanguageId(currentLanguageId),
+                    getSharedCollections(currentLanguageId),
+                ]);
+
+                // Merge: owned first, then shared (viewer + editor)
+                const merged = [
+                    ...ownedCollections,
+                    ...sharedCollections,
+                ];
+
+                if (setCollections) setCollections(merged);
             }
         };
         fetchData();
