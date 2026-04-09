@@ -166,5 +166,16 @@
     "shareModal.role.viewer": "Viewer",
     "shareModal.role.editor": "Editor",
     "shareModal.role.viewerDesc": "Can only view",
-    "shareModal.role.editorDesc": "Can view & edit words"
+    "shareModal.role.editorDesc": "Can view & edit words",
+    "wordMatching.round": "Round",
+    "wordMatching.attempts": "attempts",
+    "wordMatching.words": "Words",
+    "wordMatching.definitions": "Definitions",
+    "wordMatching.completeTitle": "Matching Complete!",
+    "wordMatching.completeSubtitle": "You matched all the words and definitions.",
+    "wordMatching.time": "Time",
+    "wordMatching.accuracy": "Accuracy",
+    "wordMatching.totalWords": "Total Words",
+    "wordMatching.playAgain": "Play Again",
+    "wordMatching.selectCollection": "Select a collection from the Practices page to start matching."
 }

@@ -166,5 +166,16 @@
     "shareModal.role.viewer": "Lector",
     "shareModal.role.editor": "Editor",
     "shareModal.role.viewerDesc": "Solo puede ver",
-    "shareModal.role.editorDesc": "Puede ver y editar palabras"
+    "shareModal.role.editorDesc": "Puede ver y editar palabras",
+    "wordMatching.round": "Ronda",
+    "wordMatching.attempts": "intentos",
+    "wordMatching.words": "Palabras",
+    "wordMatching.definitions": "Definiciones",
+    "wordMatching.completeTitle": "¡Emparejamiento completo!",
+    "wordMatching.completeSubtitle": "Has emparejado todas las palabras y definiciones.",
+    "wordMatching.time": "Tiempo",
+    "wordMatching.accuracy": "Precisión",
+    "wordMatching.totalWords": "Total de palabras",
+    "wordMatching.playAgain": "Jugar de nuevo",
+    "wordMatching.selectCollection": "Selecciona una colección desde la página de Prácticas para comenzar a emparejar."
 }

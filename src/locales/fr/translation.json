@@ -166,5 +166,16 @@
     "shareModal.role.viewer": "Lecteur",
     "shareModal.role.editor": "Éditeur",
     "shareModal.role.viewerDesc": "Peut seulement voir",
-    "shareModal.role.editorDesc": "Peut voir et modifier les mots"
+    "shareModal.role.editorDesc": "Peut voir et modifier les mots",
+    "wordMatching.round": "Manche",
+    "wordMatching.attempts": "tentatives",
+    "wordMatching.words": "Mots",
+    "wordMatching.definitions": "Définitions",
+    "wordMatching.completeTitle": "Correspondance terminée !",
+    "wordMatching.completeSubtitle": "Vous avez associé tous les mots et les définitions.",
+    "wordMatching.time": "Temps",
+    "wordMatching.accuracy": "Précision",
+    "wordMatching.totalWords": "Total des mots",
+    "wordMatching.playAgain": "Rejouer",
+    "wordMatching.selectCollection": "Sélectionnez une collection depuis la page Pratiques pour commencer à associer."
 }

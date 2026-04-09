@@ -166,5 +166,16 @@
     "shareModal.role.viewer": "Visualizzatore",
     "shareModal.role.editor": "Editor",
     "shareModal.role.viewerDesc": "Può solo visualizzare",
-    "shareModal.role.editorDesc": "Può visualizzare e modificare parole"
+    "shareModal.role.editorDesc": "Può visualizzare e modificare parole",
+    "wordMatching.round": "Round",
+    "wordMatching.attempts": "tentativi",
+    "wordMatching.words": "Parole",
+    "wordMatching.definitions": "Definizioni",
+    "wordMatching.completeTitle": "Abbinamento completato!",
+    "wordMatching.completeSubtitle": "Hai abbinato tutte le parole e le definizioni.",
+    "wordMatching.time": "Tempo",
+    "wordMatching.accuracy": "Precisione",
+    "wordMatching.totalWords": "Parole totali",
+    "wordMatching.playAgain": "Gioca ancora",
+    "wordMatching.selectCollection": "Seleziona una collezione dalla pagina Pratiche per iniziare ad abbinare."
 }

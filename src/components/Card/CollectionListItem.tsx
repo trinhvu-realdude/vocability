@@ -221,7 +221,7 @@ export const CollectionListItem: React.FC<CollectionListItemProps> = ({
                 <div className={`collection-accordion-body ${isExpanded ? 'expanded' : ''}`}>
                     <div className="row g-2 p-2">
                         {isLoadingWords ? (
-                            <div className="text-center w-100 py-3"><span className="loader spinner-border spinner-border-sm" /></div>
+                            <div className="mx-auto loader" />
                         ) : words && words.length > 0 ? (
                             words.map(word => (
                                 <div key={word.id} className="col-md-4 col-sm-6">

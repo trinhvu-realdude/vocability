@@ -20,10 +20,10 @@ import { usePermissions } from "../utils/usePermissions";
 import { WordCarousel } from "../components/WordCarousel";
 import "../styles/WordDetailPage.css";
 
-export const WordDetailPage: React.FC<WordDetailPageProps> = ({ 
+export const WordDetailPage: React.FC<WordDetailPageProps> = ({
     onShowToast,
     collections = [],
-    sharedCollections = [] 
+    sharedCollections = []
 }) => {
     const { wordId } = useParams();
 
@@ -85,10 +85,10 @@ export const WordDetailPage: React.FC<WordDetailPageProps> = ({
     // 2. Resolve collection when word is loaded
     useEffect(() => {
         if (!word?.collection_id) return;
-        
+
         const allCols = [...collections, ...sharedCollections];
         const foundCol = allCols.find(c => String(c.id) === String(word.collection_id));
-        
+
         if (foundCol) {
             setCollection(foundCol);
         } else {
@@ -296,9 +296,10 @@ export const WordDetailPage: React.FC<WordDetailPageProps> = ({
             ) : null}
 
             {word?.collection_id && (
-                <WordCarousel 
-                    collectionId={String(word.collection_id)} 
+                <WordCarousel
+                    collectionId={String(word.collection_id)}
                     collectionColor={collection?.color}
+                    word={word}
                 />
             )}
         </div>

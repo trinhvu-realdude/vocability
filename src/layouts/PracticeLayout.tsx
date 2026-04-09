@@ -53,7 +53,7 @@ const PracticeLayout: React.FC<PracticeLayoutProps> = ({
                     path="/vocabulary-quiz"
                     element={<VocabularyQuizPage collections={collections} />}
                 />
-                <Route path="/word-matching" element={<WordMatchingPage />} />
+                <Route path="/word-matching" element={<WordMatchingPage collections={collections} />} />
                 <Route path="/memory-card" element={<MemoryCardPage />} />
             </Routes>
 
