@@ -201,6 +201,17 @@ export const updateWord = async (
     return { ...data, definitions: editValue.definitions };
 };
 
+export const moveWordToCollection = async (
+    wordId: string,
+    toCollectionId: string
+): Promise<void> => {
+    const { error } = await supabase
+        .from("words")
+        .update({ collection_id: toCollectionId })
+        .eq("id", wordId);
+    if (error) throw error;
+};
+
 export const deleteWord = async (word: Word): Promise<void> => {
     // Definitions are cascade-deleted by DB FK
     const { error } = await supabase

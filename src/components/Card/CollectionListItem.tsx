@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Collection, CollectionShare, Word } from "../../interfaces/model";
-import { getWordsByCollectionId } from "../../services/WordService";
+import { getWordsByCollectionId, moveWordToCollection } from "../../services/WordService";
 import { useLanguage } from "../../LanguageContext";
 import { formatDate } from "../../utils/formatDateString";
 import { EditCollectionModal } from "../Modal/EditCollectionModal";
@@ -75,6 +75,33 @@ export const CollectionListItem: React.FC<CollectionListItemProps> = ({
         return () => { window.removeEventListener('reviewCountUpdated', handleRefresh); };
     }, [fetchInitialData]);
 
+    useEffect(() => {
+        const handleWordMoved = (e: any) => {
+            const { wordId, fromCollectionId, toCollectionId } = e.detail;
+            if (collection.id === fromCollectionId) {
+                setWords(prev => prev ? prev.filter(w => w.id !== wordId) : null);
+                setCollections(prev => prev.map(c =>
+                    c.id === collection.id
+                        ? { ...c, num_of_words: Math.max(0, (c.num_of_words || 1) - 1) }
+                        : c
+                ));
+            } else if (collection.id === toCollectionId) {
+                if (isExpanded && collection.id) {
+                    getWordsByCollectionId(collection.id).then(fetchedWords => {
+                        setWords(fetchedWords);
+                    }).catch(() => { });
+                }
+                setCollections(prev => prev.map(c =>
+                    c.id === collection.id
+                        ? { ...c, num_of_words: (c.num_of_words || 0) + 1 }
+                        : c
+                ));
+            }
+        };
+        window.addEventListener('wordMoved', handleWordMoved);
+        return () => window.removeEventListener('wordMoved', handleWordMoved);
+    }, [collection.id, isExpanded, setCollections]);
+
     const handleToggle = () => { setIsExpanded(!isExpanded); };
 
     const triggerReview = (e: React.MouseEvent) => {
@@ -89,9 +116,45 @@ export const CollectionListItem: React.FC<CollectionListItemProps> = ({
         window.dispatchEvent(event);
     };
 
+    const handleDragOver = (e: React.DragEvent) => {
+        if (!canEdit) return;
+        e.preventDefault();
+        e.dataTransfer.dropEffect = "move";
+    };
+
+    const handleDrop = async (e: React.DragEvent) => {
+        e.preventDefault();
+        if (!canEdit) return;
+        const wordId = e.dataTransfer.getData('wordId');
+        const sourceCollectionId = e.dataTransfer.getData('sourceCollectionId');
+
+        if (!wordId || !sourceCollectionId || sourceCollectionId === collection.id) {
+            return;
+        }
+
+        try {
+            await moveWordToCollection(wordId, collection.id!);
+            const event = new CustomEvent('wordMoved', {
+                detail: {
+                    wordId,
+                    fromCollectionId: sourceCollectionId,
+                    toCollectionId: collection.id
+                }
+            });
+            window.dispatchEvent(event);
+            if (onShowToast) onShowToast(translations["success"] || "Successfully moved word", "success");
+        } catch (err) {
+            if (onShowToast) onShowToast(translations["error"] || "Failed to move word", "error");
+        }
+    };
+
     return (
         <>
-            <div className={`collection-list-item ${isExpanded ? 'expanded' : ''}`}>
+            <div
+                className={`collection-list-item ${isExpanded ? 'expanded' : ''}`}
+                onDragOver={handleDragOver}
+                onDrop={handleDrop}
+            >
                 <div
                     className="collection-list-header"
                     onClick={handleToggle}
@@ -224,7 +287,19 @@ export const CollectionListItem: React.FC<CollectionListItemProps> = ({
                             <div className="mx-auto loader" />
                         ) : words && words.length > 0 ? (
                             words.map(word => (
-                                <div key={word.id} className="col-md-4 col-sm-6">
+                                <div
+                                    key={word.id}
+                                    className="col-md-4 col-sm-6"
+                                    draggable={canEdit}
+                                    onDragStart={(e) => {
+                                        e.dataTransfer.setData('wordId', word.id || '');
+                                        e.dataTransfer.setData('sourceCollectionId', collection.id || '');
+                                        e.currentTarget.style.opacity = '0.5';
+                                    }}
+                                    onDragEnd={(e) => {
+                                        e.currentTarget.style.opacity = '1';
+                                    }}
+                                >
                                     <div className="mini-word-row">
                                         <span className="mini-word-text"><a
                                             href={`/${translations["language"]}/word/${word.id}`}
