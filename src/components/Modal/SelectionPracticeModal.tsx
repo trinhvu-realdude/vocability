@@ -10,37 +10,18 @@ interface SelectionPracticeModalProps {
     onSelect: (collectionId: string) => void;
     id?: string;
     title?: string;
-    practiceHref?: string;
     onToast?: (message: string, type: ToastType) => void;
 }
-
-// import crosswordVideo from "../../assets/videos/crossword.mp4";
-// import scrambleVideo from "../../assets/videos/scramble.mp4";
-// import quizVideo from "../../assets/videos/quiz.mp4";
-// import matchingVideo from "../../assets/videos/matching.mp4";
-// import memoryVideo from "../../assets/videos/memory.mp4";
-
-const practiceVideos: Record<string, string> = {
-    // "/practices/crossword-puzzles": crosswordVideo,
-    // "/practices/word-scramble": scrambleVideo,
-    // "/practices/vocabulary-quiz": quizVideo,
-    // "/practices/word-matching": matchingVideo,
-    // "/practices/memory-card": memoryVideo,
-};
 
 export const SelectionPracticeModal: React.FC<SelectionPracticeModalProps> = ({
     collections,
     onSelect,
     id = "collection-selection-practice-modal",
     title = "Practice Setup",
-    practiceHref,
     onToast,
 }) => {
     const { translations } = useLanguage();
     const [selectedId, setSelectedId] = useState<string>("");
-
-    const videoSrc = practiceHref ? practiceVideos[practiceHref] : undefined;
-    console.log(videoSrc);
 
     const handleStart = async () => {
         if (selectedId !== "") {
@@ -115,15 +96,6 @@ export const SelectionPracticeModal: React.FC<SelectionPracticeModalProps> = ({
                     </div>
 
                     <div className="word-modal-body text-center p-4">
-                        {/* {videoSrc ? (
-                            <div className="ratio ratio-16x9">
-                                <video controls autoPlay className="rounded-3">
-                                    <source src={videoSrc} type="video/mp4" />
-                                    Your browser does not support the video tag.
-                                </video>
-                            </div>
-                        ) : (
-                            <> */}
                         <div className="mb-4">
                             <i className="fas fa-book-reader" style={{ fontSize: "4rem", color: "#DD5746" }}></i>
                         </div>
@@ -136,15 +108,39 @@ export const SelectionPracticeModal: React.FC<SelectionPracticeModalProps> = ({
                                 style={{ borderRadius: '12px' }}
                             >
                                 <option value="">{translations["practice.selectCollection"] || ""}</option>
-                                {collections?.map((collection) => (
-                                    <option key={collection.id} value={collection.id}>
-                                        {collection.name}
-                                    </option>
-                                ))}
+
+                                {/* Owned collections */}
+                                {collections.filter(c => c.myRole === 'owner').length > 0 && (
+                                    <optgroup label={translations["collectionPage.tabs.myCollections"] || "My Collections"}>
+                                        {collections
+                                            .filter(c => c.myRole === 'owner')
+                                            .map((collection) => (
+                                                <option key={collection.id} value={collection.id}>
+                                                    {collection.name}
+                                                </option>
+                                            ))}
+                                    </optgroup>
+                                )}
+
+                                {/* Shared collections (viewer + editor) */}
+                                {collections.filter(c => c.myRole !== 'owner').length > 0 && (
+                                    <optgroup label={translations["collectionPage.tabs.sharedWithMe"] || "Shared with me"}>
+                                        {collections
+                                            .filter(c => c.myRole !== 'owner')
+                                            .map((collection) => {
+                                                const roleLabel = collection.myRole === 'editor'
+                                                    ? translations["shareModal.role.editor"] || 'Editor'
+                                                    : translations["shareModal.role.viewer"] || 'Viewer';
+                                                return (
+                                                    <option key={collection.id} value={collection.id}>
+                                                        {collection.name} ({roleLabel})
+                                                    </option>
+                                                );
+                                            })}
+                                    </optgroup>
+                                )}
                             </select>
                         </div>
-                        {/* </>
-                        )} */}
                     </div>
 
                     <div className="word-modal-footer">
