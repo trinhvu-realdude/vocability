@@ -37,7 +37,7 @@ export const FavoritePage: React.FC<CommonProps> = ({ onShowToast, userId }) => 
                 translations["alert.removeFavoriteWord"],
                 "success"
             );
-            
+
             // Re-evaluate empty collections if needed, though they won't automatically disappear unless we filter collections too.
             // For now, removing the word from the list is sufficient for the optimistic update.
         } catch (error) {

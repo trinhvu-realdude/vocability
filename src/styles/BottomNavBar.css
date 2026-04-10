@@ -1,0 +1,77 @@
+.bottom-nav-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 70px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    z-index: 1050;
+    padding-bottom: env(safe-area-inset-bottom);
+    /* iOS safe area */
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.bottom-nav-bar .nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #adb5bd;
+    cursor: pointer;
+    flex: 1;
+    transition: color 0.2s ease;
+}
+
+.bottom-nav-bar .nav-item span {
+    font-size: 0.65rem;
+    margin-top: 4px;
+    font-weight: 600;
+}
+
+.bottom-nav-bar .nav-item i {
+    font-size: 1.25rem;
+    transition: transform 0.2s ease;
+}
+
+.bottom-nav-bar .nav-item.active {
+    color: #DD5746;
+}
+
+.bottom-nav-bar .nav-item.active i {
+    transform: scale(1.1);
+}
+
+.center-add-btn {
+    position: relative;
+    top: -15px;
+    /* pop out slightly */
+    flex: 0 0 70px !important;
+}
+
+.add-btn-circle {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #DD5746, #ff7e67);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(221, 87, 70, 0.4);
+    transition: transform 0.2s ease;
+}
+
+.add-btn-circle i {
+    font-size: 1.5rem !important;
+    color: white !important;
+}
+
+.center-add-btn:active .add-btn-circle {
+    transform: scale(0.92);
+}

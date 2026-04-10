@@ -81,4 +81,10 @@ input[type="number"] {
     .right {
         width: 60%;
     }
+    
+    /* Mobile App Shell Layout Padding */
+    body {
+        padding-bottom: 80px;
+        -webkit-tap-highlight-color: transparent;
+    }
 }

@@ -328,3 +328,27 @@
     font-size: 18px;
     font-weight: 700;
 }
+
+/* Mobile Responsiveness for App Shell */
+@media (max-width: 768px) {
+    .folder-actions {
+        /* Always visible on touch devices */
+        opacity: 1 !important; 
+        background: rgba(255, 255, 255, 0.85);
+        padding: 4px;
+        border-radius: 12px;
+        backdrop-filter: blur(4px);
+    }
+    
+    .folder-card {
+        height: 200px;
+    }
+    
+    .folder-icon-wrapper .fa-folder {
+        font-size: 60px;
+    }
+    
+    .folder-tab-name {
+        font-size: 14px;
+    }
+}

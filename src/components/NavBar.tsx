@@ -65,7 +65,7 @@ export const NavBar: React.FC<NavBarProps> = ({
                 )}
 
                 <button
-                    className="navbar-toggler"
+                    className="navbar-toggler d-none"
                     type="button"
                     data-bs-toggle="collapse"
                     data-bs-target="#navbar-toggle"
@@ -77,7 +77,7 @@ export const NavBar: React.FC<NavBarProps> = ({
                 </button>
                 {languageCode !== "" ? (
                     <div
-                        className="collapse navbar-collapse justify-content-end"
+                        className="collapse navbar-collapse justify-content-end d-none d-lg-flex"
                         id="navbar-toggle"
                     >
                         <ul className="navbar-nav mb-2 mb-lg-0 text-center">
@@ -262,7 +262,7 @@ export const NavBar: React.FC<NavBarProps> = ({
                     </div>
                 ) : (
                     <div
-                        className="collapse navbar-collapse justify-content-end"
+                        className="collapse navbar-collapse justify-content-end d-none d-lg-flex"
                         id="navbar-toggle"
                     >
                         <ul className="navbar-nav mb-2 mb-lg-0 align-items-center">

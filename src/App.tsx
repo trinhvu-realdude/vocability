@@ -13,6 +13,7 @@ import { AuthProvider } from "./contexts/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 import LoginPage from "./pages/LoginPage";
 import { ProfilePage } from "./pages/ProfilePage";
+import { BottomNavBar } from "./components/BottomNavBar";
 
 function App() {
     const [collections, setCollections] = useState<Collection[]>([]);
@@ -90,6 +91,7 @@ function App() {
                                             </Routes>
 
                                             <ButtonOnTop />
+                                            <BottomNavBar onAddWordClick={() => handleQuickAddWord("")} />
                                         </>
                                     </ProtectedRoute>
                                 }

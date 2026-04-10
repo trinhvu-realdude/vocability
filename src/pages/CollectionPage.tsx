@@ -31,6 +31,15 @@ export const CollectionPage: React.FC<CommonProps> = ({
     const [viewMode, setViewMode] = useState<'grid' | 'list'>(
         (localStorage.getItem('collection_view_mode') as 'grid' | 'list') || 'list'
     );
+    const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
+    useEffect(() => {
+        const handleResize = () => setIsMobile(window.innerWidth <= 768);
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
+    const effectiveViewMode = isMobile ? 'list' : viewMode;
 
     // Shared with Me state
     const [filteredSharedCollections, setFilteredSharedCollections] = useState<Collection[]>(sharedCollections);
@@ -50,7 +59,7 @@ export const CollectionPage: React.FC<CommonProps> = ({
     }, [viewMode]);
 
     const renderCollectionList = (list: Collection[]) => {
-        if (viewMode === 'grid') {
+        if (effectiveViewMode === 'grid') {
             return list.map((collection) => (
                 <CollectionCard
                     key={collection.id}
@@ -111,17 +120,17 @@ export const CollectionPage: React.FC<CommonProps> = ({
                     className={`collection-tab-btn ${activeTab === "mine" ? "active" : ""}`}
                     onClick={() => setActiveTab("mine")}
                 >
-                    <i className="fas fa-folder me-2" />
-                    {translations["collectionPage.tabs.myCollections"] || "My Collections"}
+                    <i className="fas fa-folder me-0 me-md-2" />
+                    <span className="d-none d-md-inline">{translations["collectionPage.tabs.myCollections"] || "My Collections"}</span>
                 </button>
                 <button
                     className={`collection-tab-btn ${activeTab === "shared" ? "active" : ""}`}
                     onClick={() => setActiveTab("shared")}
                 >
-                    <i className="fas fa-share-alt me-2" />
-                    {translations["collectionPage.tabs.sharedWithMe"] || "Shared with Me"}
+                    <i className="fas fa-share-alt me-0 me-md-2" />
+                    <span className="d-none d-md-inline">{translations["collectionPage.tabs.sharedWithMe"] || "Shared with Me"}</span>
                     {sharedCollections.length > 0 && (
-                        <span className="collection-tab-badge">{sharedCollections.length}</span>
+                        <span className="collection-tab-badge ms-1">{sharedCollections.length}</span>
                     )}
                 </button>
             </div>
@@ -152,7 +161,7 @@ export const CollectionPage: React.FC<CommonProps> = ({
                     ) : filteredSharedCollections.length > 0 ? (
                         <>
                             {renderCollectionList(filteredSharedCollections.filter(c => c.myRole === 'editor'))}
-                            
+
                             {filteredSharedCollections.some(c => c.myRole === 'editor') &&
                                 filteredSharedCollections.some(c => c.myRole === 'viewer') && (
                                     <div className="col-12 my-4">
@@ -165,7 +174,7 @@ export const CollectionPage: React.FC<CommonProps> = ({
                                         </div>
                                     </div>
                                 )}
-                                
+
                             {renderCollectionList(filteredSharedCollections.filter(c => c.myRole === 'viewer'))}
                         </>
                     ) : (
