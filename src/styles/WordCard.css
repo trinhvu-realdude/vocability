@@ -41,14 +41,53 @@
     color: #DD5746;
 }
 
-/* Keep dropdown visible on mobile */
+/* Mobile App Shell Layout */
 @media (max-width: 768px) {
+    /* Stack elements vertically */
+    .word-card-hover > .d-flex {
+        flex-direction: column;
+    }
+
+    /* Word header section */
+    .word-card-hover .left {
+        width: 100% !important;
+        border-right: none !important;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+        padding-bottom: 15px;
+        margin-bottom: 15px;
+        text-align: center;
+    }
+
+    .word-card-hover .right {
+        width: 100% !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+        text-align: center;
+    }
+
+    .word-card-hover .right .list-group-item {
+        text-align: center;
+    }
+
+    /* Center actions and phonetics */
+    .word-card-right-content .d-flex.justify-content-between.mb-2 {
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .text-speech {
+        justify-content: center;
+    }
+
     .word-actions {
-        display: none;
+        display: flex !important;
+        opacity: 1 !important;
+        justify-content: center;
     }
 
     .three-dots {
-        display: block !important;
+        display: none !important;
     }
 }
 

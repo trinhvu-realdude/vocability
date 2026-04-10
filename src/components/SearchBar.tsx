@@ -110,27 +110,55 @@ export const SearchBar: React.FC<{
 
         return (
             <div className="search-bar-container">
-                <div className="search-input-wrapper">
-                    <i className="fas fa-search search-icon"></i>
-                    <input
-                        className="search-input"
-                        type="search"
-                        placeholder={
-                            type === "collection"
-                                ? translations["searchBar.placeholderCollection"]
-                                : translations["searchBar.placeholder"]
-                        }
-                        aria-label={
-                            type === "collection"
-                                ? translations["searchBar.placeholderCollection"]
-                                : translations["searchBar.placeholder"]
-                        }
-                        value={searchValue}
-                        onChange={(event) => setSearchValue(event.target.value)}
-                    />
+                <div className="d-flex flex-grow-1 gap-2">
+                    <div className="search-input-wrapper flex-grow-1">
+                        <i className="fas fa-search search-icon"></i>
+                        <input
+                            className="search-input"
+                            type="search"
+                            placeholder={
+                                type === "collection"
+                                    ? translations["searchBar.placeholderCollection"]
+                                    : translations["searchBar.placeholder"]
+                            }
+                            aria-label={
+                                type === "collection"
+                                    ? translations["searchBar.placeholderCollection"]
+                                    : translations["searchBar.placeholder"]
+                            }
+                            value={searchValue}
+                            onChange={(event) => setSearchValue(event.target.value)}
+                        />
+                    </div>
+                    
+                    {/* Mobile Only Inline Actions */}
+                    <div className="d-flex d-md-none gap-2">
+                        {type === "collection" && (
+                            <button
+                                className="action-button btn-create-collection d-flex justify-content-center p-0"
+                                style={{ width: '3.125rem' }}
+                                data-bs-toggle="modal"
+                                data-bs-target="#add-collection"
+                                title={translations["collectionPage.createCollectionBtn"]}
+                            >
+                                <i className="fas fa-folder-plus m-0"></i>
+                            </button>
+                        )}
+                        
+                        {type === "word" && onToggleHideDefinition && (
+                            <button
+                                className={`btn-search-utility icon-only ${isHideDefinition ? 'active' : ''}`}
+                                type="button"
+                                onClick={onToggleHideDefinition}
+                                title={isHideDefinition ? translations["showDefinition"] : translations["hideDefinition"]}
+                            >
+                                <i className={`fas ${isHideDefinition ? 'fa-eye' : 'fa-eye-slash'}`}></i>
+                            </button>
+                        )}
+                    </div>
                 </div>
 
-                <div className="search-bar-actions">
+                <div className="search-bar-actions d-none d-md-flex">
                     {isFavorite ? (
                         <CollectionFilter
                             collections={collections}

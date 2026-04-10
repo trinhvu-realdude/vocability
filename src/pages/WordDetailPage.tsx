@@ -296,11 +296,13 @@ export const WordDetailPage: React.FC<WordDetailPageProps> = ({
             ) : null}
 
             {word?.collection_id && (
-                <WordCarousel
-                    collectionId={String(word.collection_id)}
-                    collectionColor={collection?.color}
-                    word={word}
-                />
+                <div className="d-none d-md-block">
+                    <WordCarousel
+                        collectionId={String(word.collection_id)}
+                        collectionColor={collection?.color}
+                        word={word}
+                    />
+                </div>
             )}
         </div>
     );

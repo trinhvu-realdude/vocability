@@ -172,11 +172,18 @@ export const CollectionListItem: React.FC<CollectionListItemProps> = ({
                                     <h5 className="collection-name me-2">{collection.name}</h5>
                                 </a>
                                 {collection.num_of_words !== undefined && (
-                                    <span className={`badge ${collection.num_of_words > 0 ? 'bg-light text-dark' : 'bg-secondary-soft text-muted'} word-count-badge`}>
-                                        {collection.num_of_words === 0 ? translations["collection.wordCount.empty"] :
-                                            collection.num_of_words === 1 ? `1 ${translations["collection.wordCount.singular"]}` :
-                                                `${collection.num_of_words} ${translations["collection.wordCount.plural"]}`}
-                                    </span>
+                                    <>
+                                        {collection.num_of_words > 0 && (
+                                            <span className="badge bg-light text-dark word-count-badge d-md-none">
+                                                {collection.num_of_words}
+                                            </span>
+                                        )}
+                                        <span className={`badge ${collection.num_of_words > 0 ? 'bg-light text-dark' : 'bg-secondary-soft text-muted'} word-count-badge d-none d-md-inline-block`}>
+                                            {collection.num_of_words === 0 ? translations["collection.wordCount.empty"] :
+                                                collection.num_of_words === 1 ? `1 ${translations["collection.wordCount.singular"]}` :
+                                                    `${collection.num_of_words} ${translations["collection.wordCount.plural"]}`}
+                                        </span>
+                                    </>
                                 )}
                                 {/* Role badge for shared-with-me */}
                                 {collection.myRole && collection.myRole !== 'owner' && (
@@ -204,14 +211,17 @@ export const CollectionListItem: React.FC<CollectionListItemProps> = ({
                                     )
                                 )}
                             </div>
-                            <small className="text-muted">
+                            <small className="text-muted d-none d-md-block text-nowrap">
                                 {collection.created_at && formatDate(new Date(collection.created_at), translations["language"])}
                             </small>
                         </div>
                     </div>
 
-                    <div className="d-flex align-items-center">
-                        <div className="collection-actions-group">
+                    <div className="collection-actions-wrapper">
+                        <small className="text-muted d-md-none fw-semibold text-nowrap me-3" style={{ fontSize: '0.875rem' }}>
+                            {collection.created_at && new Date(collection.created_at).toLocaleDateString("en-GB", { day: '2-digit', month: 'short', year: 'numeric' })}
+                        </small>
+                        <div className="collection-actions-group m-0">
                             {/* Open */}
                             {/* <a
                                 href={`/${translations["language"]}/collection/${collection.id}`}
@@ -274,7 +284,9 @@ export const CollectionListItem: React.FC<CollectionListItemProps> = ({
                                 </button>
                             )}
                         </div>
+                    </div>
 
+                    <div className="header-chevron-wrapper">
                         <div className="btn-accordion-toggle">
                             <i className="fas fa-chevron-down" />
                         </div>

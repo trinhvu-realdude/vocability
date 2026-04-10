@@ -45,6 +45,13 @@
     margin-left: 4px;
 }
 
+@media (max-width: 767.98px) {
+    .collection-tab-btn {
+        flex: 1;
+        justify-content: center;
+    }
+}
+
 /* ─── Collection Separator ───────────────────────────────── */
 
 .collection-separator {

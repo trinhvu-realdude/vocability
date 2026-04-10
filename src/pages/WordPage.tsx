@@ -136,7 +136,7 @@ export const WordPage: React.FC<WordPageProps> = ({
     return (
         <div className="container-list" id="word-list">
             <button
-                className="word-list-btn"
+                className="word-list-btn d-none d-md-block"
                 data-bs-toggle="offcanvas"
                 data-bs-target="#offcanvasWithBackdrop"
                 aria-controls="offcanvasWithBackdrop"
