@@ -219,7 +219,10 @@ export const CollectionListItem: React.FC<CollectionListItemProps> = ({
 
                     <div className="collection-actions-wrapper">
                         <small className="text-muted d-md-none fw-semibold text-nowrap me-3" style={{ fontSize: '0.875rem' }}>
-                            {collection.created_at && new Date(collection.created_at).toLocaleDateString("en-GB", { day: '2-digit', month: 'short', year: 'numeric' })}
+                            {collection.created_at && new Date(collection.created_at).toLocaleDateString(
+                                translations["language"] === "us" ? "en-US" : `${translations["language"]}-${translations["language"].toUpperCase()}`,
+                                { day: '2-digit', month: 'short', year: 'numeric' }
+                            )}
                         </small>
                         <div className="collection-actions-group m-0">
                             {/* Open */}

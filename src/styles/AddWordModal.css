@@ -402,7 +402,7 @@
 
     .word-modal-footer {
         padding: 1.25rem 1.5rem;
-        flex-direction: column;
+        flex-direction: row;
     }
 
     .word-modal-footer .btn {

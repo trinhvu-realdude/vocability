@@ -32,7 +32,7 @@
     overflow: hidden;
     background: #ffffff;
     border: 2px solid;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    /* box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); */
 }
 
 .flashcard-back {
