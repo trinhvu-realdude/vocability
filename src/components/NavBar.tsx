@@ -57,10 +57,43 @@ export const NavBar: React.FC<NavBarProps> = ({
                     </div>
                 </a>
 
-                {/* Search Bar on Mobile/Desktop */}
+                {/* Search Bar on Desktop */}
                 {languageCode && onQuickAddWord && (
                     <div className="d-none d-lg-block ms-4" style={{ width: "300px" }}>
                         <QuickSearchBar onAddWord={onQuickAddWord} languageCode={languageCode} />
+                    </div>
+                )}
+
+                {/* Mobile Language Selector — visible only on small screens */}
+                {languageCode && activeLanguages.length > 0 && (
+                    <div className="d-flex d-lg-none align-items-center ms-auto me-2">
+                        <div className="dropdown">
+                            <button
+                                className="mobile-lang-btn"
+                                data-bs-toggle="dropdown"
+                                aria-expanded="false"
+                                type="button"
+                            >
+                                <span className={`fi fi-${languageCode}`} style={{ borderRadius: '3px', boxShadow: '0 1px 3px rgba(0,0,0,0.15)' }}></span>
+                                {/* <span className="mobile-lang-code">
+                                    {languageCode !== "us" ? languageCode : "en"}
+                                </span> */}
+                                <i className="fas fa-chevron-down mobile-lang-chevron"></i>
+                            </button>
+                            <ul className="dropdown-menu dropdown-menu-end">
+                                {activeLanguages.map((language: any) => (
+                                    <li key={language.id}>
+                                        <a
+                                            className={`dropdown-item d-flex align-items-center ${language.code === translations["language"] ? "active" : ""}`}
+                                            href={`/${language.code}/collections`}
+                                        >
+                                            <i className={`fi fi-${language.code}`} style={{ borderRadius: "2px" }}></i>
+                                            <span className="ms-2">{language.language}</span>
+                                        </a>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
                     </div>
                 )}
 

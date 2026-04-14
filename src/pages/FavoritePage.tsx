@@ -126,16 +126,16 @@ export const FavoritePage: React.FC<CommonProps> = ({ onShowToast, userId }) => 
                             displayWords.length > 0 &&
                             displayWords.map((word) => (
                                 <div className="list-group-item word-card-hover p-4" key={word.id}>
-                                    <div className="d-flex w-100 justify-content-between mb-2">
+                                    <div className="d-flex w-100 justify-content-between mb-2 favorite-flex">
                                         <div className="row">
                                             <h5 className="mb-1 d-flex align-items-center gap-2">
                                                 <strong>{word.word}</strong>{" "}
-                                                <small
+                                                {/* <small
                                                     className="text-muted"
                                                     style={{ fontSize: "14px" }}
                                                 >
                                                     {word.phonetic}
-                                                </small>{" "}
+                                                </small>{" "} */}
                                                 <TextToSpeechButton word={word.word} />
                                             </h5>
                                             <small>

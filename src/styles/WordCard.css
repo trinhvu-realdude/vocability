@@ -43,9 +43,14 @@
 
 /* Mobile App Shell Layout */
 @media (max-width: 768px) {
+
     /* Stack elements vertically */
-    .word-card-hover > .d-flex {
+    .word-card-hover>.d-flex {
         flex-direction: column;
+    }
+
+    .word-card-hover>.favorite-flex {
+        flex-direction: row;
     }
 
     /* Word header section */
@@ -71,7 +76,7 @@
 
     /* Center actions and phonetics */
     .word-card-right-content .d-flex.justify-content-between.mb-2 {
-        flex-direction: column;
+        flex-direction: row;
         align-items: center;
         gap: 15px;
     }
@@ -88,6 +93,10 @@
 
     .three-dots {
         display: none !important;
+    }
+
+    .list-group-flush~small {
+        display: none;
     }
 }
 
