@@ -2,7 +2,7 @@
 .vc-container {
     margin-top: 32px;
     border: 1px solid rgba(0, 0, 0, 0.08);
-    border-radius: 16px;
+    border-radius: 12px;
     background: #ffffff;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
     overflow: hidden;
@@ -123,6 +123,7 @@
 }
 
 .vc-child-card:hover {
+    cursor: pointer;
     box-shadow: 0 12px 24px rgba(0, 0, 0, 0.06);
     border-color: rgba(221, 87, 70, 0.2);
 }
@@ -212,7 +213,7 @@
 }
 
 .vc-line {
-    font-size: 1.05rem;
+    font-size: 1rem;
     color: #2d3436;
     padding: 6px 0;
     border-bottom: 1px dashed rgba(0, 0, 0, 0.06);
@@ -312,64 +313,99 @@
 }
 
 .vc-practice-row {
+    padding: 14px 20px;
+    background: rgba(0, 0, 0, 0.015);
+    border-radius: 14px;
+    border: 1px solid rgba(0, 0, 0, 0.04);
+    transition: all 0.2s ease;
+}
+
+.vc-practice-row:hover {
+    background: rgba(221, 87, 70, 0.03);
+    border-color: rgba(221, 87, 70, 0.15);
+}
+
+.vc-segments-container {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
-    gap: 12px;
+    gap: 10px;
+    width: 100%;
 }
 
-.vc-practice-subject {
-    min-width: 80px;
+.vc-segment-text {
     font-weight: 700;
-    color: #6c757d;
-    text-align: right;
-    font-size: 0.95rem;
+    color: #4b5563;
+    font-size: 1rem;
+    min-width: 40px;
 }
 
-.vc-input-wrapper {
+.vc-segment-input-wrapper {
     position: relative;
+    display: inline-flex;
+    align-items: center;
     flex: 1;
+    min-width: 120px;
 }
 
-.vc-practice-input {
+.vc-segment-input {
     width: 100%;
     padding: 10px 16px;
-    padding-right: 40px;
-    border: 2px solid #e9ecef;
-    border-radius: 12px;
+    padding-right: 32px;
+    border: 2px solid #e5e7eb;
+    border-radius: 10px;
     font-size: 1rem;
-    color: #495057;
+    color: #1f2937;
     transition: all 0.3s ease;
     background: #ffffff;
+    font-family: inherit;
+    text-align: left;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.02);
 }
 
-.vc-practice-input:focus {
+.vc-segment-input:focus {
     outline: none;
     border-color: #DD5746;
     background: #fff;
-    box-shadow: 0 0 0 3px rgba(221, 87, 70, 0.1);
+    box-shadow: 0 0 0 4px rgba(221, 87, 70, 0.12);
 }
 
 .vc-input--correct {
-    background: #f8fff9 !important;
-    border-color: #28a745 !important;
-    color: #218838 !important;
+    background: #f0fdf4 !important;
+    border-color: #22c55e !important;
+    color: #15803d !important;
     font-weight: 700;
 }
 
-.vc-correct-icon {
+.vc-correct-mini-icon {
     position: absolute;
-    right: 12px;
+    right: 10px;
     top: 50%;
     transform: translateY(-50%);
-    color: #28a745;
-    font-size: 1.1rem;
+    color: #22c55e;
+    font-size: 0.9rem;
 }
 
-.vc-practice-suffix {
-    color: #adb5bd;
-    font-size: 0.95rem;
-    min-width: 40px;
+.vc-line-correct-icon {
+    margin-left: 10px;
+    color: #22c55e;
+    font-size: 1.2rem;
+    animation: vcScaleIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
+
+
+@keyframes vcScaleIn {
+    from {
+        transform: scale(0);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
 
 @keyframes vcFadeIn {
     from {
