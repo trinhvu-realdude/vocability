@@ -152,3 +152,19 @@ export type ExternalWord = {
         }
     ];
 };
+
+export type VerbConjugation = {
+    word: string;
+    data: [
+        {
+            root: string;
+            children: [
+                {
+                    title: string,
+                    type: string,
+                    data: string[] | string[][]
+                }
+            ]
+        }
+    ]
+};

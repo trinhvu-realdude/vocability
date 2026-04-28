@@ -5,9 +5,10 @@ import { useParams } from "react-router-dom";
 import {
     addWordToFavorite,
     getSynonymsAntonyms,
+    getVerbConjugation,
     getWordById,
 } from "../services/WordService";
-import { WordDetailPageProps } from "../interfaces/mainProps";
+import { WordDetailPageProps, VerbConjugation as VerbConjugationType } from "../interfaces/mainProps";
 import { formatDate } from "../utils/formatDateString";
 import { formatText } from "../utils/helper";
 import { getCollectionById } from "../services/CollectionService";
@@ -17,8 +18,9 @@ import { EditWordForm } from "../components/Form/EditWordForm";
 import { useLanguage } from "../LanguageContext";
 import { TextToSpeechButton } from "../components/TextToSpeechButton";
 import { usePermissions } from "../utils/usePermissions";
-import { WordCarousel } from "../components/WordCarousel";
+// import { WordCarousel } from "../components/WordCarousel";
 import "../styles/WordDetailPage.css";
+import { VerbConjugation } from "../components/VerbConjugation";
 
 export const WordDetailPage: React.FC<WordDetailPageProps> = ({
     onShowToast,
@@ -31,6 +33,7 @@ export const WordDetailPage: React.FC<WordDetailPageProps> = ({
     const [collection, setCollection] = useState<Collection>();
     const [synonyms, setSynonyms] = useState<string[]>();
     const [antonyms, setAntonyms] = useState<string[]>();
+    const [verbConjugation, setVerbConjugation] = useState<VerbConjugationType | undefined>();
 
     const [visibleOffCanvas, setVisibleOffCanvas] = useState<string | null>(
         null
@@ -40,6 +43,7 @@ export const WordDetailPage: React.FC<WordDetailPageProps> = ({
 
     const { translations } = useLanguage();
     const { canEdit } = usePermissions(collection?.id, collection?.myRole);
+    const langCodeForConjugation = translations["languageCodeForVerbConjugation"];
 
     if (translations)
         document.title = `${translations["flag"]} ${word?.word} | ${APP_NAME}`;
@@ -59,28 +63,39 @@ export const WordDetailPage: React.FC<WordDetailPageProps> = ({
         }
     };
 
-    // 1. Fetch word data (runs strictly once per wordId)
+    // 1. Fetch word data (runs strictly once per wordId + language)
     useEffect(() => {
+        let isCancelled = false;
+
         const fetchWord = async () => {
             if (!wordId) return;
             try {
                 const objWord = await getWordById(wordId);
-                if (objWord) {
-                    setWord(objWord);
-                    const objSynonymsAntonyms = await getSynonymsAntonyms(objWord);
-                    setSynonyms(objSynonymsAntonyms?.synonyms);
-                    setAntonyms(objSynonymsAntonyms?.antonyms);
-                }
+                if (isCancelled || !objWord) return;
+
+                setWord(objWord);
+
+                // Run synonyms/antonyms and verb conjugation in parallel
+                const [objSynonymsAntonyms, conjugation] = await Promise.all([
+                    getSynonymsAntonyms(objWord),
+                    getVerbConjugation(langCodeForConjugation, objWord.word),
+                ]);
+                if (isCancelled) return;
+
+                setSynonyms(objSynonymsAntonyms ? objSynonymsAntonyms.synonyms : []);
+                setAntonyms(objSynonymsAntonyms ? objSynonymsAntonyms.antonyms : []);
+                setVerbConjugation(conjugation);
             } catch (error) {
-                console.log(error);
-                setSynonyms([]);
-                setAntonyms([]);
+                if (!isCancelled) console.log(error);
             } finally {
-                setIsLoading(false);
+                if (!isCancelled) setIsLoading(false);
             }
         };
+
         fetchWord();
-    }, [wordId]);
+
+        return () => { isCancelled = true; };
+    }, [wordId, langCodeForConjugation]);
 
     // 2. Resolve collection when word is loaded
     useEffect(() => {
@@ -223,79 +238,84 @@ export const WordDetailPage: React.FC<WordDetailPageProps> = ({
 
             {isLoading ? (
                 <div className="mx-auto loader"></div>
-            ) : synonyms &&
-                antonyms &&
-                (synonyms.length > 0 || antonyms.length > 0) ? (
-                <div className="synonyms-antonyms-container mt-4">
-                    {synonyms.length > 0 && (
-                        <div className="sa-section">
-                            <h6 className="sa-title synonyms-title">
-                                Synonyms
-                            </h6>
-                            <div className="sa-badges">
-                                {synonyms.map((synonym, index) => (
-                                    <div key={`synonym-${index}`}>
-                                        <span
-                                            className="sa-badge sa-synonym"
-                                            onClick={() =>
-                                                handleShowOffCanvas(
-                                                    `offcanvas-bottom-synonym-${index}`
-                                                )
-                                            }
-                                        >
-                                            {synonym}
-                                        </span>
-                                        {visibleOffCanvas ===
-                                            `offcanvas-bottom-synonym-${index}` && (
-                                                <OffCanvas
-                                                    id={`offcanvas-bottom-synonym-${index}`}
-                                                    word={synonym}
-                                                    show={true}
-                                                    onClose={() => setVisibleOffCanvas(null)}
-                                                />
-                                            )}
+            ) : (
+                <>
+                    {synonyms &&
+                        antonyms &&
+                        (synonyms.length > 0 || antonyms.length > 0) && (
+                            <div className="synonyms-antonyms-container mt-4">
+                                {synonyms.length > 0 && (
+                                    <div className="sa-section">
+                                        <h6 className="sa-title synonyms-title">
+                                            Synonyms
+                                        </h6>
+                                        <div className="sa-badges">
+                                            {synonyms.map((synonym, index) => (
+                                                <div key={`synonym-${index}`}>
+                                                    <span
+                                                        className="sa-badge sa-synonym"
+                                                        onClick={() =>
+                                                            handleShowOffCanvas(
+                                                                `offcanvas-bottom-synonym-${index}`
+                                                            )
+                                                        }
+                                                    >
+                                                        {synonym}
+                                                    </span>
+                                                    {visibleOffCanvas ===
+                                                        `offcanvas-bottom-synonym-${index}` && (
+                                                            <OffCanvas
+                                                                id={`offcanvas-bottom-synonym-${index}`}
+                                                                word={synonym}
+                                                                show={true}
+                                                                onClose={() => setVisibleOffCanvas(null)}
+                                                            />
+                                                        )}
+                                                </div>
+                                            ))}
+                                        </div>
                                     </div>
-                                ))}
-                            </div>
-                        </div>
-                    )}
+                                )}
 
-                    {antonyms.length > 0 && (
-                        <div className="sa-section mt-3">
-                            <h6 className="sa-title antonyms-title">
-                                Antonyms
-                            </h6>
-                            <div className="sa-badges">
-                                {antonyms.map((antonym, index) => (
-                                    <div key={`antonym-${index}`}>
-                                        <span
-                                            className="sa-badge sa-antonym"
-                                            onClick={() =>
-                                                handleShowOffCanvas(
-                                                    `offcanvas-bottom-antonym-${index}`
-                                                )
-                                            }
-                                        >
-                                            {antonym}
-                                        </span>
-                                        {visibleOffCanvas ===
-                                            `offcanvas-bottom-antonym-${index}` && (
-                                                <OffCanvas
-                                                    id={`offcanvas-bottom-antonym-${index}`}
-                                                    word={antonym}
-                                                    show={true}
-                                                    onClose={() => setVisibleOffCanvas(null)}
-                                                />
-                                            )}
+                                {antonyms.length > 0 && (
+                                    <div className="sa-section mt-3">
+                                        <h6 className="sa-title antonyms-title">
+                                            Antonyms
+                                        </h6>
+                                        <div className="sa-badges">
+                                            {antonyms.map((antonym, index) => (
+                                                <div key={`antonym-${index}`}>
+                                                    <span
+                                                        className="sa-badge sa-antonym"
+                                                        onClick={() =>
+                                                            handleShowOffCanvas(
+                                                                `offcanvas-bottom-antonym-${index}`
+                                                            )
+                                                        }
+                                                    >
+                                                        {antonym}
+                                                    </span>
+                                                    {visibleOffCanvas ===
+                                                        `offcanvas-bottom-antonym-${index}` && (
+                                                            <OffCanvas
+                                                                id={`offcanvas-bottom-antonym-${index}`}
+                                                                word={antonym}
+                                                                show={true}
+                                                                onClose={() => setVisibleOffCanvas(null)}
+                                                            />
+                                                        )}
+                                                </div>
+                                            ))}
+                                        </div>
                                     </div>
-                                ))}
+                                )}
                             </div>
-                        </div>
-                    )}
-                </div>
-            ) : null}
+                        )}
+                    {verbConjugation && verbConjugation.data.length > 0 && <VerbConjugation data={verbConjugation} />}
+                </>
+            )}
 
-            {word?.collection_id && (
+            {/* {word?.collection_id && (
                 <div className="d-none d-md-block">
                     <WordCarousel
                         collectionId={String(word.collection_id)}
@@ -303,7 +323,7 @@ export const WordDetailPage: React.FC<WordDetailPageProps> = ({
                         word={word}
                     />
                 </div>
-            )}
+            )} */}
         </div>
     );
 };
