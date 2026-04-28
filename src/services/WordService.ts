@@ -310,11 +310,11 @@ export const getExternalWord = async (
 
 export const getVerbConjugation = async (
     languageCode: string,
-    word: string
+    word: Word
 ): Promise<VerbConjugation | undefined> => {
-    if (languageCode) {
+    if (languageCode && (word.part_of_speech == "verb" || word.part_of_speech == "")) {
         const response = await fetch(
-            `${import.meta.env.VITE_API_VERB_CONJUGATION_URL}?l=${languageCode}&q=${word}`
+            `${import.meta.env.VITE_API_VERB_CONJUGATION_URL}?l=${languageCode}&q=${word.word}`
         );
         const data = await response.json();
         return data as VerbConjugation;

@@ -79,7 +79,7 @@ export const VerbConjugation: React.FC<VerbConjugationProps> = ({ data }) => {
                                                 <LinesDisplay data={child.data as string[]} />
                                                 <button
                                                     className="vc-practice-btn"
-                                                    onClick={() => setPracticeData({ title: child.title, lines: child.data as string[] })}
+                                                    onClick={() => setPracticeData({ title: rootSection.root + ": " + child.title, lines: child.data as string[] })}
                                                     title="Practice this tense"
                                                 >
                                                     <i className="fas fa-pen-nib"></i>
@@ -162,6 +162,20 @@ const LinesDisplay: React.FC<{ data: string[] }> = ({ data }) => {
 };
 
 /* ── Practice Modal ─────────────────────────────────────────── */
+const PRONOUNS = [
+    "i", "you", "he", "she", "it", "we", "they",
+    "yo", "tú", "él", "ella", "usted", "nosotros", "nosotras", "vosotros", "vosotras", "ellos", "ellas", "ustedes",
+    "je", "tu", "il", "elle", "on", "nous", "vous", "ils", "elles",
+    "ich", "du", "er", "sie", "es", "wir", "ihr", "Sie",
+    "io", "tu", "lui", "lei", "noi", "voi", "loro",
+    "eu", "ele", "ela", "você", "nós", "vós", "eles", "elas", "vocês"
+];
+
+interface Segment {
+    type: "text" | "input";
+    value: string;
+}
+
 interface PracticeModalProps {
     word: string;
     title: string;
@@ -170,39 +184,61 @@ interface PracticeModalProps {
 }
 
 const PracticeModal: React.FC<PracticeModalProps> = ({ word, title, lines, onClose }) => {
-    const [answers, setAnswers] = useState<string[]>(new Array(lines.length).fill(""));
-    const [isCorrect, setIsCorrect] = useState<boolean[]>(new Array(lines.length).fill(false));
+    const [answers, setAnswers] = useState<Record<string, string>>({});
+    const [isCorrect, setIsCorrect] = useState<Record<string, boolean>>({});
 
-    // Parse lines to get subject and verb
-    // Expected format: "Subject <b>verb</b> extra"
-    const parsedLines = lines.map(line => {
-        const match = line.match(/^(.*?)<b>(.*?)<\/b>(.*)$/);
-        if (match) {
-            return {
-                subject: match[1].trim(),
-                verb: match[2].trim(),
-                suffix: match[3].trim()
-            };
+    const parseLineToSegments = (line: string): Segment[] => {
+        // Remove <b> tags but keep the text
+        const cleanLine = line.replace(/<\/?b>/g, "").trim();
+
+        // 1. French apostrophe subjects (j', j')
+        const apostropheMatch = cleanLine.match(/^([jJ]')(.+)$/);
+        if (apostropheMatch) {
+            return [
+                { type: "text", value: apostropheMatch[1] },
+                { type: "input", value: apostropheMatch[2].trim() }
+            ];
         }
-        return { subject: line, verb: "", suffix: "" };
-    });
 
-    const handleChange = (index: number, val: string) => {
-        if (isCorrect[index]) return;
+        // 2. Pronoun subjects
+        const words = cleanLine.split(/\s+/);
+        const firstWord = words[0].toLowerCase();
 
-        const newAnswers = [...answers];
-        newAnswers[index] = val;
-        setAnswers(newAnswers);
+        if (PRONOUNS.includes(firstWord) || firstWord.includes("/")) {
+            const subjectEndIdx = cleanLine.indexOf(" ");
+            if (subjectEndIdx !== -1) {
+                return [
+                    { type: "text", value: cleanLine.substring(0, subjectEndIdx + 1) },
+                    { type: "input", value: cleanLine.substring(subjectEndIdx + 1).trim() }
+                ];
+            }
+        }
 
-        // Check correctness (case insensitive, trim spaces)
-        if (val.trim().toLowerCase() === parsedLines[index].verb.toLowerCase()) {
-            const newIsCorrect = [...isCorrect];
-            newIsCorrect[index] = true;
-            setIsCorrect(newIsCorrect);
+        // 3. Fallback: hide everything
+        return [{ type: "input", value: cleanLine }];
+    };
+
+    const parsedLines = lines.map(line => parseLineToSegments(line));
+
+    const handleChange = (lineIdx: number, segIdx: number, val: string, correctValue: string) => {
+        const key = `${lineIdx}-${segIdx}`;
+        if (isCorrect[key]) return;
+
+        setAnswers(prev => ({ ...prev, [key]: val }));
+
+        if (val.trim().toLowerCase() === correctValue.toLowerCase()) {
+            setIsCorrect(prev => ({ ...prev, [key]: true }));
         }
     };
 
-    // Close on Escape
+    const isLineComplete = (lineIdx: number) => {
+        return parsedLines[lineIdx].every((seg, segIdx) =>
+            seg.type === "text" || isCorrect[`${lineIdx}-${segIdx}`]
+        );
+    };
+
+    const allCorrect = parsedLines.every((_, lineIdx) => isLineComplete(lineIdx));
+
     useEffect(() => {
         const handleEsc = (e: KeyboardEvent) => {
             if (e.key === "Escape") onClose();
@@ -213,44 +249,48 @@ const PracticeModal: React.FC<PracticeModalProps> = ({ word, title, lines, onClo
 
     return (
         <div className="vc-modal-overlay" onClick={onClose}>
-            <div className="modal-dialog modal-dialog-centered" onClick={e => e.stopPropagation()} style={{ width: '90%', maxWidth: '500px' }}>
+            <div className="modal-dialog modal-dialog-centered" onClick={e => e.stopPropagation()} style={{ width: "90%", maxWidth: "550px" }}>
                 <div className="modal-content word-modal-content">
-                    <div className="word-modal-header" style={{ backgroundColor: '#DD5746' }}>
+                    <div className="word-modal-header" style={{ backgroundColor: "#DD5746" }}>
                         <h5 className="word-modal-title">
-                            <i className="fas fa-pen-nib me-2"></i>
                             {title}
                         </h5>
-                        <button
-                            type="button"
-                            className="btn btn-sm word-modal-close"
-                            onClick={onClose}
-                            aria-label="Close"
-                        >
+                        <button type="button" className="btn btn-sm word-modal-close" onClick={onClose}>
                             <i className="fas fa-times"></i>
                         </button>
                     </div>
 
                     <div className="word-modal-body">
                         <div className="vc-practice-list">
-                            <h3 className="word-modal-title text-center mb-4" style={{ color: '#2d3436', textShadow: 'none', justifyContent: 'center' }}>
+                            <h3 className="word-modal-title text-center mb-2" style={{ color: "#2d3436", textShadow: "none", justifyContent: "center" }}>
                                 {word}
                             </h3>
-                            {parsedLines.map((item, idx) => (
-                                <div key={idx} className="vc-practice-row">
-                                    <span className="vc-practice-subject">{item.subject}</span>
-                                    <div className="vc-input-wrapper">
-                                        <input
-                                            type="text"
-                                            className={`vc-practice-input ${isCorrect[idx] ? "vc-input--correct" : ""}`}
-                                            value={isCorrect[idx] ? item.verb : answers[idx]}
-                                            onChange={e => handleChange(idx, e.target.value)}
-                                            disabled={isCorrect[idx]}
-                                            placeholder="..."
-                                            autoFocus={idx === 0}
-                                        />
-                                        {isCorrect[idx] && <i className="fas fa-check-circle vc-correct-icon"></i>}
+                            {parsedLines.map((segments, lineIdx) => (
+                                <div key={lineIdx} className="vc-practice-row">
+                                    <div className="vc-segments-container">
+                                        {segments.map((segment, segIdx) => {
+                                            const key = `${lineIdx}-${segIdx}`;
+                                            if (segment.type === "text") {
+                                                return <span key={segIdx} className="vc-segment-text">{segment.value}</span>;
+                                            } else {
+                                                return (
+                                                    <div key={segIdx} className="vc-segment-input-wrapper">
+                                                        <input
+                                                            type="text"
+                                                            className={`vc-segment-input ${isCorrect[key] ? "vc-input--correct" : ""}`}
+                                                            value={isCorrect[key] ? segment.value : (answers[key] || "")}
+                                                            onChange={e => handleChange(lineIdx, segIdx, e.target.value, segment.value)}
+                                                            disabled={isCorrect[key]}
+                                                            placeholder="..."
+                                                            autoFocus={lineIdx === 0 && segIdx === 0}
+                                                        />
+                                                        {isCorrect[key] && <i className="fas fa-check-circle vc-correct-mini-icon"></i>}
+                                                    </div>
+                                                );
+                                            }
+                                        })}
+                                        {/* {isLineComplete(lineIdx) && <i className="fas fa-check-circle vc-line-correct-icon"></i>} */}
                                     </div>
-                                    {item.suffix && <span className="vc-practice-suffix">{item.suffix}</span>}
                                 </div>
                             ))}
                         </div>
@@ -259,19 +299,13 @@ const PracticeModal: React.FC<PracticeModalProps> = ({ word, title, lines, onClo
                     <div className="word-modal-footer">
                         <button
                             type="button"
-                            className={`btn ${isCorrect.every(c => c) ? 'btn-success' : 'btn-outline-secondary'}`}
+                            className={`btn ${allCorrect ? "btn-success" : "btn-outline-secondary"}`}
                             onClick={onClose}
                         >
-                            {isCorrect.every(c => c) ? (
-                                <>
-                                    <i className="fas fa-star me-1"></i>
-                                    Excellent!
-                                </>
+                            {allCorrect ? (
+                                <><i className="fas fa-star me-1"></i>Excellent!</>
                             ) : (
-                                <>
-                                    <i className="fas fa-times me-1"></i>
-                                    Close
-                                </>
+                                <><i className="fas fa-times me-1"></i>Close</>
                             )}
                         </button>
                     </div>
