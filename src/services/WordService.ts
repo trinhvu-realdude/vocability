@@ -4,7 +4,7 @@ import {
     addCollection,
     getCollectionByNameAndLanguageId,
 } from "./CollectionService";
-import { EditWordObj, ExternalWord } from "../interfaces/mainProps";
+import { EditWordObj, ExternalWord, VerbConjugation } from "../interfaces/mainProps";
 import { getCurrentLanguageId } from "../utils/helper";
 import { languages } from "../utils/constants";
 
@@ -281,15 +281,19 @@ export const getPhonetic = async (
 export const getSynonymsAntonyms = async (
     word: Word
 ): Promise<{ synonyms: string[]; antonyms: string[] } | undefined> => {
-    const response = await fetch(
-        `${import.meta.env.VITE_API_DICTIONARY_URL}${word.word}`
-    );
-    const data = await response.json();
-    const meanings = data[0].meanings as Array<any>;
-    for (const meaning of meanings) {
-        if (meaning.partOfSpeech === word.part_of_speech) {
-            return { synonyms: meaning.synonyms, antonyms: meaning.antonyms };
+    try {
+        const response = await fetch(
+            `${import.meta.env.VITE_API_DICTIONARY_URL}${word.word}`
+        );
+        const data = await response.json();
+        const meanings = data[0].meanings as Array<any>;
+        for (const meaning of meanings) {
+            if (meaning.partOfSpeech === word.part_of_speech) {
+                return { synonyms: meaning.synonyms, antonyms: meaning.antonyms };
+            }
         }
+    } catch (error) {
+        console.log(error);
     }
     return undefined;
 };
@@ -302,4 +306,18 @@ export const getExternalWord = async (
     );
     const data = await response.json();
     return data as ExternalWord[];
+};
+
+export const getVerbConjugation = async (
+    languageCode: string,
+    word: string
+): Promise<VerbConjugation | undefined> => {
+    if (languageCode) {
+        const response = await fetch(
+            `${import.meta.env.VITE_API_VERB_CONJUGATION_URL}?l=${languageCode}&q=${word}`
+        );
+        const data = await response.json();
+        return data as VerbConjugation;
+    }
+    return undefined;
 };

@@ -1,6 +1,7 @@
 {
     "flag": "🇵🇹",
     "language": "pt",
+    "languageCodeForVerbConjugation": "portugais",
     "languageVoice": "pt-PT",
     "navbar.collections": "Coleções",
     "navbar.collections.allCollections": "Todas as coleções",
