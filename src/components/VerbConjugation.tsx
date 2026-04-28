@@ -1,6 +1,7 @@
 import React, { useState, useRef, useLayoutEffect, useEffect } from "react";
 import { VerbConjugation as VerbConjugationType } from "../interfaces/mainProps";
 import "../styles/VerbConjugation.css";
+import "../styles/AddWordModal.css";
 
 interface VerbConjugationProps {
     data?: VerbConjugationType;
@@ -212,40 +213,68 @@ const PracticeModal: React.FC<PracticeModalProps> = ({ word, title, lines, onClo
 
     return (
         <div className="vc-modal-overlay" onClick={onClose}>
-            <div className="vc-modal-content" onClick={e => e.stopPropagation()}>
-                <div className="vc-modal-header">
-                    <h3 className="vc-modal-title">{title}</h3>
-                    <button className="vc-modal-close" onClick={onClose}>
-                        <i className="fas fa-times"></i>
-                    </button>
-                </div>
-                <div className="vc-modal-body">
-                    <div className="vc-practice-list">
-                        <h3 className="vc-modal-title text-center mb-2">{word}</h3>
-                        {parsedLines.map((item, idx) => (
-                            <div key={idx} className="vc-practice-row">
-                                <span className="vc-practice-subject">{item.subject}</span>
-                                <div className="vc-input-wrapper">
-                                    <input
-                                        type="text"
-                                        className={`vc-practice-input ${isCorrect[idx] ? "vc-input--correct" : ""}`}
-                                        value={isCorrect[idx] ? item.verb : answers[idx]}
-                                        onChange={e => handleChange(idx, e.target.value)}
-                                        disabled={isCorrect[idx]}
-                                        placeholder="Type verb..."
-                                        autoFocus={idx === 0}
-                                    />
-                                    {isCorrect[idx] && <i className="fas fa-check-circle vc-correct-icon"></i>}
-                                </div>
-                                {item.suffix && <span className="vc-practice-suffix">{item.suffix}</span>}
-                            </div>
-                        ))}
+            <div className="modal-dialog modal-dialog-centered" onClick={e => e.stopPropagation()} style={{ width: '90%', maxWidth: '500px' }}>
+                <div className="modal-content word-modal-content">
+                    <div className="word-modal-header" style={{ backgroundColor: '#DD5746' }}>
+                        <h5 className="word-modal-title">
+                            <i className="fas fa-pen-nib me-2"></i>
+                            {title}
+                        </h5>
+                        <button
+                            type="button"
+                            className="btn btn-sm word-modal-close"
+                            onClick={onClose}
+                            aria-label="Close"
+                        >
+                            <i className="fas fa-times"></i>
+                        </button>
                     </div>
-                </div>
-                <div className="vc-modal-footer">
-                    <button className="vc-done-btn" onClick={onClose}>
-                        {isCorrect.every(c => c) ? "Excellent!" : "Close"}
-                    </button>
+
+                    <div className="word-modal-body">
+                        <div className="vc-practice-list">
+                            <h3 className="word-modal-title text-center mb-4" style={{ color: '#2d3436', textShadow: 'none', justifyContent: 'center' }}>
+                                {word}
+                            </h3>
+                            {parsedLines.map((item, idx) => (
+                                <div key={idx} className="vc-practice-row">
+                                    <span className="vc-practice-subject">{item.subject}</span>
+                                    <div className="vc-input-wrapper">
+                                        <input
+                                            type="text"
+                                            className={`vc-practice-input ${isCorrect[idx] ? "vc-input--correct" : ""}`}
+                                            value={isCorrect[idx] ? item.verb : answers[idx]}
+                                            onChange={e => handleChange(idx, e.target.value)}
+                                            disabled={isCorrect[idx]}
+                                            placeholder="..."
+                                            autoFocus={idx === 0}
+                                        />
+                                        {isCorrect[idx] && <i className="fas fa-check-circle vc-correct-icon"></i>}
+                                    </div>
+                                    {item.suffix && <span className="vc-practice-suffix">{item.suffix}</span>}
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
+                    <div className="word-modal-footer">
+                        <button
+                            type="button"
+                            className={`btn ${isCorrect.every(c => c) ? 'btn-success' : 'btn-outline-secondary'}`}
+                            onClick={onClose}
+                        >
+                            {isCorrect.every(c => c) ? (
+                                <>
+                                    <i className="fas fa-star me-1"></i>
+                                    Excellent!
+                                </>
+                            ) : (
+                                <>
+                                    <i className="fas fa-times me-1"></i>
+                                    Close
+                                </>
+                            )}
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
