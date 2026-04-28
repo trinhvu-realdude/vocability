@@ -220,11 +220,6 @@
     transition: padding-left 0.2s ease;
 }
 
-.vc-line:hover {
-    padding-left: 4px;
-    color: #000;
-}
-
 .vc-line:last-child {
     border-bottom: none;
 }
@@ -305,7 +300,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 1060; /* Higher than regular UI, same as bootstrap modals */
+    z-index: 1060;
+    /* Higher than regular UI, same as bootstrap modals */
     animation: vcFadeIn 0.3s ease;
 }
 
