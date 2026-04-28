@@ -305,61 +305,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 1000;
+    z-index: 1060; /* Higher than regular UI, same as bootstrap modals */
     animation: vcFadeIn 0.3s ease;
-}
-
-.vc-modal-content {
-    background: #ffffff;
-    width: 90%;
-    max-width: 500px;
-    border-radius: 24px;
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-    overflow: hidden;
-    animation: vcSlideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.vc-modal-header {
-    padding: 24px 30px;
-    background: linear-gradient(135deg, #DD5746, #c2493a);
-    color: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.vc-modal-title {
-    margin: 0;
-    font-size: 1.25rem;
-    font-weight: 800;
-    letter-spacing: 0.5px;
-}
-
-.vc-modal-close {
-    background: rgba(255, 255, 255, 0.2);
-    border: none;
-    color: #fff;
-    font-size: 1.25rem;
-    cursor: pointer;
-    padding: 0.5rem 0.75rem;
-    border-radius: 8px;
-    transition: all 0.3s ease;
-    width: 36px;
-    height: 36px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.vc-modal-close:hover {
-    background: rgba(255, 255, 255, 0.3);
-    transform: rotate(90deg);
-}
-
-.vc-modal-body {
-    padding: 30px;
-    max-height: 60vh;
-    overflow-y: auto;
 }
 
 .vc-practice-list {
@@ -375,11 +322,11 @@
 }
 
 .vc-practice-subject {
-    min-width: 60px;
+    min-width: 80px;
     font-weight: 700;
-    color: #636e72;
+    color: #6c757d;
     text-align: right;
-    font-size: 1rem;
+    font-size: 0.95rem;
 }
 
 .vc-input-wrapper {
@@ -391,25 +338,25 @@
     width: 100%;
     padding: 10px 16px;
     padding-right: 40px;
-    border: 2px solid rgba(0, 0, 0, 0.08);
+    border: 2px solid #e9ecef;
     border-radius: 12px;
-    font-size: 1.05rem;
-    color: #2d3436;
-    transition: all 0.2s;
-    background: #f8f9fa;
+    font-size: 1rem;
+    color: #495057;
+    transition: all 0.3s ease;
+    background: #ffffff;
 }
 
 .vc-practice-input:focus {
     outline: none;
     border-color: #DD5746;
     background: #fff;
-    box-shadow: 0 0 0 4px rgba(221, 87, 70, 0.1);
+    box-shadow: 0 0 0 3px rgba(221, 87, 70, 0.1);
 }
 
 .vc-input--correct {
-    background: rgba(46, 204, 113, 0.05) !important;
-    border-color: #2ecc71 !important;
-    color: #27ae60 !important;
+    background: #f8fff9 !important;
+    border-color: #28a745 !important;
+    color: #218838 !important;
     font-weight: 700;
 }
 
@@ -418,37 +365,14 @@
     right: 12px;
     top: 50%;
     transform: translateY(-50%);
-    color: #2ecc71;
+    color: #28a745;
     font-size: 1.1rem;
 }
 
 .vc-practice-suffix {
-    color: #b2bec3;
+    color: #adb5bd;
     font-size: 0.95rem;
-}
-
-.vc-modal-footer {
-    padding: 20px 30px;
-    border-top: 1px solid rgba(0, 0, 0, 0.05);
-    display: flex;
-    justify-content: flex-end;
-}
-
-.vc-done-btn {
-    padding: 12px 24px;
-    background: #DD5746;
-    color: #fff;
-    border: none;
-    border-radius: 12px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.2s;
-}
-
-.vc-done-btn:hover {
-    background: #c2493a;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(221, 87, 70, 0.2);
+    min-width: 40px;
 }
 
 @keyframes vcFadeIn {
@@ -458,17 +382,5 @@
 
     to {
         opacity: 1;
-    }
-}
-
-@keyframes vcSlideUp {
-    from {
-        opacity: 0;
-        transform: translateY(20px) scale(0.95);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
     }
 }
