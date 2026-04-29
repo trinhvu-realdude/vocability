@@ -178,5 +178,6 @@
     "wordMatching.accuracy": "Genauigkeit",
     "wordMatching.totalWords": "Gesamtwörter",
     "wordMatching.playAgain": "Nochmal spielen",
-    "wordMatching.selectCollection": "Wählen Sie eine Sammlung auf der Übungsseite aus, um mit dem Zuordnen zu beginnen."
+    "wordMatching.selectCollection": "Wählen Sie eine Sammlung auf der Übungsseite aus, um mit dem Zuordnen zu beginnen.",
+    "verbConjugation.excellent": "Ausgezeichnet!"
 }
