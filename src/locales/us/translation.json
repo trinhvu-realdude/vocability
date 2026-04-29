@@ -178,5 +178,6 @@
     "wordMatching.accuracy": "Accuracy",
     "wordMatching.totalWords": "Total Words",
     "wordMatching.playAgain": "Play Again",
-    "wordMatching.selectCollection": "Select a collection from the Practices page to start matching."
+    "wordMatching.selectCollection": "Select a collection from the Practices page to start matching.",
+    "verbConjugation.excellent": "Excellent!"
 }

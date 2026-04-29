@@ -178,5 +178,6 @@
     "wordMatching.accuracy": "Precisión",
     "wordMatching.totalWords": "Total de palabras",
     "wordMatching.playAgain": "Jugar de nuevo",
-    "wordMatching.selectCollection": "Selecciona una colección desde la página de Prácticas para comenzar a emparejar."
+    "wordMatching.selectCollection": "Selecciona una colección desde la página de Prácticas para comenzar a emparejar.",
+    "verbConjugation.excellent": "¡Excelente!"
 }

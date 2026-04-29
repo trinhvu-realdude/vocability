@@ -114,7 +114,7 @@
     background: #ffffff;
     border: 1px solid rgba(0, 0, 0, 0.06);
     border-radius: 12px;
-    padding: 18px 18px 65px;
+    padding: 18px 18px 18px;
     /* Ample space for floating button */
     transition: all 0.3s ease;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
@@ -135,7 +135,8 @@
     letter-spacing: 0.8px;
     color: #DD5746;
     display: flex;
-    align-items: flex-end;
+    align-items: center;
+    justify-content: space-between;
     margin-bottom: 16px;
     padding-bottom: 8px;
     border-bottom: 2px solid rgba(221, 87, 70, 0.1);
@@ -259,15 +260,13 @@
 
 /* ── Practice Button ────────────────────────────────────────── */
 .vc-practice-btn {
-    position: absolute;
-    right: 15px;
-    bottom: 15px;
-    width: 42px;
-    height: 42px;
+    width: 36px;
+    height: 36px;
     border-radius: 50%;
     background: transparent;
     color: #DD5746;
     border: 2px solid rgba(221, 87, 70, 0.3);
+    flex: 0 0 36px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -415,4 +414,21 @@
     to {
         opacity: 1;
     }
+}
+
+.vc-fade-in {
+    animation: vcFadeIn 0.5s ease-in-out;
+}
+
+.vc-finished-container {
+    animation: vcFadeIn 0.6s ease-in-out;
+}
+
+.vc-success-icon {
+    animation: vcScaleIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.vc-progress-text {
+    font-weight: 600;
+    letter-spacing: 0.5px;
 }

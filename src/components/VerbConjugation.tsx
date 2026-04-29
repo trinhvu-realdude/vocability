@@ -1,5 +1,6 @@
-import React, { useState, useRef, useLayoutEffect, useEffect } from "react";
+import React, { useState, useRef, useLayoutEffect, useEffect, useMemo } from "react";
 import { VerbConjugation as VerbConjugationType } from "../interfaces/mainProps";
+import { useLanguage } from "../LanguageContext";
 import "../styles/VerbConjugation.css";
 import "../styles/AddWordModal.css";
 
@@ -43,13 +44,16 @@ export const VerbConjugation: React.FC<VerbConjugationProps> = ({ data }) => {
     if (!data || !data.data) return null;
 
     const toggleRoot = (index: number) => {
-        setExpandedRoots(prev => ({ ...prev, [index]: !prev[index] }));
+        setExpandedRoots(prev => {
+            const isCurrentlyExpanded = prev[index] ?? true;
+            return { ...prev, [index]: !isCurrentlyExpanded };
+        });
     };
 
     return (
         <div className="vc-container">
             {data.data.filter(rootSection => rootSection.children && rootSection.children.length > 0).map((rootSection, rootIndex) => {
-                const isExpanded = expandedRoots[rootIndex] !== false; // default expanded
+                const isExpanded = expandedRoots[rootIndex] ?? true; // default expanded
 
                 return (
                     <div key={rootIndex} className="vc-root-section">
@@ -70,21 +74,25 @@ export const VerbConjugation: React.FC<VerbConjugationProps> = ({ data }) => {
                             <ChildrenGrid>
                                 {rootSection.children.map((child, childIndex) => (
                                     <div key={childIndex} className="vc-child-card">
-                                        <div className="vc-child-title">{child.title}</div>
+                                        <div className="vc-child-title">
+                                            <span>{child.title}</span>
+                                            {
+                                                child.type === "lines" && (
+                                                    <button
+                                                        className="vc-practice-btn"
+                                                        onClick={() => setPracticeData({ title: rootSection.root + ": " + child.title, lines: child.data as string[] })}
+                                                        title="Practice this tense"
+                                                    >
+                                                        <i className="fas fa-pen-nib"></i>
+                                                    </button>
+                                                )
+                                            }
+                                        </div>
 
                                         {child.type === "table" ? (
                                             <TableDisplay data={child.data as string[][]} />
                                         ) : (
-                                            <>
-                                                <LinesDisplay data={child.data as string[]} />
-                                                <button
-                                                    className="vc-practice-btn"
-                                                    onClick={() => setPracticeData({ title: rootSection.root + ": " + child.title, lines: child.data as string[] })}
-                                                    title="Practice this tense"
-                                                >
-                                                    <i className="fas fa-pen-nib"></i>
-                                                </button>
-                                            </>
+                                            <LinesDisplay data={child.data as string[]} />
                                         )}
                                     </div>
                                 ))}
@@ -184,14 +192,23 @@ interface PracticeModalProps {
 }
 
 const PracticeModal: React.FC<PracticeModalProps> = ({ word, title, lines, onClose }) => {
+    const { translations } = useLanguage();
     const [answers, setAnswers] = useState<Record<string, string>>({});
     const [isCorrect, setIsCorrect] = useState<Record<string, boolean>>({});
+    const [step, setStep] = useState(0);
+
+    // Shuffle line indices once on mount
+    const shuffledIndices = useMemo(() => {
+        const indices = lines.map((_, i) => i);
+        for (let i = indices.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [indices[i], indices[j]] = [indices[j], indices[i]];
+        }
+        return indices;
+    }, [lines]);
 
     const parseLineToSegments = (line: string): Segment[] => {
-        // Remove <b> tags but keep the text
         const cleanLine = line.replace(/<\/?b>/g, "").trim();
-
-        // 1. French apostrophe subjects (j', j')
         const apostropheMatch = cleanLine.match(/^([jJ]')(.+)$/);
         if (apostropheMatch) {
             return [
@@ -199,11 +216,8 @@ const PracticeModal: React.FC<PracticeModalProps> = ({ word, title, lines, onClo
                 { type: "input", value: apostropheMatch[2].trim() }
             ];
         }
-
-        // 2. Pronoun subjects
         const words = cleanLine.split(/\s+/);
         const firstWord = words[0].toLowerCase();
-
         if (PRONOUNS.includes(firstWord) || firstWord.includes("/")) {
             const subjectEndIdx = cleanLine.indexOf(" ");
             if (subjectEndIdx !== -1) {
@@ -213,12 +227,10 @@ const PracticeModal: React.FC<PracticeModalProps> = ({ word, title, lines, onClo
                 ];
             }
         }
-
-        // 3. Fallback: hide everything
         return [{ type: "input", value: cleanLine }];
     };
 
-    const parsedLines = lines.map(line => parseLineToSegments(line));
+    const parsedLines = useMemo(() => lines.map(line => parseLineToSegments(line)), [lines]);
 
     const handleChange = (lineIdx: number, segIdx: number, val: string, correctValue: string) => {
         const key = `${lineIdx}-${segIdx}`;
@@ -237,7 +249,18 @@ const PracticeModal: React.FC<PracticeModalProps> = ({ word, title, lines, onClo
         );
     };
 
-    const allCorrect = parsedLines.every((_, lineIdx) => isLineComplete(lineIdx));
+    const currentLineIdx = shuffledIndices[step];
+    const isFinished = step >= shuffledIndices.length;
+
+    // Auto-advance logic
+    useEffect(() => {
+        if (!isFinished && isLineComplete(currentLineIdx)) {
+            const timer = setTimeout(() => {
+                setStep(prev => prev + 1);
+            }, 600); // Small delay for visual feedback
+            return () => clearTimeout(timer);
+        }
+    }, [isCorrect, currentLineIdx, isFinished]);
 
     useEffect(() => {
         const handleEsc = (e: KeyboardEvent) => {
@@ -265,11 +288,12 @@ const PracticeModal: React.FC<PracticeModalProps> = ({ word, title, lines, onClo
                             <h3 className="word-modal-title text-center mb-2" style={{ color: "#2d3436", textShadow: "none", justifyContent: "center" }}>
                                 {word}
                             </h3>
-                            {parsedLines.map((segments, lineIdx) => (
-                                <div key={lineIdx} className="vc-practice-row">
+
+                            {!isFinished ? (
+                                <div key={step} className="vc-practice-row vc-fade-in">
                                     <div className="vc-segments-container">
-                                        {segments.map((segment, segIdx) => {
-                                            const key = `${lineIdx}-${segIdx}`;
+                                        {parsedLines[currentLineIdx].map((segment, segIdx) => {
+                                            const key = `${currentLineIdx}-${segIdx}`;
                                             if (segment.type === "text") {
                                                 return <span key={segIdx} className="vc-segment-text">{segment.value}</span>;
                                             } else {
@@ -279,34 +303,40 @@ const PracticeModal: React.FC<PracticeModalProps> = ({ word, title, lines, onClo
                                                             type="text"
                                                             className={`vc-segment-input ${isCorrect[key] ? "vc-input--correct" : ""}`}
                                                             value={isCorrect[key] ? segment.value : (answers[key] || "")}
-                                                            onChange={e => handleChange(lineIdx, segIdx, e.target.value, segment.value)}
+                                                            onChange={e => handleChange(currentLineIdx, segIdx, e.target.value, segment.value)}
                                                             disabled={isCorrect[key]}
                                                             placeholder="..."
-                                                            autoFocus={lineIdx === 0 && segIdx === 0}
+                                                            autoFocus
                                                         />
                                                         {isCorrect[key] && <i className="fas fa-check-circle vc-correct-mini-icon"></i>}
                                                     </div>
                                                 );
                                             }
                                         })}
-                                        {/* {isLineComplete(lineIdx) && <i className="fas fa-check-circle vc-line-correct-icon"></i>} */}
+                                    </div>
+                                    <div className="vc-progress-text mt-3 text-center text-muted small">
+                                        {step + 1} / {shuffledIndices.length}
                                     </div>
                                 </div>
-                            ))}
+                            ) : (
+                                <div className="vc-finished-container text-center py-2">
+                                    <div className="vc-success-icon mb-2">
+                                        <i className="fas fa-check-circle fa-4x text-success"></i>
+                                    </div>
+                                    <h4>{translations["verbConjugation.excellent"] || "Review Complete!"}</h4>
+                                </div>
+                            )}
                         </div>
                     </div>
 
                     <div className="word-modal-footer">
                         <button
                             type="button"
-                            className={`btn ${allCorrect ? "btn-success" : "btn-outline-secondary"}`}
+                            className="btn btn-outline-secondary"
                             onClick={onClose}
                         >
-                            {allCorrect ? (
-                                <><i className="fas fa-star me-1"></i>Excellent!</>
-                            ) : (
-                                <><i className="fas fa-times me-1"></i>Close</>
-                            )}
+                            <i className="fas fa-times me-1"></i>
+                            {translations["closeBtn"]}
                         </button>
                     </div>
                 </div>
