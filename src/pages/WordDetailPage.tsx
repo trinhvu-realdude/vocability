@@ -39,6 +39,7 @@ export const WordDetailPage: React.FC<WordDetailPageProps> = ({
         null
     );
     const [isLoading, setIsLoading] = useState<boolean>(true);
+    const [isExtraLoading, setIsExtraLoading] = useState<boolean>(true);
     const [isEdit, setIsEdit] = useState<boolean>(false);
 
     const { translations } = useLanguage();
@@ -70,10 +71,14 @@ export const WordDetailPage: React.FC<WordDetailPageProps> = ({
         const fetchWord = async () => {
             if (!wordId) return;
             try {
+                setIsLoading(true);
+                setIsExtraLoading(true);
+
                 const objWord = await getWordById(wordId);
                 if (isCancelled || !objWord) return;
 
                 setWord(objWord);
+                setIsLoading(false); // Display word details immediately
 
                 // Run synonyms/antonyms and verb conjugation in parallel
                 const [objSynonymsAntonyms, conjugation] = await Promise.all([
@@ -88,7 +93,10 @@ export const WordDetailPage: React.FC<WordDetailPageProps> = ({
             } catch (error) {
                 if (!isCancelled) console.log(error);
             } finally {
-                if (!isCancelled) setIsLoading(false);
+                if (!isCancelled) {
+                    setIsLoading(false);
+                    setIsExtraLoading(false);
+                }
             }
         };
 
@@ -236,7 +244,7 @@ export const WordDetailPage: React.FC<WordDetailPageProps> = ({
                 />
             )}
 
-            {isLoading ? (
+            {isExtraLoading ? (
                 <div className="mx-auto loader"></div>
             ) : (
                 <>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Collection, CollectionShare, Word } from "../../interfaces/model";
 import { getWordsByCollectionId, moveWordToCollection } from "../../services/WordService";
 import { useLanguage } from "../../LanguageContext";
@@ -12,6 +12,8 @@ import { getWordsForReview } from "../../services/SpacedRepetitionService";
 import { ToastType } from "../../components/Toast";
 import { usePermissions } from "../../utils/usePermissions";
 import { getSharesForCollection } from "../../services/ShareService";
+import { TextToSpeechButton } from "../TextToSpeechButton";
+import { formatText } from "../../utils/helper";
 
 interface CollectionListItemProps {
     collection: Collection;
@@ -34,6 +36,108 @@ export const CollectionListItem: React.FC<CollectionListItemProps> = ({
     const [isEdit, setIsEdit] = useState(false);
     const [isDelete, setIsDelete] = useState(false);
     const [isShare, setIsShare] = useState(false);
+
+    // Hover Preview States
+    const [activeHoverWord, setActiveHoverWord] = useState<Word | null>(null);
+    const [hoverPos, setHoverPos] = useState<{ top: number; left: number } | null>(null);
+    const [isHoverVisible, setIsHoverVisible] = useState(false);
+    const showTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+    const hideTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+    const handleMouseEnterWord = (word: Word, e: React.MouseEvent<HTMLDivElement>) => {
+        if (hideTimeoutRef.current) {
+            clearTimeout(hideTimeoutRef.current);
+            hideTimeoutRef.current = null;
+        }
+        if (showTimeoutRef.current) {
+            clearTimeout(showTimeoutRef.current);
+            showTimeoutRef.current = null;
+        }
+
+        const rect = e.currentTarget.getBoundingClientRect();
+        const tooltipWidth = 320;
+
+        // Center horizontally
+        let left = rect.left + rect.width / 2 - tooltipWidth / 2;
+        if (left < 16) left = 16;
+        if (left + tooltipWidth > window.innerWidth - 16) {
+            left = window.innerWidth - tooltipWidth - 16;
+        }
+
+        // Place below the hovered item
+        let top = rect.bottom + 8;
+        // If it goes beyond the viewport height, place it above instead
+        const estimatedTooltipHeight = 180;
+        if (top + estimatedTooltipHeight > window.innerHeight) {
+            const potentialTop = rect.top - estimatedTooltipHeight - 8;
+            if (potentialTop > 16) {
+                top = rect.top - estimatedTooltipHeight - 8;
+            }
+        }
+
+        if (isHoverVisible && activeHoverWord && activeHoverWord.id !== word.id) {
+            showTimeoutRef.current = setTimeout(() => {
+                setIsHoverVisible(false);
+                showTimeoutRef.current = setTimeout(() => {
+                    setActiveHoverWord(word);
+                    setHoverPos({ top, left });
+                    setIsHoverVisible(true);
+                    showTimeoutRef.current = null;
+                }, 150);
+            }, 200);
+        } else if (!isHoverVisible) {
+            showTimeoutRef.current = setTimeout(() => {
+                setActiveHoverWord(word);
+                setHoverPos({ top, left });
+                setIsHoverVisible(true);
+                showTimeoutRef.current = null;
+            }, 200);
+        }
+    };
+
+    const handleMouseLeaveWord = () => {
+        if (showTimeoutRef.current) {
+            clearTimeout(showTimeoutRef.current);
+            showTimeoutRef.current = null;
+        }
+        if (hideTimeoutRef.current) {
+            clearTimeout(hideTimeoutRef.current);
+        }
+        hideTimeoutRef.current = setTimeout(() => {
+            setIsHoverVisible(false);
+        }, 250);
+    };
+
+    const handleMouseEnterPopup = () => {
+        if (hideTimeoutRef.current) {
+            clearTimeout(hideTimeoutRef.current);
+            hideTimeoutRef.current = null;
+        }
+        if (showTimeoutRef.current) {
+            clearTimeout(showTimeoutRef.current);
+            showTimeoutRef.current = null;
+        }
+    };
+
+    const handleMouseLeavePopup = () => {
+        if (hideTimeoutRef.current) {
+            clearTimeout(hideTimeoutRef.current);
+        }
+        hideTimeoutRef.current = setTimeout(() => {
+            setIsHoverVisible(false);
+        }, 250);
+    };
+
+    useEffect(() => {
+        return () => {
+            if (showTimeoutRef.current) {
+                clearTimeout(showTimeoutRef.current);
+            }
+            if (hideTimeoutRef.current) {
+                clearTimeout(hideTimeoutRef.current);
+            }
+        };
+    }, []);
 
     const { translations } = useLanguage();
     const { canEdit, canShare, canDelete, canPractice } = usePermissions(collection.id, collection.myRole);
@@ -315,7 +419,11 @@ export const CollectionListItem: React.FC<CollectionListItemProps> = ({
                                         e.currentTarget.style.opacity = '1';
                                     }}
                                 >
-                                    <div className="mini-word-row">
+                                    <div
+                                        className="mini-word-row"
+                                        onMouseEnter={(e) => handleMouseEnterWord(word, e)}
+                                        onMouseLeave={handleMouseLeaveWord}
+                                    >
                                         <span className="mini-word-text"><a
                                             href={`/${translations["language"]}/word/${word.id}`}
                                             className="word-link"
@@ -365,6 +473,95 @@ export const CollectionListItem: React.FC<CollectionListItemProps> = ({
                     onClose={() => setIsShare(false)}
                     onShowToast={onShowToast}
                 />
+            )}
+
+            {activeHoverWord && (
+                <div
+                    className={`word-hover-popup ${isHoverVisible ? 'visible' : ''}`}
+                    style={{
+                        position: 'fixed',
+                        top: hoverPos?.top || 0,
+                        left: hoverPos?.left || 0,
+                        zIndex: 9999,
+                        borderLeft: `4px solid ${collection.color || '#DD5746'}`,
+                    }}
+                    onMouseEnter={handleMouseEnterPopup}
+                    onMouseLeave={handleMouseLeavePopup}
+                >
+                    <div className="word-hover-header">
+                        <div className="word-hover-title-group">
+                            <h6 className="word-hover-title">{activeHoverWord.word}</h6>
+                            {activeHoverWord.part_of_speech && (
+                                <span
+                                    className="word-hover-pos"
+                                    style={{
+                                        color: collection.color || '#DD5746',
+                                        backgroundColor: collection.color ? `${collection.color}12` : 'rgba(221, 87, 70, 0.06)'
+                                    }}
+                                >
+                                    {activeHoverWord.part_of_speech}
+                                </span>
+                            )}
+                            {activeHoverWord.phonetic && (
+                                <span className="word-hover-phonetic">{activeHoverWord.phonetic}</span>
+                            )}
+                        </div>
+                        <div className="word-hover-audio-group">
+                            <TextToSpeechButton word={activeHoverWord.word} />
+                        </div>
+                    </div>
+                    <div className="word-hover-body">
+                        {activeHoverWord.definitions && activeHoverWord.definitions.length > 0 ? (
+                            <div className="word-hover-definitions-list">
+                                {activeHoverWord.definitions.map((def, idx) => {
+                                    const isMulti = activeHoverWord.definitions.length > 1;
+                                    return (
+                                        <div key={idx} className={`word-hover-definition-item${isMulti ? ' multi' : ''}`}>
+                                            {isMulti && (
+                                                <div className="word-hover-def-row">
+                                                    <span
+                                                        className="word-hover-def-badge"
+                                                        style={{ background: collection.color || '#DD5746' }}
+                                                    >
+                                                        {idx + 1}
+                                                    </span>
+                                                    <div className="word-hover-def-content">
+                                                        <div className="word-hover-definition-text">{def.definition.trim()}</div>
+                                                        {def.notes && (
+                                                            <div
+                                                                className="word-hover-notes"
+                                                                style={{ borderLeftColor: collection.color || '#DD5746' }}
+                                                            >
+                                                                <strong>{translations["addWordForm.notes"] || "Notes"}:</strong>{" "}
+                                                                <span dangerouslySetInnerHTML={{ __html: formatText(def.notes.trim()) }} />
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            )}
+                                            {!isMulti && (
+                                                <>
+                                                    <div className="word-hover-definition-text">{def.definition.trim()}</div>
+                                                    {def.notes && (
+                                                        <div
+                                                            className="word-hover-notes"
+                                                            style={{ borderLeftColor: collection.color || '#DD5746' }}
+                                                        >
+                                                            <strong>{translations["addWordForm.notes"] || "Notes"}:</strong>{" "}
+                                                            <span dangerouslySetInnerHTML={{ __html: formatText(def.notes.trim()) }} />
+                                                        </div>
+                                                    )}
+                                                </>
+                                            )}
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        ) : (
+                            <div className="text-muted italic">{translations["collection.noDefinitions"] || "No definitions available."}</div>
+                        )}
+                    </div>
+                </div>
             )}
         </>
     );

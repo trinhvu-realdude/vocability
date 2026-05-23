@@ -92,12 +92,14 @@
     overflow: hidden;
     text-overflow: ellipsis;
     display: block;
-    max-width: 140px; /* Safe mobile limit to prevent wrapping */
+    max-width: 140px;
+    /* Safe mobile limit to prevent wrapping */
 }
 
 @media (min-width: 768px) {
     .collection-name {
-        max-width: 350px; /* Larger limit on desktop */
+        max-width: 350px;
+        /* Larger limit on desktop */
     }
 }
 
@@ -246,4 +248,196 @@
 .bg-secondary-soft {
     background-color: #f1f3f5;
     color: #6c757d;
+}
+
+/* Word Hover Preview Popup */
+.word-hover-popup {
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 12px;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    padding: 1.25rem;
+    pointer-events: none;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px) scale(0.95);
+    transition: opacity 0.18s cubic-bezier(0.4, 0, 0.2, 1),
+        transform 0.18s cubic-bezier(0.4, 0, 0.2, 1),
+        visibility 0.18s;
+}
+
+.word-hover-popup.visible {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateY(0) scale(1);
+
+/* Bottom placement (default) — slides in from slightly below */
+.word-hover-popup.placement-bottom {
+    transform: translateY(10px) scale(0.95);
+}
+.word-hover-popup.placement-bottom.visible {
+    transform: translateY(0) scale(1);
+}
+
+/* Top placement — sits right above the word row, slides up into place */
+.word-hover-popup.placement-top {
+    transform: translateY(calc(-100% - 10px)) scale(0.95);
+}
+.word-hover-popup.placement-top.visible {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateY(calc(-100% - 6px)) scale(1);
+}
+
+
+.word-hover-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    padding-bottom: 0.75rem;
+    margin-bottom: 0.75rem;
+    gap: 1rem;
+}
+
+
+.word-hover-title-group {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-width: 0;
+    flex-wrap: wrap;
+}
+
+.word-hover-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #2d3436;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.word-hover-pos {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 0.15rem 0.5rem;
+    border-radius: 4px;
+    font-family: inherit;
+}
+
+.word-hover-audio-group {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-shrink: 0;
+}
+
+.word-hover-phonetic {
+    font-size: 0.875rem;
+    color: #636e72;
+}
+
+.word-hover-body {
+    max-height: 180px;
+    overflow-y: auto;
+    padding-right: 4px;
+}
+
+/* Custom scrollbar for word hover body */
+.word-hover-body::-webkit-scrollbar {
+    width: 4px;
+}
+
+.word-hover-body::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.word-hover-body::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 2px;
+}
+
+.word-hover-definitions-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+/* Single definition */
+.word-hover-definition-item {
+    font-size: 0.95rem;
+    color: #2d3436;
+    line-height: 1.5;
+}
+
+/* Multi-definition: add a subtle divider between entries */
+.word-hover-definition-item.multi {
+    padding-bottom: 0.5rem;
+    border-bottom: 1px dashed rgba(0, 0, 0, 0.07);
+}
+
+.word-hover-definition-item.multi:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+/* Row layout: badge + content side by side */
+.word-hover-def-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.65rem;
+}
+
+/* Numbered circle badge */
+.word-hover-def-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: #fff;
+    margin-top: 2px;
+    letter-spacing: 0;
+}
+
+/* Content beside the badge */
+.word-hover-def-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.word-hover-definition-text {
+    font-weight: 500;
+    font-size: 0.95rem;
+    color: #2d3436;
+    line-height: 1.5;
+}
+
+.definition-num {
+    font-weight: 700;
+    color: #adb5bd;
+}
+
+.word-hover-notes {
+    margin-top: 0.5rem;
+    font-size: 0.82rem;
+    color: #4b5563;
+    background: #f8f9fa;
+    padding: 0.4rem 0.65rem;
+    border-radius: 0 8px 8px 0;
+    border-left: 3px solid #dee2e6;
+    line-height: 1.4;
+}
+
+    line-height: 1.4;
 }
