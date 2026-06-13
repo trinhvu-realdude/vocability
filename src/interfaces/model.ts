@@ -42,6 +42,7 @@ export interface Word {
     next_review_date?: string;  // ISO string
     created_at?: string;
     updated_at?: string;
+    added_by?: Profile;          // email or username of the user who added the word (for shared collections)
 }
 
 export interface Definition {
