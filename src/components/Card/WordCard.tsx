@@ -240,16 +240,32 @@ export const WordCard: React.FC<WordCardProps> = ({
                                         )
                                     )}
                             </ul>
-                            <small
-                                className="text-muted mb-2"
-                                style={{ fontSize: "12px" }}
-                            >
-                                {translations["createdAt"]}{" "}
-                                {word.created_at && formatDate(
-                                    new Date(word.created_at),
-                                    translations["language"]
+                            <div className="d-flex align-items-center gap-2 mt-2">
+                                {word.added_by && (
+                                    <img
+                                        className="avatar-item"
+                                        src={word.added_by.avatar_url}
+                                        alt={word.added_by.display_name}
+                                        title={`${translations["addedBy"]} ${word.added_by.display_name}`}
+                                        style={{
+                                            width: "22px",
+                                            height: "22px",
+                                            borderRadius: "50%",
+                                            objectFit: "cover",
+                                        }}
+                                    />
                                 )}
-                            </small>
+                                <small
+                                    className="text-muted"
+                                    style={{ fontSize: "12px" }}
+                                >
+                                    {translations["createdAt"]}{" "}
+                                    {word.created_at && formatDate(
+                                        new Date(word.created_at),
+                                        translations["language"]
+                                    )}
+                                </small>
+                            </div>
                         </div>
 
                         {/* Overlay Button */}

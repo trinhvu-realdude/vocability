@@ -75,15 +75,17 @@ export const getWordsByCollectionIdPaginated = async (
     from: number,
     to: number
 ): Promise<Word[]> => {
-    const { data, error } = await supabase
-        .from("words")
-        .select("*, definitions(*)")
-        .eq("collection_id", collectionId)
-        .order("created_at", { ascending: false })
-        .order("sort_order", { foreignTable: "definitions", ascending: true })
-        .range(from, to);
+    const limit = to - from + 1;
+    const { data, error } = await supabase.rpc(
+        "get_words_by_collection_paginated",
+        {
+            p_collection_id: collectionId,
+            p_limit: limit,
+            p_offset: from,
+        }
+    );
     if (error) throw error;
-    return data ?? [];
+    return (data ?? []) as Word[];
 };
 
 export const getFavoriteWords = async (
