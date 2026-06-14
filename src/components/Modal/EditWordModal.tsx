@@ -3,11 +3,10 @@ import { EditWordObj, WordFormProps } from "../../interfaces/mainProps";
 import { partsOfSpeech } from "../../utils/constants";
 import {
     getPhonetic,
-    getWordsByCollectionId,
     updateWord,
 } from "../../services/WordService";
 import { useLanguage } from "../../LanguageContext";
-import { Definition } from "../../interfaces/model";
+import { Definition, Word } from "../../interfaces/model";
 import { validateInputs } from "../../utils/helper";
 import "../../styles/AddWordModal.css";
 
@@ -63,8 +62,7 @@ export const EditWordModal: React.FC<WordFormProps> = ({
             const updatedWord = await updateWord(word, editValue);
 
             if (updatedWord && collection?.id) {
-                const words = await getWordsByCollectionId(collection.id);
-                setWords(words);
+                setWords((prevWords: Word[]) => prevWords.map(w => w.id === updatedWord.id ? { ...w, ...updatedWord, added_by: w.added_by } : w));
             }
             if (setWord) setWord(updatedWord);
 
