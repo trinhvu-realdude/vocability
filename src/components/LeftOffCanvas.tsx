@@ -23,14 +23,14 @@ export const LeftOffCanvas: React.FC<{
                         <strong>{collection?.name}</strong>
                     </span>
                 </h5>
-                <div
-                    className="btn btn-sm"
-                    data-bs-dismiss="offcanvas"
+                <button
+                    type="button"
+                    className="btn btn-sm word-modal-close"
+                    data-bs-dismiss="modal"
                     aria-label="Close"
-                    style={{ color: "#fff" }}
                 >
                     <i className="fas fa-times"></i>
-                </div>
+                </button>
             </div>
             <div className="offcanvas-body">
                 <ul className="list-group">

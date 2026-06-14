@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Word } from "../../interfaces/model";
 import { WordFormProps } from "../../interfaces/mainProps";
-import { deleteWord, getWordsByCollectionId } from "../../services/WordService";
+import { deleteWord } from "../../services/WordService";
 import { useLanguage } from "../../LanguageContext";
 import "../../styles/AddWordModal.css";
 
@@ -26,8 +26,7 @@ export const DeleteWordModal: React.FC<WordFormProps> = ({
         try {
             await deleteWord(wordData);
             if (wordData.collection_id) {
-                const words = await getWordsByCollectionId(wordData.collection_id);
-                setWords(words);
+                setWords((prevWords: Word[]) => prevWords.filter(w => w.id !== wordData.id));
             }
 
             // Close form first
