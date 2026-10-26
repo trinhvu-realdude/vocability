@@ -288,12 +288,18 @@ export const getSynonymsAntonyms = async (
             `${import.meta.env.VITE_API_DICTIONARY_URL}${word.word}`
         );
         const data = await response.json();
-        const meanings = data[0].meanings as Array<any>;
-        for (const meaning of meanings) {
-            if (meaning.partOfSpeech === word.part_of_speech) {
-                return { synonyms: meaning.synonyms, antonyms: meaning.antonyms };
-            }
-        }
+        const entries = data.entries as Array<any>;
+        console.log(entries);
+        
+        const matchingEntries = word.part_of_speech
+            ? entries.filter((entry) => entry.partOfSpeech === word.part_of_speech)
+            : entries;
+
+        return matchingEntries.reduce((acc, entry) => {
+            acc.synonyms.push(...(entry.synonyms ?? []));
+            acc.antonyms.push(...(entry.antonyms ?? []));
+            return acc;
+        }, { synonyms: [], antonyms: [] });
     } catch (error) {
         console.log(error);
     }
@@ -302,12 +308,12 @@ export const getSynonymsAntonyms = async (
 
 export const getExternalWord = async (
     word: string
-): Promise<ExternalWord[] | { message: string }> => {
+): Promise<ExternalWord | { message: string }> => {
     const response = await fetch(
         `${import.meta.env.VITE_API_DICTIONARY_URL}${word}`
     );
     const data = await response.json();
-    return data as ExternalWord[];
+    return data as ExternalWord;
 };
 
 export const getVerbConjugation = async (

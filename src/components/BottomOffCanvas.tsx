@@ -9,7 +9,7 @@ export const OffCanvas: React.FC<{
     show: boolean;
     onClose: any;
 }> = ({ id, word, show, onClose }) => {
-    const [data, setData] = useState<ExternalWord[] | { message: string }>();
+    const [data, setData] = useState<ExternalWord | { message: string }>();
     const [isLoading, setIsLoading] = useState<boolean>(true);
 
     useEffect(() => {
@@ -28,7 +28,7 @@ export const OffCanvas: React.FC<{
             id={id}
             aria-labelledby={`offcanvas-bottom-${word}-label`}
             style={{
-                height: `${data instanceof Array ? "100%" : "20%"}`,
+                height: `${data && "entries" in data ? "100%" : "20%"}`,
                 visibility: show ? "visible" : "hidden",
                 transition: "visibility 0.3s ease, height 0.3s ease",
                 backgroundColor: "#fcfcfc",
@@ -55,143 +55,157 @@ export const OffCanvas: React.FC<{
             <div className="offcanvas-body text-start container">
                 {isLoading ? (
                     <div className="mx-auto loader"></div>
-                ) : data && data instanceof Array ? (
-                    data.map((element, index) => (
-                        <div
-                            className="d-flex w-100 justify-content-between mb-2"
-                            key={index}
-                        >
-                            <div className="row">
-                                <h5 className="mb-1 d-flex align-items-center gap-2">
-                                    <strong>{element.word}</strong>
-                                    <small
-                                        className="text-muted"
-                                        style={{ fontSize: "14px" }}
-                                    >
-                                        {element.phonetic}
-                                    </small>
-                                    <TextToSpeechButton word={element.word} />
-                                </h5>
-                                {element.meanings &&
-                                    element.meanings.map((meaning, index) => (
-                                        <div key={index}>
-                                            <small>
-                                                <i>{meaning.partOfSpeech}</i>
-                                            </small>
-                                            <div className="mx-2">
-                                                <ul className="list-group list-group-flush">
-                                                    {meaning.definitions &&
-                                                        meaning.definitions.map(
-                                                            (
-                                                                definition,
-                                                                index
-                                                            ) => (
-                                                                <li
-                                                                    className="list-group-item"
-                                                                    key={index}
-                                                                >
-                                                                    <p>
-                                                                        {
-                                                                            definition.definition
-                                                                        }
-                                                                    </p>
-                                                                    {definition.example && (
-                                                                        <p>
-                                                                            <strong>
-                                                                                Example:
-                                                                            </strong>{" "}
-                                                                            {
-                                                                                definition.example
-                                                                            }
-                                                                        </p>
-                                                                    )}
-                                                                </li>
-                                                            )
-                                                        )}
-                                                </ul>
-                                                {meaning.synonyms.length > 0 &&
-                                                    meaning.antonyms.length >
-                                                    0 && (
-                                                        <table
-                                                            className="table table-bordered table-sm mt-2"
-                                                            style={{
-                                                                borderRadius:
-                                                                    "0.25rem",
-                                                            }}
+                ) : data && "entries" in data && data.entries ? (
+                    <div className="d-flex w-100 justify-content-between mb-2">
+                        <div className="row w-100">
+                            <h5 className="mb-1 d-flex align-items-center gap-2">
+                                <strong>{data.word}</strong>
+                                <TextToSpeechButton word={data.word} />
+                            </h5>
+                            {data.entries.map((entry, index) => (
+                                <div key={index} className="mb-3">
+                                    <div className="d-flex align-items-center gap-2">
+                                        <small>
+                                            <i>{entry.partOfSpeech}</i>
+                                        </small>
+                                        <small
+                                            className="text-muted"
+                                            style={{ fontSize: "14px" }}
+                                        >
+                                            {entry.pronunciations &&
+                                                entry.pronunciations.length >
+                                                    0 &&
+                                                entry.pronunciations[0].text}
+                                        </small>
+                                    </div>
+                                    <div className="mx-2">
+                                        <ul className="list-group list-group-flush">
+                                            {entry.senses &&
+                                                entry.senses.map(
+                                                    (sense, sIndex) => (
+                                                        <li
+                                                            className="list-group-item"
+                                                            key={sIndex}
                                                         >
-                                                            <thead>
-                                                                <tr className="text-center">
-                                                                    <th scope="col">
-                                                                        Synonyms
-                                                                    </th>
-                                                                    <th scope="col">
-                                                                        Antonyms
-                                                                    </th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                                <tr className="text-center">
-                                                                    <td>
-                                                                        {meaning
-                                                                            .synonyms
-                                                                            .length >
-                                                                            0 &&
-                                                                            meaning.synonyms.map(
-                                                                                (
-                                                                                    synonym,
-                                                                                    index
-                                                                                ) => (
-                                                                                    <div
-                                                                                        key={
-                                                                                            index
-                                                                                        }
-                                                                                    >
-                                                                                        <span>
-                                                                                            {
-                                                                                                synonym
-                                                                                            }
-                                                                                        </span>
-                                                                                    </div>
-                                                                                )
-                                                                            )}
-                                                                    </td>
-                                                                    <td>
-                                                                        {meaning
-                                                                            .antonyms
-                                                                            .length >
-                                                                            0 &&
-                                                                            meaning.antonyms.map(
-                                                                                (
-                                                                                    antonym,
-                                                                                    index
-                                                                                ) => (
-                                                                                    <div
-                                                                                        key={
-                                                                                            index
-                                                                                        }
-                                                                                    >
-                                                                                        <span>
-                                                                                            {
-                                                                                                antonym
-                                                                                            }
-                                                                                        </span>
-                                                                                    </div>
-                                                                                )
-                                                                            )}
-                                                                    </td>
-                                                                </tr>
-                                                            </tbody>
-                                                        </table>
-                                                    )}
-                                            </div>
-                                        </div>
-                                    ))}
-                            </div>
+                                                            <p>
+                                                                {
+                                                                    sense.definitions
+                                                                }
+                                                            </p>
+                                                            {sense.examples &&
+                                                                sense.examples
+                                                                    .length >
+                                                                    0 && (
+                                                                    <p>
+                                                                        <strong>
+                                                                            Example:
+                                                                        </strong>{" "}
+                                                                        {sense.examples.map(
+                                                                            (
+                                                                                ex,
+                                                                                exIndex,
+                                                                            ) => (
+                                                                                <span
+                                                                                    key={
+                                                                                        exIndex
+                                                                                    }
+                                                                                >
+                                                                                    {
+                                                                                        ex
+                                                                                    }
+                                                                                    {exIndex <
+                                                                                        sense
+                                                                                            .examples
+                                                                                            .length -
+                                                                                            1 && (
+                                                                                        <br />
+                                                                                    )}
+                                                                                </span>
+                                                                            ),
+                                                                        )}
+                                                                    </p>
+                                                                )}
+                                                        </li>
+                                                    ),
+                                                )}
+                                        </ul>
+
+                                        {((entry.synonyms &&
+                                            entry.synonyms.length > 0) ||
+                                            (entry.antonyms &&
+                                                entry.antonyms.length > 0)) && (
+                                            <table
+                                                className="table table-bordered table-sm mt-2"
+                                                style={{
+                                                    borderRadius: "0.25rem",
+                                                }}
+                                            >
+                                                <thead>
+                                                    <tr className="text-center">
+                                                        <th scope="col">
+                                                            Synonyms
+                                                        </th>
+                                                        <th scope="col">
+                                                            Antonyms
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr className="text-center">
+                                                        <td>
+                                                            {entry.synonyms &&
+                                                                entry.synonyms.map(
+                                                                    (
+                                                                        synonym,
+                                                                        synIndex,
+                                                                    ) => (
+                                                                        <div
+                                                                            key={
+                                                                                synIndex
+                                                                            }
+                                                                        >
+                                                                            <span>
+                                                                                {
+                                                                                    synonym
+                                                                                }
+                                                                            </span>
+                                                                        </div>
+                                                                    ),
+                                                                )}
+                                                        </td>
+                                                        <td>
+                                                            {entry.antonyms &&
+                                                                entry.antonyms.map(
+                                                                    (
+                                                                        antonym,
+                                                                        antIndex,
+                                                                    ) => (
+                                                                        <div
+                                                                            key={
+                                                                                antIndex
+                                                                            }
+                                                                        >
+                                                                            <span>
+                                                                                {
+                                                                                    antonym
+                                                                                }
+                                                                            </span>
+                                                                        </div>
+                                                                    ),
+                                                                )}
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        )}
+                                    </div>
+                                </div>
+                            ))}
                         </div>
-                    ))
+                    </div>
                 ) : (
                     <div className="container text-center">
-                        {data && data.message}
+                        {data && "message" in data && data.message}
                     </div>
                 )}
             </div>
