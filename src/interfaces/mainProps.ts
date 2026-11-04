@@ -136,21 +136,36 @@ export type EditWordObj = {
 
 export type ExternalWord = {
     word: string;
-    phonetic: string;
-    phonetics: [{ text: string; audio: string }];
-    meanings: [
+    entries: [
         {
+            antonyms: [string];
+            forms: [
+                {
+                    word: string;
+                    tags: [string];
+                }
+            ];
+            language: {
+                code: string;
+                name: string;
+            };
             partOfSpeech: string;
-            definitions: [
+            pronunciations: [
+                {
+                    type: string;
+                    text: string;
+                    tags: [string];
+                }
+            ];
+            senses: [
                 {
                     definition: string;
-                    example: string;
+                    examples: [string];
                 }
             ];
             synonyms: [string];
-            antonyms: [string];
         }
-    ];
+    ]
 };
 
 export type VerbConjugation = {
