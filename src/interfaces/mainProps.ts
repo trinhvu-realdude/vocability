@@ -159,7 +159,7 @@ export type ExternalWord = {
             ];
             senses: [
                 {
-                    definitions: string;
+                    definition: string;
                     examples: [string];
                 }
             ];

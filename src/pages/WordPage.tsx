@@ -156,13 +156,10 @@ export const WordPage: React.FC<WordPageProps> = ({
 
             <PageHeader
                 content={
-                    <>
+                    collection && <>
                         <span style={{ color: collection?.color }}>
                             <strong>{collection?.name}</strong>
-                        </span>{" "}
-                        {new String(
-                            translations["addWordForm.collection"]
-                        ).toLowerCase()}
+                        </span>
                         <div
                             className="btn btn-sm mx-2"
                             style={{

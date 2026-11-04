@@ -248,36 +248,14 @@ export const addWordToFavorite = async (
 // ─── External API ────────────────────────────────────────────────────────────
 
 export const getPhonetic = async (
-    word: string
+    word: string, partOfSpeech?: string
 ): Promise<string | undefined> => {
-    const fetchPhonetic = async (w: string) => {
-        try {
-            const response = await fetch(
-                `${import.meta.env.VITE_API_DICTIONARY_URL}${w.replace(/\//g, "")}`
-            );
-            const data = await response.json();
-            if (data instanceof Array) {
-                for (const element of data[0].phonetics) {
-                    if (element.text) return element.text as string;
-                }
-            }
-            return undefined;
-        } catch (error) {
-            return undefined;
-        }
-    };
-
-    const phonetic = await fetchPhonetic(word);
-    if (!phonetic) {
-        let result = "";
-        for (const w of word.split(" ")) {
-            const data = await fetchPhonetic(w);
-            if (data) result += data + " ";
-            else return undefined;
-        }
-        return "/" + result.replace(/\//g, "").trim() + "/";
-    }
-    return phonetic;
+    const response = await fetch(
+        `${import.meta.env.VITE_API_VERB_CONJUGATION_URL}${import.meta.env.VITE_GET_PHONETIC_PATH}?word=${word}&partOfSpeech=${partOfSpeech}`
+    );
+    const data = await response.json();
+    const pronunciations = data.pronunciations as Array<any>;
+    return pronunciations.length != 0 ? pronunciations[0].phonetic : undefined;
 };
 
 export const getSynonymsAntonyms = async (
@@ -290,7 +268,7 @@ export const getSynonymsAntonyms = async (
         const data = await response.json();
         const entries = data.entries as Array<any>;
         console.log(entries);
-        
+
         const matchingEntries = word.part_of_speech
             ? entries.filter((entry) => entry.partOfSpeech === word.part_of_speech)
             : entries;
@@ -322,7 +300,7 @@ export const getVerbConjugation = async (
 ): Promise<VerbConjugation | undefined> => {
     if (languageCode && (word.part_of_speech == "verb" || word.part_of_speech == "")) {
         const response = await fetch(
-            `${import.meta.env.VITE_API_VERB_CONJUGATION_URL}?l=${languageCode}&q=${word.word}`
+            `${import.meta.env.VITE_API_VERB_CONJUGATION_URL}${import.meta.env.VITE_SEARCH_WORD_PATH}?l=${languageCode}&q=${word.word}`
         );
         const data = await response.json();
         return data as VerbConjugation;

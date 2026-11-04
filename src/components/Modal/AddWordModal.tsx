@@ -127,7 +127,7 @@ export const AddWordModal: React.FC<CommonProps> = ({
                 if (!isImportMode) {
                     let phonetic;
                     if (currentLanguageId === 1) {
-                        phonetic = await getPhonetic(word.toLowerCase().trim());
+                        phonetic = await getPhonetic(word.toLowerCase().trim(), partOfSpeech.toLowerCase().trim());
                     }
 
                     const objWord = {

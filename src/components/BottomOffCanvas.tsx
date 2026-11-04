@@ -74,7 +74,7 @@ export const OffCanvas: React.FC<{
                                         >
                                             {entry.pronunciations &&
                                                 entry.pronunciations.length >
-                                                    0 &&
+                                                0 &&
                                                 entry.pronunciations[0].text}
                                         </small>
                                     </div>
@@ -89,13 +89,13 @@ export const OffCanvas: React.FC<{
                                                         >
                                                             <p>
                                                                 {
-                                                                    sense.definitions
+                                                                    sense.definition
                                                                 }
                                                             </p>
                                                             {sense.examples &&
                                                                 sense.examples
                                                                     .length >
-                                                                    0 && (
+                                                                0 && (
                                                                     <p>
                                                                         <strong>
                                                                             Example:
@@ -117,9 +117,9 @@ export const OffCanvas: React.FC<{
                                                                                         sense
                                                                                             .examples
                                                                                             .length -
-                                                                                            1 && (
-                                                                                        <br />
-                                                                                    )}
+                                                                                        1 && (
+                                                                                            <br />
+                                                                                        )}
                                                                                 </span>
                                                                             ),
                                                                         )}
@@ -134,70 +134,70 @@ export const OffCanvas: React.FC<{
                                             entry.synonyms.length > 0) ||
                                             (entry.antonyms &&
                                                 entry.antonyms.length > 0)) && (
-                                            <table
-                                                className="table table-bordered table-sm mt-2"
-                                                style={{
-                                                    borderRadius: "0.25rem",
-                                                }}
-                                            >
-                                                <thead>
-                                                    <tr className="text-center">
-                                                        <th scope="col">
-                                                            Synonyms
-                                                        </th>
-                                                        <th scope="col">
-                                                            Antonyms
-                                                        </th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr className="text-center">
-                                                        <td>
-                                                            {entry.synonyms &&
-                                                                entry.synonyms.map(
-                                                                    (
-                                                                        synonym,
-                                                                        synIndex,
-                                                                    ) => (
-                                                                        <div
-                                                                            key={
-                                                                                synIndex
-                                                                            }
-                                                                        >
-                                                                            <span>
-                                                                                {
-                                                                                    synonym
+                                                <table
+                                                    className="table table-bordered table-sm mt-2"
+                                                    style={{
+                                                        borderRadius: "0.25rem",
+                                                    }}
+                                                >
+                                                    <thead>
+                                                        <tr className="text-center">
+                                                            <th scope="col">
+                                                                Synonyms
+                                                            </th>
+                                                            <th scope="col">
+                                                                Antonyms
+                                                            </th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr className="text-center">
+                                                            <td>
+                                                                {entry.synonyms &&
+                                                                    entry.synonyms.map(
+                                                                        (
+                                                                            synonym,
+                                                                            synIndex,
+                                                                        ) => (
+                                                                            <div
+                                                                                key={
+                                                                                    synIndex
                                                                                 }
-                                                                            </span>
-                                                                        </div>
-                                                                    ),
-                                                                )}
-                                                        </td>
-                                                        <td>
-                                                            {entry.antonyms &&
-                                                                entry.antonyms.map(
-                                                                    (
-                                                                        antonym,
-                                                                        antIndex,
-                                                                    ) => (
-                                                                        <div
-                                                                            key={
-                                                                                antIndex
-                                                                            }
-                                                                        >
-                                                                            <span>
-                                                                                {
-                                                                                    antonym
+                                                                            >
+                                                                                <span>
+                                                                                    {
+                                                                                        synonym
+                                                                                    }
+                                                                                </span>
+                                                                            </div>
+                                                                        ),
+                                                                    )}
+                                                            </td>
+                                                            <td>
+                                                                {entry.antonyms &&
+                                                                    entry.antonyms.map(
+                                                                        (
+                                                                            antonym,
+                                                                            antIndex,
+                                                                        ) => (
+                                                                            <div
+                                                                                key={
+                                                                                    antIndex
                                                                                 }
-                                                                            </span>
-                                                                        </div>
-                                                                    ),
-                                                                )}
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        )}
+                                                                            >
+                                                                                <span>
+                                                                                    {
+                                                                                        antonym
+                                                                                    }
+                                                                                </span>
+                                                                            </div>
+                                                                        ),
+                                                                    )}
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            )}
                                     </div>
                                 </div>
                             ))}
