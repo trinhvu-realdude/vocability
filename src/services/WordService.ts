@@ -248,10 +248,10 @@ export const addWordToFavorite = async (
 // ─── External API ────────────────────────────────────────────────────────────
 
 export const getPhonetic = async (
-    word: string, partOfSpeech?: string
+    word: string, partOfSpeech?: string, language?: string
 ): Promise<string | undefined> => {
     const response = await fetch(
-        `${import.meta.env.VITE_API_VERB_CONJUGATION_URL}${import.meta.env.VITE_GET_PHONETIC_PATH}?word=${word}&partOfSpeech=${partOfSpeech}`
+        `${import.meta.env.VITE_API_VERB_CONJUGATION_URL}${import.meta.env.VITE_GET_PHONETIC_PATH}?l=${language === "us" ? "en" : language}&w=${word}&pos=${partOfSpeech}`
     );
     const data = await response.json();
     const pronunciations = data.pronunciations as Array<any>;

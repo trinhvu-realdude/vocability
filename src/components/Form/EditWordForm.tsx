@@ -50,10 +50,7 @@ export const EditWordForm: React.FC<WordFormProps> = ({
         if (!validateInputs(wordEdit, partOfSpeechEdit, collection, definitionsEdit, setErrors)) return;
 
         setIsLoading(true);
-        let phonetic;
-        if (translations["language"] === "us") {
-            phonetic = await getPhonetic(wordEdit.toLowerCase(), partOfSpeechEdit.toLowerCase());
-        }
+        let phonetic = await getPhonetic(wordEdit.toLowerCase(), partOfSpeechEdit.toLowerCase(), translations["language"]);
         try {
             const editValue: EditWordObj = {
                 word: wordEdit,
