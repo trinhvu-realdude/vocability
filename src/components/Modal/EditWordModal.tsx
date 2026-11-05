@@ -49,9 +49,7 @@ export const EditWordModal: React.FC<WordFormProps> = ({
 
         setIsLoading(true);
         let phonetic;
-        if (translations["language"] === "us") {
-            phonetic = await getPhonetic(wordEdit.toLowerCase(), partOfSpeechEdit.toLowerCase());
-        }
+        phonetic = await getPhonetic(wordEdit.toLowerCase(), partOfSpeechEdit.toLowerCase(), translations["language"]);
         try {
             const editValue: EditWordObj = {
                 word: wordEdit,
