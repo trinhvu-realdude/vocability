@@ -26,7 +26,7 @@ export const LeftOffCanvas: React.FC<{
                 <button
                     type="button"
                     className="btn btn-sm word-modal-close"
-                    data-bs-dismiss="modal"
+                    data-bs-dismiss="offcanvas"
                     aria-label="Close"
                 >
                     <i className="fas fa-times"></i>
