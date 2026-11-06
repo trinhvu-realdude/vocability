@@ -82,7 +82,7 @@ export const WordDetailPage: React.FC<WordDetailPageProps> = ({
 
                 // Run synonyms/antonyms and verb conjugation in parallel
                 const [objSynonymsAntonyms, conjugation] = await Promise.all([
-                    getSynonymsAntonyms(objWord),
+                    getSynonymsAntonyms(objWord, translations["language"]),
                     getVerbConjugation(langCodeForConjugation, objWord),
                 ]);
                 if (isCancelled) return;
