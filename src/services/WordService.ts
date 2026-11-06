@@ -259,25 +259,17 @@ export const getPhonetic = async (
 };
 
 export const getSynonymsAntonyms = async (
-    word: Word
+    word: Word, language?: string
 ): Promise<{ synonyms: string[]; antonyms: string[] } | undefined> => {
     try {
         const response = await fetch(
-            `${import.meta.env.VITE_API_DICTIONARY_URL}${word.word}`
+            `${import.meta.env.VITE_API_VERB_CONJUGATION_URL}${import.meta.env.VITE_SYNONYMS_ANTONYMS}?l=${language === "us" ? "en" : language}&w=${word.word}&pos=${word.part_of_speech}`
         );
         const data = await response.json();
-        const entries = data.entries as Array<any>;
-        console.log(entries);
+        const synonyms = data.synonyms as Array<string>;
+        const antonyms = data.antonyms as Array<string>;
 
-        const matchingEntries = word.part_of_speech
-            ? entries.filter((entry) => entry.partOfSpeech === word.part_of_speech)
-            : entries;
-
-        return matchingEntries.reduce((acc, entry) => {
-            acc.synonyms.push(...(entry.synonyms ?? []));
-            acc.antonyms.push(...(entry.antonyms ?? []));
-            return acc;
-        }, { synonyms: [], antonyms: [] });
+        return { synonyms, antonyms }
     } catch (error) {
         console.log(error);
     }
