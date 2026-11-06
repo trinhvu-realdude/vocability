@@ -277,10 +277,10 @@ export const getSynonymsAntonyms = async (
 };
 
 export const getExternalWord = async (
-    word: string
+    word: string, language: string
 ): Promise<ExternalWord | { message: string }> => {
     const response = await fetch(
-        `${import.meta.env.VITE_API_DICTIONARY_URL}${word}`
+        `${import.meta.env.VITE_API_DICTIONARY_URL}${language == "us" ? "en" : language}/${word}`
     );
     const data = await response.json();
     return data as ExternalWord;
