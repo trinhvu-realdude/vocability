@@ -277,7 +277,7 @@ export const WordDetailPage: React.FC<WordDetailPageProps> = ({
                                                                 word={synonym}
                                                                 show={true}
                                                                 onClose={() => setVisibleOffCanvas(null)}
-                                                                language={translations["language"]}
+                                                                translations={translations}
                                                             />
                                                         )}
                                                 </div>
@@ -311,7 +311,7 @@ export const WordDetailPage: React.FC<WordDetailPageProps> = ({
                                                                 word={antonym}
                                                                 show={true}
                                                                 onClose={() => setVisibleOffCanvas(null)}
-                                                                language={translations["language"]}
+                                                                translations={translations}
                                                             />
                                                         )}
                                                 </div>

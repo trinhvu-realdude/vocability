@@ -8,14 +8,14 @@ export const OffCanvas: React.FC<{
     word: string;
     show: boolean;
     onClose: any;
-    language: string;
-}> = ({ id, word, show, onClose, language }) => {
+    translations: any;
+}> = ({ id, word, show, onClose, translations }) => {
     const [data, setData] = useState<ExternalWord | { message: string }>();
     const [isLoading, setIsLoading] = useState<boolean>(true);
 
     useEffect(() => {
         const fetchData = async () => {
-            const objExternalWord = await getExternalWord(word, language);
+            const objExternalWord = await getExternalWord(word, translations);
             setData(objExternalWord);
             setIsLoading(false);
         };
