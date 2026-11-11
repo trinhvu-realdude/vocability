@@ -277,25 +277,24 @@ export const getSynonymsAntonyms = async (
 };
 
 export const getExternalWord = async (
-    word: string, language: string
+    word: string, translations: any
 ): Promise<ExternalWord | { message: string }> => {
     const response = await fetch(
-        `${import.meta.env.VITE_API_DICTIONARY_URL}${language == "us" ? "en" : language}/${word}`
+        `${import.meta.env.VITE_API_DICTIONARY_URL}${translations["language"] == "us" ? "en" : translations["language"]}/${word}`
     );
-    const data = await response.json();
-    return data as ExternalWord;
+    const data = await response.json() as ExternalWord;
+    const entries = data.entries as Array<any>;
+    if (entries.length !== 0) return data;
+    return { message: translations["noFoundWord"] }
 };
 
 export const getVerbConjugation = async (
     languageCode: string,
     word: Word
 ): Promise<VerbConjugation | undefined> => {
-    if (languageCode && (word.part_of_speech == "verb" || word.part_of_speech == "")) {
-        const response = await fetch(
-            `${import.meta.env.VITE_API_VERB_CONJUGATION_URL}${import.meta.env.VITE_SEARCH_WORD_PATH}?l=${languageCode}&q=${word.word}`
-        );
-        const data = await response.json();
-        return data as VerbConjugation;
-    }
-    return undefined;
+    const response = await fetch(
+        `${import.meta.env.VITE_API_VERB_CONJUGATION_URL}${import.meta.env.VITE_SEARCH_WORD_PATH}?l=${languageCode}&q=${word.word}`
+    );
+    const data = await response.json();
+    return data as VerbConjugation;
 };
