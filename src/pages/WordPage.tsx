@@ -188,8 +188,7 @@ export const WordPage: React.FC<WordPageProps> = ({
             <div className="list-group mt-4">
                 {isLoading ? (
                     <div className="mx-auto loader"></div>
-                ) : filteredWords &&
-                    filteredWords.length > 0 ? (
+                ) : filteredWords?.length > 0 ? (
                     filteredWords.map((word) => (
                         <WordCard
                             key={word.id}

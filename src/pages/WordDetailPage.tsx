@@ -324,16 +324,6 @@ export const WordDetailPage: React.FC<WordDetailPageProps> = ({
                     {verbConjugation && verbConjugation.data.length > 0 && <VerbConjugation data={verbConjugation} />}
                 </>
             )}
-
-            {/* {word?.collection_id && (
-                <div className="d-none d-md-block">
-                    <WordCarousel
-                        collectionId={String(word.collection_id)}
-                        collectionColor={collection?.color}
-                        word={word}
-                    />
-                </div>
-            )} */}
         </div>
     );
 };
