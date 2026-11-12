@@ -141,7 +141,7 @@ export const CollectionPage: React.FC<CommonProps> = ({
                     <div className="row mt-4 mb-2">
                         {isLoading ? (
                             <div className="mx-auto loader" />
-                        ) : filteredCollections && filteredCollections.length > 0 ? (
+                        ) : filteredCollections?.length > 0 ? (
                             <>
                                 {renderCollectionList(filteredCollections.filter(c => !c.myRole || c.myRole === 'owner'))}
                             </>
@@ -158,7 +158,7 @@ export const CollectionPage: React.FC<CommonProps> = ({
                 <div className="row mt-4 mb-2">
                     {isLoading ? (
                         <div className="mx-auto loader" />
-                    ) : filteredSharedCollections.length > 0 ? (
+                    ) : filteredSharedCollections?.length > 0 ? (
                         <>
                             {renderCollectionList(filteredSharedCollections.filter(c => c.myRole === 'editor'))}
 

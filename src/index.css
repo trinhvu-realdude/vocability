@@ -18,6 +18,10 @@ body {
     background-color: #fcfcfc;
 }
 
+*::-webkit-scrollbar {
+    display: none;
+}
+
 /* Chrome, Safari, Edge, Opera */
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
@@ -81,7 +85,7 @@ input[type="number"] {
     .right {
         width: 60%;
     }
-    
+
     /* Mobile App Shell Layout Padding */
     body {
         padding-bottom: 80px;
